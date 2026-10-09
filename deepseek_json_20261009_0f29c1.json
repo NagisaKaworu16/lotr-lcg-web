@@ -1,0 +1,682 @@
+{
+  "pack_code": "core",
+  "pack_name": "核心包",
+  "translation_version": "revised_ffg",
+  "translation_style": "A社邓版（新版）",
+  "heroes": [
+    {
+      "code": "01001",
+      "name": "阿拉贡",
+      "type_code": "hero",
+      "sphere_code": "leadership",
+      "traits": "登丹人. 贵族. 游侠.",
+      "threat": 12,
+      "willpower": 2,
+      "attack": 3,
+      "defense": 2,
+      "health": 5,
+      "text": "警戒. 响应：在阿拉贡被指派执行探险后，从他的资源池中支付1枚资源标记，以重整阿拉贡。",
+      "quantity": 1
+    },
+    {
+      "code": "01002",
+      "name": "希奥杰德",
+      "type_code": "hero",
+      "sphere_code": "leadership",
+      "traits": "贵族. 洛汗. 战士.",
+      "threat": 8,
+      "willpower": 1,
+      "attack": 2,
+      "defense": 1,
+      "health": 4,
+      "text": "响应：在希奥杰德被指派执行探险后，选择一名被指派执行该探险的英雄。增加1枚资源标记到该英雄的资源池中。",
+      "quantity": 1
+    },
+    {
+      "code": "01003",
+      "name": "格罗因",
+      "type_code": "hero",
+      "sphere_code": "leadership",
+      "traits": "矮人. 贵族.",
+      "threat": 9,
+      "willpower": 2,
+      "attack": 2,
+      "defense": 1,
+      "health": 4,
+      "text": "响应：在格罗因受到伤害后，他刚才每受到1点伤害，增加1枚资源标记到他的资源池中。",
+      "quantity": 1
+    },
+    {
+      "code": "01004",
+      "name": "吉姆利",
+      "type_code": "hero",
+      "sphere_code": "tactics",
+      "traits": "矮人. 贵族. 战士.",
+      "threat": 11,
+      "willpower": 2,
+      "attack": 2,
+      "defense": 2,
+      "health": 5,
+      "text": "吉姆利每有1枚伤害标记，他获得+1攻击力。",
+      "quantity": 1
+    },
+    {
+      "code": "01005",
+      "name": "莱戈拉斯",
+      "type_code": "hero",
+      "sphere_code": "tactics",
+      "traits": "贵族. 西尔凡精灵. 战士.",
+      "threat": 9,
+      "willpower": 1,
+      "attack": 3,
+      "defense": 1,
+      "health": 4,
+      "text": "远程. 响应：在莱戈拉斯参与一次攻击并消灭敌人后，放置2枚进度标记到当前探险上。",
+      "quantity": 1
+    },
+    {
+      "code": "01006",
+      "name": "萨林",
+      "type_code": "hero",
+      "sphere_code": "tactics",
+      "traits": "矮人. 战士.",
+      "threat": 9,
+      "willpower": 1,
+      "attack": 2,
+      "defense": 2,
+      "health": 4,
+      "text": "当萨林被指派执行探险时，对每个刚从遭遇牌组翻开的敌人造成1点伤害。",
+      "quantity": 1
+    },
+    {
+      "code": "01007",
+      "name": "伊奥温",
+      "type_code": "hero",
+      "sphere_code": "spirit",
+      "traits": "贵族. 洛汗.",
+      "threat": 9,
+      "willpower": 4,
+      "attack": 1,
+      "defense": 1,
+      "health": 3,
+      "text": "行动：从你的手牌中弃除一张卡牌，以使伊奥温获得+1意志力直到本阶段结束。每回合每位玩家可以触发一次本效果。",
+      "quantity": 1
+    },
+    {
+      "code": "01008",
+      "name": "埃莉诺",
+      "type_code": "hero",
+      "sphere_code": "spirit",
+      "traits": "刚铎. 贵族.",
+      "threat": 7,
+      "willpower": 1,
+      "attack": 1,
+      "defense": 2,
+      "health": 3,
+      "text": "响应：横置埃莉诺，以取消一张刚从遭遇牌组翻开的诡计的“翻开时”效果。然后，弃除该卡牌，并以遭遇牌组的下一张卡牌代替。",
+      "quantity": 1
+    },
+    {
+      "code": "01009",
+      "name": "敦赫雷",
+      "type_code": "hero",
+      "sphere_code": "spirit",
+      "traits": "洛汗. 战士.",
+      "threat": 8,
+      "willpower": 1,
+      "attack": 2,
+      "defense": 1,
+      "health": 4,
+      "text": "当敦赫雷单独攻击时，他能将探查区中的敌人作为目标。这样做时，他获得+1攻击力。",
+      "quantity": 1
+    },
+    {
+      "code": "01010",
+      "name": "德内梭尔",
+      "type_code": "hero",
+      "sphere_code": "lore",
+      "traits": "刚铎. 贵族. 摄政王.",
+      "threat": 8,
+      "willpower": 1,
+      "attack": 1,
+      "defense": 3,
+      "health": 3,
+      "text": "行动：横置德内梭尔，以查看遭遇牌组顶端的一张卡牌。你可以将该卡牌移至牌组底端。",
+      "quantity": 1
+    },
+    {
+      "code": "01011",
+      "name": "格罗芬德尔",
+      "type_code": "hero",
+      "sphere_code": "lore",
+      "traits": "贵族. 诺多精灵. 战士.",
+      "threat": 12,
+      "willpower": 3,
+      "attack": 3,
+      "defense": 1,
+      "health": 5,
+      "text": "行动：从格罗芬德尔的资源池中支付1枚资源标记，以治疗任一角色的1点伤害。（每个回合限制1次）",
+      "quantity": 1
+    },
+    {
+      "code": "01012",
+      "name": "贝拉芙",
+      "type_code": "hero",
+      "sphere_code": "lore",
+      "traits": "登丹人. 游侠.",
+      "threat": 10,
+      "willpower": 2,
+      "attack": 2,
+      "defense": 2,
+      "health": 4,
+      "text": "行动：横置贝拉芙，以选择一位玩家。该玩家抽两张卡牌。",
+      "quantity": 1
+    }
+  ],
+  "allies": [
+    {
+      "code": "01013",
+      "name": "都城守卫",
+      "type_code": "ally",
+      "sphere_code": "leadership",
+      "traits": "刚铎. 战士.",
+      "cost": 2,
+      "willpower": 1,
+      "attack": 1,
+      "defense": 0,
+      "health": 2,
+      "text": "无",
+      "quantity": 3
+    },
+    {
+      "code": "01014",
+      "name": "法拉米尔",
+      "type_code": "ally",
+      "sphere_code": "leadership",
+      "traits": "刚铎. 贵族. 战士.",
+      "cost": 4,
+      "willpower": 2,
+      "attack": 1,
+      "defense": 2,
+      "health": 3,
+      "text": "行动：横置法拉米尔，以选择一名角色。该角色获得+1意志力直到本阶段结束。",
+      "quantity": 2
+    },
+    {
+      "code": "01015",
+      "name": "亚尔诺之子",
+      "type_code": "ally",
+      "sphere_code": "leadership",
+      "traits": "登丹人. 游侠.",
+      "cost": 3,
+      "willpower": 0,
+      "attack": 2,
+      "defense": 0,
+      "health": 2,
+      "text": "响应：在亚尔诺之子进入游戏后，选择探查区的一名敌人。该敌人与你交战。",
+      "quantity": 2
+    },
+    {
+      "code": "01016",
+      "name": "甘道夫",
+      "type_code": "ally",
+      "sphere_code": "neutral",
+      "traits": "巫师.",
+      "cost": 5,
+      "willpower": 4,
+      "attack": 4,
+      "defense": 4,
+      "health": 4,
+      "text": "行动：选择一项：从一位玩家的威胁值中减去5点；或抽3张卡牌；或治疗一位英雄的所有伤害。在回合结束时，将甘道夫弃除。",
+      "quantity": 1
+    }
+  ],
+  "attachments": [
+    {
+      "code": "01017",
+      "name": "刚铎之盾",
+      "type_code": "attachment",
+      "sphere_code": "tactics",
+      "traits": "盔甲. 物品.",
+      "cost": 1,
+      "text": "受限。附属角色获得+1防御力。",
+      "quantity": 2
+    },
+    {
+      "code": "01018",
+      "name": "西尔凡之刃",
+      "type_code": "attachment",
+      "sphere_code": "tactics",
+      "traits": "物品. 武器.",
+      "cost": 1,
+      "text": "受限。附属角色获得+1攻击力。",
+      "quantity": 2
+    },
+    {
+      "code": "01019",
+      "name": "夫人的恩惠",
+      "type_code": "attachment",
+      "sphere_code": "spirit",
+      "traits": "恩惠.",
+      "cost": 1,
+      "text": "附属英雄获得+1意志力。",
+      "quantity": 2
+    },
+    {
+      "code": "01020",
+      "name": "黑暗中的光芒",
+      "type_code": "attachment",
+      "sphere_code": "lore",
+      "traits": "物品.",
+      "cost": 2,
+      "text": "行动：横置附属英雄，以选择一名角色。治疗该角色2点伤害。",
+      "quantity": 2
+    }
+  ],
+  "events": [
+    {
+      "code": "01021",
+      "name": "偷袭",
+      "type_code": "event",
+      "sphere_code": "leadership",
+      "cost": 2,
+      "text": "行动：从你的手牌中放置一名盟友进入游戏。在回合结束时，将该盟友返回你的手牌。",
+      "quantity": 2
+    },
+    {
+      "code": "01022",
+      "name": "佯攻",
+      "type_code": "event",
+      "sphere_code": "tactics",
+      "cost": 2,
+      "text": "选择一名敌人。该敌人在本阶段不能攻击。",
+      "quantity": 2
+    },
+    {
+      "code": "01023",
+      "name": "意志的考验",
+      "type_code": "event",
+      "sphere_code": "spirit",
+      "cost": 1,
+      "text": "响应：在遭遇牌被翻开后，取消其“翻开时”效果。",
+      "quantity": 2
+    },
+    {
+      "code": "01024",
+      "name": "伊姆拉崔斯的学识",
+      "type_code": "event",
+      "sphere_code": "lore",
+      "cost": 2,
+      "text": "行动：选择一名角色。治疗该角色3点伤害。",
+      "quantity": 2
+    },
+    {
+      "code": "01025",
+      "name": "甘道夫的查阅",
+      "type_code": "event",
+      "sphere_code": "lore",
+      "cost": 1,
+      "text": "行动：查看你牌组顶端的5张卡牌。将其中1张加入你的手牌，其余以任意顺序放回牌组顶端。",
+      "quantity": 2
+    },
+    {
+      "code": "01026",
+      "name": "拉达加斯特的狡黠",
+      "type_code": "event",
+      "sphere_code": "lore",
+      "cost": 1,
+      "text": "探险行动：选择探查区的一名敌人。直到本阶段结束，该敌人不贡献其威胁值。",
+      "quantity": 2
+    },
+    {
+      "code": "01027",
+      "name": "秘密路径",
+      "type_code": "event",
+      "sphere_code": "lore",
+      "cost": 1,
+      "text": "探险行动：选择探查区的一个地区。直到本阶段结束，该地区不贡献其威胁值。",
+      "quantity": 2
+    },
+    {
+      "code": "01028",
+      "name": "都林之门",
+      "type_code": "event",
+      "sphere_code": "lore",
+      "cost": 1,
+      "text": "行动：选择一名矮人角色。重整该角色。",
+      "quantity": 2
+    },
+    {
+      "code": "01029",
+      "name": "树民",
+      "type_code": "event",
+      "sphere_code": "lore",
+      "cost": 0,
+      "text": "行动：选择探查区的一名敌人。将你与该敌人的交战状态转移给另一位玩家。",
+      "quantity": 2
+    },
+    {
+      "code": "01030",
+      "name": "游侠的警示",
+      "type_code": "event",
+      "sphere_code": "spirit",
+      "cost": 1,
+      "text": "响应：在敌人攻击你之后，取消该次攻击。",
+      "quantity": 2
+    }
+  ],
+  "encounter_cards": [
+    {
+      "code": "01074",
+      "name": "国王蜘蛛",
+      "type_code": "enemy",
+      "traits": "生物. 蜘蛛.",
+      "text": "当国王蜘蛛攻击时，防守玩家必须从其手牌中弃除1张卡牌。",
+      "threat": 20,
+      "attack": 2,
+      "defense": 3,
+      "health": 3,
+      "quantity": 2
+    },
+    {
+      "code": "01075",
+      "name": "嗡嗡怪",
+      "type_code": "enemy",
+      "traits": "生物.",
+      "text": "强制：在嗡嗡怪与一名玩家交战后，该玩家必须提高其威胁值4点。",
+      "threat": 40,
+      "attack": 1,
+      "defense": 2,
+      "health": 3,
+      "quantity": 1
+    },
+    {
+      "code": "01076",
+      "name": "乌苟立安特的后裔",
+      "type_code": "enemy",
+      "traits": "生物. 蜘蛛.",
+      "text": "强制：在乌苟立安特的后裔从探查区移入交战区后，每位玩家必须提高其威胁值2点。",
+      "threat": 32,
+      "attack": 3,
+      "defense": 5,
+      "health": 9,
+      "quantity": 1
+    },
+    {
+      "code": "01089",
+      "name": "多尔哥多半兽人",
+      "type_code": "enemy",
+      "traits": "半兽人.",
+      "text": "当多尔哥多半兽人被消灭时，每位玩家必须提高其威胁值1点。",
+      "threat": 10,
+      "attack": 2,
+      "defense": 0,
+      "health": 3,
+      "quantity": 3
+    },
+    {
+      "code": "01090",
+      "name": "乌夫萨克酋长",
+      "type_code": "enemy",
+      "traits": "半兽人.",
+      "text": "强制：在乌夫萨克酋长与一名玩家交战后，该玩家必须将其手牌中的1张盟友卡牌弃除。",
+      "threat": 35,
+      "attack": 2,
+      "defense": 3,
+      "health": 6,
+      "quantity": 1
+    },
+    {
+      "code": "01091",
+      "name": "多尔哥多驯兽师",
+      "type_code": "enemy",
+      "traits": "半兽人.",
+      "text": "当多尔哥多驯兽师攻击时，其攻击力+1。",
+      "threat": 35,
+      "attack": 2,
+      "defense": 1,
+      "health": 5,
+      "quantity": 2
+    },
+    {
+      "code": "01096",
+      "name": "森林蜘蛛",
+      "type_code": "enemy",
+      "traits": "生物. 蜘蛛.",
+      "text": "当森林蜘蛛攻击时，防守玩家不能从其手牌中打出事件卡。",
+      "threat": 25,
+      "attack": 2,
+      "defense": 1,
+      "health": 4,
+      "quantity": 4
+    },
+    {
+      "code": "01097",
+      "name": "东湾巡逻兵",
+      "type_code": "enemy",
+      "traits": "半兽人.",
+      "text": "无",
+      "threat": 5,
+      "attack": 3,
+      "defense": 1,
+      "health": 2,
+      "quantity": 1
+    },
+    {
+      "code": "01098",
+      "name": "漆黑森林蝙蝠",
+      "type_code": "enemy",
+      "traits": "生物.",
+      "text": "当漆黑森林蝙蝠攻击时，防守玩家必须横置其控制的一名角色。",
+      "threat": 15,
+      "attack": 1,
+      "defense": 0,
+      "health": 2,
+      "quantity": 1
+    },
+    {
+      "code": "01103",
+      "name": "洞窟守卫",
+      "type_code": "enemy",
+      "traits": "亡灵.",
+      "text": "厄运 1. 暗影：选择并弃除你控制的一张附属卡。被弃除的目标卡返回探查区。（若此攻击未被防御，则弃除你控制的所有附属卡。）",
+      "threat": 2,
+      "attack": 2,
+      "defense": 1,
+      "health": 2,
+      "quantity": 2
+    },
+    {
+      "code": "01077",
+      "name": "大森林蛛网",
+      "type_code": "location",
+      "traits": "森林.",
+      "text": "强制：在大森林蛛网离开游戏后，每位玩家必须提高其威胁值1点。",
+      "threat": 2,
+      "quest_points": 2,
+      "quantity": 2
+    },
+    {
+      "code": "01078",
+      "name": "幽暗密林群山",
+      "type_code": "location",
+      "traits": "山地.",
+      "text": "当幽暗密林群山成为当前地区时，每位玩家必须提高其威胁值1点。",
+      "threat": 2,
+      "quest_points": 3,
+      "quantity": 3
+    },
+    {
+      "code": "01094",
+      "name": "死灵法师的关隘",
+      "type_code": "location",
+      "traits": "要塞.",
+      "text": "强制：在死灵法师的关隘成为当前地区后，每位玩家必须提高其威胁值2点。",
+      "threat": 3,
+      "quest_points": 2,
+      "quantity": 2
+    },
+    {
+      "code": "01095",
+      "name": "魔法溪流",
+      "type_code": "location",
+      "traits": "河流.",
+      "text": "当魔法溪流成为当前地区时，将其上的所有进度标记弃除。",
+      "threat": 2,
+      "quest_points": 2,
+      "quantity": 2
+    },
+    {
+      "code": "01099",
+      "name": "古老森林道路",
+      "type_code": "location",
+      "traits": "森林.",
+      "text": "行动：横置一个你控制的角色，以将1个进度标记放置在古老森林道路上。",
+      "threat": 1,
+      "quest_points": 3,
+      "quantity": 2
+    },
+    {
+      "code": "01100",
+      "name": "森林之门",
+      "type_code": "location",
+      "traits": "森林.",
+      "text": "当森林之门成为当前地区时，每位玩家必须提高其威胁值1点。",
+      "threat": 2,
+      "quest_points": 4,
+      "quantity": 2
+    },
+    {
+      "code": "01106",
+      "name": "无尽洞窟",
+      "type_code": "location",
+      "traits": "地牢.",
+      "text": "厄运 1. 涌动.",
+      "threat": 1,
+      "quest_points": 3,
+      "quantity": 2
+    },
+    {
+      "code": "01107",
+      "name": "塔楼大门",
+      "type_code": "location",
+      "traits": "地牢.",
+      "text": "在前往塔楼大门后，每位玩家将其牌组顶端的一张卡牌面朝下放置在其面前，如同它刚从探查区与其交战。这些卡牌被称为“半兽人守卫”，视为具有以下属性的敌人：1点生命值，1点攻击力，1点防御力。",
+      "threat": 2,
+      "quest_points": 1,
+      "quantity": 2
+    },
+    {
+      "code": "01079",
+      "name": "森林之眼",
+      "type_code": "treachery",
+      "text": "翻开时：每位玩家必须提高其威胁值2点。",
+      "quantity": 1
+    },
+    {
+      "code": "01080",
+      "name": "陷入蛛网",
+      "type_code": "treachery",
+      "text": "翻开时：将陷入蛛网附属到一位玩家控制的一位英雄上。受限。附属英雄获得 -2 意志力。",
+      "quantity": 2
+    },
+    {
+      "code": "01092",
+      "name": "为暗影所驱",
+      "type_code": "treachery",
+      "text": "翻开时：直到本阶段结束，探查区中每张卡牌的威胁值+1。",
+      "quantity": 1
+    },
+    {
+      "code": "01093",
+      "name": "死灵法师的魔爪",
+      "type_code": "treachery",
+      "text": "翻开时：对每位玩家控制的一个角色造成2点伤害。",
+      "quantity": 3
+    },
+    {
+      "code": "01104",
+      "name": "在暗影之下",
+      "type_code": "treachery",
+      "text": "翻开时：直到本阶段结束，探查区中的总威胁值提高X点，X为游戏中的玩家数量。",
+      "quantity": 2
+    },
+    {
+      "code": "01105",
+      "name": "铁镣铐",
+      "type_code": "treachery",
+      "text": "翻开时：将铁镣铐附属到起始玩家牌库顶端。（视为一张具有以下文本的状态附属：“下一次一位玩家将从附属牌库抽取1张或更多卡牌时，改为弃除铁镣铐。”）",
+      "quantity": 1
+    }
+  ],
+  "objective_cards": [
+    {
+      "code": "01108",
+      "name": "甘道夫的地图",
+      "type_code": "objective",
+      "traits": "物品.",
+      "text": "守护. 受限. 行动：当甘道夫的地图没有遭遇卡附属时，提高你的威胁值2点以认领此目标卡。认领后，将甘道夫的地图附属到你控制的一位英雄上。（视为一张附属卡。若被卸除，则将甘道夫的地图返回探查区。）附属英雄不能攻击或防御。",
+      "quantity": 1
+    },
+    {
+      "code": "01109",
+      "name": "地牢火炬",
+      "type_code": "objective",
+      "traits": "物品.",
+      "text": "守护. 受限. 行动：当地牢火炬没有遭遇卡附属时，提高你的威胁值2点以认领此目标卡。认领后，将地牢火炬附属到你控制的一位英雄上。（视为一张附属卡。若被卸除，则将地牢火炬返回探查区。）强制：在每轮结束时，提高附属英雄控制者的威胁值2点。",
+      "quantity": 1
+    },
+    {
+      "code": "01110",
+      "name": "暗影钥匙",
+      "type_code": "objective",
+      "traits": "物品.",
+      "text": "守护. 受限. 行动：当暗影钥匙没有遭遇卡附属时，提高你的威胁值2点以认领此目标卡。认领后，将暗影钥匙附属到你控制的一位英雄上。（视为一张附属卡。若被卸除，则将暗影钥匙返回探查区。）强制：在每轮结束时，附属英雄受到1点伤害。",
+      "quantity": 1
+    }
+  ],
+  "quest_cards": [
+    {
+      "code": "01128",
+      "name": "穿越黑森林 - 1A",
+      "type_code": "quest",
+      "text": "准备：从遭遇牌组中搜寻1张“古老森林道路”和1张“森林蜘蛛”，并将它们加入探查区。将遭遇牌组洗牌。",
+      "quest_points": 8
+    },
+    {
+      "code": "01129",
+      "name": "穿越黑森林 - 1B",
+      "type_code": "quest",
+      "text": "无",
+      "quest_points": 8
+    },
+    {
+      "code": "01130",
+      "name": "穿越黑森林 - 2A",
+      "type_code": "quest",
+      "text": "无",
+      "quest_points": 2
+    },
+    {
+      "code": "01131",
+      "name": "穿越黑森林 - 2B",
+      "type_code": "quest",
+      "text": "无",
+      "quest_points": 2
+    },
+    {
+      "code": "01132",
+      "name": "穿越黑森林 - 3A",
+      "type_code": "quest",
+      "text": "无",
+      "quest_points": 0
+    },
+    {
+      "code": "01133",
+      "name": "穿越黑森林 - 3B",
+      "type_code": "quest",
+      "text": "无",
+      "quest_points": 0
+    }
+  ]
+}
