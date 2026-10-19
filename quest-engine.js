@@ -1,11 +1,11 @@
 /* Core quest phase: explicit framework steps and per-card interruption windows. */
 const QuestRulesFactory=(H,R)=>{
- const need=(v,m)=>{if(!v)throw Error(m);},same=(a,b)=>String(a)===String(b),q=s=>s.phase===3?s.traveling:s.questing;
+ const need=(v,m)=>{if(!v)throw Error(m);},same=(a,b)=>String(a)===String(b),q=s=>s.phase===4?s.encountering:s.phase===3?s.traveling:s.questing;
  const alive=s=>s.players.filter(p=>!p.eliminated),chars=s=>R.chars(s),committed=s=>chars(s).filter(c=>c.state.committed);
- const log=(s,t)=>H.log(s,(s.phase===3?'旅行':'探险')+' · '+t),opt=c=>({value:String(c.uid),label:(c.meta?.nameZh||c.name||c.meta?.name)+' #'+c.uid});
+ const log=(s,t)=>H.log(s,(s.phase===4?'遭遇':s.phase===3?'旅行':'探险')+' · '+t),opt=c=>({value:String(c.uid),label:(c.meta?.nameZh||c.name||c.meta?.name)+' #'+c.uid});
  const field=(key,label,items)=>({key,label,options:items.map(opt)});
  const task=(s,kind,actor,payload={},optional=false)=>q(s).tasks.push({id:++s.serial,kind,actor,payload,optional});
- function check(s){need([2,3].includes(s.phase)&&q(s)?.round===s.round&&!q(s).completed&&s.status==='playing','当前没有进行中的探险阶段');need(!s.pending.length,'请先处理剧本事项');need(!q(s).queue.length,'请先处理卡牌响应');}
+ function check(s){need([2,3,4].includes(s.phase)&&q(s)?.round===s.round&&!q(s).completed&&s.status==='playing','当前没有进行中的探险阶段');need(!s.pending.length,'请先处理剧本事项');need(!q(s).queue.length,'请先处理卡牌响应');}
  function start(s){need(s.phase===2,'只能在第三阶段初始化探险');need(s.questing?.round!==s.round,'本回合探险阶段已经初始化，不能重复开始');need(s.players.every(p=>p.heroStates),'旧存档没有实际角色，请新开预组牌测试');const order=alive(s).map(p=>p.id).sort((a,b)=>(a-s.first+s.players.length)%s.players.length-(b-s.first+s.players.length)%s.players.length);s.questing={round:s.round,step:'beforeCommit',order,index:order.length,commitIndex:0,finalPasses:[],queue:[],tasks:[],remaining:[],closing:false,completed:false,revealed:0,encounterModifiers:[]};for(const c of chars(s))c.state.committed=false;log(s,'开始，投入前行动窗口开放');if(s.quest===125)for(const p of alive(s)){const x=p.playerDeck.shift();if(x)p.engaged.push({id:0,uid:x.uid,name:'兽人守卫',type:'Enemy',attack:1,defense:1,health:1,threat:0,synthetic:true,playerCard:x});}}
  function pass(s,pid){check(s);need(!q(s).tasks.length,'请先处理探险选择');R.passAction(s,pid);}
  function allPassed(s){return alive(s).every(p=>q(s).finalPasses.includes(p.id));}

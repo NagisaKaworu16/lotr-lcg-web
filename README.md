@@ -1,3 +1,9 @@
+# v0.10.0 当前验收入口
+
+完整解压并保留 assets，打开 index.html；第四阶段结束后进入第五阶段遭遇。先暂定主动交战或不交战，再全员二次确认；交战前后行动窗口沿用交流缓冲。第五阶段末停止，第六阶段待开发。同机1–4人，未联网。操作与规则见 phase5-acceptance.md，继续开发先读 PROJECT_MEMORY.md。
+
+以下保留既有版本说明与资料。
+
 > 项目记忆与版本管理：先读 [PROJECT_MEMORY.md](PROJECT_MEMORY.md)；协作约定见 [AGENTS.md](AGENTS.md)，Git使用见 [docs/GIT_WORKFLOW.md](docs/GIT_WORKFLOW.md)，历史见 [CHANGELOG.md](CHANGELOG.md)。统一检查命令：`python scripts/check_project.py`。
 
 # v0.9.0 · 第四阶段旅行验收版

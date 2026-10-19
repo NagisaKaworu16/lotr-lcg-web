@@ -4,8 +4,8 @@ const PlanningRulesFactory=(H)=>{
  const BASE=Object.fromEntries(S.cards.map(c=>[c.code,c]));
  const clone=x=>JSON.parse(JSON.stringify(x)),need=(v,m)=>{if(!v)throw Error(m);};
  const num=x=>Number(x),same=(a,b)=>String(a)===String(b);
- const context=s=>s.phase===3?s.traveling:s.phase===2?s.questing:s.planning;
- const log=(s,t)=>H.log(s,(s.phase===3?'旅行':s.phase===2?'探险':'计划')+' · '+t);
+ const context=s=>s.phase===4?s.encountering:s.phase===3?s.traveling:s.phase===2?s.questing:s.planning;
+ const log=(s,t)=>H.log(s,(s.phase===4?'遭遇':s.phase===3?'旅行':s.phase===2?'探险':'计划')+' · '+t);
  const alive=s=>s.players.filter(p=>!p.eliminated);
  function data(s,x){const p=s.players[x.owner??x.controller];return p?.heroCards?.find(c=>c.code===x.code)||p?.registeredDeck?.cards?.find(c=>c.code===x.code)||BASE[x.code];}
  function captured(s,p,index){return !s.rescued&&s.prisoner?.player===p&&s.prisoner?.hero===index;}
@@ -16,11 +16,11 @@ const PlanningRulesFactory=(H)=>{
  const find=(s,uid)=>[...chars(s),...attaches(s),...enemies(s),...locations(s)].find(c=>same(c.uid,uid));
  function attached(s,uid){return attaches(s).filter(c=>same(c.state.target,uid));}
  function traits(s,c){let t=c.meta.traits||'';if(attached(s,c.uid).some(a=>a.meta.code==='01026'))t+=' Gondor.';return t;}
- function stats(s,uid){const c=find(s,uid);need(c,'目标已不在场');let v={willpower:c.meta.willpower??0,attack:c.meta.attack??0,defense:c.meta.defense??0,health:c.meta.health??0,threat:c.meta.threat??0};if(c.meta.code==='01004')v.attack+=c.state.damage||0;
+ function stats(s,uid){const c=find(s,uid);need(c,'目标已不在场');let v={willpower:c.meta.willpower??0,attack:c.meta.attack??0,defense:c.meta.defense??0,health:c.meta.health??0,threat:c.meta.threat??0};if(c.kind==='enemy'&&c.state.forestSpiderRound===s.round)v.attack+=c.state.forestSpiderBonus??1;if(c.meta.code==='01004')v.attack+=c.state.damage||0;
   for(const a of attached(s,uid))switch(a.meta.code){case'01027':v.willpower+=2;break;case'01040':v.health+=4;break;case'01041':v.attack+=traits(s,c).includes('Dwarf.')?2:1;break;case'01055':v.willpower++;break;case'01056':v.threat--;break;case'01071':v.willpower--;break;}
   for(const m of s.phaseModifiers||[])if(m.round===s.round&&m.phase===s.phase&&m.targets.includes(c.uid))v[m.stat]+=m.amount;
-  if([2,3].includes(s.phase))for(const m of context(s)?.encounterModifiers||[]){const inStage=s.staging.some(x=>x.uid===c.uid);if(m.kind==='committed'&&c.state.committed||m.kind==='staging'&&inStage||m.kind==='stagingLocations'&&inStage&&c.kind==='location')v[m.stat]+=m.amount;}
-  if([2,3].includes(s.phase)&&context(s)?.ignoredThreat?.includes(c.uid))v.threat=0;
+  if([2,3,4].includes(s.phase))for(const m of context(s)?.encounterModifiers||[]){const inStage=s.staging.some(x=>x.uid===c.uid);if(m.kind==='committed'&&c.state.committed||m.kind==='staging'&&inStage||m.kind==='stagingLocations'&&inStage&&c.kind==='location')v[m.stat]+=m.amount;}
+  if([2,3,4].includes(s.phase)&&context(s)?.ignoredThreat?.includes(c.uid))v.threat=0;
   for(const k of Object.keys(v))v[k]=Math.max(0,v[k]);return v;
  }
  function icons(s,h){const a=[h.meta.sphere];if(h.meta.code==='01001'&&attached(s,h.uid).some(a=>a.meta.code==='01027'))a.push('spirit');return a;}
@@ -38,14 +38,15 @@ const PlanningRulesFactory=(H)=>{
  ]));
  function eventTiming(code){return EVENT_TIMING[code]||null;}
  function window(s){const pl=context(s);
-  if(s.status!=='playing'||s.setupPending||![1,2,3].includes(s.phase)||pl?.round!==s.round||pl.completed)return {kind:'closed',label:'未开放的执行窗口'};
+  if(s.status!=='playing'||s.setupPending||![1,2,3,4].includes(s.phase)||pl?.round!==s.round||pl.completed)return {kind:'closed',label:'未开放的执行窗口'};
   if(s.pending.length)return {kind:'framework',label:'剧本强制事项结算中'};
   const t=pl.queue[0];if(t)return {kind:'resolution',taskId:t.id,trigger:t.kind==='leaveResponses'&&t.payload.kind==='ally'?'allyLeaves':null,label:'响应／效果结算中：不能插入普通行动'};
-  if([2,3].includes(s.phase)&&pl.tasks?.length)return {kind:'framework',label:'探险响应／强制选择中'};
+  if([2,3,4].includes(s.phase)&&pl.tasks?.length)return {kind:'framework',label:'探险响应／强制选择中'};
   if(s.phase===2&&!['beforeCommit','afterCommit','afterStaging','afterResult'].includes(pl.step))return {kind:'framework',label:'探险步骤／遭遇结算中'};
+  if(s.phase===4&&!['beforeChecks','afterChecks'].includes(pl.step))return {kind:'framework',label:'交战选择／检定／强制效果结算中'};
   if(s.phase===3&&pl.step!=='action')return {kind:'framework',label:'旅行费用／旅行响应结算中'};
   if(pl.closing)return {kind:'framework',label:'阶段结束效果结算中'};
-  return {kind:'action',phase:s.phase,label:(s.phase===3?'旅行阶段':s.phase===2?'探险阶段':'计划阶段')+' · 玩家行动窗口'};
+  return {kind:'action',phase:s.phase,label:(s.phase===4?'遭遇阶段':s.phase===3?'旅行阶段':s.phase===2?'探险阶段':'计划阶段')+' · 玩家行动窗口'};
  }
  function requireEventWindow(s,code,responseTask){const timing=eventTiming(code);need(timing,'此事件尚未登记合法执行窗口');const w=window(s);
   if(timing.kind==='response'){need(responseTask&&context(s).queue[0]===responseTask&&w.taskId===responseTask.id&&w.trigger===timing.trigger,'当前没有该响应牌所要求的触发窗口：'+timing.label);return timing;}
@@ -53,10 +54,10 @@ const PlanningRulesFactory=(H)=>{
   need(timing.phase===undefined||timing.phase===s.phase,timing.label+'，计划阶段不能使用');return timing;
  }
  function start(s){if(!s.players.every(p=>p.heroStates))return;s.planning={round:s.round,order:alive(s).map(p=>p.id).sort((a,b)=>(a-s.first+s.players.length)%s.players.length-(b-s.first+s.players.length)%s.players.length),index:0,finalPasses:[],queue:[],closing:false,completed:false};log(s,'开始；由起始玩家依次打出盟友和附属');}
- function plan(s){need([1,2,3].includes(s.phase)&&!s.setupPending&&s.status==='playing','当前不是计划或探险阶段');need(context(s)?.round===s.round,'请按阶段正常进入');need(!context(s).completed,'本阶段已结算完成');return context(s);}
- function free(s){const p=plan(s);need(!p.actionLocked||p.executingAction,'正在执行全员确认的行动');need(!p.halted,p.halted);need(!p.closing,'正在结算计划阶段结束效果');need(!s.pending.length,'请先处理剧本待结算事项');need(!p.queue.length,'请先完成响应或强制选择');if([2,3].includes(s.phase))need(window(s).kind==='action','当前不是玩家行动窗口');return p;}
+ function plan(s){need([1,2,3,4].includes(s.phase)&&!s.setupPending&&s.status==='playing','当前不是计划或探险阶段');need(context(s)?.round===s.round,'请按阶段正常进入');need(!context(s).completed,'本阶段已结算完成');return context(s);}
+ function free(s){const p=plan(s);need(!p.actionLocked||p.executingAction,'正在执行全员确认的行动');need(!p.halted,p.halted);need(!p.closing,'正在结算计划阶段结束效果');need(!s.pending.length,'请先处理剧本待结算事项');need(!p.queue.length,'请先完成响应或强制选择');if([2,3,4].includes(s.phase))need(window(s).kind==='action','当前不是玩家行动窗口');return p;}
  function active(s){return context(s)?.order[context(s).index]??null;}
- function touch(s){context(s).finalPasses=[];if([2,3].includes(s.phase)&&!context(s).executingAction){context(s).actionApprovals=[];context(s).deploymentApprovals=[];}}
+ function touch(s){context(s).finalPasses=[];if([2,3,4].includes(s.phase)&&!context(s).executingAction){context(s).actionApprovals=[];context(s).deploymentApprovals=[];}}
  function useLimit(s,key){s.abilityUses??={};need(!s.abilityUses[key],'本轮／阶段使用次数已达上限');s.abilityUses[key]=true;}
  function used(s,key){return !!s.abilityUses?.[key];}
  function modifier(s,targets,stat,amount){s.phaseModifiers??=[];s.phaseModifiers.push({round:s.round,phase:s.phase,targets:[...targets],stat,amount});}
@@ -114,11 +115,12 @@ const PlanningRulesFactory=(H)=>{
  function draw(s,pid,n){const p=s.players[pid];const k=H.drawPlayer(s,p,n);log(s,`${p.name}抽${k}张牌`);}
  function ownerZone(s,x,name){return s.players[x.owner][name];}
  function putAlly(s,pid,x,played=false){const p=s.players[pid];const m=data(s,x);need(unique(s,m),'同名独特角色已在场');x.controller=pid;x.exhausted=false;x.damage=0;x.committed=false;p.allies.push(x);if(played)s.alliesPlayed=s.alliesPlayed?.round===s.round?{round:s.round,count:s.alliesPlayed.count+1}:{round:s.round,count:1};log(s,`${p.name}${played?'打出':'放入'}盟友「${m.nameZh}」，以重置状态入场`);if(['01015','01016','01018','01061','01073'].includes(m.code)||(m.code==='01059'&&played))queue(s,'entry',pid,{uid:x.uid,code:m.code});}
- function play(s,pid,uid,params={}){need(![2,3].includes(s.phase)||!context(s)?.discussion||context(s).executingAction,'请先暂定事件并由全员二次确认');const r=checkedPlay(s,pid,uid,params),{meta:m,instance:x}=r;spend(s,r.payment.pay);removeFrom(s.players[pid].hand,uid);touch(s);log(s,`${s.players[pid].name}支付${r.cost}资源：${Object.entries(r.payment.pay).map(([id,n])=>find(s,id).meta.nameZh+'−'+n).join('、')||'0费用'}`);
+ function play(s,pid,uid,params={}){need(![2,3,4].includes(s.phase)||!context(s)?.discussion||context(s).executingAction,'请先暂定事件并由全员二次确认');const r=checkedPlay(s,pid,uid,params),{meta:m,instance:x}=r;spend(s,r.payment.pay);removeFrom(s.players[pid].hand,uid);touch(s);log(s,`${s.players[pid].name}支付${r.cost}资源：${Object.entries(r.payment.pay).map(([id,n])=>find(s,id).meta.nameZh+'−'+n).join('、')||'0费用'}`);
   if(m.type==='ally')putAlly(s,pid,x,true);else if(m.type==='attachment'){x.controller=pid;x.target=num(params.target);x.exhausted=false;s.players[pid].attachments.push(x);log(s,`附加「${m.nameZh}」至${label(s,find(s,x.target))}`);if(restrictedOn(s,x.target).length>2)queue(s,'restricted',pid,{target:x.target},false);}
   else{applyEvent(s,pid,x,params);if(m.code==='01049')ownerZone(s,x,'playerRemoved').push(x);else ownerZone(s,x,'playerDiscard').push(x);}
   pump(s);return x;
  }
+ function engageEnemy(s,uid,pid){const p=s.players[pid],c=find(s,uid);need(p&&!p.eliminated&&c?.kind==='enemy','交战目标或玩家已失效');const old=alive(s).find(p=>p.engaged.some(e=>same(e.uid,uid)));need(old?.id!==pid,'该敌人已与你交战');if(old)removeFrom(old.engaged,uid);else removeFrom(s.staging,uid);p.engaged.push(c.state);if(c.state.id===75)queue(s,'hummer',pid,{},false);if(c.state.id===96){c.state.forestSpiderBonus=(c.state.forestSpiderRound===s.round?(c.state.forestSpiderBonus??1):0)+1;c.state.forestSpiderRound=s.round;}log(s,p.name+'与「'+c.state.name+'」交战');}
  function changeThreat(s,pid,n){const p=s.players[pid];p.threat=Math.max(0,p.threat+n);log(s,`${p.name}威胁${n>=0?'+':''}${n} → ${p.threat}`);if(p.threat>=50)eliminate(s,pid);}
  function eliminate(s,pid){const p=s.players[pid];if(p.eliminated)return;const characterIds=(p.heroStates||[]).filter(h=>!h.destroyed).map(h=>h.uid).concat(p.allies.map(c=>c.uid));const attachments=[...attaches(s)].filter(a=>a.controller===pid||characterIds.includes(a.state.target));
   for(const a of attachments){const list=s.players[a.controller].attachments;if(list.some(c=>c.uid===a.uid)){removeFrom(list,a.uid);ownerZone(s,a.state,'playerDiscard').push(a.state);}}
@@ -187,7 +189,7 @@ const PlanningRulesFactory=(H)=>{
   if(c.meta.code==='01070')need((s.abilityUses?.[`${uid}:protector:${s.round}:${s.phase}`]||0)<3,'本阶段已达到3次上限');
   r.legal=true;
  }catch(e){r.reason=e.message;}return r;}
- function activate(s,pid,uid,a={}){need(![2,3].includes(s.phase)||!context(s)?.discussion||context(s).executingAction,'请先暂定能力并由全员二次确认');const r=abilitySpec(s,pid,uid,a);need(r.legal,r.reason);chosen(r.fields,a);const c=r.source,code=c.meta.code;touch(s);
+ function activate(s,pid,uid,a={}){need(![2,3,4].includes(s.phase)||!context(s)?.discussion||context(s).executingAction,'请先暂定能力并由全员二次确认');const r=abilitySpec(s,pid,uid,a);need(r.legal,r.reason);chosen(r.fields,a);const c=r.source,code=c.meta.code;touch(s);
   if(['01010','01012','01014','01026','01057','01058','01060','01062','01072'].includes(code))c.state.exhausted=true;
   switch(code){
    case'01007':useLimit(s,`${uid}:eowyn:${pid}:${s.round}`);s.players[pid].playerDiscard.push(removeFrom(s.players[pid].hand,a.discard));modifier(s,[c.uid],'willpower',1);break;
@@ -237,7 +239,7 @@ const PlanningRulesFactory=(H)=>{
    if(r.type==='horn')find(s,find(s,r.uid).state.target).state.resources++;if(r.type==='brok')putAlly(s,r.pid,removeFrom(s.players[r.pid].hand,r.uid));if(r.type==='sacrifice'){spend(s,pay.pay);const x=removeFrom(s.players[r.pid].hand,r.uid);draw(s,t.payload.controller,2);ownerZone(s,x,'playerDiscard').push(x);}pump(s);return;}
   pl.queue.shift();const d=t.payload,pid=t.actor;
   if(t.kind==='entry')switch(d.code){
-   case'01015':{const e=find(s,a.target),old=alive(s).find(p=>p.engaged.some(c=>c.uid===e.uid));if(old)removeFrom(old.engaged,e.uid);else removeFrom(s.staging,e.uid);s.players[pid].engaged.push(e.state);if(e.state.id===75)queue(s,'hummer',pid,{},false);if(e.state.id===96)e.state.forestSpiderRound=s.round;break;}
+   case'01015':{engageEnemy(s,a.target,pid);break;}
    case'01016':locationProgress(s,num(a.target),1);break;
    case'01018':for(const e of enemies(s).filter(e=>(e.meta.traits||'').includes('Orc.')))damageEnemy(s,e.uid,1);break;
    case'01059':{const p=alive(s).find(p=>p.playerDiscard.some(c=>same(c.uid,a.card)));const x=removeFrom(p.playerDiscard,a.card);ownerZone(s,x,'hand').push(x);break;}
@@ -260,8 +262,8 @@ const PlanningRulesFactory=(H)=>{
  function endTurn(s,pid){const p=free(s);need(active(s)===pid,'只有当前计划玩家可结束自己的出牌步骤');p.index++;touch(s);log(s,s.players[pid].name+'结束盟友／附属出牌步骤');}
  function passAction(s,pid){const pl=free(s);need(active(s)===null,'须先由每位玩家结束盟友／附属出牌步骤');need(alive(s).some(p=>p.id===pid),'无效玩家');need(!pl.finalPasses.includes(pid),'该玩家已经放弃剩余行动');pl.finalPasses.push(pid);log(s,s.players[pid].name+'放弃本阶段剩余行动');}
  function applyEnd(s,e){s.delayedEffects=s.delayedEffects.filter(x=>x.id!==e.id);if(find(s,e.uid)?.kind==='ally')leaveAlly(s,e.uid,e.kind==='beorn'?'playerDeck':'hand');}
- function complete(s){s.phaseModifiers=(s.phaseModifiers||[]).filter(m=>m.round!==s.round||m.phase!==s.phase);s.phasePermissions=(s.phasePermissions||[]).filter(m=>m.round!==s.round||m.phase!==s.phase);context(s).completed=true;context(s).closing=false;if(s.phase===3){context(s).step='completed';context(s).encounterModifiers=[];context(s).ignoredThreat=[];s.phaseThreat=0;}if(s.phase===2){context(s).step='completed';context(s).encounterModifiers=[];context(s).ignoredThreat=[];for(const c of chars(s))c.state.committed=false;s.phaseThreat=0;for(const c of s.staging)delete c.bonus;}log(s,'本阶段结束效果结算完成');}
- function finish(s){const pl=plan(s);need(!pl.halted,pl.halted);need(!pl.queue.length,'请先结算响应');if(!pl.closing){if(s.phase===3)need(pl.step==='action','旅行尚未结算');else if(s.phase===2)need(pl.step==='afterResult','探险尚未结算');else need(active(s)===null,'请先由每位玩家结束计划出牌步骤');need(alive(s).every(p=>pl.finalPasses.includes(p.id)),'请让每位玩家确认放弃剩余行动');pl.closing=true;pl.endEffects=(s.delayedEffects||[]).filter(e=>e.round===s.round&&e.phase===s.phase);}pump(s);return pl.completed;}
- return {icons,checkedPlay,damageCharacter,damageEnemy,locationProgress,modifier,changeThreat,queue,pump,spend,draw,putAlly,context,eventTiming,window,start,active,playSpec,play,abilitySpec,activate,abilities,choiceSpec,resolveChoice,endTurn,passAction,finish,chars,attaches,enemies,locations,stats,find,data,payment,restrictedOn};
+ function complete(s){s.phaseModifiers=(s.phaseModifiers||[]).filter(m=>m.round!==s.round||m.phase!==s.phase);s.phasePermissions=(s.phasePermissions||[]).filter(m=>m.round!==s.round||m.phase!==s.phase);context(s).completed=true;context(s).closing=false;if([3,4].includes(s.phase)){context(s).step='completed';context(s).encounterModifiers=[];context(s).ignoredThreat=[];s.phaseThreat=0;}if(s.phase===2){context(s).step='completed';context(s).encounterModifiers=[];context(s).ignoredThreat=[];for(const c of chars(s))c.state.committed=false;s.phaseThreat=0;for(const c of s.staging)delete c.bonus;}log(s,'本阶段结束效果结算完成');}
+ function finish(s){const pl=plan(s);need(!pl.halted,pl.halted);need(!pl.queue.length,'请先结算响应');if(!pl.closing){if(s.phase===4)need(pl.step==='afterChecks','交战检定尚未结束');else if(s.phase===3)need(pl.step==='action','旅行尚未结算');else if(s.phase===2)need(pl.step==='afterResult','探险尚未结算');else need(active(s)===null,'请先由每位玩家结束计划出牌步骤');need(alive(s).every(p=>pl.finalPasses.includes(p.id)),'请让每位玩家确认放弃剩余行动');pl.closing=true;pl.endEffects=(s.delayedEffects||[]).filter(e=>e.round===s.round&&e.phase===s.phase);}pump(s);return pl.completed;}
+ return {engageEnemy,icons,checkedPlay,damageCharacter,damageEnemy,locationProgress,modifier,changeThreat,queue,pump,spend,draw,putAlly,context,eventTiming,window,start,active,playSpec,play,abilitySpec,activate,abilities,choiceSpec,resolveChoice,endTurn,passAction,finish,chars,attaches,enemies,locations,stats,find,data,payment,restrictedOn};
 };
 if(typeof module!=='undefined')module.exports=PlanningRulesFactory;
