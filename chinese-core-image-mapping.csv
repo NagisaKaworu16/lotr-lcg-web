@@ -1,0 +1,74 @@
+﻿code,name,nameZhCard,nameZhGame,type,sphere,cost,threat,imageUrl,sourceImage,sourceId,sha256,verification
+01001,Aragorn,阿拉贡,阿拉贡,hero,leadership,,12,assets/cards-zh-core/01001.jpg,cards/0752_英雄_阿拉贡.jpg,752,7493f53d47ffd6fae3ef21ba77956335f3b682f35c422fc7ecae866d04d9ed99,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01002,Théodred,希奥杰德,希奥德雷德,hero,leadership,,8,assets/cards-zh-core/01002.jpg,cards/0751_英雄_希奥杰德.jpg,751,554cd75fbb7ff41d5a7e3e053152d56f8151a59b883047141f911f25feef5255,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01003,Glóin,格罗因,葛罗因,hero,leadership,,9,assets/cards-zh-core/01003.jpg,cards/0748_英雄_格罗因.jpg,748,1b28da8cf9c6fb9fb56e02ee978411275b0ed67439208c1f100f6e930296b00d,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01004,Gimli,吉姆利,金雳,hero,tactics,,11,assets/cards-zh-core/01004.jpg,cards/0749_英雄_吉姆利.jpg,749,b07c6e2891438c2fcc4a235cfbf40e1825cd95d98620394a2eba0f8efbf48adc,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01005,Legolas,莱戈拉斯,莱戈拉斯,hero,tactics,,9,assets/cards-zh-core/01005.jpg,cards/0750_英雄_莱戈拉斯.jpg,750,05ae7d90d2b9fef44b0bbfdf44df44c86b1c76c0a9e27d274e2877ca075cf45e,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01006,Thalin,沙林,沙林,hero,tactics,,9,assets/cards-zh-core/01006.jpg,cards/0745_英雄_沙林.jpg,745,4951a7214ce5b46329be51fe67e8ec8ea0bce7464bef5d937be6315acc7cbe63,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01007,Éowyn,伊奥温,伊欧玟,hero,spirit,,9,assets/cards-zh-core/01007.jpg,cards/0747_英雄_伊奥温.jpg,747,a47937cf322431bd07b5dbf6cfffde34d05a4557223ea3489ca2e70b60f2073b,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01008,Eleanor,埃莉诺,埃莉诺,hero,spirit,,7,assets/cards-zh-core/01008.jpg,cards/0746_英雄_埃莉诺.jpg,746,58d2ab343b4abe61ce799f102e473414bcb4d04f15dd87133da5022e8aa699d0,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01009,Dúnhere,敦赫雷,杜内希尔,hero,spirit,,8,assets/cards-zh-core/01009.jpg,cards/0753_英雄_敦赫雷.jpg,753,90d060d428e47dd88d116da08ae77b002bc3ddaba5ceefa367fd17b86711ef8c,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01010,Denethor,德内梭尔,丹内梭尔,hero,lore,,8,assets/cards-zh-core/01010.jpg,cards/0734_英雄_德内梭尔.jpg,734,72170769c4a5394a7f4a6e34574e635382614b13c8bbd09e805f896b39d11300,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01011,Glorfindel,格罗芬德尔,葛罗芬戴尔,hero,lore,,12,assets/cards-zh-core/01011.jpg,cards/0744_英雄_格罗芬德尔.jpg,744,493eeec13af2642dcf8a541e959277cff29e4fcff1d322bb6a1d899106a0e792,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01012,Beravor,贝拉芙,贝拉沃,hero,lore,,10,assets/cards-zh-core/01012.jpg,cards/0733_英雄_贝拉芙.jpg,733,0ae2ef335dd91ac615563e523643fadfa6b2b54a383e9b1b0d0e42072f2fc7cf,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01013,Guard of the Citadel,王城禁卫,城堡卫兵,ally,leadership,2,,assets/cards-zh-core/01013.jpg,cards/0732_盟友_王城禁卫.jpg,732,bd4e3c72568448e6e050fb913197380a03c03dc46d3ed627029b3bc541063220,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01014,Faramir,法拉米尔,法拉米尔,ally,leadership,4,,assets/cards-zh-core/01014.jpg,cards/0730_盟友_法拉米尔.jpg,730,e1e55c9ce87ea43eab861807024c0775256ca81edd0202e8ab7b4c7161473038,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01015,Son of Arnor,阿尔诺之子,阿尔诺之子,ally,leadership,3,,assets/cards-zh-core/01015.jpg,cards/0729_盟友_阿尔诺之子.jpg,729,8b388050dd623f38e8992a6cf9de7f44377f0b746bd309d6076a58db54a5cd3c,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01016,Snowbourn Scout,雪河斥候,雪鬃河侦察兵,ally,leadership,1,,assets/cards-zh-core/01016.jpg,cards/0731_盟友_雪河斥候.jpg,731,ff34d7bc696c686c8f20fee3391bcd297a723801f621a85e6a2db22cd599593c,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01017,Silverlode Archer,银脉河弓手,银脉河弓手,ally,leadership,3,,assets/cards-zh-core/01017.jpg,cards/0742_盟友_银脉河弓手.jpg,742,7c230d3f59392124c0c9b7545bb5abc23b157cd1966da97eab43efb3a58d0e98,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01018,Longbeard Orc Slayer,长须奥克屠戮者,长须兽人杀手,ally,leadership,4,,assets/cards-zh-core/01018.jpg,cards/0740_盟友_长须奥克屠戮者.jpg,740,f1a208e16e4b856fc4abbefdb236294a557961bc210a0db1cb334af3822dbfc5,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01019,Brok Ironfist,布洛克·铁拳,布洛克铁拳,ally,leadership,6,,assets/cards-zh-core/01019.jpg,cards/0739_盟友_布洛克·铁拳.jpg,739,016d7fb84f5406aa7f94b9de1f5ac9b81e28ea6d0d3e60437082fcf06a427d6c,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01020,Ever Vigilant,保持警惕,时刻警惕,event,leadership,1,,assets/cards-zh-core/01020.jpg,cards/0737_事件_保持警惕.jpg,737,b3a36bdb10f0750cde5c7763d2b9ae8090556aeb3992e53844d362e8b0817cca,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01021,Common Cause,同心协力,共同事业,event,leadership,0,,assets/cards-zh-core/01021.jpg,cards/0738_事件_同心协力.jpg,738,47990cf275ced53b1fada5cf370332cf7da04cb64fe6c18c2832da4101d72e08,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01022,For Gondor!,刚铎万岁,为了刚铎,event,leadership,2,,assets/cards-zh-core/01022.jpg,cards/0741_事件_刚铎万岁.jpg,741,7d09af7fd132b2934ff3e7f6192950000eb2305e9477ddbbabdf8af7feb078e2,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01023,Sneak Attack,偷袭,偷袭,event,leadership,1,,assets/cards-zh-core/01023.jpg,cards/0736_事件_偷袭.jpg,736,2a875420b7f375078c6ca75488dd6bca9b73e154adc65058c4d5b4d25b9b1ddb,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01024,Valiant Sacrifice,英勇牺牲,英勇牺牲,event,leadership,1,,assets/cards-zh-core/01024.jpg,cards/0735_事件_英勇牺牲.jpg,735,0182f52f13178f6ce2c5a3d7c84a391ed62c8d7883604298bc8ed28fc902e0b9,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01025,Grim Resolve,坚定的决心,坚定决心,event,leadership,5,,assets/cards-zh-core/01025.jpg,cards/0718_事件_坚定的决心.jpg,718,6ae4f590747a7d051dd4c96490f2b4a45ebaa2f2e00b7a495e8abf50b07d2036,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01026,Steward of Gondor,刚铎宰相,刚铎宰相,attachment,leadership,2,,assets/cards-zh-core/01026.jpg,cards/0743_附属_刚铎宰相.jpg,743,1a60af15d8d50e4018124e14e691bf5eb4f842fda58921accfcceb5673847b3b,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01027,Celebrían's Stone,凯勒布莉安的宝石,凯勒布莉安之石,attachment,leadership,2,,assets/cards-zh-core/01027.jpg,cards/0728_附属_凯勒布莉安的宝石.jpg,728,8c3f7802b777a3b5f6a57d6dce4588e240d410bd8a4e50683697dd84c787e83f,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01028,Veteran Axehand,老练的斧手,老练斧手,ally,tactics,2,,assets/cards-zh-core/01028.jpg,cards/0717_盟友_老练的斧手.jpg,717,576bf9d633281fb1f1ab11121160ba857e328c24931f0a3b832587d2f0fb0bbe,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01029,Gondorian Spearman,刚铎长矛手,刚铎长矛兵,ally,tactics,2,,assets/cards-zh-core/01029.jpg,cards/0715_盟友_刚铎长矛手.jpg,715,b93f4cea7bf06f059ea60fa90abebb2495bdefcb809f33aa1542d9e608beb0ae,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01030,Horseback Archer,弓骑兵,骑马弓手,ally,tactics,3,,assets/cards-zh-core/01030.jpg,cards/0713_盟友_弓骑兵.jpg,713,464fb94f937c065f8f91550419c7195e1e8328c0795fab5c2acf95ad8bf82e1f,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01031,Beorn,贝奥恩,比翁,ally,tactics,6,,assets/cards-zh-core/01031.jpg,cards/0716_盟友_贝奥恩.jpg,716,0ee6866393d41bd69e5a9f803450afef6b5ec7c12f9477e76ce9a10d46b3809d,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01032,Blade Mastery,精于剑术,剑术精通,event,tactics,1,,assets/cards-zh-core/01032.jpg,cards/0712_事件_精于剑术.jpg,712,a9a53b61e1826cf83fca27d654668591342b02650a31f1481ae57d9a3feff5bb,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01033,Rain of Arrows,箭雨,箭雨,event,tactics,1,,assets/cards-zh-core/01033.jpg,cards/0714_事件_箭雨.jpg,714,744400c0c03198c67a22a6ce7be2c14c9c3173f858d5370454b1538280940ce3,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01034,Feint,佯攻,佯攻,event,tactics,1,,assets/cards-zh-core/01034.jpg,cards/0726_事件_佯攻.jpg,726,0fd7dd3747c53be232a6b76692b7981f29b84600f478d1be623339899b6d1959,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01035,Quick Strike,先发制人,迅捷打击,event,tactics,1,,assets/cards-zh-core/01035.jpg,cards/0725_事件_先发制人.jpg,725,648d947fcce8633502df101c1eab1b2a13e09f73f37d2f1985f5a4d68f3098ef,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01036,Thicket of Spears,密集的长矛,长矛之林,event,tactics,3,,assets/cards-zh-core/01036.jpg,cards/0723_事件_密集的长矛.jpg,723,d907673914c80e2c1f73282152e20c324de36f7115526947090c6b4ac3be5c81,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01037,Swift Strike,迅猛一击,快速反击,event,tactics,2,,assets/cards-zh-core/01037.jpg,cards/0722_事件_迅猛一击.jpg,722,a947c615767e5dcfa492fcfa9094cdb505f57a60523a9c8d8677fd4186cf53fd,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01038,Stand Together,并肩作战,并肩作战,event,tactics,0,,assets/cards-zh-core/01038.jpg,cards/0721_事件_并肩作战.jpg,721,e1390e3355499f383a1d44b6ddb1796da365ec4e11bcc79842c7052d952eb572,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01039,Blade of Gondolin,刚多林剑,刚多林之刃,attachment,tactics,1,,assets/cards-zh-core/01039.jpg,cards/0720_附属_刚多林剑.jpg,720,635f4929f2569a7bf043ab68e9b61a2cde55ba19f2dad2f86839f96636eff347,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01040,Citadel Plate,王城板甲,城堡板甲,attachment,tactics,4,,assets/cards-zh-core/01040.jpg,cards/0724_附属_王城板甲.jpg,724,aa16c928d1b89535c5aec357e640712b97ee5fe31efab6c53b8cf7f24fe1278d,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01041,Dwarven Axe,矮人斧,矮人战斧,attachment,tactics,2,,assets/cards-zh-core/01041.jpg,cards/0719_附属_矮人斧.jpg,719,6ae68a02eef60e38d06faccef10c554250f2894f0ebc92dd90db0b64aa3c9d09,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01042,Horn of Gondor,刚铎号角,刚铎号角,attachment,tactics,1,,assets/cards-zh-core/01042.jpg,cards/0711_附属_刚铎号角.jpg,711,5cd47bf7f8ffa7da0340344e54e956489de8995ae64da9d4c9322ea87626f5dc,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01043,Wandering Took,漫游的图克,流浪的图克,ally,spirit,2,,assets/cards-zh-core/01043.jpg,cards/0707_盟友_漫游的图克.jpg,707,4fa80259ef5f10a25a0571a2a34aeb7036e6f708d98deba2c8356ebd4a865e40,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01044,Lórien Guide,罗瑞恩向导,洛瑞恩向导,ally,spirit,3,,assets/cards-zh-core/01044.jpg,cards/0727_盟友_罗瑞恩向导.jpg,727,395f9680e509527682f275fcccb2a2cc1841d17219f3018d987b9b44dc6aeddd,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01045,Northern Tracker,北方的追踪者,北方追踪者,ally,spirit,4,,assets/cards-zh-core/01045.jpg,cards/0709_盟友_北方的追踪者.jpg,709,976eaa26667d88f2f202fef4cd2b6171c2be54e383ac728e23178547e82759d0,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01046,The Galadhrim's Greeting,加拉兹民的问候,加拉兹民的问候,event,spirit,3,,assets/cards-zh-core/01046.jpg,cards/0708_事件_加拉兹民的问候.jpg,708,4f0a4bbf199db6868b827f7040574632e703949a8e01b057f085fede16031950,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01047,Strength of Will,意志之力,意志之力,event,spirit,0,,assets/cards-zh-core/01047.jpg,cards/0704_事件_意志之力.jpg,704,9bb783245bf95b8b8d2f34867358a8f79a364a7cc8bccc6e587a05c2fd64ae10,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01048,Hasty Stroke,仓促的攻击,仓促一击,event,spirit,1,,assets/cards-zh-core/01048.jpg,cards/0705_事件_仓促的攻击.jpg,705,3fc212536fc57255cb5b9e8f946e368f71edf0f73635b571dfaaa097eb8d56ee,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01049,Will of the West,西方的意志,西方意志,event,spirit,1,,assets/cards-zh-core/01049.jpg,cards/0706_事件_西方的意志.jpg,706,bfa42128754ecfe6f97fc2e9bac1bc74187bc2471b260f79b278df4554c11717,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01050,A Test of Will,意志的考验,意志考验,event,spirit,1,,assets/cards-zh-core/01050.jpg,cards/0635_事件_意志的考验.jpg,635,9a6d331471a4b07c2a4b2414968c0dda4584e70d25b7fe8327c071c0f66b7793,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。 图面为重印版，底部印刷编号不同，但对应同一基础版卡牌。
+01051,Stand and Fight,奋起战斗,挺身战斗,event,spirit,X,,assets/cards-zh-core/01051.jpg,cards/0703_事件_奋起战斗.jpg,703,a2cbaa11d9ab1d3595a134c69c6adb90897b56271bb511f8815c3e3de174ecc7,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01052,A Light in the Dark,黑暗中的光芒,黑暗中的光,event,spirit,2,,assets/cards-zh-core/01052.jpg,cards/0701_事件_黑暗中的光芒.jpg,701,55a94b56caa5c24bb1efd338b4db87033d8938c1120addd1e85af16f2e0485a7,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01053,Dwarven Tomb,矮人坟墓,矮人墓穴,event,spirit,1,,assets/cards-zh-core/01053.jpg,cards/0702_事件_矮人坟墓.jpg,702,67d6d37a6b240a2963910a06b07e19bef26fbcdb6db4d9f1548d0d30fd4d7645,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01054,Fortune or Fate,运气或命运,命运与机遇,event,spirit,5,,assets/cards-zh-core/01054.jpg,cards/0710_事件_运气或命运.jpg,710,e28bebc48f7d978b0b28f863a80fef0a51f52988121d8b63a4837398a61a7539,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01055,The Favor of the Lady,夫人的眷顾,夫人的恩惠,attachment,spirit,2,,assets/cards-zh-core/01055.jpg,cards/0699_附属_夫人的眷顾.jpg,699,397408df9ae3c87ef903410325813b1a45ba9d8e392be9619b758c90d87d4f0a,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01056,Power in the Earth,大地的力量,大地之力,attachment,spirit,1,,assets/cards-zh-core/01056.jpg,cards/0698_附属_大地的力量.jpg,698,a79690962b86caa97ebb4303f92605c253d8dfb68535f89121238736d802bb3d,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01057,Unexpected Courage,突来勇气,意外的勇气,attachment,spirit,2,,assets/cards-zh-core/01057.jpg,cards/0697_附属_突来勇气.jpg,697,11d735809cff689aa58eade6a6aeec63c7920ca1c1e93625149772734829674f,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01058,Daughter of the Nimrodel,宁洛德尔之女,宁洛德尔之女,ally,lore,3,,assets/cards-zh-core/01058.jpg,cards/0696_盟友_宁洛德尔之女.jpg,696,ff1cdf2ec8ea87a8590ebd55c96a07cfc77df6b1e7abf0806d6bc1aba5497ec3,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01059,Erebor Hammersmith,埃瑞博铁匠,埃瑞博铁匠,ally,lore,2,,assets/cards-zh-core/01059.jpg,cards/0695_盟友_埃瑞博铁匠.jpg,695,34b81007511bfa96671c19027c51b965b789c46239edd510ad37dffbb6a8c37c,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01060,Henamarth Riversong,赫纳玛斯·河曲,汉纳玛斯河歌,ally,lore,1,,assets/cards-zh-core/01060.jpg,cards/0694_盟友_赫纳玛斯·河曲.jpg,694,f9f50ee41247fe2bf0cf8d9daf60937e2870292ee8f5bcf2170c52e9f21f5d9a,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01061,Miner of the Iron Hills,铁丘陵矿工,铁丘陵矿工,ally,lore,2,,assets/cards-zh-core/01061.jpg,cards/0693_盟友_铁丘陵矿工.jpg,693,4edd0a0fcb700a31f40f896231e292c5e965ba39bba828173b3f047595992af1,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01062,Gléowine,格利奥威奈,格雷温,ally,lore,2,,assets/cards-zh-core/01062.jpg,cards/0692_盟友_格利奥威奈.jpg,692,3671872a19fbf77fd462efdba19d6efcb228fb58502eb4eea78576d98536189e,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01063,Lore of Imladris,伊姆拉缀斯的学识,伊姆拉缀斯的医术,event,lore,2,,assets/cards-zh-core/01063.jpg,cards/0700_事件_伊姆拉缀斯的学识.jpg,700,866bbba7678a8426d2c129d12a080a6d48746d303841f2633a7fa4975ae6a5d1,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01064,Lórien's Wealth,罗瑞恩的财富,洛瑞恩的财富,event,lore,3,,assets/cards-zh-core/01064.jpg,cards/0691_事件_罗瑞恩的财富.jpg,691,22258118c9f5df47f8f6ce2084d3c63981cdacc9d0e075b349bb184b716d064a,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01065,Radagast's Cunning,拉达加斯特的机敏,瑞达加斯特的计谋,event,lore,1,,assets/cards-zh-core/01065.jpg,cards/0689_事件_拉达加斯特的机敏.jpg,689,3eb7486ec5f9c0a1b7ad3a10cb880b9fac0bdc0a479cc900d69b19e4547634f6,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01066,Secret Paths,秘径,秘密小径,event,lore,1,,assets/cards-zh-core/01066.jpg,cards/0687_事件_秘径.jpg,687,7f93a86061a48594619e3e1492fc9e65d65ea8186363b32e44974915142f5763,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01067,Gandalf's Search,甘道夫的查阅,甘道夫的搜寻,event,lore,X,,assets/cards-zh-core/01067.jpg,cards/0685_事件_甘道夫的查阅.jpg,685,837f8e31fa05e6c3a01f02c49fc9c92996f88fcff289c8f9bc91e4cd9ced89a4,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01068,Beorn's Hospitality,贝奥恩的款待,比翁的款待,event,lore,5,,assets/cards-zh-core/01068.jpg,cards/0684_事件_贝奥恩的款待.jpg,684,b8f5eebca58109a5fffebe9b86701781d1863621be0e9d9ee66436f28b48ea61,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01069,Forest Snare,森林罗网,森林陷阱,attachment,lore,3,,assets/cards-zh-core/01069.jpg,cards/0688_附属_森林罗网.jpg,688,12f1cf6e78d4c6d39bbbd6eee055c59798590c3dbbc1acdff53612da57cd3c8e,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01070,Protector of Lórien,罗瑞恩的保护者,洛瑞恩守护者,attachment,lore,1,,assets/cards-zh-core/01070.jpg,cards/0686_附属_罗瑞恩的保护者.jpg,686,6eada068330fa1b2365de4adeb5c1e85ce34ac6a440e151697b757279bb2c69a,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01071,Dark Knowledge,黑暗知识,黑暗知识,attachment,lore,1,,assets/cards-zh-core/01071.jpg,cards/0682_附属_黑暗知识.jpg,682,ee658606a2acceaa8419c1dcf77000e8ca2f37b7018b84444d7e5f4f71cc84a1,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01072,Self Preservation,自我保护,自我保全,attachment,lore,3,,assets/cards-zh-core/01072.jpg,cards/0683_附属_自我保护.jpg,683,00dd327b60240e03d833f518331598b4adac05bb1dfb94c28960bb7390e485e1,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
+01073,Gandalf,甘道夫,甘道夫,ally,neutral,5,,assets/cards-zh-core/01073.jpg,cards/0690_盟友_甘道夫.jpg,690,fb557671bf27beb1c3001abf4c47012da9a7469f87120d4e3802e1f1f36fdb55,按名称、类型、领域、费用／英雄威胁及能力核对；保留原图。
