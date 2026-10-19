@@ -2,7 +2,7 @@ const TravelUI=(()=>{
  const E=ScenarioEngine,T=E.traveling,R=E.planning,Q=E.questing,esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const b=(label,kind,args='',disabled=false)=>`<button data-action="travelFlow" data-travel="${kind}" ${args} ${disabled?'disabled':''}>${esc(label)}</button>`;
  function panel(s,pid){if(s.phase!==3||!s.traveling)return '';const x=s.traveling,actor=s.players[pid]&&!s.players[pid].eliminated?pid:s.first,ch=R.choiceSpec(s),sp=x.tasks[0]?.kind==='travelResponses'?T.responseSpec(s):Q.spec(s);let body='';
-  if(x.completed)return '<section class="panel deck-valid"><h2>阶段4 · 旅行阶段验收完成</h2><p>第五阶段遭遇尚未开放。当前地点、资源和角色状态保留，不会重新进入第三阶段。</p></section>';
+  if(x.completed)return '<section class="panel deck-valid"><h2>阶段4 · 旅行阶段验收完成</h2><p>当前地点、资源和角色状态保留。点击下方「进入第五阶段 · 遭遇」继续。</p></section>';
   if(ch)body+=`<div class="notice">${esc(ch.message)} <button data-action="planning" data-plan="choice" data-id="${ch.task.id}">处理卡牌响应</button></div>`;
   if(sp)body+=`<div class="notice">${esc(sp.message)} ${b('处理响应／选择','choice',`data-id="${sp.task.id}"`,!!ch)}</div>`;
   if(x.step==='choice'){body+=`<p>由起始玩家 ${esc(s.players[s.first].name)} 暂定旅行地点，全队二次确认后才支付费用和移动地点。${s.active?'已有当前地点，本次不能旅行到另一地点。':''}</p><div class="actions">${s.staging.filter(c=>c.type==='Location').map(c=>{const sp=T.spec(s,c.uid);return `<span title="${esc(sp.reason)}">${b('暂定：'+c.name,'propose',`data-uid="${c.uid}"`,!sp.legal)}${!sp.legal?`<span class="small muted">${esc(sp.reason)}</span>`:''}</span>`;}).join('')}${b('暂定本次不旅行','skip','',!T.spec(s,null).legal)}</div>`;
