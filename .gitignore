@@ -1,0 +1,19 @@
+# Local outputs and dependencies
+__pycache__/
+*.py[cod]
+node_modules/
+.venv/
+venv/
+dist/
+release/
+*.zip
+*.bundle
+*.log
+# Local credentials and personal saves
+.env
+.env.*
+!.env.example
+saves/
+*-save.json
+.DS_Store
+Thumbs.db
