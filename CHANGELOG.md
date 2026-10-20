@@ -1,3 +1,11 @@
+# v0.14.2 · 卡图全量本地化（2026-10-20）
+
+- 背景：ringsdb.com 与 hallofbeorn.com 在国内网络被阻断（TLS 握手失败），网页内所有在线英文卡图（图库英文版、遭遇卡、探险卡）无法加载。
+- 镜像：新增 scripts/fetch-card-images.py（经本机代理抓取）与 scripts/optimize-card-images.py（转 WebP q80、长边 ≤620 并重建映射）。1511 张引用卡图（RingsDB 1446＋Hall of Beorn 65）全部镜像到 assets/cards-en/ 与 assets/cards-encounter/，835MB 原图压至 82MB。
+- 接入：新增 local-image-map.js（远程 URL → 本地 WebP 的映射表），image-ui.js 的 safeUrl 优先返回本地路径，远程仅作无镜像时的回退；shell.html / build.py 纳入该文件。
+- 验证：新增 scripts/verify-local-art.cjs 真实浏览器检查——图库玩家牌两页、遭遇页、对局桌面全部图片解码成功，页面发出的 ringsdb/hallofbeorn 请求为 0；新增 2 项模拟DOM测试，389 项通过。
+- 注意：assets 体积约 96MB；更新图片请依次运行两个脚本（需可访问外网的代理）。
+
 # v0.14.1 · 桌面真实浏览器验收与派遣提示（2026-10-20）
 
 - 完成真实浏览器验收：本机 Chrome（155.0.8059.84，无头）＋playwright-core 打开离线 index.html；新增 scripts/browser-check.cjs 可重复执行，截图与结果写入 docs/browser-acceptance/。

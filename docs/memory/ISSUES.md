@@ -50,3 +50,10 @@ v0.12.0开发时审阅发现：甘道夫地图（#108）的牌文禁止持有英
 - 原状态：环境无浏览器可执行文件，Chromium下载失败。
 - 2026-10-20：改用 playwright-core 驱动本机 Chrome 155.0.8059.84 无头模式。2人幽暗密林 @1440 走完七阶段到第2回合；4人都尔哥多 @1920 开局正常；16张长手牌与1440/1920均无横向溢出；操作栏吸顶；远程卡图失败有降级文本；无控制台错误。结果在 docs/browser-acceptance/report.json（ok=true）与7张截图。
 - 顺带修复：探险派遣提交后自动切换到下一位未提交玩家视图，并在查看已提交玩家时提示「等待 X 提交派遣名单」（新增1项回归，共387项）。
+
+## I011 · 在线卡图国内被墙（2026-10-20 已解决）
+
+- 现象：用户报告网页内在线卡图全部打不开。诊断：本机网络正常（国内站点可达），ringsdb.com 与 hallofbeorn.com TLS 握手直接失败（SNI 阻断），与代码无关。
+- 解决：1511张引用卡图（RingsDB 1446＋Hall of Beorn 65）经本机代理镜像到 assets/cards-en/ 与 assets/cards-encounter/（WebP q80，长边≤620，835MB→82MB）；新增 local-image-map.js 映射表，image-ui.js 的 safeUrl 优先本地、远程仅回退；构建与shell.html纳入映射。
+- 验证：scripts/verify-local-art.cjs 真实浏览器检查图库两页＋遭遇页＋对局桌面全部图片解码成功，外网图片请求0；新增2项模拟DOM测试（映射覆盖、WebP格式与尺寸），共389项。
+- 维护：更新图片时先跑 scripts/fetch-card-images.py（需代理，--proxy http://127.0.0.1:7899），再跑 scripts/optimize-card-images.py；扩展新剧本引用新图后同样重跑。
