@@ -1,0 +1,117 @@
+{
+ "width": 1440,
+ "at": "2026-10-20T07:39:20.560Z",
+ "ok": true,
+ "checks": [
+  {
+   "name": "公共桌面存在且位于操作栏下方",
+   "ok": true,
+   "detail": "150 → 338"
+  },
+  {
+   "name": "底部玩家区位于公共桌面之下",
+   "ok": true,
+   "detail": "338 → 1303"
+  },
+  {
+   "name": "右侧阶段与日志同栏且靠右",
+   "ok": true,
+   "detail": "rail x=1162 board x=22"
+  },
+  {
+   "name": "玩家区与公共桌面同宽同起点",
+   "ok": true,
+   "detail": "1122/1122"
+  },
+  {
+   "name": "操作栏滚动后仍固定在视口顶部",
+   "ok": true,
+   "detail": "top=8"
+  },
+  {
+   "name": "操作栏标题显示当前任务与阶段",
+   "ok": true,
+   "detail": "收集资源与抽牌 | 第 1/7 阶段 · 资源 | 收集资源、抽1张牌 → 计划阶段"
+  },
+  {
+   "name": "能到达探险投入步骤",
+   "ok": true,
+   "detail": "2/commit"
+  },
+  {
+   "name": "投入步骤有可选角色",
+   "ok": true,
+   "detail": "count=1"
+  },
+  {
+   "name": "点牌只产生草稿：日志/横置/已投入均不变",
+   "ok": true,
+   "detail": "selected=1"
+  },
+  {
+   "name": "点牌后有金色选中标记",
+   "ok": true,
+   "detail": "selected=1"
+  },
+  {
+   "name": "单人提交后不执行、不锁定",
+   "ok": true,
+   "detail": "locked=false"
+  },
+  {
+   "name": "操作栏显示全员确认进度",
+   "ok": true,
+   "detail": "玩家1 · 待提交 | 玩家2 · 已提交"
+  },
+  {
+   "name": "提交后视图切到待提交玩家",
+   "ok": true,
+   "detail": "view=0"
+  },
+  {
+   "name": "两人都提交后仍不执行，进入二次确认",
+   "ok": true,
+   "detail": "locked=false committed=0"
+  },
+  {
+   "name": "操作栏提示二次确认进度",
+   "ok": true,
+   "detail": "名单已就绪 · 等待二次确认（0/2） | 玩家1 · 待确认 | 玩家2 · 待确认 | 第 3/7 阶段 · 探险 :: 玩家1 · 待确认 | 玩家2 · 待确认"
+  },
+  {
+   "name": "二次确认按钮按玩家逐个提供",
+   "ok": true,
+   "detail": "buttons=2"
+  },
+  {
+   "name": "全员二次确认后才执行投入",
+   "ok": true,
+   "detail": "locked=true committed=1 exhausted=1"
+  },
+  {
+   "name": "智能窗口可切换且不改变规则状态",
+   "ok": true,
+   "detail": "smart→detailed→smart"
+  },
+  {
+   "name": "多人切换只改视图不改游戏状态",
+   "ok": true,
+   "detail": "view 0→1"
+  },
+  {
+   "name": "规则自动按顺序执行投入",
+   "ok": true,
+   "detail": "committed=1 log=回合1 · 探险 · 玩家1投入：阿拉贡 || 回合1 · 探险 · 全员二次确认，正式执行投入 || 回合1 · 探险 · 玩家1确认派遣名单，等待全员确认 "
+  },
+  {
+   "name": "投入后的强制效果被接管为当前任务",
+   "ok": true,
+   "detail": "tasks=1 dock=选择强制效果目标 | 第 3/7 阶段 · 探险"
+  },
+  {
+   "name": "无脚本错误",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}
