@@ -28,6 +28,50 @@ body:has(.desktop-table) .brand{font-size:19px}body:has(.desktop-table) main{pad
 @media(max-width:760px){body:has(.desktop-table) main{padding:10px}.tabletop-layout{grid-template-columns:1fr}.tabletop-rail{position:static;max-height:none;grid-template-columns:1fr 1fr}.tabletop-rail .phase-rail{grid-column:1/-1}.phase-rail .rail-step{display:inline-flex;padding:5px}.phase-rail .rail-step>span,.phase-rail .rail-step small{display:none}.operation-dock{position:relative;top:0}.operation-content{max-height:none}.expedition-title>.player-tabs{margin:0}.public-table,.player-mat{padding:12px}.quest-display{gap:10px}.table-card-row{gap:8px}}
 .operation-content .card-art{max-width:100px;float:left;margin:0 14px 8px 0}.operation-content .notice:after{content:'';display:block;clear:both}.operation-content .image-loading-note{display:none}.operation-content:has(.table-selection) button[data-combat="defense"],.operation-content:has(.table-selection) button[data-combat="attack"]{display:none}
 
+/* v0.14.3 light tabletop: the board used to be a dark slate slab, which read
+   as a forced dark mode. Keep one parchment palette across landing, setup and
+   play; card art still separates from the table through warm paper tones. */
+.public-table{background:radial-gradient(ellipse at top,#fbfaf3,#f1efe2 72%);border:1px solid #d8dcd0;box-shadow:inset 0 1px 0 #fff}
+.player-mat{background:#faf9f2;border:1px solid #d8dcd0;border-top:3px solid #ad8b4b}
+.player-mat>.table-zone+.table-zone{border-top:1px solid #e2e5d9}
+.other-player{border-top:1px solid #e2e5d9}
+.zone-heading h2{color:#2c4438}
+.zone-heading>span{color:#768174}
+.threat-total{color:#8a6f34}
+.zone-empty{border-color:#d8dcd0;color:#9ba390}
+.quest-location-row{border-bottom:1px solid #e1e3d8}
+.quest-display h3{color:#3a5142}
+.quest-display p{color:#4f5a4d}
+.operation-dock{background:#fffdf6;border:1px solid #c9b98a;box-shadow:0 6px 18px #24392f1f}
+.operation-title{background:#f1edde}
+.operation-indicator{background:#ad8b4b;box-shadow:0 0 10px #ad8b4b55}
+.operation-content .table-selection{background:#f7f4e8;border:1px solid #dcccab}
+.operation-content .table-selection p{color:#5a5340}
+.table-card{background:#fffdf6;border:1px solid #c6cfc1;box-shadow:0 2px 6px #24392f14}
+.table-card .card-face{background:#efeee2}
+.table-card-fallback{color:#7d8878}
+.card-face:has(img[hidden]):after{color:#6f7a6c}
+.table-card-caption b{color:#24392f}
+.table-card-caption span{color:#66715f}
+.table-card .inspect-card{background:#f6f4e8;border-color:#d8dcd0}
+.table-card details{color:#5f6a5c}
+.table-card.exhausted .table-card-caption>span:last-child{color:#a35446}
+.card-legality{color:#7d8878}
+.selection-mark{background:#ad8b4b;color:#fffdf6}
+.table-card.selected{border-color:#a3833f;box-shadow:0 0 12px #ad8b4b3d}
+.tabletop-rail>section,.tabletop-rail>details{background:#f8f7ee;border:1px solid #d8dcd0}
+.tabletop-rail p{color:#5c675a}
+.rail-step{color:#6f7a6c;border-left-color:transparent}
+.rail-step>span{color:#96a08f}
+.rail-step small{color:#a3833f}
+.rail-step.current{color:#24392f;background:#eee8d4;border-left-color:#ad8b4b}
+.rail-step.past{color:#4c5f4d}
+.deck-rail .deck-counts div{background:#eef0e5;color:#4a5a4c}
+.deck-rail .deck-counts strong{color:#55693f}
+.table-log p{border-bottom:1px solid #e3e5d9}
+.operation-title{color:#24392f}
+.operation-title strong{color:#24392f}
+
 </style></head><body>
 <header><a class="brand" href="#">✥ 中土远征 <small>THE LORD OF THE RINGS · LCG</small></a><nav><button id="tableTab" class="active">剧本桌面</button><button id="catalogTab">基础卡牌库 <span>55</span></button><button id="playersTab">英雄与玩家牌</button><button id="imagesTab">全部卡图</button><button id="helpTab">说明与完成范围</button></nav><div class="header-actions"><button id="undo">撤销一步</button><button id="export">导出存档</button><label class="button" for="import">导入存档</label><input id="import" type="file" accept="application/json" hidden></div></header>
 <main id="app"></main><div id="toast" role="status" aria-live="polite"></div>
