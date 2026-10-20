@@ -30,3 +30,5 @@
 导入草稿PR合并前，v0.9.0基线在 `codex/project-memory-v090`；第五阶段基线在 `feature/encounter-phase-v0100`（草稿PR #2）；第六阶段在 `feature/combat-phase-v0110`（草稿PR #3）；第七阶段本地开发在 `feature/refresh-phase-v0120`，v0.12.0尚未上传；窗口优化本地分支为 `feature/smart-windows-v0130`（v0.13.0），也尚未上传。本地／远端同步以 PROJECT_MEMORY.md 和 docs/REMOTE_STATUS.md 为准，用户已分别明确授权v0.10.0及本次v0.11.0代码、更新后的项目记忆和验收记录上传该私有仓库独立分支并创建草稿PR，不合并main，远端 main 暂保留原始剧本资料。合并后 `main` 保留已验证基线；新功能用 `feature/...`，修复用 `fix/...`。提交前看 diff 并运行检查。提交信息说明实际改动。不要凭文件名伪造旧提交历史，不推送令牌／存档／临时包，不强推或覆盖远端历史。远端关联及同步状态以 `git remote -v` 和实际推送结果为准。
 
 2026-10-20后续授权：用户要求将v0.13.1上传私有仓库并新建分支，分支名不含「草稿」。本次交付分支fix/multiplayer-setup-v0131，包含整合功能和最新项目记忆／验收记录；仅创建分支，不新建PR、不合并main。此前未上传记录保留为历史，后续以docs/REMOTE_STATUS.md和GitHub实际状态为准。
+
+2026-10-20桌面改版：本地v0.14.0分支feature/tabletop-ui-v0140基于已上传v0.13.1，尚未上传；验收见tabletop-acceptance.md，当前386项自动测试通过，真实浏览器未验收。
