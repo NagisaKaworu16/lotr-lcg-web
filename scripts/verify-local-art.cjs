@@ -56,7 +56,7 @@ const executablePath = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.
   await page.locator('#tableTab').click();
   await page.waitForTimeout(400);
   await page.selectOption('#playerCount', '2').catch(() => {});
-  await page.locator('.scenario button[data-action="start"]').first().click();
+  await page.locator('.scenario button[data-action="startOpen"]').first().click(); await page.waitForTimeout(400); await page.locator('[data-action="chooserConfirm"]').click();
   await page.waitForTimeout(900);
   for (const b of await page.locator('button[data-action="keepHand"]').all()) await b.click();
   await page.waitForTimeout(300);

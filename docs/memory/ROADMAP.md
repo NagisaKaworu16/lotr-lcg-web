@@ -14,7 +14,7 @@
 | 桌面交互改版 | 已实现并通过四条需求验收（v0.14.5） | tabletop-acceptance、check-taskbar、planning-dom-tests |
 | 真实浏览器验收（桌面） | 已完成（2026-10-20，Chrome 155 无头） | tabletop-acceptance、docs/browser-acceptance |
 | 开局取消窗口迁移 | 待做 | 安都因／多尔哥多开局 |
-| 牌组导入与组卡器 | 文本/URL 导入已完成；扩展卡池与分享链接待做 | player-cards.parseTextDeck/fromRingsdb、player-tests |
+| 牌组导入与组卡器 | 我的卡组页、开局选牌、文本/URL 导入已完成；内嵌组卡器回填、扩展卡池与分享链接待做 | player-cards.parseTextDeck/fromRingsdb、player-tests |
 | 联机 | 后续独立里程碑 | 服务器、身份、私密手牌、断线恢复与操作版本 |
 
 桌面真实浏览器验收已完成；当前优先收集用户上手反馈，同时迁移安都因／多尔哥多开局取消窗口、补完整计分并审计跨阶段规则。新增功能放到独立分支，保留已验证基线。

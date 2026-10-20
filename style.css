@@ -126,3 +126,41 @@ body:has(.desktop-table) .brand{font-size:19px}body:has(.desktop-table) main{pad
 #pc-decktext{width:100%;min-height:210px;font:13px/1.6 ui-monospace,Consolas,monospace;border:1px solid var(--line);border-radius:6px;padding:10px;resize:vertical;background:#fff}
 .import-report{border-left-color:#a35446;background:#f7ece6;color:#7a4437}
 .import-report p{margin:2px 0}
+
+/* v0.14.8 deck library page and start-of-scenario deck chooser. */
+.deck-import{padding:16px}
+.deck-import-tabs{display:flex;gap:6px;margin-bottom:12px}
+.deck-import-tabs button{font-size:12px;padding:5px 12px}
+.deck-import-tabs button.active{background:#365842;color:#fff;border-color:#365842}
+.deck-import-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.deck-import-row input{flex:1;min-width:240px}
+.deck-list{display:grid;gap:12px;margin-top:14px}
+.deck-card{display:grid;grid-template-columns:150px minmax(0,1fr) auto;gap:14px;align-items:center;background:#fffdf6;border:1px solid #d8dcd0;border-radius:10px;padding:12px}
+.deck-card.is-selected{border-color:#ad8b4b;box-shadow:0 0 0 1px #ad8b4b55}
+.deck-card-heroes{display:flex;gap:4px}
+.deck-hero-thumb{width:46px;height:66px;border-radius:4px;overflow:hidden;background:#efeee2;display:block}
+.deck-hero-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.deck-card-body h2{font-size:15px;margin:0 0 2px}
+.deck-card-tags{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 0}
+.deck-card-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.deck-card-actions button{font-size:12px;padding:5px 9px}
+.deck-filters{align-items:center;gap:8px}
+.deck-filters .spacer{flex:1}
+.deck-grid{display:grid;gap:12px}
+.chooser-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:14px}
+.chooser-tabs{display:flex;gap:8px;margin-bottom:14px}
+.chooser-tabs button{flex:1;padding:10px;font-size:13px;text-align:center}
+.chooser-tabs button.active{background:#365842;color:#fff;border-color:#365842}
+.chooser-players{margin-bottom:12px}
+.chooser-body{max-height:52vh;overflow:auto;padding-right:4px}
+.chooser-new{padding:8px 0}
+.chooser-new input{flex:1;min-width:260px}
+.chooser-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);flex-wrap:wrap}
+@media(max-width:760px){.deck-card{grid-template-columns:1fr}.deck-card-actions{justify-content:flex-start}}
+/* nav buttons must keep their dark-header treatment on hover (base button:hover is paper). */
+nav button:hover{background:transparent;color:#f6e3ad}
+nav button.active:hover{background:transparent;color:#f6e3ad}
+/* deck thumbnails: plain art only, no loading note or card padding. */
+.deck-hero-thumb .card-art{margin:0;padding:0;border:0;background:transparent;min-height:0;width:100%;border-radius:4px}
+.deck-hero-thumb .card-art img{border-radius:4px}
+.deck-hero-thumb .image-loading-note{display:none}

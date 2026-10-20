@@ -36,7 +36,7 @@ const WIDTH = arg('width', 1440);
 
   // ---- 2. layout landmarks -------------------------------------------------
   await page.selectOption('#playerCount', '2');
-  await page.locator('.scenario', { hasText: '幽暗密林' }).first().locator('button[data-action="start"]').click();
+  await page.locator('.scenario', { hasText: '幽暗密林' }).first().locator('button[data-action="startOpen"]').click(); await page.waitForTimeout(400); await page.locator('[data-action="chooserConfirm"]').click();
   await page.waitForTimeout(700);
   for (const x of await page.locator('button[data-action="keepHand"]').all()) await x.click();
   await page.locator('button[data-action="finishSetup"]').click();

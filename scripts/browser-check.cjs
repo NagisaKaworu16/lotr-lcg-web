@@ -92,7 +92,7 @@ let browser;
   const startGame = async (players, scenarioText) => {
     await page.selectOption('#playerCount', String(players));
     await page.waitForTimeout(200);
-    await page.locator('.scenario', { hasText: scenarioText }).first().locator('button[data-action="start"]').click();
+    await page.locator('.scenario', { hasText: scenarioText }).first().locator('button[data-action="startOpen"]').click(); await page.waitForTimeout(400); await page.locator('[data-action="chooserConfirm"]').click();
     await page.waitForTimeout(600);
     for (const x of await page.locator('button[data-action="keepHand"]').all()) await x.click();
     await page.waitForTimeout(200);
@@ -242,7 +242,7 @@ let browser;
   await page.waitForTimeout(400);
   await page.selectOption('#playerCount', '4');
   await page.waitForTimeout(200);
-  await page.locator('.scenario').nth(2).locator('button[data-action="start"]').click();
+  await page.locator('.scenario').nth(2).locator('button[data-action="startOpen"]').click(); await page.waitForTimeout(400); await page.locator('[data-action="chooserConfirm"]').click();
   await page.waitForTimeout(600);
   for (const x of await page.locator('button[data-action="keepHand"]').all()) await x.click();
   await page.waitForTimeout(200);
