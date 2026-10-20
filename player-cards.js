@@ -54,7 +54,54 @@ function config(deck,snapshot){let r=validateDeck(deck,snapshot);need(r.valid,r.
 function importDeck(raw,snapshot){need(raw&&typeof raw==='object','无效牌组JSON');let slots=raw.slots;need(slots&&typeof slots==='object'&&!Array.isArray(slots),'找不到RingsDB slots字段');const by=index(snapshot),heroes=[],draw={};for(const [code,n] of Object.entries(slots)){need(typeof n==='number'&&Number.isInteger(n)&&n>=0,`${code}数量无效`);if(!n)continue;need(by[code],`本版本仅接入基础版，无法导入${code}`);if(by[code].type==='hero'){need(n===1,'每名英雄只能1张');heroes.push(code);}else draw[code]=n;}
  const h=raw.heroes===undefined?heroes:raw.heroes;need(Array.isArray(h)&&h.every(c=>typeof c==='string'),'heroes须为卡牌代码数组');return {id:'custom-import',name:String(raw.name||'导入牌组').slice(0,100),mode:raw.mode||'standard',heroes:h,slots:draw};}
 function exportDeck(deck){return {name:deck.name,mode:deck.mode,slots:{...deck.slots,...Object.fromEntries(deck.heroes.map(code=>[code,1]))}};}
+// ---- deck import: pasted decklist text, or a RingsDB decklist JSON payload ----
+// Names are matched loosely (case, punctuation and apostrophes ignored) so pasted
+// lists from RingsDB, arkham.build-style exports or plain notes all resolve.
+function nameKey(value){return String(value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[\u2018\u2019\u02bc]/g,"'").replace(/[^0-9a-z\u4e00-\u9fff']/g,'');}
+function nameIndex(snapshot){const map=new Map;for(const c of snapshot.cards)for(const n of [c.name,c.nameZh,c.nameZhCard]){const k=nameKey(n);if(k&&!map.has(k))map.set(k,c.code);}return map;}
+const deckHeaders=/^(?:英雄|英雄区|英雄名单|heroes?|deck|decklist|牌组|牌库|玩家牌|玩家牌组|cards?|slots?|盟友|盟友区|附属|附属区|事件|attachments?|allies|events?)\s*[:：]?\s*[（(]?\s*\d*\s*[)）]?$/i;
+function parseTextDeck(text,snapshot){
+ const by=index(snapshot),names=nameIndex(snapshot),heroes=[],slots={},errors=[],warnings=[];let cards=0;
+ String(text||'').split(/\r?\n/).forEach((rawLine,i)=>{
+  const original=rawLine;let line=rawLine.trim();
+  if(!line)return;
+  if(/^(?:\/\/|;|—|##?\s*$)/.test(line))return;
+  if(deckHeaders.test(line.replace(/[*#]/g,'')))return;
+  line=line.replace(/^[-*•·]\s*/,'').trim();
+  const m=line.match(/^(?:(\d+)\s*[x×*]\s*|(\d+)\s+)?(.+?)(?:\s*[x×*]\s*(\d+))?$/i);
+  if(!m){errors.push({line:i+1,text:original.trim(),reason:'无法解析这一行'});return;}
+  const rawCount=m[1]||m[2]||m[4],count=rawCount?Number(rawCount):1;
+  if(!Number.isInteger(count)||count<1||count>99){errors.push({line:i+1,text:original.trim(),reason:'张数无效'});return;}
+  let name=String(m[3]||'').trim().replace(/[，,;；]$/,'');
+  let code=null;
+  const bare=name.match(/^#?(\d{3,6})$/);
+  const paren=name.match(/^(.*?)\s*[（(]\s*#?(\d{3,6})\s*[)）]$/);
+  if(bare&&by[bare[1]])code=bare[1];
+  else if(paren&&by[paren[2]]){name=paren[1].trim();code=paren[2];}
+  if(!code)code=names.get(nameKey(name))||null;
+  if(!code){errors.push({line:i+1,text:original.trim(),reason:'卡池中没有「'+name+'」'});return;}
+  const card=by[code];
+  if(card.type==='hero'){
+   if(count>1)warnings.push({line:i+1,text:original.trim(),reason:'英雄只取1张'});
+   if(!heroes.includes(code))heroes.push(code);
+   if(heroes.length>3){errors.push({line:i+1,text:original.trim(),reason:'英雄超过3名'});}
+   return;
+  }
+  slots[code]=(slots[code]||0)+count;cards+=count;
+ });
+ if(!heroes.length)errors.push({line:0,text:'',reason:'没有识别到英雄（需要1–3名）'});
+ return {deck:{id:'custom-import',name:'导入牌组',mode:'standard',heroes,slots},errors,warnings,cards,heroes:heroes.length};
+}
+function fromRingsdb(raw){
+ need(raw&&typeof raw==='object'&&!Array.isArray(raw),'RingsDB 返回的不是牌组对象');
+ const sourceHeroes=raw.heroes||{},heroes=[];
+ if(Array.isArray(sourceHeroes)){for(const c of sourceHeroes)if(c)heroes.push(String(c));}
+ else{for(const [code,n] of Object.entries(sourceHeroes))if(Number(n)>0)heroes.push(String(code));}
+ const slots={};for(const [code,n] of Object.entries(raw.slots||{})){const v=Number(n);if(Number.isInteger(v)&&v>0)slots[String(code)]=v;}
+ need(heroes.length,'RingsDB 牌组里没有英雄');
+ return {id:'ringsdb-'+raw.id,name:String(raw.name||('RingsDB 牌组 '+raw.id)).slice(0,100),mode:'standard',heroes,slots,source:'ringsdb:'+raw.id};
+}
 async function fetchCore({fetchImpl=globalThis.fetch,signal}={}){need(typeof fetchImpl==='function','当前浏览器不支持联网读取');const endpoint='https://ringsdb.com/api/public/cards/Core.json';const r=await fetchImpl(endpoint,{method:'GET',cache:'default',signal});need(r.ok,`RingsDB请求失败：HTTP ${r.status}`);return normalizePack(await r.json(),{endpoint,packCode:'Core',fetchedAt:new Date().toISOString(),lastModified:r.headers.get('Last-Modified'),cacheControl:r.headers.get('Cache-Control')});}
-return {SPHERES,NAMES,normalizeCard,normalizePack,verify,index,starter,validateDeck,validateFellowship,config,importDeck,exportDeck,fetchCore};
+return {SPHERES,NAMES,normalizeCard,normalizePack,verify,index,starter,validateDeck,validateFellowship,config,importDeck,exportDeck,fetchCore,parseTextDeck,fromRingsdb,nameIndex};
 })();
 if(typeof module!=='undefined')module.exports=PlayerCards;
