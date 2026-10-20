@@ -27,4 +27,4 @@
 
 ## Git
 
-导入草稿PR合并前，v0.9.0基线在 `codex/project-memory-v090`；第五阶段最新开发在 `feature/encounter-phase-v0100`，以导入分支为基底创建增量草稿PR；用户已明确授权本次代码、项目记忆和验收记录上传该私有仓库，远端 main 暂保留原始剧本资料。合并后 `main` 保留已验证基线；新功能用 `feature/...`，修复用 `fix/...`。提交前看 diff 并运行检查。提交信息说明实际改动。不要凭文件名伪造旧提交历史，不推送令牌／存档／临时包，不强推或覆盖远端历史。远端关联及同步状态以 `git remote -v` 和实际推送结果为准。
+导入草稿PR合并前，v0.9.0基线在 `codex/project-memory-v090`；第五阶段基线在 `feature/encounter-phase-v0100`（草稿PR #2）；第六阶段开发在 `feature/combat-phase-v0110`。本地／远端同步以 PROJECT_MEMORY.md 和 docs/REMOTE_STATUS.md 为准，用户已分别明确授权v0.10.0及本次v0.11.0代码、更新后的项目记忆和验收记录上传该私有仓库独立分支并创建草稿PR，不合并main，远端 main 暂保留原始剧本资料。合并后 `main` 保留已验证基线；新功能用 `feature/...`，修复用 `fix/...`。提交前看 diff 并运行检查。提交信息说明实际改动。不要凭文件名伪造旧提交历史，不推送令牌／存档／临时包，不强推或覆盖远端历史。远端关联及同步状态以 `git remote -v` 和实际推送结果为准。
