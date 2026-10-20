@@ -31,4 +31,4 @@
 
 2026-10-20后续授权：用户要求将v0.13.1上传私有仓库并新建分支，分支名不含「草稿」。本次交付分支fix/multiplayer-setup-v0131，包含整合功能和最新项目记忆／验收记录；仅创建分支，不新建PR、不合并main。此前未上传记录保留为历史，后续以docs/REMOTE_STATUS.md和GitHub实际状态为准。
 
-2026-10-20桌面改版：本地v0.14.0分支feature/tabletop-ui-v0140基于已上传v0.13.1，尚未上传；验收见tabletop-acceptance.md，当前386项自动测试通过，真实浏览器未验收。
+2026-10-20桌面改版：本地v0.14.0分支feature/tabletop-ui-v0140基于已上传v0.13.1，尚未上传；验收见tabletop-acceptance.md。同日完成真实浏览器验收（本机Chrome 155无头，scripts/browser-check.cjs），387项自动测试通过；派遣提交后自动切换到下一位未提交玩家视图。
