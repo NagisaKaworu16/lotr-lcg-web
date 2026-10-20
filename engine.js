@@ -2,7 +2,7 @@
 const ScenarioEngine = (()=>{
 const D=typeof LOTR_DATA!=='undefined'?LOTR_DATA:require('./data.js');
 const PlanningFactory=typeof PlanningRulesFactory!=='undefined'?PlanningRulesFactory:require('./planning-engine.js');
-const P2=PlanningFactory({log,drawPlayer,shuffle,checkQuest:s=>{if(s.questing&&s.phase===2&&!s.questing.queue.length){P3.advanceIfReady(s);P3.resumeDeployment(s);P3.resumeActions(s);}if(s.traveling&&s.phase===3){P3.advanceIfReady(s);P4.resume(s);}if(s.encountering&&s.phase===4){P3.advanceIfReady(s);P5.resume(s);}if(s.combat&&s.phase===5){P3.advanceIfReady(s);P6.resume(s);}},defeatEnemy:(s,uid)=>defeat(s,uid,true),addProgress:(s,n)=>[2,3,4,5].includes(s.phase)&&P2.context(s)?P3.progress(s,n):addProgress(s,n,true)});
+const P2=PlanningFactory({log,drawPlayer,shuffle,checkQuest:s=>{if(s.questing&&s.phase===2&&!s.questing.queue.length){P3.advanceIfReady(s);P3.resumeDeployment(s);P3.resumeActions(s);}if(s.traveling&&s.phase===3){P3.advanceIfReady(s);P4.resume(s);}if(s.encountering&&s.phase===4){P3.advanceIfReady(s);P5.resume(s);}if(s.combat&&s.phase===5){P3.advanceIfReady(s);P6.resume(s);}if(s.refreshing&&s.phase===6){P7.resume(s);}},defeatEnemy:(s,uid)=>defeat(s,uid,true),addProgress:(s,n)=>[2,3,4,5,6].includes(s.phase)&&P2.context(s)?P3.progress(s,n):addProgress(s,n,true)});
 const QuestFactory=typeof QuestRulesFactory!=='undefined'?QuestRulesFactory:require('./quest-engine.js');
 const P3=QuestFactory({log,draw,shuffle,discardCard,task,gate,advance:(s)=>advance(s,true),threat},P2);
 const TravelFactory=typeof TravelRulesFactory!=='undefined'?TravelRulesFactory:require('./travel-engine.js');
@@ -11,6 +11,8 @@ const EncounterFactory=typeof EncounterRulesFactory!=='undefined'?EncounterRules
 const P5=EncounterFactory({log},P2,P3);
 const CombatFactory=typeof CombatRulesFactory!=='undefined'?CombatRulesFactory:require('./combat-engine.js');
 const P6=CombatFactory({log,draw,discardCard,get byId(){return byId;}},P2,P3);
+const RefreshFactory=typeof RefreshRulesFactory!=='undefined'?RefreshRulesFactory:require('./refresh-engine.js');
+const P7=RefreshFactory({log},P2,P3);
 const byId=Object.fromEntries(D.cards.map(x=>[x.id,x]));
 const phases=['资源','计划','探险','旅行','遭遇','战斗','刷新'];
 const clone=x=>JSON.parse(JSON.stringify(x));
@@ -20,7 +22,7 @@ function shuffle(s,a){for(let i=a.length-1;i>0;i--){let j=Math.floor(rng(s)*(i+1
 function log(s,t){s.log.unshift(`回合${s.round} · ${t}`);}
 function task(s,text,kind='manual',args={}){s.pending.push({id:++s.serial,text,kind,args});}
 function assert(v,msg){if(!v)throw Error(msg);}
-function ready(s){assert(!s.openingTest||s.phase<=5,'阶段7及后续自动规则尚未启用。');assert(!s.setupPending,'请先确认起始手牌并执行剧本设置。');assert(s.status==='playing','对局已经结束。');assert(!s.pending.length,'请先处理待结算事项。');}
+function ready(s){assert(!s.setupPending,'请先确认起始手牌并执行剧本设置。');assert(s.status==='playing','对局已经结束。');assert(!s.pending.length,'请先处理待结算事项。');}
 function quest(s){return D.quests.find(q=>q.id===s.quest);}
 function live(s){return s.players.filter(p=>!p.eliminated);}
 function remove(a,uid){let i=a.findIndex(c=>c.uid===uid);assert(i>=0,'找不到该牌。');return a.splice(i,1)[0];}
@@ -170,7 +172,7 @@ function extraShadow(s,uid,n){assert(!s.combat,'补发暗影由战斗效果自�
 function returnEnemy(s,uid){assert(!s.questing,'探险阶段返回敌人须由卡牌效果执行');ready(s);let a=s.players.map(p=>p.engaged).find(a=>a.some(c=>c.uid===uid));assert(a,'敌人未交战。');const c=remove(a,uid);if(c.shadows)for(const x of c.shadows)discardCard(s,x);delete c.shadows;delete c.shadowRevealed;s.staging.push(c);log(s,`${c.name}返回探查区`);}
 function claim(s,uid,pid,hero){ready(s);if(s.questing)assert(P2.window(s).kind==='action'&&!P2.context(s).actionLocked,'领取目标只能在未锁定的行动窗口执行');const o=s.objectives.find(o=>o.uid===uid);const p=s.players[pid];assert(o&&!o.guard&&!o.holder,'目标仍有守卫或已被持有。');assert(p&&!p.eliminated&&Number.isInteger(hero)&&hero>=0&&hero<p.heroes.length,'无效英雄。');assert(s.rescued||s.prisoner?.player!==pid||s.prisoner?.hero!==hero,'囚犯不能持有目标。');assert(s.objectives.filter(o=>o.holder?.player===pid&&o.holder?.hero===hero).length<2,'该英雄已持有2张受限目标（其他受限附属请自行核对）。');if(s.questing){const h=p.heroStates[hero];assert(h&&!h.destroyed,'英雄已离场');assert(P2.restrictedOn(s,h.uid).length<2,'英雄已有2张受限附属');P2.context(s).finalPasses=[];P2.context(s).actionApprovals=[];}o.holder={player:pid,hero};if(s.questing)P2.changeThreat(s,pid,2);else adjustThreat(s,p,2);log(s,`${p.name}的${p.heroes[hero]}领取${o.name}`);}
 function returnObjective(s,uid){ready(s);let o=s.objectives.find(o=>o.uid===uid);assert(o?.holder,'目标尚未持有。');o.holder=null;log(s,`${o.name}返回探查区`);}
-function nextPhase(s){ready(s);if(s.phase===1&&s.planning){if(s.planning.completed){s.phase=2;P3.start(s);log(s,'进入探险阶段');}else P2.finish(s);return;}if(s.phase===2&&s.questing){if(s.questing.completed){s.phase=3;P4.start(s);log(s,'进入旅行阶段');}else P3.move(s);return;}if(s.phase===3&&s.questing&&!s.traveling){P4.start(s);return;}if(s.phase===3&&s.traveling){if(s.traveling.completed){s.phase=4;P5.start(s);log(s,'进入遭遇阶段');}else P4.finish(s);return;}if(s.phase===4&&s.encountering){if(s.encountering.completed){s.phase=5;P6.start(s);log(s,'进入第六阶段战斗');}else P5.finish(s);return;}if(s.phase===5&&s.combat){assert(!s.combat.completed,'第六阶段已完成，第七阶段刷新待开放。');P6.finish(s);return;}if(s.phase===0&&s.players.some(p=>p.heroStates)&&s.resourceRound!==s.round)resourcePhase(s);
+function nextPhase(s){ready(s);if(s.phase===1&&s.planning){if(s.planning.completed){s.phase=2;P3.start(s);log(s,'进入探险阶段');}else P2.finish(s);return;}if(s.phase===2&&s.questing){if(s.questing.completed){s.phase=3;P4.start(s);log(s,'进入旅行阶段');}else P3.move(s);return;}if(s.phase===3&&s.questing&&!s.traveling){P4.start(s);return;}if(s.phase===3&&s.traveling){if(s.traveling.completed){s.phase=4;P5.start(s);log(s,'进入遭遇阶段');}else P4.finish(s);return;}if(s.phase===4&&s.encountering){if(s.encountering.completed){s.phase=5;P6.start(s);log(s,'进入第六阶段战斗');}else P5.finish(s);return;}if(s.phase===5&&s.combat){if(s.combat.completed){s.phase=6;P7.start(s);}else P6.finish(s);return;}if(s.phase===6&&s.refreshing){if(s.refreshing.completed)P7.nextRound(s);else P7.finish(s);return;}if(s.phase===0&&s.players.some(p=>p.heroStates)&&s.resourceRound!==s.round)resourcePhase(s);
  if(s.phase===2){assert(s.stagedRound===s.round,'本回合须先执行探查（第三阶段也需确认跳过）。');assert(s.resolvedRound===s.round,'请先结算本回合探险结果。');s.phaseThreat=0;for(const c of s.staging)delete c.bonus;}
  if(s.phase===4)assert(s.checkedRound===s.round,'请先完成交战检定或确认跳过。');
  if(s.phase===5){for(const p of s.players)for(const c of p.engaged){for(const x of c.shadows||[])discardCard(s,x);delete c.shadows;delete c.shadowRevealed;}if(s.staging.some(c=>c.id===83))task(s,'探查区的每张哥布林狙击手：每位玩家对己方1名角色造成1点伤害。');}
@@ -189,6 +191,7 @@ function nextPhase(s){ready(s);if(s.phase===1&&s.planning){if(s.planning.complet
 }
 function questFailure(s,n){ready(s);assert(s.phase===2&&s.stagedRound===s.round,'须在探查后结算。');assert(Number.isInteger(n)&&n>0,'失败差值须为正整数。');for(const p of live(s))adjustThreat(s,p,n);for(const c of s.staging.filter(c=>c.id===101)){let o=s.objectives.find(o=>!o.holder);if(o){s.objectives=s.objectives.filter(x=>x.uid!==o.uid);if(o.guard){let g=s.staging.find(c=>c.uid===o.guard);if(g)delete g.guard;}delete o.guard;s.deck.push(o);shuffle(s,s.deck);log(s,'地牢狱卒将无人持有的目标洗回牌库');}}}
 function resolveQuest(s,willpower){assert(!s.questing,'意志由投入角色自动计算');ready(s);assert(s.phase===2&&s.stagedRound===s.round,'须先执行探查。');assert(s.resolvedRound!==s.round,'本回合探险已经结算。');assert(Number.isInteger(willpower)&&willpower>=0,'总意志须为非负整数。');const delta=willpower-threat(s);s.resolvedRound=s.round;if(delta>=0)addProgress(s,delta);else questFailure(s,-delta);log(s,`探险结算：意志${willpower}，威胁${threat(s)}，差值${delta}`);}
-return {combat:P6,encountering:P5,traveling:P4,questing:P3,planning:P2,openingChoice,startScenario,resourcePhase,drawPlayer,extraShadow,resolveQuest,D,byId,phases,create,quest,gate,threat,stage,addProgress,advance,travel,engage,encounterChecks,defeat,shadows,revealShadows,returnEnemy,claim,returnObjective,nextPhase,resolve,rescue,questFailure,adjustThreat,clone};
+const api={refreshing:P7,combat:P6,encountering:P5,traveling:P4,questing:P3,planning:P2,openingChoice,startScenario,resourcePhase,drawPlayer,extraShadow,resolveQuest,D,byId,phases,create,quest,gate,threat,stage,addProgress,advance,travel,engage,encounterChecks,defeat,shadows,revealShadows,returnEnemy,claim,returnObjective,nextPhase,resolve,rescue,questFailure,adjustThreat,clone};
+const WindowFactory=typeof WindowRulesFactory!=='undefined'?WindowRulesFactory:require('./window-engine.js');api.windows=WindowFactory(api);return api;
 })();
 if(typeof module!=='undefined')module.exports=ScenarioEngine;
