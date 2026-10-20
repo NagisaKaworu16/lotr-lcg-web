@@ -98,3 +98,25 @@ body:has(.desktop-table) .brand{font-size:19px}body:has(.desktop-table) main{pad
 .deck-counts div{border-radius:6px}
 @media(min-width:1700px){:root{--card-w:140px}.table-card{width:var(--card-w);flex-basis:var(--card-w)}.peer-cards .table-card{width:var(--card-w);flex-basis:var(--card-w)}.tabletop-layout{grid-template-columns:minmax(0,1fr) 274px}}
 @media(max-width:1100px){:root{--card-w:118px}.table-card{width:var(--card-w);flex-basis:var(--card-w)}.peer-cards .table-card{width:var(--card-w);flex-basis:var(--card-w)}}
+
+/* v0.14.5 operation dock as the single task bar: task label, confirmation
+   progress chips and the phase index live in one sticky strip. */
+.operation-chips{display:flex;gap:6px;flex-wrap:wrap;align-items:center;min-width:0}
+.op-chip{font-size:11px;line-height:1.6;padding:2px 9px;border-radius:999px;border:1px solid #d6c393;background:#f8f1dd;color:#6d5a2c;white-space:nowrap;max-width:100%;overflow-wrap:anywhere}
+.op-chip.done{border-color:#a9c09a;background:#e8f0e0;color:#3c5a34}
+.operation-title strong{min-width:0;overflow-wrap:anywhere}
+.operation-title>.small{white-space:nowrap;color:#768174}
+
+/* v0.14.6 per-player deck pickers on the setup screen. */
+.deck-setup .preset-row{display:grid;grid-template-columns:76px minmax(0,1fr) minmax(170px,220px);align-items:center;gap:14px;padding:10px 0;border-top:1px solid var(--line)}
+.deck-setup .preset-row:first-of-type{border-top:0}
+.preset-who{font-weight:600;color:var(--green);font-size:13px}
+.preset-buttons{display:flex;gap:8px;flex-wrap:wrap}
+.preset-buttons button{font-size:12px;padding:6px 11px}
+.deck-setup label.small{display:flex;align-items:center;gap:8px;margin:0;min-width:0}
+.deck-setup label.small>span{white-space:nowrap;color:var(--muted)}
+.deck-setup .preset-row select{width:100%;min-width:0}
+.deck-setup .setup-foot{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:12px}
+.deck-setup .setup-foot label.small{flex:0 0 auto}
+.deck-setup .setup-foot select{width:auto;min-width:120px}
+@media(max-width:760px){.deck-setup .preset-row{grid-template-columns:1fr;gap:8px}}
