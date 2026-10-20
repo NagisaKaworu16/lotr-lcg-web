@@ -72,6 +72,35 @@ body:has(.desktop-table) .brand{font-size:19px}body:has(.desktop-table) main{pad
 .operation-title{color:#24392f}
 .operation-title strong{color:#24392f}
 
+/* v0.14.4 unified box metrics: one card width, one panel padding, one radius,
+   equal-height card rows and equal-height zone headings so every frame lines
+   up on the same vertical rhythm. */
+:root{--panel-pad:16px;--panel-radius:10px;--card-w:132px;--card-gap:12px;--card-radius:8px}
+.tabletop-main{gap:var(--panel-pad)}
+.public-table,.player-mat{padding:var(--panel-pad);border-radius:var(--panel-radius)}
+.operation-dock{border-radius:var(--panel-radius)}
+.operation-title{padding:12px var(--panel-pad)}
+.operation-content{padding:0 var(--panel-pad)}
+.tabletop-rail>section,.tabletop-rail>details{padding:var(--panel-pad);border-radius:var(--panel-radius)}
+.quest-location-row{gap:var(--panel-pad)}
+.quest-location-row{padding-bottom:var(--panel-pad)}
+.table-zone{min-width:0}
+.zone-heading{min-height:32px;margin-bottom:10px;gap:10px}
+.zone-heading button{font-size:11px;padding:4px 9px;min-height:26px}
+.table-card-row{gap:var(--card-gap);align-items:stretch}
+.table-card{width:var(--card-w);flex:0 0 var(--card-w);border-radius:var(--card-radius);display:flex;flex-direction:column}
+.table-card .card-face{border-radius:6px;min-height:0}
+.table-card .table-card-caption{flex:1}
+.table-card .card-legality{margin-top:auto}
+.peer-cards .table-card{width:var(--card-w);flex-basis:var(--card-w)}
+.peer-cards .card-face{min-height:0}
+.quest-display>.card-art{width:var(--card-w);min-width:0}
+.operation-content .card-art{max-width:var(--card-w)}
+.rail-step{border-radius:6px}
+.deck-counts div{border-radius:6px}
+@media(min-width:1700px){:root{--card-w:140px}.table-card{width:var(--card-w);flex-basis:var(--card-w)}.peer-cards .table-card{width:var(--card-w);flex-basis:var(--card-w)}.tabletop-layout{grid-template-columns:minmax(0,1fr) 274px}}
+@media(max-width:1100px){:root{--card-w:118px}.table-card{width:var(--card-w);flex-basis:var(--card-w)}.peer-cards .table-card{width:var(--card-w);flex-basis:var(--card-w)}}
+
 </style></head><body>
 <header><a class="brand" href="#">✥ 中土远征 <small>THE LORD OF THE RINGS · LCG</small></a><nav><button id="tableTab" class="active">剧本桌面</button><button id="catalogTab">基础卡牌库 <span>55</span></button><button id="playersTab">英雄与玩家牌</button><button id="imagesTab">全部卡图</button><button id="helpTab">说明与完成范围</button></nav><div class="header-actions"><button id="undo">撤销一步</button><button id="export">导出存档</button><label class="button" for="import">导入存档</label><input id="import" type="file" accept="application/json" hidden></div></header>
 <main id="app"></main><div id="toast" role="status" aria-live="polite"></div>
