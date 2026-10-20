@@ -31,4 +31,4 @@
 
 2026-10-20后续授权：用户要求将v0.13.1上传私有仓库并新建分支，分支名不含「草稿」。本次交付分支fix/multiplayer-setup-v0131，包含整合功能和最新项目记忆／验收记录；仅创建分支，不新建PR、不合并main。此前未上传记录保留为历史，后续以docs/REMOTE_STATUS.md和GitHub实际状态为准。
 
-2026-10-20桌面改版：本地v0.14.0分支feature/tabletop-ui-v0140基于已上传v0.13.1，尚未上传；验收见tabletop-acceptance.md。同日完成真实浏览器验收（本机Chrome 155无头，scripts/browser-check.cjs），387项自动测试通过；派遣提交后自动切换到下一位未提交玩家视图。同日卡图全量本地化（v0.14.2）：ringsdb/hallofbeorn 国内被墙，1511张卡图镜像到assets（WebP，约96MB），local-image-map.js 映射，scripts/fetch-card-images.py＋optimize-card-images.py 维护，真实浏览器验证外网图片请求为0；389项测试通过。
+2026-10-20桌面改版至今：分支 feature/tabletop-ui-v0140 基于已上传 v0.13.1（c6f0724）连续迭代到 v0.15.0。含真实浏览器验收与三套审计脚本（browser-check／check-layout／check-contrast／check-taskbar）、1511 张卡图本地化、浅色纸面主题、统一框体尺寸与对齐、BGA 式任务条（当前任务＋全员确认进度）、每位玩家预组选择、牌表粘贴与 RingsDB 链接导入、我的卡组页与开局选牌、新游戏流程（剧本模式／支线剧情＋设置页）。400 项规则／模拟DOM测试通过。
