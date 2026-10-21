@@ -64,7 +64,7 @@ function enter(s,id){s.quest=id;s.progress=0;s.spawnDefeated=false;log(s,`进入
 }
 function initializePlayer(s,p){
  const by=Object.fromEntries(p.registeredDeck.cards.map(c=>[c.code,c]));
- p.heroStates=p.heroCards.map((c,index)=>({uid:++s.serial,code:c.code,index,exhausted:false,damage:0,resources:0,committed:false,destroyed:false}));
+ p.heroStates=p.heroCards.map((c,index)=>({uid:++s.serial,code:c.code,index,exhausted:false,damage:0,resources:s.difficulty==='easy'?1:0,committed:false,destroyed:false}));
  p.playerDeck=[];p.hand=[];p.playerDiscard=[];p.playerRemoved=[];p.allies=[];p.attachments=[];p.mulliganTaken=false;p.openingConfirmed=false;
  for(const [code,n] of Object.entries(p.registeredDeck.slots)){assert(by[code]&&['ally','attachment','event'].includes(by[code].type),'无效的玩家牌库卡牌。');assert(Number.isInteger(n)&&n>=0,'无效的玩家牌数量。');for(let i=0;i<n;i++)p.playerDeck.push({uid:++s.serial,code,owner:p.id});}
  shuffle(s,p.playerDeck);drawPlayer(s,p,6,true);log(s,`${p.name}抽取6张起始手牌（牌库剩${p.playerDeck.length}张）`);
@@ -86,13 +86,29 @@ function resourcePhase(s){
  for(const p of live(s))if(p.heroStates){for(const h of p.heroStates){if(h.destroyed||(!s.rescued&&s.prisoner?.player===p.id&&s.prisoner.hero===h.index))continue;h.resources++;}const count=drawPlayer(s,p,1);log(s,`${p.name}每名可用英雄获得1资源，抽取${count}张牌`);}
  s.resourceRound=s.round;
 }
+/* 官方 Easy Mode（LOTR Easy Mode Rules / MEC65 规则书）：setup 时每位英雄资源池 +1，
+   并从当前剧本遭遇牌库移除带「difficulty」金框标记的卡。早期剧本没有金框，按官方清单逐卡移除。
+   下表是核心包三剧本涉及遭遇组的官方清单（键为英文卡名，值为移除张数）。 */
+const EASY_REMOVE={
+ 'Chieftan Ufthak':1,'Dol Guldur Beastmaster':1,"Necromancer's Pass":1,"The Necromancer's Reach":2,
+ 'Eastern Crows':2,'Evil Storm':1,
+ 'Caught in a Web':2,'Eyes of the Forest':1,'Hummerhorns':1,
+ 'Hill Troll':1,'Marsh Adder':1,'Despair':2,
+ 'Massing at Night':1,'Gladden Fields':2,
+ 'Dungeon Jailor':2,
+};
 function create(scenarioId,players=1,seed=Date.now(),configs=null,options={}){
  assert(Number.isInteger(players)&&players>=1&&players<=4,'人数须为1–4。');const sc=D.scenarios.find(x=>x.id===scenarioId);assert(sc,'未知剧本。');
- const s={version:1,scenario:sc.id,quest:sc.stages[0],round:1,phase:0,first:0,serial:0,seed:(seed>>>0)||1,status:'playing',progress:0,phaseThreat:0,revealSteps:0,stagedRound:0,spawnDefeated:false,prisoner:null,rescued:false,players:[],deck:[],discard:[],staging:[],resolving:[],conditions:[],objectives:[],setaside:[],victory:[],active:null,pending:[],log:[]};
+ const difficulty=options.difficulty==='easy'?'easy':'normal';
+ const s={version:1,difficulty,scenario:sc.id,quest:sc.stages[0],round:1,phase:0,first:0,serial:0,seed:(seed>>>0)||1,status:'playing',progress:0,phaseThreat:0,revealSteps:0,stagedRound:0,spawnDefeated:false,prisoner:null,rescued:false,players:[],deck:[],discard:[],staging:[],resolving:[],conditions:[],objectives:[],setaside:[],victory:[],active:null,pending:[],log:[]};
  if(configs)assert(Array.isArray(configs)&&configs.length===players,'玩家牌组配置数量不符。');
  for(let i=0;i<players;i++){const c=configs?.[i];if(c)assert(Array.isArray(c.heroes)&&c.heroes.length>=1&&c.heroes.length<=3&&Number.isInteger(c.startingThreat),'无效英雄配置。');s.players.push({id:i,name:`玩家${i+1}`,threat:c?c.startingThreat:[29,29,24,30][i],heroes:c?[...c.heroes]:[...roster[i]],...(c?{heroCodes:[...c.heroCodes],heroCards:clone(c.heroCards),registeredDeck:clone(c.registeredDeck)}:{}),engaged:[],eliminated:false});}
- for(const d of D.cards.filter(c=>sc.sets.includes(c.set)))for(let i=0;i<d.quantity;i++)s.deck.push({...clone(d),uid:++s.serial});shuffle(s,s.deck);
- log(s,`开始「${sc.name}」 · ${players}人 · 普通模式`);
+ for(const d of D.cards.filter(c=>sc.sets.includes(c.set))){
+  const qty=d.quantity-(difficulty==='easy'?(EASY_REMOVE[d.en]||0):0);
+  for(let i=0;i<qty;i++)s.deck.push({...clone(d),uid:++s.serial});
+ }
+ shuffle(s,s.deck);
+ log(s,`开始「${sc.name}」 · ${players}人 · ${difficulty==='easy'?'简单模式（每位英雄+1资源，移除难度标记卡）':'标准模式'}`);
  if(options.openingTest)s.openingTest=true;
  if(options.first!==undefined){assert(Number.isInteger(options.first)&&options.first>=0&&options.first<players,'起始玩家必须在本局人数范围内。');s.first=options.first;}
  for(const p of s.players)if(p.registeredDeck){initializePlayer(s,p);p.openingConfirmed=!options.deferSetup;}
