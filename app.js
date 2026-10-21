@@ -90,9 +90,11 @@ const CHAPTER_VIEWS={
 };
 function ngArt(entry){
  const fb=`<span class="ng-art-fallback"><b>${enc(entry.zh||entry.en||entry.name)}</b><i>${entry.playable?'封面待替换':'占位封面'}</i></span>`;
+ /* 方形框里完整显示封面，空出来的地方用同图放大模糊填充，避免竖版盒图被裁掉边角。 */
  const img=entry.art?`<img src="${enc(entry.art)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="const s=this.getAttribute('src')||'';if(/\.webp$/.test(s)){this.setAttribute('src',s.replace(/\.webp$/,'.jpg'))}else{this.remove()}">`:'';
  const badges=(entry.playable?'<span class="ng-ready-badge">可玩</span>':'')+(entry.pub==='community'?'<span class="ng-community-badge">社区</span>':'');
- return `<div class="ng-card-art">${fb}${img}${badges}</div>`;
+ const style=entry.art?` style="--ng-art:url('${enc(entry.art)}')"`:'';
+ return `<div class="ng-card-art${entry.art?' has-art':''}"${style}>${fb}${img}${badges}</div>`;
 }
 function ngCard(entry){const attrs=entry.ready?`data-action="ngOpen" data-kind="${entry.kind}" data-id="${entry.id}"`:`data-action="ngLocked" data-id="${entry.id}" data-name="${enc(entry.zh||entry.name)}"`;
  const title=entry.zh||entry.name,en=entry.en===''?'':(entry.en||entry.name);

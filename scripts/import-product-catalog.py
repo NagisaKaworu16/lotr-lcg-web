@@ -123,7 +123,11 @@ def zh_name(name, titles):
     return ''
 
 
-def convert(path, dest, max_side=520, quality=82):
+COVER_SIDE = 640   # 卡片方框约 160–190px 宽；保留原始比例，由 CSS 的 contain + 模糊底放进方框
+
+
+def convert(path, dest, max_side=COVER_SIDE, quality=82):
+    """Keep the artwork's own aspect ratio (never crop, never upscale)."""
     with Image.open(path) as im:
         im = im.convert('RGBA')
         w, h = im.size
@@ -168,6 +172,7 @@ def load_manifest():
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--source', required=True, help='folder containing products.json and images/')
+    ap.add_argument('--rebuild-images', action='store_true', help='rewrite every cover, even if the webp exists')
     args = ap.parse_args()
 
     with io.open(os.path.join(args.source, 'products.json'), encoding='utf-8') as fh:
@@ -198,7 +203,7 @@ def main():
         ident = slug_id(p['slug'])
         dest_name = ident + '.webp'
         dest = os.path.join(OUT_IMG, dest_name)
-        if not os.path.isfile(dest):
+        if args.rebuild_images or not os.path.isfile(dest):
             convert(src, dest)
             converted += 1
         publisher = p.get('publisher', '')

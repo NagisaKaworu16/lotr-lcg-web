@@ -166,8 +166,8 @@ nav button.active:hover{background:transparent;color:#f6e3ad}
 .ng-chapter-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-bottom:8px;border-bottom:1px solid var(--line);font-size:11px;letter-spacing:1.6px;color:var(--green);text-transform:uppercase}
 .ng-card{position:relative;display:flex;flex-direction:column;background:#fffdf6;border:1px solid var(--line);border-radius:10px;overflow:hidden;cursor:pointer;text-align:left}
 .ng-card:hover{border-color:var(--gold);box-shadow:0 6px 16px #24392f1f;transform:translateY(-2px)}
-.ng-card-art{position:relative;aspect-ratio:16/10;background:#efeee2;overflow:hidden;display:flex;align-items:center;justify-content:center}
-.ng-card-art img{position:relative;z-index:1;width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
+.ng-card-art{position:relative;aspect-ratio:1/1;background:#efeee2;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.ng-card-art img{position:relative;z-index:1;width:100%;height:100%;object-fit:contain;object-position:center;display:block}
 .ng-art-fallback{position:absolute;inset:0;z-index:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:12px;text-align:center;background:linear-gradient(160deg,#33473f,#243a31 60%,#1d2f28);color:#e8dfc4}
 .ng-art-fallback b{font:600 12px/1.4 Georgia,serif;letter-spacing:1.2px;text-transform:uppercase;max-width:92%}
 .ng-art-fallback i{font:400 10px/1.4 system-ui;color:#a9b7a4;font-style:normal}
@@ -205,8 +205,8 @@ nav button.active:hover{background:transparent;color:#f6e3ad}
 @media(max-width:560px){.ng-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
 /* v0.15.2 product covers: portrait box art sits inside a 4:3 tile. */
-.ng-card-art{aspect-ratio:3/4;background:#eae7d9}
-.ng-card-art img{object-fit:cover;object-position:center top;background:#eae7d9}
+.ng-card-art{aspect-ratio:1/1;background:#eae7d9}
+.ng-card-art img{object-fit:contain;object-position:center;background:transparent}
 .ng-community-badge{position:absolute;z-index:2;top:6px;left:6px;background:#7a5c3e;color:#fff;font-size:10px;padding:1px 6px;border-radius:3px;letter-spacing:.5px}
 .ng-card .ng-card-body h3{font-size:13px;line-height:1.35}
 .ng-card.locked .ng-card-art img{filter:grayscale(.25);opacity:.95}
@@ -257,6 +257,13 @@ header{gap:18px}
 .nav-home.active .brand-mark{filter:drop-shadow(0 0 5px #f6e3ad66)}
 body:has(.desktop-table) .nav-home .brand-mark{width:17px;height:17px}
 @media(max-width:900px){.nav-home .brand-mark{width:17px;height:17px}}
+
+/* v0.15.17 square covers: artwork stays complete (contain), the gaps are filled by a blurred copy. */
+.ng-card-art.has-art::before{content:'';position:absolute;inset:0;background-image:var(--ng-art);background-size:cover;background-position:center;background-repeat:no-repeat;filter:blur(18px) saturate(1.1) brightness(.8);transform:scale(1.2);opacity:.95;z-index:0}
+.ng-card-art.has-art{background:#dfdccb}
+.ng-card-art img{position:relative;z-index:1;width:100%;height:100%;object-fit:contain;display:block}
+.ng-card.locked .ng-card-art img{filter:none;opacity:1}
+.ng-card-art.has-art .ng-art-fallback{display:none}
 
 </style></head><body>
 <header><nav><button id="tableTab" class="active nav-home" title="回到首页"><svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><defs><linearGradient id="brandGold" x1="10" y1="8" x2="54" y2="57" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fdf4cd"/><stop offset=".32" stop-color="#e3c47a"/><stop offset=".55" stop-color="#a9853f"/><stop offset=".78" stop-color="#e8cb86"/><stop offset="1" stop-color="#fffae0"/></linearGradient><radialGradient id="brandField" cx=".5" cy=".42" r=".58"><stop offset="0" stop-color="#8a4a16"/><stop offset=".46" stop-color="#4a2a10"/><stop offset="1" stop-color="#150e07"/></radialGradient></defs><circle cx="32" cy="32" r="21" fill="#0d1710" fill-opacity=".62"/><circle cx="32" cy="32" r="21" fill="none" stroke="url(#brandGold)" stroke-width="7"/><path d="M14.6 19.2A21 21 0 0 1 32.6 10.9" fill="none" stroke="#fffbe8" stroke-width="2.4" stroke-linecap="round" opacity=".55"/></svg>首页</button><button id="catalogTab">基础卡牌库 <span>55</span></button><button id="decksTab">我的卡组</button><button id="playersTab">英雄与玩家牌</button><button id="imagesTab">全部卡图</button><button id="helpTab">说明与完成范围</button></nav><div class="history-nav"><button id="navBack" type="button" title="后退" aria-label="后退">←</button><button id="navFwd" type="button" title="前进" aria-label="前进">→</button></div><div class="header-actions"><button id="undo">撤销一步</button><button id="export">导出存档</button><label class="button" for="import">导入存档</label><input id="import" type="file" accept="application/json" hidden></div></header>
@@ -8296,9 +8303,11 @@ const CHAPTER_VIEWS={
 };
 function ngArt(entry){
  const fb=`<span class="ng-art-fallback"><b>${enc(entry.zh||entry.en||entry.name)}</b><i>${entry.playable?'封面待替换':'占位封面'}</i></span>`;
+ /* 方形框里完整显示封面，空出来的地方用同图放大模糊填充，避免竖版盒图被裁掉边角。 */
  const img=entry.art?`<img src="${enc(entry.art)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="const s=this.getAttribute('src')||'';if(/\.webp$/.test(s)){this.setAttribute('src',s.replace(/\.webp$/,'.jpg'))}else{this.remove()}">`:'';
  const badges=(entry.playable?'<span class="ng-ready-badge">可玩</span>':'')+(entry.pub==='community'?'<span class="ng-community-badge">社区</span>':'');
- return `<div class="ng-card-art">${fb}${img}${badges}</div>`;
+ const style=entry.art?` style="--ng-art:url('${enc(entry.art)}')"`:'';
+ return `<div class="ng-card-art${entry.art?' has-art':''}"${style}>${fb}${img}${badges}</div>`;
 }
 function ngCard(entry){const attrs=entry.ready?`data-action="ngOpen" data-kind="${entry.kind}" data-id="${entry.id}"`:`data-action="ngLocked" data-id="${entry.id}" data-name="${enc(entry.zh||entry.name)}"`;
  const title=entry.zh||entry.name,en=entry.en===''?'':(entry.en||entry.name);

@@ -30,22 +30,17 @@ MAPPING = {
     '埃瑞德米斯林': 'Ered-Mithrin-Campaign-Expansion',
 }
 
-TARGET_W, TARGET_H = 390, 520   # 3:4, matches the .ng-card-art frame
+TARGET = 640   # longest side; the square frame uses contain + a blurred backdrop
 RENDER_DPI = 200
 
 
-def crop_to_ratio(im, ratio):
-    """Center-crop to ratio (w/h) without upscaling."""
+def fit_longest(im, longest):
+    """Scale so the longest side is `longest`, never upscaling; keeps the original ratio."""
     w, h = im.size
-    if abs(w / h - ratio) < 1e-3:
-        return im
-    if w / h > ratio:                      # too wide -> trim sides
-        new_w = max(1, round(h * ratio))
-        left = (w - new_w) // 2
-        return im.crop((left, 0, left + new_w, h))
-    new_h = max(1, round(w / ratio))       # too tall -> trim top/bottom
-    top = (h - new_h) // 2
-    return im.crop((0, top, w, top + new_h))
+    scale = min(1.0, longest / max(w, h))
+    if scale < 1.0:
+        return im.resize((max(1, int(w * scale)), max(1, int(h * scale))), Image.LANCZOS)
+    return im
 
 
 def main():
@@ -56,7 +51,6 @@ def main():
     args = ap.parse_args()
 
     os.makedirs(OUT_IMG, exist_ok=True)
-    ratio = TARGET_W / TARGET_H
     done = missing = 0
 
     for stem, slug in MAPPING.items():
@@ -71,11 +65,11 @@ def main():
         im = Image.open(io.BytesIO(pix.tobytes('png'))).convert('RGB')
         pages = doc.page_count
         doc.close()
-        im = crop_to_ratio(im, ratio).resize((TARGET_W, TARGET_H), Image.LANCZOS)
+        im = fit_longest(im, TARGET)
         im.save(dest, 'WEBP', quality=args.quality, method=6)
         size = os.path.getsize(dest)
         print('wrote    %-46s %4dx%-4d %5.1fKB  <- %s.pdf (%d pages)'
-              % (slug + '.webp', TARGET_W, TARGET_H, size / 1024, stem, pages))
+              % (slug + '.webp', im.size[0], im.size[1], size / 1024, stem, pages))
         done += 1
 
     print('covers written=%d missing=%d' % (done, missing))

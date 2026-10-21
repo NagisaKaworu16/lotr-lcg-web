@@ -8,7 +8,7 @@
 | 路径 | 作用 |
 |---|---|
 | `product-catalog.js` | 生成文件：180 条产品，按页签与章节分好组（无需手改） |
-| `assets/products/<slug>.webp` | 产品封面，长边 ≤520，q82，共约 2.3MB |
+| `assets/products/<slug>.webp` | 产品封面，长边 ≤640（不放大、不裁切），q82，共约 2.6MB |
 | `assets/scenarios/<id>.webp` | 可选：覆盖「可玩剧本」的封面（缺省用文字占位） |
 | `scripts/import-product-catalog.py` | 导入脚本（Pillow，需 venv） |
 
@@ -64,7 +64,7 @@ python build.py
 
 ## 用 PDF 首页做封面
 
-官方目录快照里的封面只有 235×235（近方形），放进 3:4 的封面框会被裁得很厉害。
+官方目录快照里的封面只有 142–235px 宽，直接放进方形卡片会糊或变形，用战役书首页替换会更清晰。
 战役书 PDF 的第一页就是完整竖版封面，可以直接拿来替换：
 
 ```bash
@@ -72,7 +72,7 @@ python build.py
   scripts/extract-pdf-covers.py --source "C:/Users/Administrator/Downloads"
 ```
 
-- 渲染首页（200 dpi）→ 居中裁成 3:4 → 390×520 WebP q85 → 覆盖 `assets/products/<slug>.webp`。
+- 渲染首页（200 dpi）→ 等比缩到长边 640（不裁切）→ WebP q85 → 覆盖 `assets/products/<slug>.webp`。
 - 裁剪方向自适应：原图偏宽裁左右，偏高裁上下；永远不放大。
 - 映射写在脚本的 `MAPPING` 里（PDF 文件名 → 产品 slug）：
 
@@ -82,7 +82,7 @@ python build.py
 | `逐梦者.pdf` | `Dream-chaser-Campaign-Expansion` |
 | `埃瑞德米斯林.pdf` | `Ered-Mithrin-Campaign-Expansion` |
 
-**注意**：`import-product-catalog.py` 只在目标文件不存在时才转换图片，所以重跑导入不会把这几个封面还原成官方盒图；
+**注意**：`import-product-catalog.py` 只在目标文件不存在时才转换图片（整批重转用 `--rebuild-images`），所以重跑导入不会把这几个封面还原成官方盒图；
 真要还原，删掉对应的 `.webp` 再跑导入脚本。PDF 本身不入库（体积大且受版权保护），仓库只保存裁好的 WebP。
 
 ## 权益说明
