@@ -20,6 +20,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT_IMG = os.path.join(ROOT, 'assets', 'products')
 OUT_JS = os.path.join(ROOT, 'product-catalog.js')
 ZH_JSON = os.path.join(ROOT, 'product-zh.json')
+POD_MANIFEST = os.path.join(ROOT, 'pod-manifest.json')
 
 # English group -> Chinese chapter title (fallback keeps the English name)
 GROUP_ZH = {
@@ -129,9 +130,11 @@ def convert(path, dest, max_side=520, quality=82):
         im.save(dest, 'WEBP', quality=quality, method=6)
 
 
-def chapter_label(group, publisher, category, tab=None):
+def chapter_label(group, publisher, category, tab=None, pod_type=''):
+    if tab == 'pod':
+        return '官方 POD' if pod_type == 'official_pod' else 'ALeP 自制独立作品'
     if category == 'Revised Content':
-        return '新版 POD（Revised）' if tab == 'pod' else '新版扩展（Revised）'
+        return '新版扩展（Revised）'
     zh = GROUP_ZH.get(group)
     if category == 'Nightmare Decks':
         bare = re.sub(r'\s+Nightmare(?:\s+(?:Deck|Decks|Product))?$', '', group).strip()
@@ -140,6 +143,23 @@ def chapter_label(group, publisher, category, tab=None):
     if publisher != 'Fantasy Flight Games':
         return '社区 · ' + (GROUP_ZH.get(group) or group)
     return zh or GROUP_ZH.get(group + ' Cycle') or group
+
+
+CODE_IN_NAME = re.compile(r'\(([A-Z]+[0-9][0-9A-Z-]*)\)\s*$')
+
+
+def code_of(name):
+    m = CODE_IN_NAME.search(name or '')
+    return m.group(1) if m else ''
+
+
+def load_manifest():
+    """Selected POD manifest: the authority for what counts as 支线剧情."""
+    if not os.path.isfile(POD_MANIFEST):
+        return []
+    with io.open(POD_MANIFEST, encoding='utf-8') as fh:
+        data = json.load(fh)
+    return data.get('items', [])
 
 
 def main():
@@ -152,11 +172,15 @@ def main():
     products = data['products'] if isinstance(data, dict) else data
 
     titles = load_zh()
+    manifest = load_manifest()
+    by_code = {i['code']: i for i in manifest if i.get('code')}
     os.makedirs(OUT_IMG, exist_ok=True)
     KEYS = ('revised', 'legacy', 'pod', NIGHTMARE_TAB)
     order = {k: [] for k in KEYS}
     chapters = {k: {} for k in KEYS}
     converted = skipped = 0
+    seen_codes = set()
+    seen_titles = set()
 
     for p in products:
         if p.get('status') != 'ok' or not p.get('file'):
@@ -180,22 +204,40 @@ def main():
         if base in SKIP_NAMES:
             skipped += 1
             continue
+        if PROMO_RE.search(base):
+            # Preorder promotions reprint an existing scenario; they are not new content.
+            skipped += 1
+            continue
+        code = code_of(name)
+        if code:
+            seen_codes.add(code)
+        seen_titles.add(base.lower())
+        pod = by_code.get(code) if code else None
         hero = HERO_RE.match(base)
         if hero and category == 'Revised Content':
             # Same cycle as the campaign box, which is the one holding the scenarios.
             skipped += 1
             continue
-        if category == 'Nightmare Decks':
-            tab = NIGHTMARE_TAB
+        pod_type = ''
+        if pod:
+            tab = 'pod'
+            pod_type = pod['type']
         elif base in POD_OVERRIDES:
             tab = 'pod'
-        elif category in POD_CATEGORIES or publisher != 'Fantasy Flight Games':
+            pod_type = 'official_pod'
+        elif category == 'Nightmare Decks':
+            tab = NIGHTMARE_TAB
+        elif category in POD_CATEGORIES:
             tab = 'pod'
+            pod_type = 'official_pod'
+        elif publisher != 'Fantasy Flight Games':
+            # Community cycles are deluxe + adventure packs, so they belong with the legacy boxes.
+            tab = 'legacy'
         elif category == 'Revised Content':
             tab = 'revised'
         else:
             tab = 'legacy'
-        label = chapter_label(group, publisher, category, tab)
+        label = chapter_label(group, publisher, category, tab, pod_type)
         campaign = CAMPAIGN_RE.match(base) if category == 'Revised Content' else None
         series = campaign.group(1) if campaign else ''
         zh = (titles.get(series) or zh_name(p.get('name', ''), titles)) if series else zh_name(p.get('name', ''), titles)
@@ -214,6 +256,40 @@ def main():
             order[tab].append(label)
         chapters[tab][label].append(item)
 
+    # Manifest entries the catalogue snapshot never collected (e.g. The Mirror of Galadriel).
+    for it in manifest:
+        if it.get('code') and it['code'] in seen_codes:
+            continue
+        if it['title_en'].lower() in seen_titles:
+            continue
+        ident = 'pod-' + slug_id(it['title_en']).lower()
+        art = ''
+        cover = it.get('cover') or ''
+        if cover:
+            src = os.path.join(args.source, '..', 'lotr-pod-workbuddy', cover.replace('/', os.sep))
+            src = os.path.normpath(src)
+            if os.path.isfile(src):
+                dest = os.path.join(OUT_IMG, ident + '.webp')
+                convert(src, dest)
+                art = 'assets/products/' + ident + '.webp'
+                converted += 1
+        pod_type = it['type']
+        label = chapter_label('', '', '', 'pod', pod_type)
+        if label not in chapters['pod']:
+            chapters['pod'][label] = []
+            order['pod'].append(label)
+        chapters['pod'][label].append({
+            'id': ident,
+            'name': it['title_en'],
+            'en': it['title_en'],
+            'zh': titles.get(it['title_en'], ''),
+            'art': art,
+            'meta': 'ALeP 自制' if pod_type == 'fan_standalone' else '官方 POD',
+            'pub': 'community' if pod_type == 'fan_standalone' else 'ffg',
+            'cat': 'Print on Demand',
+        })
+        seen_titles.add(it['title_en'].lower())
+
     def build(tab, start_index):
         out = []
         for i, label in enumerate(order[tab], start=start_index):
@@ -225,7 +301,7 @@ def main():
         'generated': '2026-10-21',
         'revised': build('revised', 2),     # chapter 1 is the playable core set
         'legacy': build('legacy', 1),
-        'pod': build('pod', 2),             # chapter 1 is the three playable core scenarios
+        'pod': build('pod', 1),
         'nightmare': build(NIGHTMARE_TAB, 1),
     }
     with io.open(OUT_JS, 'w', encoding='utf-8', newline='\n') as fh:

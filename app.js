@@ -54,7 +54,7 @@ const NEW_GAME_TABS=[
 const NG_NOTE={
  revised:'新版扩展（Revised）：旧循环的重制版本，剧本按系列收录。',
  legacy:'旧版扩展：每个循环由一个大扩展加六到八个剧本组成，点开扩展挑选剧本。',
- pod:'支线剧情（POD）：官方 POD 与社区作品，可脱离循环单独游玩。',
+ pod:'支线剧情（POD）：官方单独发售的剧本与 ALeP 自制独立作品，可脱离循环单独游玩。',
  nightmare:'噩梦包：各循环的高难度变体，需配合对应剧本使用。'
 };
 const BASE_CORE={id:'core',kind:'campaign',ready:true,playable:true,name:'基础剧本合集',en:'Core Set Campaign',art:PRODUCT_IMG+'Revised-Core-Set.webp',meta:'3 个剧本 · 连续或单场'};
@@ -79,7 +79,7 @@ function seriesById(id){return id==='core'?CORE_SERIES:(legacySeries().find(s=>s
 const CHAPTER_VIEWS={
  revised:[{label:'CHAPTER 1 · 基础版',items:[BASE_CORE]}].concat(PRODUCT_TABS.revised||[]),
  legacy:[],
- pod:[{label:'CHAPTER 1 · 基础版',items:POD_READY}].concat(PRODUCT_TABS.pod||[]),
+ pod:(PRODUCT_TABS.pod||[]),
  nightmare:(PRODUCT_TABS.nightmare||[])
 };
 function ngArt(entry){

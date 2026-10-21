@@ -13,7 +13,11 @@
         "罗瓦尼安荒野",
         "东方阴影",
         "霍比特人：越过山丘与洞穴",
-        "黑骑手"
+        "黑骑手",
+        "第一纪元",
+        "伊欧的子嗣",
+        "夏尔的清算",
+        "费艾诺的遗产"
       ],
       "subs": [
         "Core Set · 暗影中的魔窟 · 6 个剧本",
@@ -26,9 +30,13 @@
         "The Wilds of Rhovanion · 埃瑞德米斯林 · 6 个剧本",
         "A Shadow in the East · 复仇魔多 · 6 个剧本",
         "The Hobbit: Over Hill and Under Hill · 霍比特人传奇 · 1 个剧本",
-        "The Black Riders · 魔戒传奇 · 5 个剧本"
+        "The Black Riders · 魔戒传奇 · 5 个剧本",
+        "First Age · 社区 · 命运主宰 · 4 个剧本",
+        "Children of Eorl · 社区 · 洛汗誓言 · 6 个剧本",
+        "The Shire's Reckoning · 社区 · 陨落之夏 · 2 个剧本",
+        "The Legacy of Fëanor · 社区 · 费艾诺的遗产 · 1 个剧本"
       ],
-      "open": 11,
+      "open": 15,
       "broken": 0,
       "overflowX": false
     }
@@ -90,7 +98,11 @@
         "罗瓦尼安荒野",
         "东方阴影",
         "霍比特人：越过山丘与洞穴",
-        "黑骑手"
+        "黑骑手",
+        "第一纪元",
+        "伊欧的子嗣",
+        "夏尔的清算",
+        "费艾诺的遗产"
       ],
       "subs": [
         "Core Set · 暗影中的魔窟 · 6 个剧本",
@@ -103,9 +115,13 @@
         "The Wilds of Rhovanion · 埃瑞德米斯林 · 6 个剧本",
         "A Shadow in the East · 复仇魔多 · 6 个剧本",
         "The Hobbit: Over Hill and Under Hill · 霍比特人传奇 · 1 个剧本",
-        "The Black Riders · 魔戒传奇 · 5 个剧本"
+        "The Black Riders · 魔戒传奇 · 5 个剧本",
+        "First Age · 社区 · 命运主宰 · 4 个剧本",
+        "Children of Eorl · 社区 · 洛汗誓言 · 6 个剧本",
+        "The Shire's Reckoning · 社区 · 陨落之夏 · 2 个剧本",
+        "The Legacy of Fëanor · 社区 · 费艾诺的遗产 · 1 个剧本"
       ],
-      "open": 11,
+      "open": 15,
       "broken": 0,
       "overflowX": false
     }

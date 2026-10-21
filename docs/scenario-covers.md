@@ -26,14 +26,20 @@ python build.py
 
 | 判断 | 页签 |
 |---|---|
+| 产品编号命中 `pod-manifest.json` | 支线剧情（按 `type` 分「官方 POD」／「ALeP 自制独立作品」） |
+| `base in POD_OVERRIDES`（manifest 缺失时的后备） | 支线剧情 |
 | `category == Nightmare Decks` | 噩梦包 |
-| `base in POD_OVERRIDES`（如 `The Dark of Mirkwood`） | 支线剧情 |
-| `category == Print on Demand` 或非 FFG 出版 | 支线剧情 |
+| `category == Print on Demand` | 支线剧情 |
+| 非 FFG 出版（社区） | 旧版扩展（社区循环同样是大盒 + 冒险包） |
 | `category == Revised Content` | 新版扩展 |
 | 其余（Cycles / Sagas） | 旧版扩展 |
 
-- 新版扩展 / 旧版扩展 / 支线剧情 / 噩梦包 四个页签，共 172 条（另 8 条被跳过）。
-- **新版扩展每个系列只出一条**：一个循环重制成「英雄扩展 + 战役扩展」两盒，剧本只在战役盒里，
+- 新版扩展 / 旧版扩展 / 支线剧情 / 噩梦包 四个页签，共 165 条。
+- **支线剧情由 `pod-manifest.json` 定义**（来源 `lotr-pod-workbuddy/pod-import.json`）：官方 POD 14 项
+  + ALeP 自制独立作品 5 项 + 你指定保留的黑森林之黯（MEC102）= 20 项。清单外的官方 POD 特性与社区作品
+  不会进入这个页签；预购特典（`Preorder Promotion`）一律跳过，因为不含新剧本。
+  清单里目录没采集到的条目（凯兰崔尔之镜）会用缺图占位补录，`art` 留空、`title` 悬停可查原名。
+- **旧版扩展每个系列只出一条**：一个循环重制成「英雄扩展 + 战役扩展」两盒，剧本只在战役盒里，
   所以英雄盒直接跳过（`HERO_RE`），条目落在战役盒上，标题用系列名（如「安格玛觉醒」）、
   副标题用系列英文名（`Angmar Awakened`），点击后对应的是战役盒。传奇扩展（魔戒同盟等）本来就是单盒，不受影响。
   `assets/products/` 里仍保留英雄盒封面，以后要恢复成两条时可以直接引用。
@@ -41,9 +47,8 @@ python build.py
   `Defenders of Gondor`、`Riders of Rohan` —— 基础版本身在页面里以「基础剧本合集」出现，不再重复列出。
 - 章节 = 目录里的 `group`，`GROUP_ZH` 给出中文章名；噩梦包章节统一为「噩梦 · <循环名>」，
   社区作品统一加「社区 · 」前缀。
-- 只有基础版（`core`）与三个核心剧本标记为 `ready: true`，其余是 `ready: false` 的占位：
-  点击提示「只是封面占位」，不会进入设置页，也不会创建对局。
-- `ready: true` 的剧本没有产品封面时，`POD_READY` 会取各剧本第一张探险卡正面图作封面。
+- 只有基础版（`core`）与三个核心剧本标记为 `ready/playable: true`，其余是占位：
+  点击剧本会提示「只是封面占位」，不会创建对局。
 
 ## 加新条目
 
@@ -99,7 +104,7 @@ python build.py
   其余是占位，卡片标「待实现」，点「下一步」会拦下并提示。
 - 传奇扩展（霍比特人／魔戒）同样适用：首盒当大盒，其余盒成为它里面的剧本
   （霍比特人 1 个、魔戒 5 个），因为它们是按顺序推进的一串剧本。
-- 基础剧本合集与支线剧情的三个剧本共用 `CORE_SERIES`（`seriesById('core')`）。
+- 基础剧本合集的三个剧本由 `CORE_SERIES`（`seriesById('core')`）提供；支线剧情页签不再重复这三个剧本。
 
 验收：
 
@@ -119,7 +124,7 @@ NODE_PATH="<node workspace>/node_modules" node scripts/check-legacy-packs.cjs
 3. 预购特典后缀（`Preorder Promotion`）→ 基础名 + 「（预购特典）」；
 4. 都没有则留空，界面回退显示英文原名。
 
-当前覆盖率 172/172。卡片标题显示中文，副标题用去编号的英文名（新版扩展的系列名，如 `Angmar Awakened`；
+当前覆盖率 165/165。卡片标题显示中文，副标题用去编号的英文名（新版扩展的系列名，如 `Angmar Awakened`；
 完整产品原名与 `MECxx` 编号保留在卡片的 `title` 悬停提示里），便于和官方产品对照。
 译名以**魔戒中文维基译名表**为准（如 Carrock→卡尔岩、Rhosgobel→罗斯戈贝尔、Erech→埃瑞赫、
 Wainriders→战车民、Tharbad→沙巴德、Carn Dûm→卡恩督姆、Nurn→努尔恩、Osgiliath→欧斯吉利亚斯）。

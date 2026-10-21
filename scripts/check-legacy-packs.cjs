@@ -33,7 +33,7 @@ const WIDTHS=[1440,768];
    };
   });
   report.push({width,legacyList:list});
-  if(list.cards.length!==11)report.push({width,error:'大扩展数量应为 11，实际 '+list.cards.length});
+  if(list.cards.length!==15)report.push({width,error:"大扩展数量应为 15，实际 "+list.cards.length});
   if(list.broken)report.push({width,error:`列表 ${list.broken} 张封面未加载`});
   if(list.overflowX)report.push({width,error:'列表出现横向滚动'});
   await page.evaluate(()=>window.scrollTo(0,0));
@@ -80,12 +80,14 @@ const WIDTHS=[1440,768];
    await page.screenshot({path:path.join(OUT,`${width}-legacy-packs-scrolled.png`)});
   }
 
-  /* the base game must still be selectable in standalone mode */
+  /* the base game must still be fully playable; it now lives under 新版扩展 */
   await page.click('[data-action="ngBack"]');
   await page.waitForTimeout(150);
-  await page.click('.ng-tabs button[data-value="pod"]');
+  await page.click('.ng-tabs button[data-value="revised"]');
   await page.waitForTimeout(150);
-  await page.click('[data-id="anduin"]');
+  await page.click('[data-action="ngOpen"][data-id="core"]');
+  await page.waitForTimeout(200);
+  await page.click('[data-action="ngMode"][data-value="standalone"]');
   await page.waitForTimeout(200);
   const base=await page.evaluate(()=>({
    packs:[...document.querySelectorAll('.ng-pack')].map(c=>c.querySelector('h3').textContent.trim()),
