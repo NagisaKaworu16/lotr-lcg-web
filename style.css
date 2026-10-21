@@ -232,3 +232,13 @@ nav button.active:hover{background:transparent;color:#f6e3ad}
 .ng-pack.selected .ng-card-go{color:var(--green);font-weight:700}
 @media(max-width:860px){.ng-pack-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:560px){.ng-pack-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* v0.15.11 header history controls: back / forward + clickable brand acts as home. */
+.history-nav{display:flex;gap:4px}
+.history-nav button{padding:5px 11px;font-size:14px;line-height:1.15;background:#3b5141;color:#f6e3ad;border-color:#7c8c74;min-width:34px}
+.history-nav button:hover{background:#46604c;border-color:#c4a265}
+.history-nav button:disabled{opacity:.35}
+.brand{cursor:pointer}
+.brand:hover{color:#f6e3ad}
+body:has(.desktop-table) .history-nav button{padding:4px 9px;font-size:13px}
+@media(max-width:900px){.history-nav{order:3}}

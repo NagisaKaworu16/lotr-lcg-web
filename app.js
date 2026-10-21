@@ -66,10 +66,14 @@ let legacyCache=null;
 function legacySeries(){
  if(legacyCache)return legacyCache;
  legacyCache=(PRODUCT_TABS.legacy||[]).map(ch=>{
+  const name=ch.label.replace(/^CHAPTER\s+\d+\s+·\s*/,'');
   const items=ch.items.filter(x=>!PACK_SKIP.test(x.name));
-  const [deluxe,...packs]=items;
-  if(!deluxe)return null;
-  return {...deluxe,kind:'legacy',ready:true,playable:false,packs,series:ch.label.replace(/^CHAPTER\s+\d+\s+·\s*/,'')};
+  /* ch.box 是该章的大盒 id；核心包被移除后为 null，此时用章节名承载剩下的剧本。 */
+  const deluxe=ch.box?(items.find(x=>x.id===ch.box)||null):null;
+  const packs=deluxe?items.filter(x=>x!==deluxe):items;
+  if(!packs.length)return null;
+  const head=deluxe||{id:'chapter-'+(ch.key||name),name,en:'',zh:name,art:(packs[0]&&packs[0].art)||''};
+  return {...head,kind:'legacy',ready:true,playable:false,packs,series:deluxe?name:''};
  }).filter(Boolean);
  return legacyCache;
 }
@@ -89,7 +93,7 @@ function ngArt(entry){
  return `<div class="ng-card-art">${fb}${img}${badges}</div>`;
 }
 function ngCard(entry){const attrs=entry.ready?`data-action="ngOpen" data-kind="${entry.kind}" data-id="${entry.id}"`:`data-action="ngLocked" data-id="${entry.id}" data-name="${enc(entry.zh||entry.name)}"`;
- const title=entry.zh||entry.name,en=entry.en||entry.name;
+ const title=entry.zh||entry.name,en=entry.en===''?'':(entry.en||entry.name);
  const sub=entry.zh?[en,entry.series,entry.packs&&entry.packs.length?entry.packs.length+' 个剧本':''].filter(Boolean).join(' · '):(entry.meta||'');
  const go=entry.playable?'开始 →':entry.ready?'选择剧本 →':'尚未实现';
  return `<article class="ng-card${entry.ready?'':' locked'}" ${attrs} title="${enc(title)}${entry.zh?'｜'+enc(entry.name):''}">${ngArt(entry)}<div class="ng-card-body"><h3>${enc(title)}</h3><p class="small muted ng-card-en">${enc(sub)}</p></div><span class="ng-card-go">${go}</span></article>`;}
@@ -167,7 +171,7 @@ async function handleChooser(b){const a=b.dataset.action,c=deckChooser;if(!c)ret
  if(a==='chooserImportUrl'){const input=document.querySelector('#chooser-url'),raw=String(input&&input.value||'').trim(),m=raw.match(/(?:decklist|deck)\/(?:view\/)?(\d+)/i)||raw.match(/^(\d+)$/);if(!m){toast('无法识别牌组编号；示例 https://ringsdb.com/decklist/view/12345');return;}const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),15000);try{const res=await fetch('https://ringsdb.com/api/public/decklist/'+m[1],{signal:ctrl.signal,headers:{Accept:'application/json'}});if(!res.ok)throw Error('RingsDB 返回 HTTP '+res.status);const saved=PlayerUI.saveDeck(PlayerCards.fromRingsdb(await res.json()));c.picks[c.player]=saved.id;const next=c.picks.findIndex(x=>!x);if(next>=0)c.player=next;render();toast('已导入并选给玩家'+(c.player+1)+'：'+saved.name);}catch(e){toast(e.name==='AbortError'?'RingsDB 请求超时（15秒）；国内网络通常无法访问':'导入失败：'+e.message);}finally{clearTimeout(timer);}return;}
  if(a==='chooserConfirm'){for(let i=0;i<c.players;i++)setupDraft.decks[i]=c.picks[i];const id=c.scenario;deckChooser=null;beginScenario(id);return;}
 }
-function render(){captureSetup();document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));const navBtn=$('#'+({table:'tableTab',decks:'decksTab',catalog:'catalogTab',players:'playersTab',images:'imagesTab',help:'helpTab'}[tab]));if(navBtn)navBtn.classList.add('active');$('#app').innerHTML=tab==='table'?(deckChooser?chooserPage():table()):tab==='decks'?PlayerUI.decksPage():tab==='catalog'?catalog():tab==='players'?PlayerUI.html():tab==='images'?ImageLibrary.html():help();$('#undo').disabled=!history.length;$('#export').disabled=!state;if(tab==='table'&&state&&$('#hand-player'))$('#hand-player').onchange=ev=>{handView=Number(ev.target.value);render();};if(tab==='table'&&state&&$('#planning-actor'))$('#planning-actor').onchange=ev=>{handView=Number(ev.target.value);render();};if(tab==='table'&&state)QuestUI.bind();if(tab==='table'&&!state)bindSetup();if(tab==='players')PlayerUI.bind();if(tab==='decks')PlayerUI.bindDecks();if(tab==='images')ImageLibrary.bind();else ImageLibrary.bindErrors(document.querySelector('#app'));if(tab==='catalog'){filterCatalog();$('#search').oninput=filterCatalog;$('#setFilter').onchange=filterCatalog;$('#typeFilter').onchange=filterCatalog;ImageLibrary.bindErrors(document.querySelector('#catalogResults'));}}
+function render(){captureSetup();document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));const navBtn=$('#'+({table:'tableTab',decks:'decksTab',catalog:'catalogTab',players:'playersTab',images:'imagesTab',help:'helpTab'}[tab]));if(navBtn)navBtn.classList.add('active');$('#app').innerHTML=tab==='table'?(deckChooser?chooserPage():table()):tab==='decks'?PlayerUI.decksPage():tab==='catalog'?catalog():tab==='players'?PlayerUI.html():tab==='images'?ImageLibrary.html():help();$('#undo').disabled=!history.length;$('#export').disabled=!state;if(tab==='table'&&state&&$('#hand-player'))$('#hand-player').onchange=ev=>{handView=Number(ev.target.value);render();};if(tab==='table'&&state&&$('#planning-actor'))$('#planning-actor').onchange=ev=>{handView=Number(ev.target.value);render();};if(tab==='table'&&state)QuestUI.bind();if(tab==='table'&&!state)bindSetup();if(tab==='players')PlayerUI.bind();if(tab==='decks')PlayerUI.bindDecks();if(tab==='images')ImageLibrary.bind();else ImageLibrary.bindErrors(document.querySelector('#app'));if(tab==='catalog'){filterCatalog();$('#search').oninput=filterCatalog;$('#setFilter').onchange=filterCatalog;$('#typeFilter').onchange=filterCatalog;ImageLibrary.bindErrors(document.querySelector('#catalogResults'));}trackView();}
 async function choose(title,body,read){return new Promise(resolve=>{let d=document.createElement('dialog');d.innerHTML=`<h2>${enc(title)}</h2><div>${body}</div><div class="actions"><button class="primary" id="ok">确认</button><button id="cancel">取消</button></div>`;document.body.append(d);d.showModal();d.querySelector('#ok').onclick=()=>{let v=read(d);d.close();d.remove();resolve(v);};d.querySelector('#cancel').onclick=()=>{d.close();d.remove();resolve(null);};d.oncancel=()=>{d.remove();resolve(null);};});}
 function playerOptions(){return state.players.filter(p=>!p.eliminated).map(p=>`<option value="${p.id}">${enc(p.name)}</option>`).join('');}
 $('#app').onclick=async ev=>{const b=ev.target.closest('[data-action]');if(!b||b.disabled)return;const a=b.dataset.action,uid=Number(b.dataset.uid),id=Number(b.dataset.id),pid=Number(b.dataset.player);
@@ -209,4 +213,24 @@ $('#undo').onclick=()=>{if(history.length){state=history.pop();save();render();}
 $('#export').onclick=()=>{if(!state)return;let blob=new Blob([JSON.stringify({format:'lotr-scenario-save',version:1,state},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`lotr-${state.scenario}-round-${state.round}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
 $('#import').onchange=async ev=>{const f=ev.target.files[0];if(!f)return;try{if(f.size>5000000)throw Error('存档过大。');const v=JSON.parse(await f.text());if(v.format!=='lotr-scenario-save'||v.version!==1||!v.state||!D.scenarios.some(s=>s.id===v.state.scenario)||!D.quests.some(q=>q.id===v.state.quest)||!Array.isArray(v.state.players)||v.state.players.length<1||v.state.players.length>4||!Array.isArray(v.state.deck)||!Array.isArray(v.state.pending))throw Error('不是此版本的有效存档。');if(state&&!confirm('导入将覆盖当前桌面；可撤销恢复。'))return;mutate(()=>{state=v.state;if(state.phase===2&&state.questing)E.questing.enableDiscussion(state);});tab='table';render();toast('存档已导入。');}catch(e){toast('导入失败：'+e.message);}finally{ev.target.value='';}};
 if(state){const restored=E.clone(state);try{E.windows.run(state);save();}catch(e){state=restored;toast('自动推进已暂停：'+e.message);}}
+/* 视图历史：tab + 新游戏步骤 + 选牌状态组成签名，只有签名变化才入栈，
+   这样浏览器与顶栏的 ← → 都能在「列表 / 设置 / 选牌 / 各页签」之间前进后退。 */
+const HAS_VIEW_HISTORY=typeof window!=='undefined'&&window.history&&typeof window.history.pushState==='function';
+let viewKey='',viewMax=0,restoringView=false;
+function viewSnapshot(){return {tab,ng:newGame?JSON.stringify(newGame):null,chooser:deckChooser?JSON.stringify(deckChooser):null};}
+function viewSignature(){return tab+'|'+(newGame?[newGame.step,newGame.tab,newGame.series,newGame.mode,newGame.pack].join(':'):'')+'|'+(deckChooser?['c',deckChooser.scenario,deckChooser.player,deckChooser.tab].join(':'):'');}
+function syncHistoryButtons(depth){const back=$('#navBack'),fwd=$('#navFwd');if(back)back.disabled=depth<=0;if(fwd)fwd.disabled=depth>=viewMax;}
+function trackView(){if(!HAS_VIEW_HISTORY||restoringView)return;const key=viewSignature();if(key===viewKey)return;viewKey=key;
+ const depth=((window.history.state&&window.history.state.depth)||0)+1;if(depth>viewMax)viewMax=depth;
+ window.history.pushState({...viewSnapshot(),depth},'');syncHistoryButtons(depth);}
+function restoreView(data){tab=(data&&data.tab)||'table';newGame=data&&data.ng?JSON.parse(data.ng):null;deckChooser=data&&data.chooser?JSON.parse(data.chooser):null;viewKey=viewSignature();render();}
+function goHome(){tab='table';newGame=null;deckChooser=null;render();}
+if(HAS_VIEW_HISTORY){
+ window.history.replaceState({...viewSnapshot(),depth:0},'');viewKey=viewSignature();
+ window.addEventListener('popstate',ev=>{restoringView=true;try{restoreView(ev.state);}finally{restoringView=false;}syncHistoryButtons((ev.state&&ev.state.depth)||0);});
+}
+const brandHome=$('#brandHome');if(brandHome)brandHome.onclick=ev=>{ev.preventDefault();goHome();};
+const navBack=$('#navBack');if(navBack)navBack.onclick=()=>{if(HAS_VIEW_HISTORY)window.history.back();};
+const navFwd=$('#navFwd');if(navFwd)navFwd.onclick=()=>{if(HAS_VIEW_HISTORY)window.history.forward();};
+if(HAS_VIEW_HISTORY)syncHistoryButtons(0);
 render();

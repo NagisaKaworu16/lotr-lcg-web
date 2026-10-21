@@ -75,7 +75,10 @@ POD_CATEGORIES = {'Print on Demand'}
 # The revised core box and the four starter decks are the base game now; the
 # screen already offers 基础剧本合集 as the playable entry, so they are skipped.
 SKIP_NAMES = {'Revised Core Set', 'Dwarves of Durin', 'Elves of Lórien',
-              'Defenders of Gondor', 'Riders of Rohan'}
+              'Defenders of Gondor', 'Riders of Rohan',
+              # 旧版核心包就是现在的基础游戏，旧版扩展列表里不再重复出现；
+              # 它所属的循环改用章节名承载剩下的 6 个冒险包。
+              'Core Set'}
 # Revised solo scenario pack ships like a POD even though its category is Revised.
 POD_OVERRIDES = {'The Dark of Mirkwood': ('旧', '新版 POD')}
 # A revised cycle ships as two boxes. The scenarios only live in the campaign box,
@@ -181,6 +184,8 @@ def main():
     converted = skipped = 0
     seen_codes = set()
     seen_titles = set()
+    group_head = {}       # group -> 该组首项 id（首项被跳过则为 None）
+    chapter_group = {}    # chapter label -> group
 
     for p in products:
         if p.get('status') != 'ok' or not p.get('file'):
@@ -202,6 +207,8 @@ def main():
         name = p.get('name', '')
         base = CODE_RE.sub('', name).strip()
         if base in SKIP_NAMES:
+            if group:
+                group_head.setdefault(group, None)
             skipped += 1
             continue
         if PROMO_RE.search(base):
@@ -237,6 +244,8 @@ def main():
             tab = 'revised'
         else:
             tab = 'legacy'
+        if group:
+            group_head.setdefault(group, ident)
         label = chapter_label(group, publisher, category, tab, pod_type)
         campaign = CAMPAIGN_RE.match(base) if category == 'Revised Content' else None
         series = campaign.group(1) if campaign else ''
@@ -254,6 +263,7 @@ def main():
         if label not in chapters[tab]:
             chapters[tab][label] = []
             order[tab].append(label)
+            chapter_group[label] = group
         chapters[tab][label].append(item)
 
     # Manifest entries the catalogue snapshot never collected (e.g. The Mirror of Galadriel).
@@ -297,7 +307,13 @@ def main():
     def build(tab, start_index):
         out = []
         for i, label in enumerate(order[tab], start=start_index):
-            out.append({'label': 'CHAPTER %d · %s' % (i, label), 'items': chapters[tab][label]})
+            entry = {'label': 'CHAPTER %d · %s' % (i, label), 'items': chapters[tab][label]}
+            if tab == 'legacy':
+                head = group_head.get(chapter_group.get(label, ''))
+                # 首项被跳过（如核心包）时 head 为 None：该章没有大盒，用章节名承载剧本。
+                entry['box'] = head
+                entry['key'] = slug_id(chapter_group.get(label, label)).lower()
+            out.append(entry)
         return out
 
     payload = {

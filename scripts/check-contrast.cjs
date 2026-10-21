@@ -62,8 +62,8 @@ const AUDIT = (min) => {
 
   await audit('landing');
   await page.selectOption('#playerCount', '2');
-  await page.locator('.ng-tabs button', { hasText: '支线剧情' }).click(); await page.waitForTimeout(250);
-  await page.locator('.ng-card', { hasText: '穿越幽暗密林' }).first().click(); await page.waitForTimeout(300);
+  await page.locator('.ng-tabs button', { hasText: '新版扩展' }).click(); await page.waitForTimeout(250);
+  await page.locator('.ng-card', { hasText: '基础剧本合集' }).first().click(); await page.waitForTimeout(300);
   await page.locator('[data-action="ngNext"]').click(); await page.waitForTimeout(300);
   await page.locator('[data-action="chooserConfirm"]').click();
   await page.waitForTimeout(700);

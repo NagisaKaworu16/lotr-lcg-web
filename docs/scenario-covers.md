@@ -34,7 +34,7 @@ python build.py
 | `category == Revised Content` | 新版扩展 |
 | 其余（Cycles / Sagas） | 旧版扩展 |
 
-- 新版扩展 / 旧版扩展 / 支线剧情 / 噩梦包 四个页签，共 165 条。
+- 新版扩展 / 旧版扩展 / 支线剧情 / 噩梦包 四个页签，共 164 条。
 - **支线剧情由 `pod-manifest.json` 定义**（来源 `lotr-pod-workbuddy/pod-import.json`）：官方 POD 14 项
   + ALeP 自制独立作品 5 项 + 你指定保留的黑森林之黯（MEC102）= 20 项。清单外的官方 POD 特性与社区作品
   不会进入这个页签；预购特典（`Preorder Promotion`）一律跳过，因为不含新剧本。
@@ -44,8 +44,11 @@ python build.py
   所以英雄盒直接跳过（`HERO_RE`），条目落在战役盒上，标题用系列名（如「安格玛觉醒」）、
   副标题用系列英文名（`Angmar Awakened`），点击后对应的是战役盒。传奇扩展（魔戒同盟等）本来就是单盒，不受影响。
   `assets/products/` 里仍保留英雄盒封面，以后要恢复成两条时可以直接引用。
-- 跳过 `SKIP_NAMES`：`Revised Core Set`（即现在的基础游戏）、`Dwarves of Durin`、`Elves of Lórien`、
-  `Defenders of Gondor`、`Riders of Rohan` —— 基础版本身在页面里以「基础剧本合集」出现，不再重复列出。
+- 跳过 `SKIP_NAMES`：`Revised Core Set`、`Core Set`（两个核心包都等于现在的基础游戏）、`Dwarves of Durin`、
+  `Elves of Lórien`、`Defenders of Gondor`、`Riders of Rohan` —— 基础版本身在页面里以「基础剧本合集」出现。
+- **没有大盒的循环**：导入脚本给每个 legacy 章节写 `box`（大盒 id，首项被跳过时为 `null`）与 `key`。
+  核心包被移除后，「黑森林的魔影」这一章 `box` 为 null，`legacySeries()` 就用章节名当系列名、封面取第一个剧本，
+  承载剩下的 6 个冒险包；其它章节仍按 `box` 找大盒。判定逻辑不要改回「首项即大盒」。
 - 章节 = 目录里的 `group`，`GROUP_ZH` 给出中文章名；噩梦包章节统一为「噩梦 · <循环名>」，
   社区作品统一加「社区 · 」前缀。
 - 只有基础版（`core`）与三个核心剧本标记为 `ready/playable: true`，其余是占位：
