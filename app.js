@@ -41,15 +41,46 @@ let newGame=null,pendingSession=null;
 const CAMPAIGN={name:'基础剧本合集',en:'Core Set Campaign',cover:119,scenarios:['mirkwood','anduin','dolguldur']};
 const PODS=[{id:'mirkwood',cover:119},{id:'anduin',cover:126},{id:'dolguldur',cover:123}];
 const DIFFICULTY={easy:'简单',normal:'普通',hard:'困难'};
+/* 封面占位：把 <id>.webp / .jpg 之类放进 assets/scenarios/ 即可自动显示；缺图时用文字底纹兜底。 */
+const SCENARIO_ART='assets/scenarios/';
+const POD_READY=PODS.map(p=>{const sc=D.scenarios.find(s=>s.id===p.id);return {id:p.id,kind:'pod',name:sc.name,en:sc.en,cover:p.cover,ready:true,meta:'难度 '+sc.difficulty+' · '+sc.stages.length+' 张探险卡'};});
+const POD_FUTURE=[
+ ['the-hunt-for-gollum','希尔凡精灵的猎杀','The Hunt for Gollum'],
+ ['conflict-at-the-carrock','卡洛克冲突','Conflict at the Carrock'],
+ ['a-journey-to-rhosgobel','罗森渡口之旅','A Journey to Rhosgobel'],
+ ['the-hills-of-emyn-muil','埃敏穆伊丘陵','The Hills of Emyn Muil'],
+ ['the-dead-marshes','死亡沼泽','The Dead Marshes'],
+ ['return-to-mirkwood','重返幽暗密林','Return to Mirkwood'],
+ ['into-the-pit','进入深渊','Into the Pit'],
+ ['the-seventh-level','第七层','The Seventh Level'],
+ ['flight-from-moria','逃离摩瑞亚','Flight from Moria']
+].map(([id,name,en])=>({id:id,kind:'pod',name:name,en:en,ready:false,meta:'封面占位 · 剧本待实现'}));
+const POD_CHAPTERS=[
+ {label:'CHAPTER 1 · 基础版',items:POD_READY},
+ {label:'CHAPTER 2 · 暗影中的魔窟',items:POD_FUTURE.slice(0,6)},
+ {label:'CHAPTER 3 · 卡兹杜姆',items:POD_FUTURE.slice(6)}
+];
+const CAMPAIGN_CHAPTERS=[
+ {label:'CHAPTER 1 · 基础版',items:[{id:'core',kind:'campaign',name:CAMPAIGN.name,en:CAMPAIGN.en,cover:119,ready:true,meta:'3 个剧本 · 连续或单场'}]},
+ {label:'CHAPTER 2 · 暗影中的魔窟',items:[{id:'shadow-of-mirkwood',kind:'campaign',name:'暗影中的魔窟',en:'Shadows of Mirkwood',ready:false,meta:'6 个剧本 · 剧本待实现'}]},
+ {label:'CHAPTER 3 · 卡兹杜姆',items:[{id:'khazad-dum',kind:'campaign',name:'卡兹杜姆',en:'Khazad-dûm',ready:false,meta:'3 个剧本 · 剧本待实现'}]}
+];
 function questArt(qid){const rec=ImageLibrary.by['enc-'+qid],url=ImageLibrary.safeUrl(rec&&(rec.faces&&rec.faces.A||rec.imageUrl));return url?`<img src="${enc(url)}" alt="" loading="lazy" referrerpolicy="no-referrer">`:'<span class="ng-art-fallback">探险卡</span>';}
-function ngCard(kind,def){const sc=D.scenarios.find(x=>x.id===def.id),name=sc?sc.name:CAMPAIGN.name,en=sc?sc.en:CAMPAIGN.en;
- return `<article class="ng-card${kind==='campaign'?' wide':''}" data-action="ngOpen" data-kind="${kind}" data-id="${def.id}"><div class="ng-card-art">${questArt(def.cover)}</div><div class="ng-card-body"><span class="eyebrow">${kind==='campaign'?'CAMPAIGN':'POD'}</span><h3>${enc(name)}</h3><p class="small muted">${enc(en||'')}</p><p class="small">${sc?`难度 ${sc.difficulty} · ${sc.stages.length} 张探险卡`:'3 个剧本 · 连续或单场'}</p></div><span class="ng-card-go">开始 →</span></article>`;}
+function ngArt(entry){
+ const fb=`<span class="ng-art-fallback"><b>${enc(entry.en||entry.name)}</b><i>${entry.ready?'封面待替换':'占位封面'}</i></span>`;
+ const src=SCENARIO_ART+entry.id+'.webp';
+ const img=`<img src="${enc(src)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="const s=this.getAttribute('src')||'';if(/\.webp$/.test(s)){this.setAttribute('src',s.replace(/\.webp$/,'.jpg'))}else if(/\.jpg$/.test(s)){this.setAttribute('src',s.replace(/\.jpg$/,'.png'))}else{this.remove()}">`;
+ return `<div class="ng-card-art">${fb}${img}${entry.ready?'<span class="ng-ready-badge">可玩</span>':''}</div>`;
+}
+function ngCard(entry){const attrs=entry.ready?`data-action="ngOpen" data-kind="${entry.kind}" data-id="${entry.id}"`:`data-action="ngLocked" data-id="${entry.id}" data-name="${enc(entry.name)}"`;
+ return `<article class="ng-card${entry.ready?'':' locked'}" ${attrs}>${ngArt(entry)}<div class="ng-card-body"><span class="eyebrow">${entry.kind==='campaign'?'CAMPAIGN':'POD'}</span><h3>${enc(entry.name)}</h3><p class="small muted">${enc(entry.en||'')}</p><p class="small">${enc(entry.meta||'')}</p></div><span class="ng-card-go">${entry.ready?'开始 →':'即将推出'}</span></article>`;}
+function ngChapters(list){return list.map(ch=>`<section class="ng-chapter"><div class="ng-chapter-head"><span>${enc(ch.label)}</span><span class="small muted">${ch.items.length} 项 · ${ch.items.filter(x=>x.ready).length} 可玩</span></div><div class="ng-grid">${ch.items.map(ngCard).join('')}</div></section>`).join('');}
 function ngCompat(){return `<div class="ng-compat" aria-hidden="true"><select id="playerCount">${[1,2,3,4].map(n=>`<option value="${n}" ${setupDraft.players===n?'selected':''}>${n}</option>`).join('')}</select><input id="seed" value="${enc(setupDraft.seed)}"><select id="pc-first">${Array.from({length:setupDraft.players},(_,i)=>`<option value="${i}" ${setupDraft.first===i?'selected':''}>玩家${i+1}</option>`).join('')}</select></div>`;}
 function newGameList(){const tab=(newGame&&newGame.tab)||'campaign';
  return `<div class="newgame"><div class="newgame-head"><div><div class="eyebrow">NEW GAME</div><h1>新游戏</h1><p class="muted">基础版三个剧本可以连成一条剧本线，也可以单场冒险。</p></div><button data-action="ngBack">取消</button></div>
  <div class="ng-tabs" role="tablist"><button role="tab" data-action="ngTab" data-value="campaign" class="${tab==='campaign'?'active':''}" aria-selected="${tab==='campaign'}">剧本模式</button><button role="tab" data-action="ngTab" data-value="pod" class="${tab==='pod'?'active':''}" aria-selected="${tab==='pod'}">支线剧情</button></div>
- <p class="small muted">${tab==='campaign'?'剧本模式：从穿越幽暗密林开始，依次推进三个剧本。':'支线剧情（Pod）：把每个剧本当作单场冒险来玩。'}</p>
- <div class="ng-grid">${tab==='campaign'?ngCard('campaign',{id:'core',cover:119}):PODS.map(x=>ngCard('pod',x)).join('')}</div>${ngCompat()}</div>`;}
+ <p class="small muted">${tab==='campaign'?'剧本模式：从穿越幽暗密林开始，依次推进三个剧本；后续扩展先以封面占位。':'支线剧情（Pod）：把每个剧本当作单场冒险来玩；灰度为尚未实现的占位封面。'}</p>
+ ${ngChapters(tab==='campaign'?CAMPAIGN_CHAPTERS:POD_CHAPTERS)}${ngCompat()}</div>`;}
 function newGameSettings(){const g=newGame,scenarioId=g.mode==='campaign'?'mirkwood':g.scenario,sc=D.scenarios.find(x=>x.id===scenarioId)||D.scenarios[0],cover=g.mode==='campaign'?CAMPAIGN.cover:(PODS.find(x=>x.id===g.scenario)||{}).cover||CAMPAIGN.cover;
  return `<div class="newgame"><div class="newgame-head"><div><div class="eyebrow">NEW GAME · ${g.mode==='campaign'?'基础剧本合集':'支线剧情'}</div><h1>新游戏</h1></div><button data-action="ngBack">取消</button></div>
  <div class="ng-settings"><aside class="ng-cover"><div class="ng-cover-art">${questArt(cover)}</div><h2>${enc(g.mode==='campaign'?CAMPAIGN.name:sc.name)}</h2><p class="small muted">${enc(g.mode==='campaign'?CAMPAIGN.en:sc.en||'')}</p>${g.mode==='campaign'?`<p class="small">穿越幽暗密林 → 沿安都因河而下 → 逃离多尔哥多</p>`:`<p class="small">难度 ${sc.difficulty} · ${sc.stages.length} 张双面探险卡</p>`}</aside>
@@ -80,6 +111,7 @@ async function handleNewGame(b){const a=b.dataset.action;
  if(a==='ngOpen'){const kind=b.dataset.kind,id=b.dataset.id||'core';newGame={step:'settings',tab:kind==='pod'?'pod':'campaign',mode:kind==='pod'?'standalone':'campaign',scenario:kind==='pod'?id:'mirkwood',name:'',difficulty:'normal',windowMode:'smart',advanced:false};render();return;}
  if(a==='ngTab'){newGame={...(newGame||{}),step:'list',tab:b.dataset.value};render();return;}
  if(a==='ngBack'){newGame=null;render();return;}
+ if(a==='ngLocked'){toast('「'+(b.dataset.name||'该剧本')+'」目前只是封面占位，剧本内容待实现。');return;}
  if(a==='ngPlayers'){const sel=$('#playerCount');if(sel)sel.value=b.dataset.value;captureSetup();render();return;}
  if(a==='ngMode'){newGame.mode=b.dataset.value;if(newGame.mode==='campaign')newGame.scenario='mirkwood';render();return;}
  if(a==='ngScenario'){newGame.mode='standalone';newGame.scenario=b.dataset.value;render();return;}

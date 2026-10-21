@@ -159,13 +159,25 @@ nav button.active:hover{background:transparent;color:#f6e3ad}
 .ng-tabs button{flex:1;background:transparent;border:0;border-bottom:3px solid transparent;border-radius:0;padding:10px 8px;font-size:13px;color:var(--muted)}
 .ng-tabs button:hover{background:transparent;color:var(--green)}
 .ng-tabs button.active{color:var(--green);border-bottom-color:var(--green);font-weight:600}
-.ng-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:12px}
+.ng-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;margin-top:10px}
+.ng-chapter{margin-top:20px}
+.ng-chapter-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-bottom:8px;border-bottom:1px solid var(--line);font-size:11px;letter-spacing:1.6px;color:var(--green);text-transform:uppercase}
 .ng-card{position:relative;display:flex;flex-direction:column;background:#fffdf6;border:1px solid var(--line);border-radius:10px;overflow:hidden;cursor:pointer;text-align:left}
 .ng-card:hover{border-color:var(--gold);box-shadow:0 6px 16px #24392f1f;transform:translateY(-2px)}
-.ng-card-art{aspect-ratio:16/7;background:#efeee2;overflow:hidden}
-.ng-card-art img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
+.ng-card-art{position:relative;aspect-ratio:16/10;background:#efeee2;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.ng-card-art img{position:relative;z-index:1;width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
+.ng-art-fallback{position:absolute;inset:0;z-index:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:12px;text-align:center;background:linear-gradient(160deg,#33473f,#243a31 60%,#1d2f28);color:#e8dfc4}
+.ng-art-fallback b{font:600 12px/1.4 Georgia,serif;letter-spacing:1.2px;text-transform:uppercase;max-width:92%}
+.ng-art-fallback i{font:400 10px/1.4 system-ui;color:#a9b7a4;font-style:normal}
+.ng-card.locked .ng-art-fallback{background:repeating-linear-gradient(135deg,#efece0,#efece0 9px,#e5e1d2 9px,#e5e1d2 18px);color:#8d9683}
+.ng-card.locked .ng-art-fallback b{color:#8d9683}
+.ng-ready-badge{position:absolute;z-index:2;top:6px;right:6px;background:#365842;color:#fff;font-size:10px;padding:1px 6px;border-radius:3px;letter-spacing:.5px}
+.ng-card.locked{opacity:.85;cursor:not-allowed}
+.ng-card.locked .ng-card-art{filter:grayscale(.9) contrast(.95)}
+.ng-card.locked:hover{transform:none;border-color:var(--line);box-shadow:none}
+.ng-card.locked .ng-card-go{color:var(--muted);font-weight:500}
 .ng-card-body{padding:12px 14px;display:grid;gap:2px}
-.ng-card-body h3{margin:2px 0;font-size:16px}
+.ng-card-body h3{margin:2px 0;font-size:14px}
 .ng-card-body p{margin:1px 0}
 .ng-card-go{align-self:flex-end;padding:0 14px 12px;color:var(--green);font-size:12px;font-weight:600}
 .ng-settings{display:grid;grid-template-columns:300px minmax(0,1fr);gap:20px;align-items:start}
@@ -185,9 +197,7 @@ nav button.active:hover{background:transparent;color:#f6e3ad}
 .ng-advanced .ng-seg{margin-top:10px}
 .ng-actions{display:flex;gap:10px;justify-content:flex-end}
 .ng-compat{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
-.ng-card.wide{grid-column:1/-1;flex-direction:row;align-items:stretch}
-.ng-card.wide .ng-card-art{width:40%;flex:0 0 40%;aspect-ratio:auto;height:190px}
-.ng-card.wide .ng-card-body{flex:1;align-content:center;padding:18px 20px}
-.ng-card.wide .ng-card-go{position:absolute;right:18px;bottom:12px}
 .ng-art-fallback{display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-size:12px}
-@media(max-width:900px){.ng-grid{grid-template-columns:1fr}.ng-settings{grid-template-columns:1fr}}
+@media(max-width:1180px){.ng-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:860px){.ng-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.ng-settings{grid-template-columns:1fr}}
+@media(max-width:560px){.ng-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
