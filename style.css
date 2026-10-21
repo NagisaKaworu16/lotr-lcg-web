@@ -210,3 +210,12 @@ nav button.active:hover{background:transparent;color:#f6e3ad}
 .ng-card.locked .ng-card-art img{filter:grayscale(.25);opacity:.95}
 .ng-card-body{padding:10px 12px 4px}
 .ng-card.locked .ng-card-go{color:#9a9f92}
+
+/* v0.15.3 Chinese product titles: English original becomes a muted subtitle. */
+.ng-card .ng-card-en{font-size:10px;line-height:1.35;margin:2px 0 0;opacity:.85;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ng-card .ng-card-body h3{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.7em}
+.ng-card .ng-card-en{min-height:2.7em}
+/* locked cards keep full colour; the badge and label carry the state. */
+.ng-card.locked{opacity:1}
+.ng-card.locked .ng-card-art img{filter:none;opacity:.94}
+.ng-card.locked .ng-card-art{filter:none}

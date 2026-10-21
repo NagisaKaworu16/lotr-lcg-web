@@ -1,3 +1,11 @@
+# v0.15.3 · 产品与剧本中文适配（2026-10-21）
+
+- 新增 `product-zh.json`：英文原名（去编号）→ 中文工作译名的映射表，覆盖 180/180 条产品；噩梦包按后缀自动生成「· 噩梦」，预购特典生成「（预购特典）」，含源站拼写错误的兼容项（`A Joureny to Rhosgobel`、`The Redhord Gate`、`The City of the Corsairs`）。
+- 导入脚本 `scripts/import-product-catalog.py` 合并译名写入 `product-catalog.js` 的 `zh` 字段，并打印中文覆盖率；缺少译名时自动回退英文。
+- 界面：卡片标题改为中文，英文原名降为 10px 副标题（两行截断），`title` 属性同时给出中英文；文字占位层也改用中文。标题与副标题统一高度，网格各卡对齐。
+- 占位卡不再整体灰度（此前整页偏灰），改为保留原色 + 「尚未实现」标签，与已可玩卡片靠角标区分。
+- 验证：401 项测试通过（补充中文标题断言）；对比度审计 6 阶段 0 问题。
+
 # v0.15.2 · 接入官方产品目录，新游戏改为封面墙（2026-10-21）
 
 - 数据：新增 `scripts/import-product-catalog.py`，把 Hall of Beorn 目录快照（官方 159 + 社区 21，共 180 项）导入为 `product-catalog.js`，封面转 WebP（长边 ≤520，共 2.3MB）存 `assets/products/`；脚本按 `status` 过滤失败项并打印统计。

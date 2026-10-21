@@ -19,6 +19,7 @@ from PIL import Image
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT_IMG = os.path.join(ROOT, 'assets', 'products')
 OUT_JS = os.path.join(ROOT, 'product-catalog.js')
+ZH_JSON = os.path.join(ROOT, 'product-zh.json')
 
 # English group -> Chinese chapter title (fallback keeps the English name)
 GROUP_ZH = {
@@ -60,6 +61,38 @@ def slug_id(slug):
     return re.sub(r'[^A-Za-z0-9._-]+', '-', slug).strip('-')
 
 
+def load_zh():
+    if not os.path.isfile(ZH_JSON):
+        return {}
+    with io.open(ZH_JSON, encoding='utf-8') as fh:
+        data = json.load(fh)
+    return data.get('titles', {})
+
+
+CODE_RE = re.compile(r'\s*\((?:UME|ME|OP|FA|ALE|LOF)[0-9A-Z-]+\)\s*$')
+NIGHT_RE = re.compile(r'\s+Nightmare(?:\s+(?:Deck|Decks|Product))?$', re.I)
+PROMO_RE = re.compile(r'\s+Preorder Promotion$', re.I)
+
+
+def zh_name(name, titles):
+    """Resolve a Chinese title: exact -> nightmare suffix -> preorder suffix."""
+    base = CODE_RE.sub('', name).strip()
+    if base in titles:
+        return titles[base]
+    m = NIGHT_RE.search(base)
+    if m:
+        stem = base[:m.start()].strip()
+        zh = titles.get(stem) or titles.get(stem.replace('Treachery', 'The Treachery'))
+        if zh:
+            return zh + ' · 噩梦'
+    m = PROMO_RE.search(base)
+    if m:
+        stem = base[:m.start()].strip()
+        if stem in titles:
+            return titles[stem] + '（预购特典）'
+    return ''
+
+
 def convert(path, dest, max_side=520, quality=82):
     with Image.open(path) as im:
         im = im.convert('RGBA')
@@ -91,6 +124,7 @@ def main():
         data = json.load(fh)
     products = data['products'] if isinstance(data, dict) else data
 
+    titles = load_zh()
     os.makedirs(OUT_IMG, exist_ok=True)
     tabs = {'campaign': [], 'pod': [], NIGHTMARE_TAB: []}
     order = {'campaign': [], 'pod': [], NIGHTMARE_TAB: []}
@@ -121,9 +155,11 @@ def main():
         else:
             tab = 'campaign'
         label = chapter_label(group, publisher, category)
+        zh = zh_name(p.get('name', ''), titles)
         item = {
             'id': ident,
             'name': p.get('name', ident),
+            'zh': zh,
             'art': 'assets/products/' + dest_name,
             'meta': COND_ZH.get(category, category),
             'pub': 'community' if publisher != 'Fantasy Flight Games' else 'ffg',
@@ -154,7 +190,9 @@ def main():
         fh.write('const PRODUCT_TABS=' + json.dumps(payload, ensure_ascii=False, separators=(',', ':')) + ';\n')
 
     total = sum(len(chapters[t][l]) for t in chapters for l in chapters[t])
+    named = sum(1 for t in chapters for l in chapters[t] for it in chapters[t][l] if it.get('zh'))
     print('images converted=%d reused=%d skipped=%d' % (converted, total - converted, skipped))
+    print('chinese titles: %d/%d' % (named, total))
     for t in ('campaign', 'pod', NIGHTMARE_TAB):
         n = sum(len(chapters[t][l]) for l in chapters[t])
         print('%-10s chapters=%2d items=%3d' % (t, len(order[t]), n))

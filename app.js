@@ -57,13 +57,14 @@ const CHAPTER_VIEWS={
 };
 function questArt(qid){const rec=ImageLibrary.by['enc-'+qid],url=ImageLibrary.safeUrl(rec&&(rec.faces&&rec.faces.A||rec.imageUrl));return url?`<img src="${enc(url)}" alt="" loading="lazy" referrerpolicy="no-referrer">`:'<span class="ng-art-fallback">探险卡</span>';}
 function ngArt(entry){
- const fb=`<span class="ng-art-fallback"><b>${enc(entry.en||entry.name)}</b><i>${entry.ready?'封面待替换':'占位封面'}</i></span>`;
+ const fb=`<span class="ng-art-fallback"><b>${enc(entry.zh||entry.en||entry.name)}</b><i>${entry.ready?'封面待替换':'占位封面'}</i></span>`;
  const img=entry.art?`<img src="${enc(entry.art)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="const s=this.getAttribute('src')||'';if(/\.webp$/.test(s)){this.setAttribute('src',s.replace(/\.webp$/,'.jpg'))}else{this.remove()}">`:'';
  const badges=(entry.ready?'<span class="ng-ready-badge">可玩</span>':'')+(entry.pub==='community'?'<span class="ng-community-badge">社区</span>':'');
  return `<div class="ng-card-art">${fb}${img}${badges}</div>`;
 }
-function ngCard(entry){const attrs=entry.ready?`data-action="ngOpen" data-kind="${entry.kind}" data-id="${entry.id}"`:`data-action="ngLocked" data-id="${entry.id}" data-name="${enc(entry.name)}"`;
- return `<article class="ng-card${entry.ready?'':' locked'}" ${attrs}>${ngArt(entry)}<div class="ng-card-body"><h3>${enc(entry.name)}</h3><p class="small muted">${enc(entry.meta||'')}</p></div><span class="ng-card-go">${entry.ready?'开始 →':'尚未实现'}</span></article>`;}
+function ngCard(entry){const attrs=entry.ready?`data-action="ngOpen" data-kind="${entry.kind}" data-id="${entry.id}"`:`data-action="ngLocked" data-id="${entry.id}" data-name="${enc(entry.zh||entry.name)}"`;
+ const title=entry.zh||entry.name,sub=entry.zh?entry.name:(entry.meta||'');
+ return `<article class="ng-card${entry.ready?'':' locked'}" ${attrs} title="${enc(title)}${entry.zh?'｜'+enc(entry.name):''}">${ngArt(entry)}<div class="ng-card-body"><h3>${enc(title)}</h3><p class="small muted ng-card-en">${enc(sub)}</p></div><span class="ng-card-go">${entry.ready?'开始 →':'尚未实现'}</span></article>`;}
 function ngChapters(list){return list.map((ch,chIndex)=>`<section class="ng-chapter"><div class="ng-chapter-head"><span>${enc(ch.label)}</span><span class="small muted">${ch.items.length} 项 · ${ch.items.filter(x=>x.ready).length} 可玩</span></div>${ch.items.length?`<div class="ng-grid">${ch.items.map(ngCard).join('')}</div>`:'<p class="empty">本批暂无条目</p>'}</section>`).join('');}
 function ngCompat(){return `<div class="ng-compat" aria-hidden="true"><select id="playerCount">${[1,2,3,4].map(n=>`<option value="${n}" ${setupDraft.players===n?'selected':''}>${n}</option>`).join('')}</select><input id="seed" value="${enc(setupDraft.seed)}"><select id="pc-first">${Array.from({length:setupDraft.players},(_,i)=>`<option value="${i}" ${setupDraft.first===i?'selected':''}>玩家${i+1}</option>`).join('')}</select></div>`;}
 function newGameList(){const tab=(newGame&&newGame.tab)||'campaign',chapters=CHAPTER_VIEWS[tab]||CHAPTER_VIEWS.campaign;
