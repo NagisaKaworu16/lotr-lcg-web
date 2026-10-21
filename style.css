@@ -159,7 +159,7 @@ nav button.active:hover{background:transparent;color:#f6e3ad}
 .ng-tabs button{flex:1;background:transparent;border:0;border-bottom:3px solid transparent;border-radius:0;padding:10px 8px;font-size:13px;color:var(--muted)}
 .ng-tabs button:hover{background:transparent;color:var(--green)}
 .ng-tabs button.active{color:var(--green);border-bottom-color:var(--green);font-weight:600}
-.ng-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;margin-top:10px}
+.ng-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:12px;margin-top:10px}
 .ng-chapter{margin-top:20px}
 .ng-chapter-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-bottom:8px;border-bottom:1px solid var(--line);font-size:11px;letter-spacing:1.6px;color:var(--green);text-transform:uppercase}
 .ng-card{position:relative;display:flex;flex-direction:column;background:#fffdf6;border:1px solid var(--line);border-radius:10px;overflow:hidden;cursor:pointer;text-align:left}
@@ -179,7 +179,7 @@ nav button.active:hover{background:transparent;color:#f6e3ad}
 .ng-card-body{padding:12px 14px;display:grid;gap:2px}
 .ng-card-body h3{margin:2px 0;font-size:14px}
 .ng-card-body p{margin:1px 0}
-.ng-card-go{align-self:flex-end;padding:0 14px 12px;color:var(--green);font-size:12px;font-weight:600}
+.ng-card-go{display:block;margin-top:auto;padding:6px 12px 10px;color:var(--green);font-size:12px;font-weight:600;text-align:right}
 .ng-settings{display:grid;grid-template-columns:300px minmax(0,1fr);gap:20px;align-items:start}
 .ng-cover-art{aspect-ratio:16/9;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:#efeee2}
 .ng-cover-art img{width:100%;height:100%;object-fit:cover;display:block}
@@ -201,3 +201,12 @@ nav button.active:hover{background:transparent;color:#f6e3ad}
 @media(max-width:1180px){.ng-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:860px){.ng-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.ng-settings{grid-template-columns:1fr}}
 @media(max-width:560px){.ng-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* v0.15.2 product covers: portrait box art sits inside a 4:3 tile. */
+.ng-card-art{aspect-ratio:3/4;background:#eae7d9}
+.ng-card-art img{object-fit:cover;object-position:center top;background:#eae7d9}
+.ng-community-badge{position:absolute;z-index:2;top:6px;left:6px;background:#7a5c3e;color:#fff;font-size:10px;padding:1px 6px;border-radius:3px;letter-spacing:.5px}
+.ng-card .ng-card-body h3{font-size:13px;line-height:1.35}
+.ng-card.locked .ng-card-art img{filter:grayscale(.25);opacity:.95}
+.ng-card-body{padding:10px 12px 4px}
+.ng-card.locked .ng-card-go{color:#9a9f92}
