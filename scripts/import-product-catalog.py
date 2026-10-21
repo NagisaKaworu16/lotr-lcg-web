@@ -44,10 +44,26 @@ GROUP_ZH = {
     'Fellowship Decks': '官方 POD · Fellowship',
     'Custom Scenario Kits': '官方 POD · 自定义剧本包',
     'Scenario Packs': '官方 POD · 剧本包',
-    'Stand Alone Scenarios': '社区 STANDALONE',
-    'Doom Mastered Cycle': '社区 · 命运主宰',
-    'Fell Summer Cycle': '社区 · 陨落之夏',
-    'The Legacy of Fëanor': '社区 · 费艾诺的遗产',
+    'Stand Alone Scenarios': '独立剧本合集',
+    'Doom Mastered Cycle': '命运主宰',
+    'Fell Summer Cycle': '陨落之夏',
+    'The Legacy of Fëanor': '费艾诺的遗产',
+    'The First Age': '第一纪元',
+}
+# Nightmare decks reuse the cycle name; map the bare cycle name too.
+NIGHTMARE_ZH = {
+    'Shadows of Mirkwood': '暗影中的魔窟',
+    'Dwarrowdelf': '卡兹杜姆',
+    'Against the Shadow': '对抗阴影',
+    'The Ring-maker': '魔戒匠人',
+    'Angmar Awakened': '安格玛觉醒',
+    'Dream-chaser': '追梦者',
+    'Haradrim': '哈拉德林',
+    'Ered Mithrin': '埃瑞德米斯林',
+    'Vengeance of Mordor': '复仇魔多',
+    'The Hobbit Saga': '霍比特人传奇',
+    'The Lord of the Rings Saga': '魔戒传奇',
+    'The Treachery of Rhudaur': '鲁道尔的背叛',
 }
 COND_ZH = {
     'Revised Content': '新版内容', 'Cycles': '循环', 'Sagas': '传奇',
@@ -55,6 +71,12 @@ COND_ZH = {
 }
 NIGHTMARE_TAB = 'nightmare'
 POD_CATEGORIES = {'Print on Demand'}
+# The revised core box and the four starter decks are the base game now; the
+# screen already offers 基础剧本合集 as the playable entry, so they are skipped.
+SKIP_NAMES = {'Revised Core Set', 'Dwarves of Durin', 'Elves of Lórien',
+              'Defenders of Gondor', 'Riders of Rohan'}
+# Revised solo scenario pack ships like a POD even though its category is Revised.
+POD_OVERRIDES = {'The Dark of Mirkwood': ('旧', '新版 POD')}
 
 
 def slug_id(slug):
@@ -103,16 +125,17 @@ def convert(path, dest, max_side=520, quality=82):
         im.save(dest, 'WEBP', quality=quality, method=6)
 
 
-def chapter_label(group, publisher, category):
+def chapter_label(group, publisher, category, tab=None):
     if category == 'Revised Content':
-        return '新版内容（Revised）'
+        return '新版 POD（Revised）' if tab == 'pod' else '新版扩展（Revised）'
     zh = GROUP_ZH.get(group)
-    if publisher != 'Fantasy Flight Games':
-        prefix = '社区 · '
-        return prefix + (zh or group)
     if category == 'Nightmare Decks':
-        return '噩梦 · ' + (GROUP_ZH.get(group.replace(' Nightmare Decks', '').replace(' Cycle', ' Cycle'), group.replace(' Nightmare Decks', '')))
-    return zh or group
+        bare = re.sub(r'\s+Nightmare(?:\s+(?:Deck|Decks|Product))?$', '', group).strip()
+        name = NIGHTMARE_ZH.get(bare) or GROUP_ZH.get(bare + ' Cycle') or GROUP_ZH.get(bare) or bare
+        return '噩梦 · ' + name
+    if publisher != 'Fantasy Flight Games':
+        return '社区 · ' + (GROUP_ZH.get(group) or group)
+    return zh or GROUP_ZH.get(group + ' Cycle') or group
 
 
 def main():
@@ -126,9 +149,9 @@ def main():
 
     titles = load_zh()
     os.makedirs(OUT_IMG, exist_ok=True)
-    tabs = {'campaign': [], 'pod': [], NIGHTMARE_TAB: []}
-    order = {'campaign': [], 'pod': [], NIGHTMARE_TAB: []}
-    chapters = {'campaign': {}, 'pod': {}, NIGHTMARE_TAB: {}}
+    KEYS = ('revised', 'legacy', 'pod', NIGHTMARE_TAB)
+    order = {k: [] for k in KEYS}
+    chapters = {k: {} for k in KEYS}
     converted = skipped = 0
 
     for p in products:
@@ -148,20 +171,29 @@ def main():
         publisher = p.get('publisher', '')
         category = p.get('category', '')
         group = p.get('group', '')
+        name = p.get('name', '')
+        base = CODE_RE.sub('', name).strip()
+        if base in SKIP_NAMES:
+            skipped += 1
+            continue
         if category == 'Nightmare Decks':
             tab = NIGHTMARE_TAB
+        elif base in POD_OVERRIDES:
+            tab = 'pod'
         elif category in POD_CATEGORIES or publisher != 'Fantasy Flight Games':
             tab = 'pod'
+        elif category == 'Revised Content':
+            tab = 'revised'
         else:
-            tab = 'campaign'
-        label = chapter_label(group, publisher, category)
+            tab = 'legacy'
+        label = chapter_label(group, publisher, category, tab)
         zh = zh_name(p.get('name', ''), titles)
         item = {
             'id': ident,
             'name': p.get('name', ident),
             'zh': zh,
             'art': 'assets/products/' + dest_name,
-            'meta': COND_ZH.get(category, category),
+            'meta': POD_OVERRIDES.get(base, (None, COND_ZH.get(category, category)))[1],
             'pub': 'community' if publisher != 'Fantasy Flight Games' else 'ffg',
             'cat': category,
         }
@@ -179,8 +211,9 @@ def main():
     payload = {
         'source': data.get('source') if isinstance(data, dict) else '',
         'generated': '2026-10-21',
-        'campaign': build('campaign', 2),   # chapter 1 is the playable core set
-        'pod': build('pod', 2),
+        'revised': build('revised', 2),     # chapter 1 is the playable core set
+        'legacy': build('legacy', 1),
+        'pod': build('pod', 2),             # chapter 1 is the three playable core scenarios
         'nightmare': build(NIGHTMARE_TAB, 1),
     }
     with io.open(OUT_JS, 'w', encoding='utf-8', newline='\n') as fh:
@@ -193,7 +226,7 @@ def main():
     named = sum(1 for t in chapters for l in chapters[t] for it in chapters[t][l] if it.get('zh'))
     print('images converted=%d reused=%d skipped=%d' % (converted, total - converted, skipped))
     print('chinese titles: %d/%d' % (named, total))
-    for t in ('campaign', 'pod', NIGHTMARE_TAB):
+    for t in ('revised', 'legacy', 'pod', NIGHTMARE_TAB):
         n = sum(len(chapters[t][l]) for l in chapters[t])
         print('%-10s chapters=%2d items=%3d' % (t, len(order[t]), n))
     print('wrote', OUT_JS)

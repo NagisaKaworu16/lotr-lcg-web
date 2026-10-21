@@ -27,13 +27,19 @@ python build.py
 | 判断 | 页签 |
 |---|---|
 | `category == Nightmare Decks` | 噩梦包 |
+| `base in POD_OVERRIDES`（如 `The Dark of Mirkwood`） | 支线剧情 |
 | `category == Print on Demand` 或非 FFG 出版 | 支线剧情 |
-| 其余（Cycles / Sagas / Revised Content） | 剧本模式 |
+| `category == Revised Content` | 新版扩展 |
+| 其余（Cycles / Sagas） | 旧版扩展 |
 
-- 章节 = 目录里的 `group`；`Revised Content` 合并为一章「新版内容（Revised）」。
-- 社区作品（A Long-extended Party / Tales from the Cards / Marc Lommert）带棕色「社区」角标。
+- 新版扩展 / 旧版扩展 / 支线剧情 / 噩梦包 四个页签，共 175 条（另 5 条被跳过）。
+- 跳过 `SKIP_NAMES`：`Revised Core Set`（即现在的基础游戏）、`Dwarves of Durin`、`Elves of Lórien`、
+  `Defenders of Gondor`、`Riders of Rohan` —— 基础版本身在页面里以「基础剧本合集」出现，不再重复列出。
+- 章节 = 目录里的 `group`，`GROUP_ZH` 给出中文章名；噩梦包章节统一为「噩梦 · <循环名>」，
+  社区作品统一加「社区 · 」前缀。
 - 只有基础版（`core`）与三个核心剧本标记为 `ready: true`，其余是 `ready: false` 的占位：
-  封面灰度处理、点击提示「只是封面占位」，不会进入设置页，也不会创建对局。
+  点击提示「只是封面占位」，不会进入设置页，也不会创建对局。
+- `ready: true` 的剧本没有产品封面时，`POD_READY` 会取各剧本第一张探险卡正面图作封面。
 
 ## 加新条目
 
@@ -57,5 +63,17 @@ python build.py
 3. 预购特典后缀（`Preorder Promotion`）→ 基础名 + 「（预购特典）」；
 4. 都没有则留空，界面回退显示英文原名。
 
-当前覆盖率 180/180。卡片标题显示中文，英文原名作为副标题保留，便于和官方产品对照。
-译名是社区常用工作译名，不是 FFG 官方中文版译文；要改某个名字，直接编辑 `product-zh.json` 再重跑导入脚本即可。
+当前覆盖率 175/175。卡片标题显示中文，英文原名作为副标题保留，便于和官方产品对照。
+译名以**魔戒中文维基译名表**为准（如 Carrock→卡尔岩、Rhosgobel→罗斯戈贝尔、Erech→埃瑞赫、
+Wainriders→战车民、Tharbad→沙巴德、Carn Dûm→卡恩督姆、Nurn→努尔恩、Osgiliath→欧斯吉利亚斯）。
+要改某个名字，直接编辑 `product-zh.json` 再重跑导入脚本即可。
+
+## 验收
+
+```bash
+NODE_PATH="<node workspace>/node_modules" node scripts/check-catalog-tabs.cjs
+```
+
+真实 Chrome 打开 index.html，在 1440 / 768 两档宽度下逐页签检查：页签标签、章名、
+各章条目数、可玩/锁定/社区角标计数、封面解码失败数、横向溢出、外网请求数。
+结果写入 `docs/catalog-tabs/`（截图 + report.json）。

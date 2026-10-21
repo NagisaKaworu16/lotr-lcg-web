@@ -1,3 +1,14 @@
+# v0.15.4 · 产品目录改为四页签并校正中文译名（2026-10-21）
+
+- 分类：新游戏页签由「剧本模式／支线剧情／噩梦包」改为 **新版扩展／旧版扩展／支线剧情／噩梦包**，按 Hall of Beorn 目录的 `category` 与 `group` 重新路由（`Revised Content` → 新版扩展，其余 Cycles/Sagas → 旧版扩展）。四个页签共 175 条：新版 9、旧版 78、支线 38、噩梦 50。
+- 移除 5 条基础包条目：`Revised Core Set`、`Dwarves of Durin`、`Elves of Lórien`、`Defenders of Gondor`、`Riders of Rohan`（新版核心包即现在的基础游戏，页面已用「基础剧本合集」表示）。
+- `The Dark of Mirkwood`（黑森林之黯）按新版 POD 归入支线剧情，独立成章「新版 POD（Revised）」。
+- 章节名：修复社区章「社区 · 社区 · …」重复前缀；噩梦章补全中译（此前为 `噩梦 · Shadows of Mirkwood`），统一为「噩梦 · <循环名>」；`Stand Alone Scenarios` 改为「独立剧本合集」。支线剧情章号从 2 起编，避免与页面追加的「CHAPTER 1 · 基础版」撞号。
+- 译名：按**魔戒中文维基译名表**校正 26 条，含 Carrock→卡尔岩、Rhosgobel→罗斯戈贝尔、Erech→埃瑞赫、Wainriders→战车民、Tharbad→沙巴德、Carn Dûm→卡恩督姆、Nurn→努尔恩、Osgiliath→欧斯吉利亚斯、Withered Heath→枯荒野、Old Forest→老林子、Mountain of Fire→末日火山等。
+- 封面：`POD_READY` 的三个可玩剧本此前只有文字占位（深绿块），改为取各剧本第一张探险卡正面图。
+- 每个页签补一句说明文案（`NG_NOTE`），替换原先写死的三分支判断。
+- 验证：401 项测试通过（更新页签/条目断言）；新增 `scripts/check-catalog-tabs.cjs` 真实浏览器验收（1440/768 两档、四页签），175 张封面全部解码、0 破损、0 外网请求、无横向溢出；布局 14/14、对比度 6 阶段 0 问题、任务栏 22/22 通过。
+
 # v0.15.3 · 产品与剧本中文适配（2026-10-21）
 
 - 新增 `product-zh.json`：英文原名（去编号）→ 中文工作译名的映射表，覆盖 180/180 条产品；噩梦包按后缀自动生成「· 噩梦」，预购特典生成「（预购特典）」，含源站拼写错误的兼容项（`A Joureny to Rhosgobel`、`The Redhord Gate`、`The City of the Corsairs`）。

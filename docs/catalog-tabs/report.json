@@ -1,0 +1,276 @@
+[
+  {
+    "width": 1440,
+    "tabs": [
+      {
+        "label": "新版扩展",
+        "active": true
+      },
+      {
+        "label": "旧版扩展",
+        "active": false
+      },
+      {
+        "label": "支线剧情",
+        "active": false
+      },
+      {
+        "label": "噩梦包",
+        "active": false
+      }
+    ]
+  },
+  {
+    "width": 1440,
+    "tab": "revised",
+    "chapters": [
+      "CHAPTER 1 · 基础版",
+      "CHAPTER 2 · 新版扩展（Revised）"
+    ],
+    "cards": 10,
+    "ready": 1,
+    "locked": 9,
+    "community": 0,
+    "brokenImages": 0,
+    "brokenList": [],
+    "note": "新版扩展（Revised）：旧循环以「英雄扩展 + 战役扩展」两盒重制，剧本沿用旧版。　共 10 项 · 1 可玩",
+    "titles": [
+      "基础剧本合集",
+      "安格玛觉醒 · 英雄扩展",
+      "安格玛觉醒 · 战役扩展",
+      "追梦者 · 英雄扩展"
+    ],
+    "overflowX": false
+  },
+  {
+    "width": 1440,
+    "tab": "legacy",
+    "chapters": [
+      "CHAPTER 1 · 暗影中的魔窟",
+      "CHAPTER 2 · 卡兹杜姆",
+      "CHAPTER 3 · 对抗阴影",
+      "CHAPTER 4 · 魔戒匠人",
+      "CHAPTER 5 · 安格玛觉醒",
+      "CHAPTER 6 · 追梦者",
+      "CHAPTER 7 · 哈拉德林",
+      "CHAPTER 8 · 埃瑞德米斯林",
+      "CHAPTER 9 · 复仇魔多",
+      "CHAPTER 10 · 霍比特人传奇",
+      "CHAPTER 11 · 魔戒传奇"
+    ],
+    "cards": 78,
+    "ready": 0,
+    "locked": 78,
+    "community": 0,
+    "brokenImages": 0,
+    "brokenList": [],
+    "note": "旧版扩展：按循环排列的早期产品，一个大盒加六个冒险包。　共 78 项 · 0 可玩",
+    "titles": [
+      "核心包",
+      "双人限定版起始包",
+      "猎杀咕噜",
+      "卡尔岩之争"
+    ],
+    "overflowX": false
+  },
+  {
+    "width": 1440,
+    "tab": "pod",
+    "chapters": [
+      "CHAPTER 1 · 基础版",
+      "CHAPTER 2 · 新版 POD（Revised）",
+      "CHAPTER 3 · 官方 POD · Gen Con",
+      "CHAPTER 4 · 官方 POD · Fellowship",
+      "CHAPTER 5 · 官方 POD · 自定义剧本包",
+      "CHAPTER 6 · 官方 POD · 剧本包",
+      "CHAPTER 7 · 社区 · 命运主宰",
+      "CHAPTER 8 · 社区 · 洛汗誓言",
+      "CHAPTER 9 · 社区 · 陨落之夏",
+      "CHAPTER 10 · 社区 · 独立剧本合集",
+      "CHAPTER 11 · 社区 · 费艾诺的遗产"
+    ],
+    "cards": 41,
+    "ready": 3,
+    "locked": 38,
+    "community": 21,
+    "brokenImages": 0,
+    "brokenList": [],
+    "note": "支线剧情（POD）：官方 POD 与社区作品，可脱离循环单独游玩。　共 41 项 · 3 可玩",
+    "titles": [
+      "穿越幽暗密林",
+      "沿安都因河而下",
+      "逃离多尔哥多",
+      "黑森林之黯"
+    ],
+    "overflowX": false
+  },
+  {
+    "width": 1440,
+    "tab": "nightmare",
+    "chapters": [
+      "CHAPTER 1 · 噩梦 · 暗影中的魔窟",
+      "CHAPTER 2 · 噩梦 · 卡兹杜姆",
+      "CHAPTER 3 · 噩梦 · 对抗阴影",
+      "CHAPTER 4 · 噩梦 · 魔戒匠人",
+      "CHAPTER 5 · 噩梦 · 安格玛觉醒",
+      "CHAPTER 6 · 噩梦 · 追梦者",
+      "CHAPTER 7 · 噩梦 · 霍比特人传奇",
+      "CHAPTER 8 · 噩梦 · 魔戒传奇"
+    ],
+    "cards": 50,
+    "ready": 0,
+    "locked": 50,
+    "community": 0,
+    "brokenImages": 0,
+    "brokenList": [],
+    "note": "噩梦包：各循环的高难度变体，需配合对应剧本使用。　共 50 项 · 0 可玩",
+    "titles": [
+      "穿越幽暗密林 · 噩梦",
+      "沿安都因河而下 · 噩梦",
+      "逃离多尔哥多 · 噩梦",
+      "猎杀咕噜 · 噩梦"
+    ],
+    "overflowX": false
+  },
+  {
+    "width": 1440,
+    "remoteRequests": 0
+  },
+  {
+    "width": 768,
+    "tabs": [
+      {
+        "label": "新版扩展",
+        "active": true
+      },
+      {
+        "label": "旧版扩展",
+        "active": false
+      },
+      {
+        "label": "支线剧情",
+        "active": false
+      },
+      {
+        "label": "噩梦包",
+        "active": false
+      }
+    ]
+  },
+  {
+    "width": 768,
+    "tab": "revised",
+    "chapters": [
+      "CHAPTER 1 · 基础版",
+      "CHAPTER 2 · 新版扩展（Revised）"
+    ],
+    "cards": 10,
+    "ready": 1,
+    "locked": 9,
+    "community": 0,
+    "brokenImages": 0,
+    "brokenList": [],
+    "note": "新版扩展（Revised）：旧循环以「英雄扩展 + 战役扩展」两盒重制，剧本沿用旧版。　共 10 项 · 1 可玩",
+    "titles": [
+      "基础剧本合集",
+      "安格玛觉醒 · 英雄扩展",
+      "安格玛觉醒 · 战役扩展",
+      "追梦者 · 英雄扩展"
+    ],
+    "overflowX": false
+  },
+  {
+    "width": 768,
+    "tab": "legacy",
+    "chapters": [
+      "CHAPTER 1 · 暗影中的魔窟",
+      "CHAPTER 2 · 卡兹杜姆",
+      "CHAPTER 3 · 对抗阴影",
+      "CHAPTER 4 · 魔戒匠人",
+      "CHAPTER 5 · 安格玛觉醒",
+      "CHAPTER 6 · 追梦者",
+      "CHAPTER 7 · 哈拉德林",
+      "CHAPTER 8 · 埃瑞德米斯林",
+      "CHAPTER 9 · 复仇魔多",
+      "CHAPTER 10 · 霍比特人传奇",
+      "CHAPTER 11 · 魔戒传奇"
+    ],
+    "cards": 78,
+    "ready": 0,
+    "locked": 78,
+    "community": 0,
+    "brokenImages": 0,
+    "brokenList": [],
+    "note": "旧版扩展：按循环排列的早期产品，一个大盒加六个冒险包。　共 78 项 · 0 可玩",
+    "titles": [
+      "核心包",
+      "双人限定版起始包",
+      "猎杀咕噜",
+      "卡尔岩之争"
+    ],
+    "overflowX": false
+  },
+  {
+    "width": 768,
+    "tab": "pod",
+    "chapters": [
+      "CHAPTER 1 · 基础版",
+      "CHAPTER 2 · 新版 POD（Revised）",
+      "CHAPTER 3 · 官方 POD · Gen Con",
+      "CHAPTER 4 · 官方 POD · Fellowship",
+      "CHAPTER 5 · 官方 POD · 自定义剧本包",
+      "CHAPTER 6 · 官方 POD · 剧本包",
+      "CHAPTER 7 · 社区 · 命运主宰",
+      "CHAPTER 8 · 社区 · 洛汗誓言",
+      "CHAPTER 9 · 社区 · 陨落之夏",
+      "CHAPTER 10 · 社区 · 独立剧本合集",
+      "CHAPTER 11 · 社区 · 费艾诺的遗产"
+    ],
+    "cards": 41,
+    "ready": 3,
+    "locked": 38,
+    "community": 21,
+    "brokenImages": 0,
+    "brokenList": [],
+    "note": "支线剧情（POD）：官方 POD 与社区作品，可脱离循环单独游玩。　共 41 项 · 3 可玩",
+    "titles": [
+      "穿越幽暗密林",
+      "沿安都因河而下",
+      "逃离多尔哥多",
+      "黑森林之黯"
+    ],
+    "overflowX": false
+  },
+  {
+    "width": 768,
+    "tab": "nightmare",
+    "chapters": [
+      "CHAPTER 1 · 噩梦 · 暗影中的魔窟",
+      "CHAPTER 2 · 噩梦 · 卡兹杜姆",
+      "CHAPTER 3 · 噩梦 · 对抗阴影",
+      "CHAPTER 4 · 噩梦 · 魔戒匠人",
+      "CHAPTER 5 · 噩梦 · 安格玛觉醒",
+      "CHAPTER 6 · 噩梦 · 追梦者",
+      "CHAPTER 7 · 噩梦 · 霍比特人传奇",
+      "CHAPTER 8 · 噩梦 · 魔戒传奇"
+    ],
+    "cards": 50,
+    "ready": 0,
+    "locked": 50,
+    "community": 0,
+    "brokenImages": 0,
+    "brokenList": [],
+    "note": "噩梦包：各循环的高难度变体，需配合对应剧本使用。　共 50 项 · 0 可玩",
+    "titles": [
+      "穿越幽暗密林 · 噩梦",
+      "沿安都因河而下 · 噩梦",
+      "逃离多尔哥多 · 噩梦",
+      "猎杀咕噜 · 噩梦"
+    ],
+    "overflowX": false
+  },
+  {
+    "width": 768,
+    "remoteRequests": 0
+  }
+]
