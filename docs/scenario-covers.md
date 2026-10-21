@@ -49,6 +49,29 @@ python build.py
 2. **手写条目**：在 `app.js` 的 `CHAPTER_VIEWS` 里追加
    `{id, name, en, art, ready:false, meta}`，`art` 指向 `assets/products/…webp` 或 `assets/scenarios/<id>.webp`。
 
+## 用 PDF 首页做封面
+
+官方目录快照里的封面只有 235×235（近方形），放进 3:4 的封面框会被裁得很厉害。
+战役书 PDF 的第一页就是完整竖版封面，可以直接拿来替换：
+
+```bash
+"C:/Users/Administrator/.workbuddy/binaries/python/envs/default/Scripts/python.exe" \
+  scripts/extract-pdf-covers.py --source "C:/Users/Administrator/Downloads"
+```
+
+- 渲染首页（200 dpi）→ 居中裁成 3:4 → 390×520 WebP q85 → 覆盖 `assets/products/<slug>.webp`。
+- 裁剪方向自适应：原图偏宽裁左右，偏高裁上下；永远不放大。
+- 映射写在脚本的 `MAPPING` 里（PDF 文件名 → 产品 slug）：
+
+| PDF | 目标 slug |
+|---|---|
+| `安格玛觉醒.pdf` | `Angmar-Awakened-Campaign-Expansion` |
+| `逐梦者.pdf` | `Dream-chaser-Campaign-Expansion` |
+| `埃瑞德米斯林.pdf` | `Ered-Mithrin-Campaign-Expansion` |
+
+**注意**：`import-product-catalog.py` 只在目标文件不存在时才转换图片，所以重跑导入不会把这几个封面还原成官方盒图；
+真要还原，删掉对应的 `.webp` 再跑导入脚本。PDF 本身不入库（体积大且受版权保护），仓库只保存裁好的 WebP。
+
 ## 权益说明
 
 产品封面版权归各自权利人，仅作离线原型展示；来源与原图链接保存在采集输出
