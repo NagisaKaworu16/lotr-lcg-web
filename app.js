@@ -122,7 +122,7 @@ function newGameSettings(){const g=newGame,s=seriesById(g.series),packs=s.packs|
   <div class="ng-actions"><button data-action="ngBack">返回</button><button class="primary" data-action="ngNext" ${ready?'':'disabled'}>下一步：选择牌组</button></div>
   ${ready?'':`<p class="small muted">「${enc(pick.zh||pick.name||'该剧本')}」的剧本内容尚未实现；目前可玩的是基础版的三个剧本。</p>`}
  </section>
- <section class="ng-packs"><div class="ng-chapter-head"><span>选择冒险</span><span class="small muted">${g.mode==='campaign'?'完整剧本会从第一个开始':'点一张封面切换剧本'}</span></div><div class="ng-pack-grid">${packs.map(p=>ngPackCard(p,g.mode==='campaign'?p===first:p.id===g.pack)).join('')}</div></section>
+ ${g.mode==='standalone'?`<section class="ng-packs"><div class="ng-chapter-head"><span>选择冒险</span><span class="small muted">点一张封面切换剧本</span></div><div class="ng-pack-grid">${packs.map(p=>ngPackCard(p,p.id===g.pack)).join('')}</div></section>`:''}
  </div>${ngCompat()}</div>`;}
 function setup(){return newGame&&newGame.step==='settings'?newGameSettings():newGameList();}
 function phaseHint(){return ['新对局点击推进时，会自动为每名未被囚禁且存活的英雄收集1资源，并为每位玩家抽1张牌。魔法溪流会禁止抽牌；铁镣改写下一次抽牌。','按起始玩家顺序打出盟友和附属；点击手牌选择目标和资源支付。处理响应后结束各自出牌，再由所有玩家让过行动，结算计划阶段结束。','在上方探险面板按步骤操作：选择投入角色、处理响应、逐张翻开遭遇。窗口关闭后自动计算意志、威胁和进度，无需输入数值。','由起始玩家暂定旅行地点，全员二次确认后支付费用和移动地点。完成旅行强制效果与响应后才开放普通行动。','在上方暂定主动交战或不交战，全员二次确认。交战检定前后开放行动；检定逐人循环，强制效果先处理。安都因河航道只跳过检定。','在上方战斗面板暂定攻击／防御名单，全队二次确认。暗影逐张结算，系统计算伤害；各步骤之间保留行动窗口。','先暂定蛛网支付，全员二次确认后重置、增加威胁并轮换先手；行动结束后分开结算阶段结束及回合结束效果，再进入下一回合资源阶段。'][state.phase];}

@@ -41,6 +41,20 @@ const WIDTHS=[1440,768];
 
   await page.click('[data-id="Khazad-dum"]');
   await page.waitForTimeout(250);
+  /* campaign mode hides the scenario grid: the run always starts at scenario one */
+  const campaign=await page.evaluate(()=>({
+   packCards:document.querySelectorAll('.ng-pack').length,
+   hint:(document.querySelector('.ng-form')||{}).textContent||'',
+   nextDisabled:!!document.querySelector('[data-action="ngNext"]').disabled,
+  }));
+  report.push({width,legacyCampaign:campaign});
+  if(campaign.packCards)report.push({width,error:'完整剧本模式不应展示剧本网格，实际 '+campaign.packCards+' 张'});
+  if(!campaign.hint.includes('红角门'))report.push({width,error:'完整剧本模式未说明起点剧本'});
+  await page.evaluate(()=>window.scrollTo(0,0));
+  await page.screenshot({path:path.join(OUT,`${width}-legacy-campaign.png`)});
+
+  await page.click('[data-action="ngMode"][data-value="standalone"]');
+  await page.waitForTimeout(250);
   const detail=await page.evaluate(async()=>{
    const imgs=[...document.querySelectorAll('.ng-card-art img')];
    imgs.forEach(i=>{i.loading='eager';});
@@ -51,7 +65,6 @@ const WIDTHS=[1440,768];
     selected:document.querySelectorAll('.ng-pack.selected').length,
     playable:document.querySelectorAll('.ng-pack:not(.locked)').length,
     nextDisabled:!!(next&&next.disabled),
-    hint:(document.querySelector('.ng-form .small.muted:last-of-type')||{}).textContent||'',
     broken:[...document.querySelectorAll('.ng-card-art img')].filter(i=>i.naturalWidth===0).length,
     overflowX:document.documentElement.scrollWidth>document.documentElement.clientWidth,
    };
