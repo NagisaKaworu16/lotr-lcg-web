@@ -1,3 +1,10 @@
+# v0.15.13 · 新增浏览器标签图标（至尊戒）（2026-10-21）
+
+- 原本没有 favicon，浏览器标签页只显示默认空白图标。新增 `assets/favicon.svg`：深墨绿圆角底 + 金色至尊戒，环上以 `stroke-dasharray` 画出一圈滕格瓦式刻纹，环内是末日火山的暗橙余温，左上有一道高光。
+- 同时导出位图兜底：`favicon-16.png`／`favicon-32.png`／`favicon-48.png`／`favicon-180.png`（apple-touch-icon）与多尺寸 `favicon.ico`（16/32/48），由 Chrome 渲染 SVG 后截图 + Pillow 合成。
+- `shell.html` 的 head 按浏览器优先级挂好五条 link（SVG → PNG 32/16 → ICO → apple-touch-icon），并加 `theme-color #273f32` 与页面顶栏同色。`build.py` 只内联 style/script，这些 link 会原样进入 `index.html`。
+- 验证：Chrome 实际请求了 4 个图标资源、5 条 link 全都能解码；16px 下金环与暖色内圈仍可辨认（对照图见 `docs/catalog-tabs/favicon-sizes.png`）。402 项测试通过。
+
 # v0.15.12 · 难度改为官方三模式，简单模式真正生效（2026-10-21）
 
 - **核对官方规则**：FFG《Easy Mode Rules》与《The Wilds of Rhovanion》规则书原文写着「three modes of play are available: Easy, Standard, and Nightmare」，即**简单 / 标准 / 噩梦**，**没有「困难」**。此前界面上的 easy/normal/hard 是错的。
