@@ -38,14 +38,13 @@ function card(c,zone='catalog'){
 }
 function cards(a,z){return `<div class="cards">${a.length?a.map(c=>card(c,z)).join(''):empty()}</div>`;}
 let newGame=null,pendingSession=null;
-const CAMPAIGN={name:'基础剧本合集',en:'Core Set Campaign',cover:119,scenarios:['mirkwood','anduin','dolguldur']};
 const PODS=[{id:'mirkwood',cover:119},{id:'anduin',cover:126},{id:'dolguldur',cover:123}];
 const DIFFICULTY={easy:'简单',normal:'普通',hard:'困难'};
 /* 产品封面：由 scripts/import-product-catalog.py 从 Hall of Beorn 目录生成。 */
 const SCENARIO_ART='assets/scenarios/';
 const PRODUCT_IMG='assets/products/';
 function questArtUrl(qid){const rec=ImageLibrary.by['enc-'+qid];return ImageLibrary.safeUrl(rec&&(rec.faces&&rec.faces.A||rec.imageUrl))||'';}
-const POD_READY=PODS.map(p=>{const sc=D.scenarios.find(s=>s.id===p.id);return {id:p.id,kind:'pod',name:sc.name,en:sc.en,ready:true,art:questArtUrl(p.cover),meta:'难度 '+sc.difficulty+' · '+sc.stages.length+' 张探险卡'};});
+const POD_READY=PODS.map(p=>{const sc=D.scenarios.find(s=>s.id===p.id);return {id:p.id,kind:'pod',name:sc.name,en:sc.en,ready:true,playable:true,art:questArtUrl(p.cover),meta:'难度 '+sc.difficulty+' · '+sc.stages.length+' 张探险卡'};});
 const NEW_GAME_TABS=[
  {value:'revised',label:'新版扩展'},
  {value:'legacy',label:'旧版扩展'},
@@ -54,47 +53,77 @@ const NEW_GAME_TABS=[
 ];
 const NG_NOTE={
  revised:'新版扩展（Revised）：旧循环的重制版本，剧本按系列收录。',
- legacy:'旧版扩展：按循环排列的早期产品，一个大盒加六个冒险包。',
+ legacy:'旧版扩展：每个循环由一个大扩展加六到八个剧本组成，点开扩展挑选剧本。',
  pod:'支线剧情（POD）：官方 POD 与社区作品，可脱离循环单独游玩。',
  nightmare:'噩梦包：各循环的高难度变体，需配合对应剧本使用。'
 };
-const BASE_CORE={id:'core',kind:'campaign',name:'基础剧本合集',en:'Core Set Campaign',art:PRODUCT_IMG+'Revised-Core-Set.webp',ready:true,meta:'3 个剧本 · 连续或单场'};
+const BASE_CORE={id:'core',kind:'campaign',ready:true,playable:true,name:'基础剧本合集',en:'Core Set Campaign',art:PRODUCT_IMG+'Revised-Core-Set.webp',meta:'3 个剧本 · 连续或单场'};
+/* 旧版每个循环在目录里是「一个大盒 + 6 个冒险包」，传奇则是若干盒连成一条线。
+   像诡镇那样：列表只列大盒，点进去在设置页里选具体剧本。
+   预购特典、双人起始包不含新剧本，不进列表。 */
+const PACK_SKIP=/Preorder Promotion|Two-Player Limited/;
+let legacyCache=null;
+function legacySeries(){
+ if(legacyCache)return legacyCache;
+ legacyCache=(PRODUCT_TABS.legacy||[]).map(ch=>{
+  const items=ch.items.filter(x=>!PACK_SKIP.test(x.name));
+  const [deluxe,...packs]=items;
+  if(!deluxe)return null;
+  return {...deluxe,kind:'legacy',ready:true,playable:false,packs,series:ch.label.replace(/^CHAPTER\s+\d+\s+·\s*/,'')};
+ }).filter(Boolean);
+ return legacyCache;
+}
+/* 基础剧本合集与支线剧情的三个剧本共用同一份「系列」定义。 */
+const CORE_SERIES={id:'core',kind:'campaign',ready:true,playable:true,name:'基础剧本合集',en:'Core Set Campaign',art:PRODUCT_IMG+'Revised-Core-Set.webp',series:'基础版',packs:POD_READY};
+function seriesById(id){return id==='core'?CORE_SERIES:(legacySeries().find(s=>s.id===id)||CORE_SERIES);}
 const CHAPTER_VIEWS={
  revised:[{label:'CHAPTER 1 · 基础版',items:[BASE_CORE]}].concat(PRODUCT_TABS.revised||[]),
- legacy:(PRODUCT_TABS.legacy||[]),
+ legacy:[],
  pod:[{label:'CHAPTER 1 · 基础版',items:POD_READY}].concat(PRODUCT_TABS.pod||[]),
  nightmare:(PRODUCT_TABS.nightmare||[])
 };
-function questArt(qid){const rec=ImageLibrary.by['enc-'+qid],url=ImageLibrary.safeUrl(rec&&(rec.faces&&rec.faces.A||rec.imageUrl));return url?`<img src="${enc(url)}" alt="" loading="lazy" referrerpolicy="no-referrer">`:'<span class="ng-art-fallback">探险卡</span>';}
 function ngArt(entry){
- const fb=`<span class="ng-art-fallback"><b>${enc(entry.zh||entry.en||entry.name)}</b><i>${entry.ready?'封面待替换':'占位封面'}</i></span>`;
+ const fb=`<span class="ng-art-fallback"><b>${enc(entry.zh||entry.en||entry.name)}</b><i>${entry.playable?'封面待替换':'占位封面'}</i></span>`;
  const img=entry.art?`<img src="${enc(entry.art)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="const s=this.getAttribute('src')||'';if(/\.webp$/.test(s)){this.setAttribute('src',s.replace(/\.webp$/,'.jpg'))}else{this.remove()}">`:'';
- const badges=(entry.ready?'<span class="ng-ready-badge">可玩</span>':'')+(entry.pub==='community'?'<span class="ng-community-badge">社区</span>':'');
+ const badges=(entry.playable?'<span class="ng-ready-badge">可玩</span>':'')+(entry.pub==='community'?'<span class="ng-community-badge">社区</span>':'');
  return `<div class="ng-card-art">${fb}${img}${badges}</div>`;
 }
 function ngCard(entry){const attrs=entry.ready?`data-action="ngOpen" data-kind="${entry.kind}" data-id="${entry.id}"`:`data-action="ngLocked" data-id="${entry.id}" data-name="${enc(entry.zh||entry.name)}"`;
- const title=entry.zh||entry.name,sub=entry.zh?(entry.en||entry.name):(entry.meta||'');
- return `<article class="ng-card${entry.ready?'':' locked'}" ${attrs} title="${enc(title)}${entry.zh?'｜'+enc(entry.name):''}">${ngArt(entry)}<div class="ng-card-body"><h3>${enc(title)}</h3><p class="small muted ng-card-en">${enc(sub)}</p></div><span class="ng-card-go">${entry.ready?'开始 →':'尚未实现'}</span></article>`;}
-function ngChapters(list){return list.map((ch,chIndex)=>`<section class="ng-chapter"><div class="ng-chapter-head"><span>${enc(ch.label)}</span><span class="small muted">${ch.items.length} 项 · ${ch.items.filter(x=>x.ready).length} 可玩</span></div>${ch.items.length?`<div class="ng-grid">${ch.items.map(ngCard).join('')}</div>`:'<p class="empty">本批暂无条目</p>'}</section>`).join('');}
+ const title=entry.zh||entry.name,en=entry.en||entry.name;
+ const sub=entry.zh?[en,entry.series,entry.packs&&entry.packs.length?entry.packs.length+' 个剧本':''].filter(Boolean).join(' · '):(entry.meta||'');
+ const go=entry.playable?'开始 →':entry.ready?'选择剧本 →':'尚未实现';
+ return `<article class="ng-card${entry.ready?'':' locked'}" ${attrs} title="${enc(title)}${entry.zh?'｜'+enc(entry.name):''}">${ngArt(entry)}<div class="ng-card-body"><h3>${enc(title)}</h3><p class="small muted ng-card-en">${enc(sub)}</p></div><span class="ng-card-go">${go}</span></article>`;}
+function ngPackCard(p,sel){const on=!!p.playable,title=p.zh||p.name;
+ const attrs=on?`data-action="ngScenario" data-value="${p.id}"`:`data-action="ngLocked" data-id="${p.id}" data-name="${enc(title)}"`;
+ return `<article class="ng-card ng-pack${on?'':' locked'}${sel?' selected':''}" ${attrs} aria-pressed="${!!sel}" title="${enc(title)}">${ngArt(p)}<div class="ng-card-body"><h3>${enc(title)}</h3><p class="small muted ng-card-en">${enc(p.en||p.name)}</p></div><span class="ng-card-go">${on?'可玩':'待实现'}</span></article>`;}
+function ngChapters(list){return list.map(ch=>`<section class="ng-chapter"><div class="ng-chapter-head"><span>${enc(ch.label)}</span><span class="small muted">${ch.items.length} 项 · ${ch.items.filter(x=>x.playable).length} 可玩</span></div>${ch.items.length?`<div class="ng-grid">${ch.items.map(ngCard).join('')}</div>`:'<p class="empty">本批暂无条目</p>'}</section>`).join('');}
 function ngCompat(){return `<div class="ng-compat" aria-hidden="true"><select id="playerCount">${[1,2,3,4].map(n=>`<option value="${n}" ${setupDraft.players===n?'selected':''}>${n}</option>`).join('')}</select><input id="seed" value="${enc(setupDraft.seed)}"><select id="pc-first">${Array.from({length:setupDraft.players},(_,i)=>`<option value="${i}" ${setupDraft.first===i?'selected':''}>玩家${i+1}</option>`).join('')}</select></div>`;}
-function newGameList(){const tab=(newGame&&newGame.tab)||'revised',chapters=CHAPTER_VIEWS[tab]||CHAPTER_VIEWS.revised;
- const total=chapters.reduce((n,c)=>n+c.items.length,0),playable=chapters.reduce((n,c)=>n+c.items.filter(x=>x.ready).length,0);
+function newGameList(){const tab=(newGame&&newGame.tab)||'revised';
+ const legacy=tab==='legacy',series=legacy?legacySeries():null;
+ const chapters=legacy?[]:(CHAPTER_VIEWS[tab]||CHAPTER_VIEWS.revised);
+ const stats=legacy?`${series.length} 个大扩展 · ${series.reduce((n,s)=>n+s.packs.length,0)} 个剧本`
+  :`共 ${chapters.reduce((n,c)=>n+c.items.length,0)} 项 · ${chapters.reduce((n,c)=>n+c.items.filter(x=>x.playable).length,0)} 可玩`;
  return `<div class="newgame"><div class="newgame-head"><div><div class="eyebrow">NEW GAME</div><h1>新游戏</h1><p class="muted">基础游戏（新版核心包）的三个剧本可以连成一条剧本线；扩展产品先以官方封面占位，规则逐步实现。</p></div><button data-action="ngBack">取消</button></div>
  <div class="ng-tabs" role="tablist">${NEW_GAME_TABS.map(t=>`<button role="tab" data-action="ngTab" data-value="${t.value}" class="${tab===t.value?'active':''}" aria-selected="${tab===t.value}">${t.label}</button>`).join('')}</div>
- <p class="small muted">${NG_NOTE[tab]||''}　共 ${total} 项 · ${playable} 可玩</p>
- ${ngChapters(chapters)}${ngCompat()}</div>`;}
-function newGameSettings(){const g=newGame,scenarioId=g.mode==='campaign'?'mirkwood':g.scenario,sc=D.scenarios.find(x=>x.id===scenarioId)||D.scenarios[0],cover=g.mode==='campaign'?CAMPAIGN.cover:(PODS.find(x=>x.id===g.scenario)||{}).cover||CAMPAIGN.cover;
- return `<div class="newgame"><div class="newgame-head"><div><div class="eyebrow">NEW GAME · ${g.mode==='campaign'?'基础剧本合集':'支线剧情'}</div><h1>新游戏</h1></div><button data-action="ngBack">取消</button></div>
- <div class="ng-settings"><aside class="ng-cover"><div class="ng-cover-art">${questArt(cover)}</div><h2>${enc(g.mode==='campaign'?CAMPAIGN.name:sc.name)}</h2><p class="small muted">${enc(g.mode==='campaign'?CAMPAIGN.en:sc.en||'')}</p>${g.mode==='campaign'?`<p class="small">穿越幽暗密林 → 沿安都因河而下 → 逃离多尔哥多</p>`:`<p class="small">难度 ${sc.difficulty} · ${sc.stages.length} 张双面探险卡</p>`}</aside>
+ <p class="small muted">${NG_NOTE[tab]||''}　${stats}</p>
+ ${legacy?`<section class="ng-chapter"><div class="ng-chapter-head"><span>大扩展</span><span class="small muted">点开一个扩展，挑选其中的剧本</span></div><div class="ng-grid">${series.map(ngCard).join('')}</div></section>`:ngChapters(chapters)}${ngCompat()}</div>`;}
+function newGameSettings(){const g=newGame,s=seriesById(g.series),packs=s.packs||[],first=packs[0]||{};
+ const pick=g.mode==='standalone'?(packs.find(p=>p.id===g.pack)||first):first;
+ const ready=!!pick.playable;
+ return `<div class="newgame"><div class="newgame-head"><div><div class="eyebrow">NEW GAME · ${enc(s.series||s.name)}</div><h1>新游戏</h1></div><button data-action="ngBack">取消</button></div>
+ <div class="ng-settings"><aside class="ng-cover"><div class="ng-cover-art">${s.art?`<img src="${enc(s.art)}" alt="" referrerpolicy="no-referrer">`:'<span class="ng-art-fallback">封面待替换</span>'}</div><h2>${enc(s.zh||s.name)}</h2><p class="small muted">${enc(s.en||'')}</p><p class="small">${packs.length} 个剧本 · ${packs.filter(x=>x.playable).length} 个可玩</p></aside>
  <section class="ng-form">
   <label class="ng-field"><span>游戏名称</span><input id="ng-name" maxlength="60" value="${enc(g.name||'')}" placeholder="例如：10月20日 中土远征"></label>
   <div class="ng-field"><span>玩家人数</span><div class="ng-seg">${[1,2,3,4].map(n=>`<button data-action="ngPlayers" data-value="${n}" class="${setupDraft.players===n?'active':''}" aria-pressed="${setupDraft.players===n}">${n}</button>`).join('')}</div></div>
-  <div class="ng-field"><span>剧本类型</span><div class="ng-seg"><button data-action="ngMode" data-value="campaign" class="${g.mode==='campaign'?'active':''}" aria-pressed="${g.mode==='campaign'}">完整连续剧本（从穿越幽暗密林开始）</button><button data-action="ngMode" data-value="standalone" class="${g.mode==='standalone'?'active':''}" aria-pressed="${g.mode==='standalone'}">单场冒险模式（三个剧本任选一）</button></div>
-   ${g.mode==='standalone'?`<div class="ng-seg ng-sub">${D.scenarios.map(x=>`<button data-action="ngScenario" data-value="${x.id}" class="${g.scenario===x.id?'active':''}">${enc(x.name)}</button>`).join('')}</div>`:`<p class="small muted">连续剧本按顺序推进；本版只自动结算当前剧本，完成后请新开下一个剧本。</p>`}</div>
+  <div class="ng-field"><span>剧本类型</span><div class="ng-seg"><button data-action="ngMode" data-value="campaign" class="${g.mode==='campaign'?'active':''}" aria-pressed="${g.mode==='campaign'}">完整剧本</button><button data-action="ngMode" data-value="standalone" class="${g.mode==='standalone'?'active':''}" aria-pressed="${g.mode==='standalone'}">单场冒险模式</button></div>
+   <p class="small muted">${g.mode==='campaign'?`完整剧本从「${enc(first.zh||first.name||'第一个剧本')}」开始，按顺序推进；本版只自动结算当前剧本。`:'在下方「选择冒险」里挑一个剧本单独游玩。'}</p></div>
   <div class="ng-field"><span>难度选择</span><div class="ng-seg">${Object.entries(DIFFICULTY).map(([k,v])=>`<button data-action="ngDifficulty" data-value="${k}" class="${g.difficulty===k?'active':''}">${v}</button>`).join('')}</div><p class="small muted">难度目前只记录并在桌面标题显示，规则仍按原版普通模式结算。</p></div>
   <details class="ng-advanced" ${g.advanced?'open':''}><summary>高级设置 · 事件窗口触发时机</summary><div class="ng-seg"><button data-action="ngWindow" data-value="smart" class="${g.windowMode==='smart'?'active':''}">智能：空窗口自动跳过</button><button data-action="ngWindow" data-value="detailed" class="${g.windowMode==='detailed'?'active':''}">详细：每个窗口都停下</button></div><p class="small muted">对应桌面操作栏的「行动窗口」模式，开局后也能随时切换。</p></details>
-  <div class="ng-actions"><button data-action="ngBack">返回</button><button class="primary" data-action="ngNext">下一步：选择牌组</button></div>
- </section></div>${ngCompat()}</div>`;}
+  <div class="ng-actions"><button data-action="ngBack">返回</button><button class="primary" data-action="ngNext" ${ready?'':'disabled'}>下一步：选择牌组</button></div>
+  ${ready?'':`<p class="small muted">「${enc(pick.zh||pick.name||'该剧本')}」的剧本内容尚未实现；目前可玩的是基础版的三个剧本。</p>`}
+ </section>
+ <section class="ng-packs"><div class="ng-chapter-head"><span>选择冒险</span><span class="small muted">${g.mode==='campaign'?'完整剧本会从第一个开始':'点一张封面切换剧本'}</span></div><div class="ng-pack-grid">${packs.map(p=>ngPackCard(p,g.mode==='campaign'?p===first:p.id===g.pack)).join('')}</div></section>
+ </div>${ngCompat()}</div>`;}
 function setup(){return newGame&&newGame.step==='settings'?newGameSettings():newGameList();}
 function phaseHint(){return ['新对局点击推进时，会自动为每名未被囚禁且存活的英雄收集1资源，并为每位玩家抽1张牌。魔法溪流会禁止抽牌；铁镣改写下一次抽牌。','按起始玩家顺序打出盟友和附属；点击手牌选择目标和资源支付。处理响应后结束各自出牌，再由所有玩家让过行动，结算计划阶段结束。','在上方探险面板按步骤操作：选择投入角色、处理响应、逐张翻开遭遇。窗口关闭后自动计算意志、威胁和进度，无需输入数值。','由起始玩家暂定旅行地点，全员二次确认后支付费用和移动地点。完成旅行强制效果与响应后才开放普通行动。','在上方暂定主动交战或不交战，全员二次确认。交战检定前后开放行动；检定逐人循环，强制效果先处理。安都因河航道只跳过检定。','在上方战斗面板暂定攻击／防御名单，全队二次确认。暗影逐张结算，系统计算伤害；各步骤之间保留行动窗口。','先暂定蛛网支付，全员二次确认后重置、增加威胁并轮换先手；行动结束后分开结算阶段结束及回合结束效果，再进入下一回合资源阶段。'][state.phase];}
 function table(){return state?DesktopUI.render(state,handView):setup();}
@@ -110,16 +139,24 @@ function chooserPage(){const c=deckChooser,sc=D.scenarios.find(x=>x.id===c.scena
  <div class="chooser-foot"><span class="small muted">${picks.map((id,i)=>`玩家${i+1}：${id?enc(PlayerUI.deckName(id)):'未选择'}`).join(' · ')}</span><button class="primary" data-action="chooserConfirm" ${ready?'':'disabled'}>开始远征</button></div></div>`;}
 async function handleNewGame(b){const a=b.dataset.action;
  const nameEl=$('#ng-name');if(nameEl&&newGame&&newGame.step==='settings'&&a!=='ngBack')newGame.name=String(nameEl.value||'');
- if(a==='ngOpen'){const kind=b.dataset.kind,id=b.dataset.id||'core';newGame={step:'settings',tab:kind==='pod'?'pod':'revised',mode:kind==='pod'?'standalone':'campaign',scenario:kind==='pod'?id:'mirkwood',name:'',difficulty:'normal',windowMode:'smart',advanced:false};render();return;}
+ if(a==='ngOpen'){const kind=b.dataset.kind,id=b.dataset.id;
+  const g={step:'settings',tab:(newGame&&newGame.tab)||'revised',series:'core',mode:'campaign',pack:null,name:'',difficulty:'normal',windowMode:'smart',advanced:false};
+  if(kind==='legacy'){g.series=id;}
+  else if(kind==='pod'){g.mode='standalone';g.pack=id;}
+  newGame=g;render();return;}
  if(a==='ngTab'){newGame={...(newGame||{}),step:'list',tab:b.dataset.value};render();return;}
  if(a==='ngBack'){newGame=null;render();return;}
  if(a==='ngLocked'){toast('「'+(b.dataset.name||'该剧本')+'」目前只是封面占位，剧本内容待实现。');return;}
  if(a==='ngPlayers'){const sel=$('#playerCount');if(sel)sel.value=b.dataset.value;captureSetup();render();return;}
- if(a==='ngMode'){newGame.mode=b.dataset.value;if(newGame.mode==='campaign')newGame.scenario='mirkwood';render();return;}
- if(a==='ngScenario'){newGame.mode='standalone';newGame.scenario=b.dataset.value;render();return;}
+ if(a==='ngMode'){newGame.mode=b.dataset.value;if(newGame.mode==='campaign')newGame.pack=null;render();return;}
+ if(a==='ngScenario'){newGame.mode='standalone';newGame.pack=b.dataset.value;render();return;}
  if(a==='ngDifficulty'){newGame.difficulty=b.dataset.value;render();return;}
  if(a==='ngWindow'){newGame.windowMode=b.dataset.value;render();return;}
- if(a==='ngNext'){newGame.name=String(newGame.name||'').trim();captureSetup();const scenarioId=newGame.mode==='campaign'?'mirkwood':newGame.scenario;pendingSession={name:newGame.name,mode:newGame.mode,difficulty:newGame.difficulty,windowMode:newGame.windowMode,scenario:scenarioId};newGame=null;openChooser(scenarioId);return;}
+ if(a==='ngNext'){newGame.name=String(newGame.name||'').trim();captureSetup();
+  const s=seriesById(newGame.series),packs=s.packs||[];
+  const target=newGame.mode==='standalone'?(packs.find(p=>p.id===newGame.pack)||packs[0]):packs[0];
+  if(!target||!target.playable){toast('「'+((target&&(target.zh||target.name))||'该剧本')+'」的剧本内容尚未实现。');return;}
+  pendingSession={name:newGame.name,mode:newGame.mode,difficulty:newGame.difficulty,windowMode:newGame.windowMode,scenario:target.id};newGame=null;openChooser(target.id);return;}
 }
 async function handleChooser(b){const a=b.dataset.action,c=deckChooser;if(!c)return;
  if(a==='chooserCancel'){deckChooser=null;render();return;}

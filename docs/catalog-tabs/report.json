@@ -46,30 +46,20 @@
     "width": 1440,
     "tab": "legacy",
     "chapters": [
-      "CHAPTER 1 · 暗影中的魔窟",
-      "CHAPTER 2 · 卡兹杜姆",
-      "CHAPTER 3 · 对抗阴影",
-      "CHAPTER 4 · 魔戒匠人",
-      "CHAPTER 5 · 安格玛觉醒",
-      "CHAPTER 6 · 追梦者",
-      "CHAPTER 7 · 哈拉德林",
-      "CHAPTER 8 · 埃瑞德米斯林",
-      "CHAPTER 9 · 复仇魔多",
-      "CHAPTER 10 · 霍比特人传奇",
-      "CHAPTER 11 · 魔戒传奇"
+      "大扩展"
     ],
-    "cards": 78,
+    "cards": 11,
     "ready": 0,
-    "locked": 78,
+    "locked": 0,
     "community": 0,
     "brokenImages": 0,
     "brokenList": [],
-    "note": "旧版扩展：按循环排列的早期产品，一个大盒加六个冒险包。　共 78 项 · 0 可玩",
+    "note": "旧版扩展：每个循环由一个大扩展加六到八个剧本组成，点开扩展挑选剧本。　11 个大扩展 · 60 个剧本",
     "titles": [
       "核心包",
-      "双人限定版起始包",
-      "猎杀咕噜",
-      "卡尔岩之争"
+      "卡兹杜姆",
+      "努门诺尔的继承者",
+      "艾辛格之声"
     ],
     "overflowX": false
   },
@@ -183,30 +173,20 @@
     "width": 768,
     "tab": "legacy",
     "chapters": [
-      "CHAPTER 1 · 暗影中的魔窟",
-      "CHAPTER 2 · 卡兹杜姆",
-      "CHAPTER 3 · 对抗阴影",
-      "CHAPTER 4 · 魔戒匠人",
-      "CHAPTER 5 · 安格玛觉醒",
-      "CHAPTER 6 · 追梦者",
-      "CHAPTER 7 · 哈拉德林",
-      "CHAPTER 8 · 埃瑞德米斯林",
-      "CHAPTER 9 · 复仇魔多",
-      "CHAPTER 10 · 霍比特人传奇",
-      "CHAPTER 11 · 魔戒传奇"
+      "大扩展"
     ],
-    "cards": 78,
+    "cards": 11,
     "ready": 0,
-    "locked": 78,
+    "locked": 0,
     "community": 0,
     "brokenImages": 0,
     "brokenList": [],
-    "note": "旧版扩展：按循环排列的早期产品，一个大盒加六个冒险包。　共 78 项 · 0 可玩",
+    "note": "旧版扩展：每个循环由一个大扩展加六到八个剧本组成，点开扩展挑选剧本。　11 个大扩展 · 60 个剧本",
     "titles": [
       "核心包",
-      "双人限定版起始包",
-      "猎杀咕噜",
-      "卡尔岩之争"
+      "卡兹杜姆",
+      "努门诺尔的继承者",
+      "艾辛格之声"
     ],
     "overflowX": false
   },

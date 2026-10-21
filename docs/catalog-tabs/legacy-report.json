@@ -1,0 +1,142 @@
+[
+  {
+    "width": 1440,
+    "legacyList": {
+      "cards": [
+        "核心包",
+        "卡兹杜姆",
+        "努门诺尔的继承者",
+        "艾辛格之声",
+        "失落王国",
+        "灰港",
+        "哈拉德之沙",
+        "罗瓦尼安荒野",
+        "东方阴影",
+        "霍比特人：越过山丘与洞穴",
+        "黑骑手"
+      ],
+      "subs": [
+        "Core Set · 暗影中的魔窟 · 6 个剧本",
+        "Khazad-dûm · 卡兹杜姆 · 6 个剧本",
+        "Heirs of Númenor · 对抗阴影 · 6 个剧本",
+        "The Voice of Isengard · 魔戒匠人 · 6 个剧本",
+        "The Lost Realm · 安格玛觉醒 · 6 个剧本",
+        "The Grey Havens · 追梦者 · 6 个剧本",
+        "The Sands of Harad · 哈拉德林 · 6 个剧本",
+        "The Wilds of Rhovanion · 埃瑞德米斯林 · 6 个剧本",
+        "A Shadow in the East · 复仇魔多 · 6 个剧本",
+        "The Hobbit: Over Hill and Under Hill · 霍比特人传奇 · 1 个剧本",
+        "The Black Riders · 魔戒传奇 · 5 个剧本"
+      ],
+      "open": 11,
+      "broken": 0,
+      "overflowX": false
+    }
+  },
+  {
+    "width": 1440,
+    "legacyDetail": {
+      "packs": [
+        "红角门",
+        "通往瑞文戴尔之路",
+        "水中守望者",
+        "漫长黑暗",
+        "石之根基",
+        "阴影与火焰"
+      ],
+      "selected": 1,
+      "playable": 0,
+      "nextDisabled": true,
+      "hint": "完整剧本从「红角门」开始，按顺序推进；本版只自动结算当前剧本。",
+      "broken": 0,
+      "overflowX": false
+    }
+  },
+  {
+    "width": 1440,
+    "baseDetail": {
+      "packs": [
+        "穿越幽暗密林",
+        "沿安都因河而下",
+        "逃离多尔哥多"
+      ],
+      "playable": 3,
+      "nextDisabled": false
+    }
+  },
+  {
+    "width": 1440,
+    "remoteRequests": 0,
+    "pageErrors": 0
+  },
+  {
+    "width": 768,
+    "legacyList": {
+      "cards": [
+        "核心包",
+        "卡兹杜姆",
+        "努门诺尔的继承者",
+        "艾辛格之声",
+        "失落王国",
+        "灰港",
+        "哈拉德之沙",
+        "罗瓦尼安荒野",
+        "东方阴影",
+        "霍比特人：越过山丘与洞穴",
+        "黑骑手"
+      ],
+      "subs": [
+        "Core Set · 暗影中的魔窟 · 6 个剧本",
+        "Khazad-dûm · 卡兹杜姆 · 6 个剧本",
+        "Heirs of Númenor · 对抗阴影 · 6 个剧本",
+        "The Voice of Isengard · 魔戒匠人 · 6 个剧本",
+        "The Lost Realm · 安格玛觉醒 · 6 个剧本",
+        "The Grey Havens · 追梦者 · 6 个剧本",
+        "The Sands of Harad · 哈拉德林 · 6 个剧本",
+        "The Wilds of Rhovanion · 埃瑞德米斯林 · 6 个剧本",
+        "A Shadow in the East · 复仇魔多 · 6 个剧本",
+        "The Hobbit: Over Hill and Under Hill · 霍比特人传奇 · 1 个剧本",
+        "The Black Riders · 魔戒传奇 · 5 个剧本"
+      ],
+      "open": 11,
+      "broken": 0,
+      "overflowX": false
+    }
+  },
+  {
+    "width": 768,
+    "legacyDetail": {
+      "packs": [
+        "红角门",
+        "通往瑞文戴尔之路",
+        "水中守望者",
+        "漫长黑暗",
+        "石之根基",
+        "阴影与火焰"
+      ],
+      "selected": 1,
+      "playable": 0,
+      "nextDisabled": true,
+      "hint": "完整剧本从「红角门」开始，按顺序推进；本版只自动结算当前剧本。",
+      "broken": 0,
+      "overflowX": false
+    }
+  },
+  {
+    "width": 768,
+    "baseDetail": {
+      "packs": [
+        "穿越幽暗密林",
+        "沿安都因河而下",
+        "逃离多尔哥多"
+      ],
+      "playable": 3,
+      "nextDisabled": false
+    }
+  },
+  {
+    "width": 768,
+    "remoteRequests": 0,
+    "pageErrors": 0
+  }
+]

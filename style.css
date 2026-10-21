@@ -219,3 +219,16 @@ nav button.active:hover{background:transparent;color:#f6e3ad}
 .ng-card.locked{opacity:1}
 .ng-card.locked .ng-card-art img{filter:none;opacity:.94}
 .ng-card.locked .ng-card-art{filter:none}
+
+/* v0.15.7 scenario picker: a deluxe box opens into its own scenario grid. */
+.ng-packs{grid-column:1/-1;margin-top:6px;padding-top:14px;border-top:1px solid var(--line)}
+.ng-packs .ng-chapter-head{margin-bottom:10px}
+.ng-pack-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:10px}
+.ng-pack .ng-card-body{padding:8px 9px 2px}
+.ng-pack .ng-card-body h3{font-size:12px;min-height:2.7em}
+.ng-pack .ng-card-en{font-size:9px}
+.ng-pack .ng-card-go{padding:4px 9px 8px;font-size:11px}
+.ng-pack.selected{border-color:var(--green);box-shadow:0 0 0 2px var(--green)}
+.ng-pack.selected .ng-card-go{color:var(--green);font-weight:700}
+@media(max-width:860px){.ng-pack-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:560px){.ng-pack-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
