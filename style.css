@@ -242,3 +242,10 @@ nav button.active:hover{background:transparent;color:#f6e3ad}
 .brand:hover{color:#f6e3ad}
 body:has(.desktop-table) .history-nav button{padding:4px 9px;font-size:13px}
 @media(max-width:900px){.history-nav{order:3}}
+
+/* v0.15.14 brand uses the ring mark instead of the ✥ glyph. */
+.brand{display:inline-flex;align-items:center;gap:10px}
+.brand-mark{width:28px;height:28px;flex:none;display:block;filter:drop-shadow(0 1px 2px #00000055)}
+.brand span{display:block;line-height:1.05}
+body:has(.desktop-table) .brand-mark{width:23px;height:23px}
+@media(max-width:900px){.brand-mark{width:24px;height:24px}}

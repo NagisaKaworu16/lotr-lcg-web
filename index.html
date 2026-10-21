@@ -245,8 +245,15 @@ nav button.active:hover{background:transparent;color:#f6e3ad}
 body:has(.desktop-table) .history-nav button{padding:4px 9px;font-size:13px}
 @media(max-width:900px){.history-nav{order:3}}
 
+/* v0.15.14 brand uses the ring mark instead of the ✥ glyph. */
+.brand{display:inline-flex;align-items:center;gap:10px}
+.brand-mark{width:28px;height:28px;flex:none;display:block;filter:drop-shadow(0 1px 2px #00000055)}
+.brand span{display:block;line-height:1.05}
+body:has(.desktop-table) .brand-mark{width:23px;height:23px}
+@media(max-width:900px){.brand-mark{width:24px;height:24px}}
+
 </style></head><body>
-<header><a class="brand" href="#" id="brandHome" title="回到首页">✥ 中土远征 <small>THE LORD OF THE RINGS · LCG</small></a><div class="history-nav"><button id="navBack" type="button" title="后退" aria-label="后退">←</button><button id="navFwd" type="button" title="前进" aria-label="前进">→</button></div><nav><button id="tableTab" class="active">剧本桌面</button><button id="catalogTab">基础卡牌库 <span>55</span></button><button id="decksTab">我的卡组</button><button id="playersTab">英雄与玩家牌</button><button id="imagesTab">全部卡图</button><button id="helpTab">说明与完成范围</button></nav><div class="header-actions"><button id="undo">撤销一步</button><button id="export">导出存档</button><label class="button" for="import">导入存档</label><input id="import" type="file" accept="application/json" hidden></div></header>
+<header><a class="brand" href="#" id="brandHome" title="回到首页"><svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><defs><linearGradient id="brandGold" x1="10" y1="8" x2="54" y2="57" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fdf4cd"/><stop offset=".32" stop-color="#e3c47a"/><stop offset=".55" stop-color="#a9853f"/><stop offset=".78" stop-color="#e8cb86"/><stop offset="1" stop-color="#fffae0"/></linearGradient><radialGradient id="brandField" cx=".5" cy=".42" r=".58"><stop offset="0" stop-color="#8a4a16"/><stop offset=".46" stop-color="#4a2a10"/><stop offset="1" stop-color="#150e07"/></radialGradient></defs><circle cx="32" cy="32" r="21" fill="#0d1710" fill-opacity=".62"/><circle cx="32" cy="32" r="21" fill="none" stroke="url(#brandGold)" stroke-width="7"/><path d="M14.6 19.2A21 21 0 0 1 32.6 10.9" fill="none" stroke="#fffbe8" stroke-width="2.4" stroke-linecap="round" opacity=".55"/></svg><span>中土远征 <small>THE LORD OF THE RINGS · LCG</small></span></a><div class="history-nav"><button id="navBack" type="button" title="后退" aria-label="后退">←</button><button id="navFwd" type="button" title="前进" aria-label="前进">→</button></div><nav><button id="tableTab" class="active">剧本桌面</button><button id="catalogTab">基础卡牌库 <span>55</span></button><button id="decksTab">我的卡组</button><button id="playersTab">英雄与玩家牌</button><button id="imagesTab">全部卡图</button><button id="helpTab">说明与完成范围</button></nav><div class="header-actions"><button id="undo">撤销一步</button><button id="export">导出存档</button><label class="button" for="import">导入存档</label><input id="import" type="file" accept="application/json" hidden></div></header>
 <main id="app"></main><div id="toast" role="status" aria-live="polite"></div>
 <script>
 /* 中文名称及规则为本项目工作译名/机制摘要；非官方译文。 */
