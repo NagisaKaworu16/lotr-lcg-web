@@ -77,6 +77,10 @@ SKIP_NAMES = {'Revised Core Set', 'Dwarves of Durin', 'Elves of Lórien',
               'Defenders of Gondor', 'Riders of Rohan'}
 # Revised solo scenario pack ships like a POD even though its category is Revised.
 POD_OVERRIDES = {'The Dark of Mirkwood': ('旧', '新版 POD')}
+# A revised cycle ships as two boxes. The scenarios only live in the campaign box,
+# so the list shows one entry per cycle and points at that box.
+HERO_RE = re.compile(r'^(.*)\s+Hero Expansion$')
+CAMPAIGN_RE = re.compile(r'^(.*)\s+Campaign Expansion$')
 
 
 def slug_id(slug):
@@ -176,6 +180,11 @@ def main():
         if base in SKIP_NAMES:
             skipped += 1
             continue
+        hero = HERO_RE.match(base)
+        if hero and category == 'Revised Content':
+            # Same cycle as the campaign box, which is the one holding the scenarios.
+            skipped += 1
+            continue
         if category == 'Nightmare Decks':
             tab = NIGHTMARE_TAB
         elif base in POD_OVERRIDES:
@@ -187,10 +196,13 @@ def main():
         else:
             tab = 'legacy'
         label = chapter_label(group, publisher, category, tab)
-        zh = zh_name(p.get('name', ''), titles)
+        campaign = CAMPAIGN_RE.match(base) if category == 'Revised Content' else None
+        series = campaign.group(1) if campaign else ''
+        zh = (titles.get(series) or zh_name(p.get('name', ''), titles)) if series else zh_name(p.get('name', ''), titles)
         item = {
             'id': ident,
             'name': p.get('name', ident),
+            'en': series or base,
             'zh': zh,
             'art': 'assets/products/' + dest_name,
             'meta': POD_OVERRIDES.get(base, (None, COND_ZH.get(category, category)))[1],

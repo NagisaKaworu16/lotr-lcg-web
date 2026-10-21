@@ -27,18 +27,18 @@
       "CHAPTER 1 · 基础版",
       "CHAPTER 2 · 新版扩展（Revised）"
     ],
-    "cards": 10,
+    "cards": 7,
     "ready": 1,
-    "locked": 9,
+    "locked": 6,
     "community": 0,
     "brokenImages": 0,
     "brokenList": [],
-    "note": "新版扩展（Revised）：旧循环以「英雄扩展 + 战役扩展」两盒重制，剧本沿用旧版。　共 10 项 · 1 可玩",
+    "note": "新版扩展（Revised）：旧循环的重制版本，剧本按系列收录。　共 7 项 · 1 可玩",
     "titles": [
       "基础剧本合集",
-      "安格玛觉醒 · 英雄扩展",
-      "安格玛觉醒 · 战役扩展",
-      "追梦者 · 英雄扩展"
+      "安格玛觉醒",
+      "追梦者",
+      "埃瑞德米斯林"
     ],
     "overflowX": false
   },
@@ -164,18 +164,18 @@
       "CHAPTER 1 · 基础版",
       "CHAPTER 2 · 新版扩展（Revised）"
     ],
-    "cards": 10,
+    "cards": 7,
     "ready": 1,
-    "locked": 9,
+    "locked": 6,
     "community": 0,
     "brokenImages": 0,
     "brokenList": [],
-    "note": "新版扩展（Revised）：旧循环以「英雄扩展 + 战役扩展」两盒重制，剧本沿用旧版。　共 10 项 · 1 可玩",
+    "note": "新版扩展（Revised）：旧循环的重制版本，剧本按系列收录。　共 7 项 · 1 可玩",
     "titles": [
       "基础剧本合集",
-      "安格玛觉醒 · 英雄扩展",
-      "安格玛觉醒 · 战役扩展",
-      "追梦者 · 英雄扩展"
+      "安格玛觉醒",
+      "追梦者",
+      "埃瑞德米斯林"
     ],
     "overflowX": false
   },

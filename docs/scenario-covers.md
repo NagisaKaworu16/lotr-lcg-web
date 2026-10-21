@@ -32,7 +32,11 @@ python build.py
 | `category == Revised Content` | 新版扩展 |
 | 其余（Cycles / Sagas） | 旧版扩展 |
 
-- 新版扩展 / 旧版扩展 / 支线剧情 / 噩梦包 四个页签，共 175 条（另 5 条被跳过）。
+- 新版扩展 / 旧版扩展 / 支线剧情 / 噩梦包 四个页签，共 172 条（另 8 条被跳过）。
+- **新版扩展每个系列只出一条**：一个循环重制成「英雄扩展 + 战役扩展」两盒，剧本只在战役盒里，
+  所以英雄盒直接跳过（`HERO_RE`），条目落在战役盒上，标题用系列名（如「安格玛觉醒」）、
+  副标题用系列英文名（`Angmar Awakened`），点击后对应的是战役盒。传奇扩展（魔戒同盟等）本来就是单盒，不受影响。
+  `assets/products/` 里仍保留英雄盒封面，以后要恢复成两条时可以直接引用。
 - 跳过 `SKIP_NAMES`：`Revised Core Set`（即现在的基础游戏）、`Dwarves of Durin`、`Elves of Lórien`、
   `Defenders of Gondor`、`Riders of Rohan` —— 基础版本身在页面里以「基础剧本合集」出现，不再重复列出。
 - 章节 = 目录里的 `group`，`GROUP_ZH` 给出中文章名；噩梦包章节统一为「噩梦 · <循环名>」，
@@ -86,7 +90,8 @@ python build.py
 3. 预购特典后缀（`Preorder Promotion`）→ 基础名 + 「（预购特典）」；
 4. 都没有则留空，界面回退显示英文原名。
 
-当前覆盖率 175/175。卡片标题显示中文，英文原名作为副标题保留，便于和官方产品对照。
+当前覆盖率 172/172。卡片标题显示中文，副标题用去编号的英文名（新版扩展的系列名，如 `Angmar Awakened`；
+完整产品原名与 `MECxx` 编号保留在卡片的 `title` 悬停提示里），便于和官方产品对照。
 译名以**魔戒中文维基译名表**为准（如 Carrock→卡尔岩、Rhosgobel→罗斯戈贝尔、Erech→埃瑞赫、
 Wainriders→战车民、Tharbad→沙巴德、Carn Dûm→卡恩督姆、Nurn→努尔恩、Osgiliath→欧斯吉利亚斯）。
 要改某个名字，直接编辑 `product-zh.json` 再重跑导入脚本即可。

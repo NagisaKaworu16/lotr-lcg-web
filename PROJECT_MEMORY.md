@@ -58,7 +58,7 @@
 
 先看 docs/memory/ROADMAP.md 和 ISSUES.md。真实浏览器桌面验收已完成（2026-10-20）；下一优先事项：用户上手验收并收集反馈、迁移安都因／多尔哥多开局取消窗口，再做完整计分和全流程规则审计。阶段说明见 phase2-acceptance.md 至 phase7-acceptance.md，桌面与浏览器验收见 tabletop-acceptance.md；现行版本说明优先于旧历史。
 
-产品目录现状（v0.15.4）：新游戏页四个页签（新版扩展／旧版扩展／支线剧情／噩梦包），数据由 `scripts/import-product-catalog.py` 从 Hall of Beorn 快照生成到 `product-catalog.js`，共 175 条；中文译名在 `product-zh.json`，以魔戒中文维基译名表为准。基础游戏（新版核心包）用「基础剧本合集」表示，目录里已跳过 `Revised Core Set` 与四盒预组。改目录或译名后必须重跑导入脚本 + `python build.py`，并跑 `scripts/check-catalog-tabs.cjs` 做真实浏览器验收。
+产品目录现状（v0.15.6）：新游戏页四个页签（新版扩展／旧版扩展／支线剧情／噩梦包），数据由 `scripts/import-product-catalog.py` 从 Hall of Beorn 快照生成到 `product-catalog.js`，共 172 条；中文译名在 `product-zh.json`，以魔戒中文维基译名表为准。基础游戏（新版核心包）用「基础剧本合集」表示，目录里已跳过 `Revised Core Set` 与四盒预组；新版扩展每个循环只出一条（剧本只在战役盒里，英雄盒被 `HERO_RE` 跳过），标题为系列名、副标题为系列英文名。三个战役扩展的封面来自战役书 PDF 首页，用 `scripts/extract-pdf-covers.py` 生成（覆盖 `assets/products/`，导入脚本不会还原）。改目录或译名后必须重跑导入脚本 + `python build.py`，并跑 `scripts/check-catalog-tabs.cjs` 做真实浏览器验收。
 
 Git状态：本地 v0.13.1 位于 fix/multiplayer-setup-v0131，基于v0.13.0提交c58331b95058e0b4ea12157bc68423cb9479d0a6（feature/smart-windows-v0130）。v0.13.0继承 v0.12.0 提交1154bfb043e8c721cb7e6890b1a687cb2adc3c2e（feature/refresh-phase-v0120）。v0.12.0基于远端 v0.11.0 提交 efe8d928d402befacf16776a9b0efd0b7b60c148（完整文件树 a8338623b8946b3825ad03a79fb8e7507910d7b4）。此前远端最新已上传版本为 feature/combat-phase-v0110，草稿PR #3以 feature/encounter-phase-v0100 为基底，未合并。用户明确上传授权覆盖v0.10.0与v0.11.0代码、更新后的项目记忆及验收记录；2026-10-20用户随后明确要求上传v0.13.1并新建不含「草稿」的分支；此次交付包含v0.13.1整合的v0.12.0刷新、v0.13.0智能窗口及更新记录。交付分支为fix/multiplayer-setup-v0131，本次只创建分支，不新建PR或合并main；实际远端提交以GitHub及docs/REMOTE_STATUS.md为准。main保留原剧本资料，PR #1/#2/#3保留。实际同步结果见 docs/REMOTE_STATUS.md。
 

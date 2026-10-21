@@ -53,7 +53,7 @@ const NEW_GAME_TABS=[
  {value:'nightmare',label:'噩梦包'}
 ];
 const NG_NOTE={
- revised:'新版扩展（Revised）：旧循环以「英雄扩展 + 战役扩展」两盒重制，剧本沿用旧版。',
+ revised:'新版扩展（Revised）：旧循环的重制版本，剧本按系列收录。',
  legacy:'旧版扩展：按循环排列的早期产品，一个大盒加六个冒险包。',
  pod:'支线剧情（POD）：官方 POD 与社区作品，可脱离循环单独游玩。',
  nightmare:'噩梦包：各循环的高难度变体，需配合对应剧本使用。'
@@ -73,7 +73,7 @@ function ngArt(entry){
  return `<div class="ng-card-art">${fb}${img}${badges}</div>`;
 }
 function ngCard(entry){const attrs=entry.ready?`data-action="ngOpen" data-kind="${entry.kind}" data-id="${entry.id}"`:`data-action="ngLocked" data-id="${entry.id}" data-name="${enc(entry.zh||entry.name)}"`;
- const title=entry.zh||entry.name,sub=entry.zh?entry.name:(entry.meta||'');
+ const title=entry.zh||entry.name,sub=entry.zh?(entry.en||entry.name):(entry.meta||'');
  return `<article class="ng-card${entry.ready?'':' locked'}" ${attrs} title="${enc(title)}${entry.zh?'｜'+enc(entry.name):''}">${ngArt(entry)}<div class="ng-card-body"><h3>${enc(title)}</h3><p class="small muted ng-card-en">${enc(sub)}</p></div><span class="ng-card-go">${entry.ready?'开始 →':'尚未实现'}</span></article>`;}
 function ngChapters(list){return list.map((ch,chIndex)=>`<section class="ng-chapter"><div class="ng-chapter-head"><span>${enc(ch.label)}</span><span class="small muted">${ch.items.length} 项 · ${ch.items.filter(x=>x.ready).length} 可玩</span></div>${ch.items.length?`<div class="ng-grid">${ch.items.map(ngCard).join('')}</div>`:'<p class="empty">本批暂无条目</p>'}</section>`).join('');}
 function ngCompat(){return `<div class="ng-compat" aria-hidden="true"><select id="playerCount">${[1,2,3,4].map(n=>`<option value="${n}" ${setupDraft.players===n?'selected':''}>${n}</option>`).join('')}</select><input id="seed" value="${enc(setupDraft.seed)}"><select id="pc-first">${Array.from({length:setupDraft.players},(_,i)=>`<option value="${i}" ${setupDraft.first===i?'selected':''}>玩家${i+1}</option>`).join('')}</select></div>`;}
