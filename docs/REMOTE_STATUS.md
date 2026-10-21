@@ -59,3 +59,9 @@ v0.11.0实际已同步：feature/combat-phase-v0110，提交 efe8d928d402befacf1
 ## v0.14.0 本地开发
 
 `feature/tabletop-ui-v0140` 基于已上传的v0.13.1提交 `c6f07243a12af2f592102d786b39fe0f7881afdc` 开发桌面改版。本次v0.14.0仅本地提交并交付离线包；没有新建远端分支／PR，也未合并main。上述旧版本同步说明为历史记录。
+
+## v0.15.0 同步到远端（2026-10-21）
+
+用户明确要求「把当前进度同步到 GitHub 仓库」。分支 `feature/tabletop-ui-v0140` 从远端 v0.13.1 提交 `c6f07243a12af2f592102d786b39fe0f7881afdc` 推进到 v0.15.0，推送 14 个提交（v0.14.1 真实浏览器验收、v0.14.2 卡图本地化、v0.14.3–0.14.5 浅色主题／框体对齐／任务条、v0.14.6–0.14.9 预组与牌组导入、我的卡组与开局选牌、新游戏流程，以及两次收尾提交），本地与远端均为 `b822a6d`。
+
+推送目标为 `origin` = https://github.com/NagisaKaworu16/lotr-lcg-web.git，使用用户提供的 fine-grained PAT（Contents: Read and write），仅在推送命令中以 `http.extraheader` 传入一次，未写入 git 配置或 remote URL，事后未保留。本次只更新该分支：未新建 PR、未合并 main（远端 main 仍为 `20c16114e55572a57d4567ef0ae96f343557a113`）。此前「v0.14.x 尚未上传」的记录是历史状态。
