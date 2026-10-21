@@ -169,7 +169,7 @@ async function handleChooser(b){const a=b.dataset.action,c=deckChooser;if(!c)ret
  if(a==='chooserTab'){c.tab=b.dataset.value;render();return;}
  if(a==='chooserPlayer'){c.player=Number(b.dataset.player);render();return;}
  if(a==='chooserPick'){const p=Number(b.dataset.player),id=b.dataset.deck;c.picks[p]=id;const next=c.picks.findIndex(x=>!x);c.player=next>=0?next:Math.min(p,c.players-1);render();return;}
- if(a==='chooserBuilder'){deckChooser=null;tab='players';render();toast('在「英雄与玩家牌」配好牌并保存后，回到剧本桌面重新开始远征就能选用。');return;}
+ if(a==='chooserBuilder'){deckChooser=null;tab='players';render();toast('在「英雄与玩家牌」配好牌并保存后，回到首页重新开始远征就能选用。');return;}
  if(a==='chooserImportUrl'){const input=document.querySelector('#chooser-url'),raw=String(input&&input.value||'').trim(),m=raw.match(/(?:decklist|deck)\/(?:view\/)?(\d+)/i)||raw.match(/^(\d+)$/);if(!m){toast('无法识别牌组编号；示例 https://ringsdb.com/decklist/view/12345');return;}const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),15000);try{const res=await fetch('https://ringsdb.com/api/public/decklist/'+m[1],{signal:ctrl.signal,headers:{Accept:'application/json'}});if(!res.ok)throw Error('RingsDB 返回 HTTP '+res.status);const saved=PlayerUI.saveDeck(PlayerCards.fromRingsdb(await res.json()));c.picks[c.player]=saved.id;const next=c.picks.findIndex(x=>!x);if(next>=0)c.player=next;render();toast('已导入并选给玩家'+(c.player+1)+'：'+saved.name);}catch(e){toast(e.name==='AbortError'?'RingsDB 请求超时（15秒）；国内网络通常无法访问':'导入失败：'+e.message);}finally{clearTimeout(timer);}return;}
  if(a==='chooserConfirm'){for(let i=0;i<c.players;i++)setupDraft.decks[i]=c.picks[i];const id=c.scenario;deckChooser=null;beginScenario(id);return;}
 }
@@ -210,7 +210,7 @@ $('#app').onclick=async ev=>{const b=ev.target.closest('[data-action]');if(!b||b
 };
 $('#imagesTab').onclick=()=>{tab='images';render();};
 $('#playersTab').onclick=()=>{tab='players';render();};const decksTab=$('#decksTab');if(decksTab)decksTab.onclick=()=>{tab='decks';render();};
-$('#tableTab').onclick=()=>{tab='table';render();};$('#catalogTab').onclick=()=>{tab='catalog';render();};$('#helpTab').onclick=()=>{tab='help';render();};
+$('#tableTab').onclick=()=>goHome();$('#catalogTab').onclick=()=>{tab='catalog';render();};$('#helpTab').onclick=()=>{tab='help';render();};
 $('#undo').onclick=()=>{if(history.length){state=history.pop();save();render();}};
 $('#export').onclick=()=>{if(!state)return;let blob=new Blob([JSON.stringify({format:'lotr-scenario-save',version:1,state},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`lotr-${state.scenario}-round-${state.round}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
 $('#import').onchange=async ev=>{const f=ev.target.files[0];if(!f)return;try{if(f.size>5000000)throw Error('存档过大。');const v=JSON.parse(await f.text());if(v.format!=='lotr-scenario-save'||v.version!==1||!v.state||!D.scenarios.some(s=>s.id===v.state.scenario)||!D.quests.some(q=>q.id===v.state.quest)||!Array.isArray(v.state.players)||v.state.players.length<1||v.state.players.length>4||!Array.isArray(v.state.deck)||!Array.isArray(v.state.pending))throw Error('不是此版本的有效存档。');if(state&&!confirm('导入将覆盖当前桌面；可撤销恢复。'))return;mutate(()=>{state=v.state;if(state.phase===2&&state.questing)E.questing.enableDiscussion(state);});tab='table';render();toast('存档已导入。');}catch(e){toast('导入失败：'+e.message);}finally{ev.target.value='';}};
@@ -231,7 +231,6 @@ if(HAS_VIEW_HISTORY){
  window.history.replaceState({...viewSnapshot(),depth:0},'');viewKey=viewSignature();
  window.addEventListener('popstate',ev=>{restoringView=true;try{restoreView(ev.state);}finally{restoringView=false;}syncHistoryButtons((ev.state&&ev.state.depth)||0);});
 }
-const brandHome=$('#brandHome');if(brandHome)brandHome.onclick=ev=>{ev.preventDefault();goHome();};
 const navBack=$('#navBack');if(navBack)navBack.onclick=()=>{if(HAS_VIEW_HISTORY)window.history.back();};
 const navFwd=$('#navFwd');if(navFwd)navFwd.onclick=()=>{if(HAS_VIEW_HISTORY)window.history.forward();};
 if(HAS_VIEW_HISTORY)syncHistoryButtons(0);

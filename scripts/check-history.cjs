@@ -69,15 +69,15 @@ const OUT=path.join(ROOT,'docs','catalog-tabs');
  s=await state();
  check('顶栏前进生效',s.newGame==='settings',s);
 
- /* 7. 切到别的页签，再点品牌回首页 */
+ /* 7. 切到别的页签，再点「首页」回到剧本桌面 */
  await page.click('#decksTab');
  await page.waitForTimeout(200);
  s=await state();
  check('切到我的卡组',s.heading.includes('我的卡组'),s);
- await page.click('#brandHome');
+ await page.click('#tableTab');
  await page.waitForTimeout(250);
  s=await state();
- check('点品牌回到首页（剧本桌面）',s.tab==='table'&&s.newGame==='none'&&s.chooser===false,s);
+ check('点首页回到剧本桌面',s.tab==='table'&&s.newGame==='none'&&s.chooser===false,s);
  check('回首页后页面不再是卡组页',!(await page.evaluate(()=>document.querySelector('#app').innerHTML.includes('我的卡组'))));
  await shot('home');
 
@@ -88,7 +88,7 @@ const OUT=path.join(ROOT,'docs','catalog-tabs');
  check('后退回到我的卡组',s.heading.includes('我的卡组'),s);
 
  /* 9. 旧版扩展里不应再有核心包 */
- await page.click('#brandHome');
+ await page.click('#tableTab');
  await page.waitForTimeout(200);
  await page.click('.ng-tabs button[data-value="legacy"]');
  await page.waitForTimeout(250);
