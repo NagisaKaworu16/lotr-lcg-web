@@ -1,0 +1,172 @@
+[
+  {
+    "width": 1440,
+    "legacyList": {
+      "cards": [
+        "黑森林的魔影",
+        "卡扎督姆",
+        "努门诺尔的后裔",
+        "艾森加德之声",
+        "失落的王国",
+        "灰港",
+        "哈拉德之沙",
+        "罗瓦尼安的荒野",
+        "东方魔影",
+        "雾山奇缘",
+        "黑骑手",
+        "第一纪元",
+        "埃奥尔的儿女",
+        "夏尔纪年",
+        "费艾诺的遗产"
+      ],
+      "subs": [
+        "6 个剧本",
+        "Khazad-dûm · 矮人故乡 · 6 个剧本",
+        "Heirs of Númenor · 对抗魔影 · 6 个剧本",
+        "The Voice of Isengard · 铸戒者 · 6 个剧本",
+        "The Lost Realm · 安格玛觉醒 · 6 个剧本",
+        "The Grey Havens · 追梦者 · 6 个剧本",
+        "The Sands of Harad · 哈拉德人 · 6 个剧本",
+        "The Wilds of Rhovanion · 埃瑞德米斯林 · 6 个剧本",
+        "A Shadow in the East · 魔多的复仇 · 6 个剧本",
+        "The Hobbit: Over Hill and Under Hill · 霍比特人传奇 · 1 个剧本",
+        "The Black Riders · 魔戒传奇 · 5 个剧本",
+        "First Age · 社区 · 命运主宰 · 4 个剧本",
+        "Children of Eorl · 社区 · 洛希尔人的誓言 · 6 个剧本",
+        "The Shire's Reckoning · 社区 · 酷夏之劫 · 2 个剧本",
+        "The Legacy of Fëanor · 社区 · 费艾诺的遗产 · 1 个剧本"
+      ],
+      "open": 15,
+      "broken": 0,
+      "overflowX": false
+    }
+  },
+  {
+    "width": 1440,
+    "legacyCampaign": {
+      "packCards": 0,
+      "hint": "\n  游戏名称\n  玩家人数1234\n  剧本类型完整剧本单场冒险模式\n   完整剧本从「红角门」开始，按顺序推进；本版只自动结算当前剧本。\n  难度选择简单标准标准（Standard）：按剧本原文设置与结算。　噩梦模式需要对应剧本的噩梦牌组（见「噩梦包」页签），本版尚未收录。\n  高级设置 · 事件窗口触发时机智能：空窗口自动跳过详细：每个窗口都停下对应桌面操作栏的「行动窗口」模式，开局后也能随时切换。\n  返回下一步：选择牌组\n  「红角门」的剧本内容尚未实现；目前可玩的是基础版的三个剧本。\n ",
+      "nextDisabled": true
+    }
+  },
+  {
+    "width": 1440,
+    "legacyDetail": {
+      "packs": [
+        "红角门",
+        "通往幽谷之路",
+        "水中监视者",
+        "漫长的黑暗",
+        "岩石的根基",
+        "魔影与烈焰"
+      ],
+      "selected": 0,
+      "playable": 0,
+      "nextDisabled": true,
+      "broken": 0,
+      "overflowX": false
+    }
+  },
+  {
+    "width": 1440,
+    "baseDetail": {
+      "packs": [
+        "穿越幽暗密林",
+        "沿安都因河而下",
+        "逃离多尔哥多"
+      ],
+      "playable": 3,
+      "nextDisabled": false
+    }
+  },
+  {
+    "width": 1440,
+    "remoteRequests": 0,
+    "pageErrors": 0
+  },
+  {
+    "width": 768,
+    "legacyList": {
+      "cards": [
+        "黑森林的魔影",
+        "卡扎督姆",
+        "努门诺尔的后裔",
+        "艾森加德之声",
+        "失落的王国",
+        "灰港",
+        "哈拉德之沙",
+        "罗瓦尼安的荒野",
+        "东方魔影",
+        "雾山奇缘",
+        "黑骑手",
+        "第一纪元",
+        "埃奥尔的儿女",
+        "夏尔纪年",
+        "费艾诺的遗产"
+      ],
+      "subs": [
+        "6 个剧本",
+        "Khazad-dûm · 矮人故乡 · 6 个剧本",
+        "Heirs of Númenor · 对抗魔影 · 6 个剧本",
+        "The Voice of Isengard · 铸戒者 · 6 个剧本",
+        "The Lost Realm · 安格玛觉醒 · 6 个剧本",
+        "The Grey Havens · 追梦者 · 6 个剧本",
+        "The Sands of Harad · 哈拉德人 · 6 个剧本",
+        "The Wilds of Rhovanion · 埃瑞德米斯林 · 6 个剧本",
+        "A Shadow in the East · 魔多的复仇 · 6 个剧本",
+        "The Hobbit: Over Hill and Under Hill · 霍比特人传奇 · 1 个剧本",
+        "The Black Riders · 魔戒传奇 · 5 个剧本",
+        "First Age · 社区 · 命运主宰 · 4 个剧本",
+        "Children of Eorl · 社区 · 洛希尔人的誓言 · 6 个剧本",
+        "The Shire's Reckoning · 社区 · 酷夏之劫 · 2 个剧本",
+        "The Legacy of Fëanor · 社区 · 费艾诺的遗产 · 1 个剧本"
+      ],
+      "open": 15,
+      "broken": 0,
+      "overflowX": false
+    }
+  },
+  {
+    "width": 768,
+    "legacyCampaign": {
+      "packCards": 0,
+      "hint": "\n  游戏名称\n  玩家人数1234\n  剧本类型完整剧本单场冒险模式\n   完整剧本从「红角门」开始，按顺序推进；本版只自动结算当前剧本。\n  难度选择简单标准标准（Standard）：按剧本原文设置与结算。　噩梦模式需要对应剧本的噩梦牌组（见「噩梦包」页签），本版尚未收录。\n  高级设置 · 事件窗口触发时机智能：空窗口自动跳过详细：每个窗口都停下对应桌面操作栏的「行动窗口」模式，开局后也能随时切换。\n  返回下一步：选择牌组\n  「红角门」的剧本内容尚未实现；目前可玩的是基础版的三个剧本。\n ",
+      "nextDisabled": true
+    }
+  },
+  {
+    "width": 768,
+    "legacyDetail": {
+      "packs": [
+        "红角门",
+        "通往幽谷之路",
+        "水中监视者",
+        "漫长的黑暗",
+        "岩石的根基",
+        "魔影与烈焰"
+      ],
+      "selected": 0,
+      "playable": 0,
+      "nextDisabled": true,
+      "broken": 0,
+      "overflowX": false
+    }
+  },
+  {
+    "width": 768,
+    "baseDetail": {
+      "packs": [
+        "穿越幽暗密林",
+        "沿安都因河而下",
+        "逃离多尔哥多"
+      ],
+      "playable": 3,
+      "nextDisabled": false
+    }
+  },
+  {
+    "width": 768,
+    "remoteRequests": 0,
+    "pageErrors": 0
+  }
+]

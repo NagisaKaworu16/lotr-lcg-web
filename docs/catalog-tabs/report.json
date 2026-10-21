@@ -1,0 +1,238 @@
+[
+  {
+    "width": 1440,
+    "tabs": [
+      {
+        "label": "新版扩展",
+        "active": true
+      },
+      {
+        "label": "旧版扩展",
+        "active": false
+      },
+      {
+        "label": "支线剧情",
+        "active": false
+      },
+      {
+        "label": "噩梦包",
+        "active": false
+      }
+    ]
+  },
+  {
+    "width": 1440,
+    "tab": "revised",
+    "chapters": [
+      "CHAPTER 1 · 基础版",
+      "CHAPTER 2 · 新版扩展（Revised）"
+    ],
+    "cards": 7,
+    "ready": 1,
+    "locked": 6,
+    "community": 0,
+    "brokenImages": 0,
+    "brokenList": [],
+    "note": "新版扩展（Revised）：旧循环的重制版本，剧本按系列收录。　共 7 项 · 1 可玩",
+    "titles": [
+      "基础剧本合集",
+      "安格玛觉醒",
+      "追梦者",
+      "埃瑞德米斯林"
+    ],
+    "overflowX": false
+  },
+  {
+    "width": 1440,
+    "tab": "legacy",
+    "chapters": [
+      "大扩展"
+    ],
+    "cards": 15,
+    "ready": 0,
+    "locked": 0,
+    "community": 4,
+    "brokenImages": 0,
+    "brokenList": [],
+    "note": "旧版扩展：每个循环由一个大扩展加六到八个剧本组成，点开扩展挑选剧本。　15 个大扩展 · 73 个剧本",
+    "titles": [
+      "黑森林的魔影",
+      "卡扎督姆",
+      "努门诺尔的后裔",
+      "艾森加德之声"
+    ],
+    "overflowX": false
+  },
+  {
+    "width": 1440,
+    "tab": "pod",
+    "chapters": [
+      "CHAPTER 1 · 官方 POD",
+      "CHAPTER 2 · ALeP 自制独立作品"
+    ],
+    "cards": 20,
+    "ready": 0,
+    "locked": 20,
+    "community": 5,
+    "brokenImages": 0,
+    "brokenList": [],
+    "note": "支线剧情（POD）：官方单独发售的剧本与 ALeP 自制独立作品，可脱离循环单独游玩。　共 20 项 · 0 可玩",
+    "titles": [
+      "黑森林之黯",
+      "欧斯吉力亚斯集结（GenCon 2011）",
+      "长湖镇之战（GenCon 2012）",
+      "埃瑞赫之石（GenCon 2013）"
+    ],
+    "overflowX": false
+  },
+  {
+    "width": 1440,
+    "tab": "nightmare",
+    "chapters": [
+      "CHAPTER 1 · 噩梦 · 黑森林的魔影",
+      "CHAPTER 2 · 噩梦 · 矮人故乡",
+      "CHAPTER 3 · 噩梦 · 对抗魔影",
+      "CHAPTER 4 · 噩梦 · 铸戒者",
+      "CHAPTER 5 · 噩梦 · 安格玛觉醒",
+      "CHAPTER 6 · 噩梦 · 追梦者",
+      "CHAPTER 7 · 噩梦 · 霍比特人传奇",
+      "CHAPTER 8 · 噩梦 · 魔戒传奇"
+    ],
+    "cards": 50,
+    "ready": 0,
+    "locked": 50,
+    "community": 0,
+    "brokenImages": 0,
+    "brokenList": [],
+    "note": "噩梦包：各循环的高难度变体，需配合对应剧本使用。　共 50 项 · 0 可玩",
+    "titles": [
+      "穿越幽暗密林 · 噩梦",
+      "沿安都因河而下 · 噩梦",
+      "逃离多尔哥多 · 噩梦",
+      "追捕咕噜 · 噩梦"
+    ],
+    "overflowX": false
+  },
+  {
+    "width": 1440,
+    "remoteRequests": 0
+  },
+  {
+    "width": 768,
+    "tabs": [
+      {
+        "label": "新版扩展",
+        "active": true
+      },
+      {
+        "label": "旧版扩展",
+        "active": false
+      },
+      {
+        "label": "支线剧情",
+        "active": false
+      },
+      {
+        "label": "噩梦包",
+        "active": false
+      }
+    ]
+  },
+  {
+    "width": 768,
+    "tab": "revised",
+    "chapters": [
+      "CHAPTER 1 · 基础版",
+      "CHAPTER 2 · 新版扩展（Revised）"
+    ],
+    "cards": 7,
+    "ready": 1,
+    "locked": 6,
+    "community": 0,
+    "brokenImages": 0,
+    "brokenList": [],
+    "note": "新版扩展（Revised）：旧循环的重制版本，剧本按系列收录。　共 7 项 · 1 可玩",
+    "titles": [
+      "基础剧本合集",
+      "安格玛觉醒",
+      "追梦者",
+      "埃瑞德米斯林"
+    ],
+    "overflowX": false
+  },
+  {
+    "width": 768,
+    "tab": "legacy",
+    "chapters": [
+      "大扩展"
+    ],
+    "cards": 15,
+    "ready": 0,
+    "locked": 0,
+    "community": 4,
+    "brokenImages": 0,
+    "brokenList": [],
+    "note": "旧版扩展：每个循环由一个大扩展加六到八个剧本组成，点开扩展挑选剧本。　15 个大扩展 · 73 个剧本",
+    "titles": [
+      "黑森林的魔影",
+      "卡扎督姆",
+      "努门诺尔的后裔",
+      "艾森加德之声"
+    ],
+    "overflowX": false
+  },
+  {
+    "width": 768,
+    "tab": "pod",
+    "chapters": [
+      "CHAPTER 1 · 官方 POD",
+      "CHAPTER 2 · ALeP 自制独立作品"
+    ],
+    "cards": 20,
+    "ready": 0,
+    "locked": 20,
+    "community": 5,
+    "brokenImages": 0,
+    "brokenList": [],
+    "note": "支线剧情（POD）：官方单独发售的剧本与 ALeP 自制独立作品，可脱离循环单独游玩。　共 20 项 · 0 可玩",
+    "titles": [
+      "黑森林之黯",
+      "欧斯吉力亚斯集结（GenCon 2011）",
+      "长湖镇之战（GenCon 2012）",
+      "埃瑞赫之石（GenCon 2013）"
+    ],
+    "overflowX": false
+  },
+  {
+    "width": 768,
+    "tab": "nightmare",
+    "chapters": [
+      "CHAPTER 1 · 噩梦 · 黑森林的魔影",
+      "CHAPTER 2 · 噩梦 · 矮人故乡",
+      "CHAPTER 3 · 噩梦 · 对抗魔影",
+      "CHAPTER 4 · 噩梦 · 铸戒者",
+      "CHAPTER 5 · 噩梦 · 安格玛觉醒",
+      "CHAPTER 6 · 噩梦 · 追梦者",
+      "CHAPTER 7 · 噩梦 · 霍比特人传奇",
+      "CHAPTER 8 · 噩梦 · 魔戒传奇"
+    ],
+    "cards": 50,
+    "ready": 0,
+    "locked": 50,
+    "community": 0,
+    "brokenImages": 0,
+    "brokenList": [],
+    "note": "噩梦包：各循环的高难度变体，需配合对应剧本使用。　共 50 项 · 0 可玩",
+    "titles": [
+      "穿越幽暗密林 · 噩梦",
+      "沿安都因河而下 · 噩梦",
+      "逃离多尔哥多 · 噩梦",
+      "追捕咕噜 · 噩梦"
+    ],
+    "overflowX": false
+  },
+  {
+    "width": 768,
+    "remoteRequests": 0
+  }
+]

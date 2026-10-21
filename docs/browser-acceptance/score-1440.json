@@ -1,0 +1,110 @@
+{
+  "ok": true,
+  "width": 1440,
+  "expected": 91,
+  "totalText": "91",
+  "shown": [
+    "+33",
+    "+60",
+    "+0",
+    "+3",
+    "-5"
+  ],
+  "checks": [
+    {
+      "name": "进行中不显示计分面板",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "胜利后出现计分面板",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "标题标明剧本胜利",
+      "ok": true,
+      "detail": "剧本胜利 · 结算计分"
+    },
+    {
+      "name": "分项含威胁合计",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "分项含回合数",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "分项含淘汰人数",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "分项含英雄伤害",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "分项含胜利区",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "分项逐条列出数值",
+      "ok": true,
+      "detail": "+33 / +60 / +0 / +3 / -5"
+    },
+    {
+      "name": "总分与官方公式一致",
+      "ok": true,
+      "detail": "面板 91 · 预期 91"
+    },
+    {
+      "name": "给出评级说明",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "显示每名玩家归一化分数",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "总分无需滚动即可见",
+      "ok": true,
+      "detail": "visible=true clipped=false"
+    },
+    {
+      "name": "底部操作按钮完整渲染",
+      "ok": true,
+      "detail": "38px"
+    },
+    {
+      "name": "分项加减等于总分",
+      "ok": true,
+      "detail": "91 vs 91"
+    },
+    {
+      "name": "失败局改为过程计分",
+      "ok": true,
+      "detail": "远征失败 · 过程计分"
+    },
+    {
+      "name": "失败局说明不计入战绩",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "390px 宽度下无横向溢出",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "无脚本错误",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}

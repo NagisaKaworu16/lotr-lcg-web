@@ -1,0 +1,32 @@
+{
+ "width": 1920,
+ "min": 3,
+ "at": "2026-10-21T14:46:54.409Z",
+ "stages": [
+  {
+   "stage": "landing",
+   "bad": []
+  },
+  {
+   "stage": "setup",
+   "bad": []
+  },
+  {
+   "stage": "resource",
+   "bad": []
+  },
+  {
+   "stage": "phase1",
+   "bad": []
+  },
+  {
+   "stage": "phase2",
+   "bad": []
+  },
+  {
+   "stage": "phase2",
+   "bad": []
+  }
+ ],
+ "ok": true
+}

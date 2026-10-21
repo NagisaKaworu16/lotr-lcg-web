@@ -1,0 +1,147 @@
+{
+  "source": "lotr-pod-workbuddy/pod-import.json (14 official POD + 5 ALeP standalone) + The Dark of Mirkwood",
+  "generated": "2026-10-21",
+  "note": "code 对应产品名末尾的 (MECxx)；cover 为空表示沿用目录已有封面，目录里没有该产品时留空占位。",
+  "items": [
+    {
+      "code": "MEC102",
+      "title_en": "The Dark of Mirkwood",
+      "type": "official_pod",
+      "id": "the-dark-of-mirkwood",
+      "cover": ""
+    },
+    {
+      "code": "MEC15",
+      "title_en": "The Massing at Osgiliath",
+      "type": "official_pod",
+      "id": "pod-the-massing-at-osgiliath-gencon-2011",
+      "cover": "images/The-Massing-at-Osgiliath-GenCon-2011.jpg"
+    },
+    {
+      "code": "MEC33",
+      "title_en": "The Stone of Erech",
+      "type": "official_pod",
+      "id": "pod-the-stone-of-erech-gencon-2013",
+      "cover": "images/The-Stone-of-Erech-GenCon-2013.jpg"
+    },
+    {
+      "code": "MEC35",
+      "title_en": "The Battle of Lake-town",
+      "type": "official_pod",
+      "id": "pod-the-battle-of-lake-town-gencon-2012",
+      "cover": "images/The-Battle-of-Lake-town-GenCon-2012.jpg"
+    },
+    {
+      "code": "MEC36",
+      "title_en": "Fog on the Barrow-downs",
+      "type": "official_pod",
+      "id": "pod-fog-on-the-barrow-downs",
+      "cover": "images/Fog-on-the-Barrow-downs.jpg"
+    },
+    {
+      "code": "MEC37",
+      "title_en": "The Old Forest",
+      "type": "official_pod",
+      "id": "pod-the-old-forest",
+      "cover": "images/The-Old-Forest.jpg"
+    },
+    {
+      "code": "MEC75",
+      "title_en": "The Wizard's Quest",
+      "type": "official_pod",
+      "id": "pod-the-wizard's-quest",
+      "cover": "images/The-Wizard's-Quest.jpg"
+    },
+    {
+      "code": "MEC86",
+      "title_en": "The Hunt for the Dreadnaught",
+      "type": "official_pod",
+      "id": "pod-the-hunt-for-the-dreadnaught",
+      "cover": "images/The-Hunt-for-the-Dreadnaught.jpg"
+    },
+    {
+      "code": "OP014",
+      "title_en": "The Ruins of Belegost",
+      "type": "official_pod",
+      "id": "pod-the-ruins-of-belegost",
+      "cover": "images/The-Ruins-of-Belegost.jpg"
+    },
+    {
+      "code": "OP015",
+      "title_en": "Murder at the Prancing Pony",
+      "type": "official_pod",
+      "id": "pod-murder-at-the-prancing-pony",
+      "cover": "images/Murder-at-the-Prancing-Pony.jpg"
+    },
+    {
+      "code": "OP016",
+      "title_en": "The Siege of Annúminas",
+      "type": "official_pod",
+      "id": "pod-the-siege-of-annuminas",
+      "cover": "images/The-Siege-of-Annuminas.jpg"
+    },
+    {
+      "code": "OP050",
+      "title_en": "Attack on Dol Guldur",
+      "type": "official_pod",
+      "id": "pod-attack-on-dol-guldur",
+      "cover": "images/Attack-on-Dol-Guldur.jpg"
+    },
+    {
+      "code": "OP077",
+      "title_en": "The Woodland Realm",
+      "type": "official_pod",
+      "id": "pod-the-woodland-realm",
+      "cover": "images/The-Woodland-Realm.jpg"
+    },
+    {
+      "code": "UMEC84",
+      "title_en": "The Mines of Moria",
+      "type": "official_pod",
+      "id": "pod-the-mines-of-moria",
+      "cover": "images/The-Mines-of-Moria.jpg"
+    },
+    {
+      "code": "UMEC85",
+      "title_en": "Escape from Khazad-dûm",
+      "type": "official_pod",
+      "id": "pod-escape-from-khazad-dum",
+      "cover": "images/Escape-from-Khazad-dum.jpg"
+    },
+    {
+      "code": "",
+      "title_en": "The Mirror of Galadriel",
+      "type": "fan_standalone",
+      "id": "pod-the-mirror-of-galadriel",
+      "cover": ""
+    },
+    {
+      "code": "ALEP08",
+      "title_en": "The Scouring of the Shire",
+      "type": "fan_standalone",
+      "id": "pod-the-scouring-of-the-shire",
+      "cover": "images/The-Scouring-of-the-Shire.png"
+    },
+    {
+      "code": "ALEP09",
+      "title_en": "The Nine are Abroad",
+      "type": "fan_standalone",
+      "id": "pod-the-nine-are-abroad",
+      "cover": "images/The-Nine-are-Abroad.png"
+    },
+    {
+      "code": "ALEP10",
+      "title_en": "The Siege of Erebor",
+      "type": "fan_standalone",
+      "id": "pod-the-siege-of-erebor",
+      "cover": "images/The-Siege-of-Erebor.png"
+    },
+    {
+      "code": "ALEP12",
+      "title_en": "The Hobbit",
+      "type": "fan_standalone",
+      "id": "pod-the-hobbit",
+      "cover": "images/The-Hobbit.png"
+    }
+  ]
+}

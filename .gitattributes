@@ -1,0 +1,16 @@
+* text=auto
+*.js text eol=lf
+*.cjs text eol=lf
+*.py text eol=lf
+*.md text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+*.jpg binary
+*.png binary
+*.zip binary
+
+# Preserve the existing remote source data byte-for-byte.
+"基础-沿河而下.json" -text
+"基础-穿越黑森林" -text
+"基础-逃离多尔古都.json" -text
+"术语.json" -text

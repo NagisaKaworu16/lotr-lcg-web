@@ -1,0 +1,83 @@
+{
+  "ok": true,
+  "width": 1440,
+  "steps": [
+    {
+      "name": "山丘巨魔",
+      "cancelCount": 0,
+      "hasResolve": true
+    },
+    {
+      "name": "座狼骑手",
+      "cancelCount": 0,
+      "hasResolve": true
+    }
+  ],
+  "checks": [
+    {
+      "name": "进入牌组选择页",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "安都因开局出现逐张翻牌面板",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "面板说明每位玩家各翻1张",
+      "ok": true,
+      "detail": "剧本设置 · 开局翻牌（每位玩家各1张）"
+    },
+    {
+      "name": "未翻开前不出现取消按钮",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "第1张结算后可继续或收尾",
+      "ok": true,
+      "detail": "等待翻下一张"
+    },
+    {
+      "name": "第2张结算后可继续或收尾",
+      "ok": true,
+      "detail": "流程收尾"
+    },
+    {
+      "name": "开局逐张翻开而不是一次性结算",
+      "ok": true,
+      "detail": "山丘巨魔 / 座狼骑手"
+    },
+    {
+      "name": "每一步都要点「结算此牌并继续」",
+      "ok": true,
+      "detail": "2 步"
+    },
+    {
+      "name": "取消按钮只在持牌时出现（无则不误报）",
+      "ok": true,
+      "detail": "本轮预组未持意志考验／埃莉诺，取消按钮正确不出现"
+    },
+    {
+      "name": "开局翻牌流程收尾（面板消失并可正常操作）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "山丘巨魔按剧本要求进入探查区",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "开局面板在收尾后消失",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "无脚本错误",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+{
+  "remoteRequests": [],
+  "pages": [
+    {
+      "name": "library-main-p1",
+      "total": 36,
+      "loaded": 36,
+      "failed": [],
+      "sample": [
+        {
+          "src": "assets/cards-zh-core/01001.jpg",
+          "w": 750,
+          "h": 1050
+        },
+        {
+          "src": "assets/cards-zh-core/01002.jpg",
+          "w": 750,
+          "h": 1050
+        },
+        {
+          "src": "assets/cards-zh-core/01003.jpg",
+          "w": 750,
+          "h": 1050
+        }
+      ]
+    },
+    {
+      "name": "library-main-p2",
+      "total": 36,
+      "loaded": 36,
+      "failed": [],
+      "sample": [
+        {
+          "src": "assets/cards-zh-core/01037.jpg",
+          "w": 750,
+          "h": 1050
+        },
+        {
+          "src": "assets/cards-zh-core/01038.jpg",
+          "w": 750,
+          "h": 1050
+        },
+        {
+          "src": "assets/cards-zh-core/01039.jpg",
+          "w": 750,
+          "h": 1050
+        }
+      ]
+    },
+    {
+      "name": "library-encounter",
+      "total": 36,
+      "loaded": 36,
+      "failed": [],
+      "sample": [
+        {
+          "src": "assets/cards-encounter/king-spider.webp",
+          "w": 424,
+          "h": 600
+        },
+        {
+          "src": "assets/cards-encounter/hummerhorns.webp",
+          "w": 424,
+          "h": 600
+        },
+        {
+          "src": "assets/cards-encounter/ungoliant-s-spawn.webp",
+          "w": 424,
+          "h": 600
+        }
+      ]
+    },
+    {
+      "name": "table-quest-art",
+      "total": 15,
+      "loaded": 15,
+      "failed": [],
+      "sample": [
+        {
+          "src": "assets/cards-encounter/flies-and-spiders-1b.webp",
+          "w": 600,
+          "h": 426
+        },
+        {
+          "src": "assets/cards-encounter/forest-spider.webp",
+          "w": 424,
+          "h": 600
+        },
+        {
+          "src": "assets/cards-encounter/old-forest-road.webp",
+          "w": 424,
+          "h": 600
+        }
+      ]
+    }
+  ],
+  "remoteRequestCount": 0,
+  "ok": true
+}

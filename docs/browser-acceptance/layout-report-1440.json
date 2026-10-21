@@ -1,0 +1,79 @@
+{
+ "width": 1440,
+ "at": "2026-10-21T15:13:06.784Z",
+ "cardWidths": [
+  132
+ ],
+ "checks": [
+  {
+   "name": "dock / board / mat 左边缘对齐",
+   "ok": true,
+   "detail": "22 / 22 / 22"
+  },
+  {
+   "name": "dock / board / mat 宽度一致",
+   "ok": true,
+   "detail": "1122 / 1122 / 1122"
+  },
+  {
+   "name": "面板内容左边缘对齐",
+   "ok": true,
+   "detail": "39 / 39 / 39"
+  },
+  {
+   "name": "面板内边距统一 16px",
+   "ok": true,
+   "detail": "board:16px mat:16px rail:16px"
+  },
+  {
+   "name": "面板圆角统一 10px",
+   "ok": true,
+   "detail": ".operation-dock:10px | .public-table:10px | .player-mat:10px"
+  },
+  {
+   "name": "右侧栏各框内边距一致",
+   "ok": true,
+   "detail": "16px"
+  },
+  {
+   "name": "右侧栏各框宽度一致",
+   "ok": true,
+   "detail": "256"
+  },
+  {
+   "name": "右侧栏各框圆角一致",
+   "ok": true,
+   "detail": "10px"
+  },
+  {
+   "name": "区域标题行等高",
+   "ok": true,
+   "detail": "32"
+  },
+  {
+   "name": "区域标题左边缘对齐",
+   "ok": true,
+   "detail": "39,725"
+  },
+  {
+   "name": "卡牌宽度统一",
+   "ok": true,
+   "detail": "132"
+  },
+  {
+   "name": "同一行卡牌等高",
+   "ok": true,
+   "detail": "288.6 | 281.4 | 283 | 281"
+  },
+  {
+   "name": "卡牌间距统一",
+   "ok": true,
+   "detail": "144"
+  },
+  {
+   "name": "无横向溢出",
+   "ok": true,
+   "detail": "false"
+  }
+ ]
+}

@@ -1,0 +1,290 @@
+{
+  "pack_code": "core",
+  "scenario_code": "escape_from_dol_guldur",
+  "scenario_name": "逃离多古尔都",
+  "translation_version": "revised_ffg",
+  "difficulty": 7,
+  "encounter_sets": [
+    {
+      "set_name": "逃离多古尔都",
+      "cards": [
+        {
+          "code": "01103",
+          "name": "洞窟守卫",
+          "type_code": "enemy",
+          "traits": "亡灵.",
+          "text": "厄运 1。\n暗影：选择并弃除你控制的1张附属卡。被弃除的目标卡返回探查区。（如果此攻击未被防御，则弃除你控制的所有附属卡。）",
+          "engagement_cost": 8,
+          "threat": 2,
+          "attack": 2,
+          "defense": 1,
+          "health": 2,
+          "quantity": 2
+        },
+        {
+          "code": "01111",
+          "name": "多古尔都的戒灵",
+          "type_code": "enemy",
+          "traits": "戒灵.",
+          "text": "不能将附属卡附属到多古尔都的戒灵上。\n多古尔都的戒灵不能被暗影效果选择为目标。\n强制：在多古尔都的戒灵攻击后，防守玩家必须提高其威胁值，数值等于其控制的已横置角色数量。",
+          "engagement_cost": 40,
+          "threat": 5,
+          "attack": 5,
+          "defense": 3,
+          "health": 9,
+          "victory": 5,
+          "quantity": 1,
+          "notes": "在任务阶段3A时从遭遇牌组中搜寻并加入探查区。"
+        },
+        {
+          "code": "01104",
+          "name": "在暗影之下",
+          "type_code": "treachery",
+          "text": "翻开时：直到本阶段结束，探查区中的总威胁值提高X点，X为游戏中的玩家数量。\n暗影：防守玩家提高其威胁值，数值等于与其交战的敌人数量。",
+          "quantity": 2
+        },
+        {
+          "code": "01105",
+          "name": "铁镣铐",
+          "type_code": "treachery",
+          "text": "翻开时：将铁镣铐附属到起始玩家牌库顶端。（视为一张状态附属卡，具有以下文本：“下一次一位玩家将从附属牌库抽取1张或更多卡牌时，改为弃除铁镣铐。”）\n暗影：结算铁镣铐的“翻开时”效果。",
+          "quantity": 1
+        },
+        {
+          "code": "01106",
+          "name": "无尽洞窟",
+          "type_code": "location",
+          "traits": "地牢.",
+          "text": "厄运 1. 涌动.",
+          "threat": 1,
+          "quest_points": 3,
+          "quantity": 2
+        },
+        {
+          "code": "01107",
+          "name": "塔楼大门",
+          "type_code": "location",
+          "traits": "地牢.",
+          "text": "在前往塔楼大门后，每位玩家将其牌组顶端的一张卡牌面朝下放置在其面前，如同它刚从探查区与其交战。这些卡牌被称为“半兽人守卫”，视为具有以下属性的敌人：1点生命值，1点攻击力，1点防御力。",
+          "threat": 2,
+          "quest_points": 1,
+          "quantity": 2
+        },
+        {
+          "code": "01112",
+          "name": "地牢狱卒",
+          "type_code": "enemy",
+          "traits": "多古尔都. 半兽人.",
+          "text": "强制：如果在玩家任务失败后，地牢狱卒位于探查区，则从探查区将1张未被认领的目标卡洗回遭遇牌组。",
+          "engagement_cost": 38,
+          "threat": 1,
+          "attack": 2,
+          "defense": 3,
+          "health": 5,
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "set_name": "幽暗密林蜘蛛",
+      "cards": [
+        {
+          "code": "01074",
+          "name": "国王蜘蛛",
+          "type_code": "enemy",
+          "traits": "生物. 蜘蛛.",
+          "text": "翻开时：每位玩家必须选择并横置其控制的1个角色。\n暗影：防守玩家必须选择并横置其控制的1个角色。（如果此攻击未被防御，则改为2个角色。）",
+          "engagement_cost": 20,
+          "threat": 2,
+          "attack": 3,
+          "defense": 1,
+          "health": 2,
+          "quantity": 2
+        },
+        {
+          "code": "01075",
+          "name": "嗡嗡怪",
+          "type_code": "enemy",
+          "traits": "生物. 昆虫.",
+          "text": "强制：在嗡嗡怪与你交战后，对你控制的一位英雄造成5点伤害。\n暗影：对防守玩家控制的每个角色造成1点伤害。（如果此攻击未被防御，则改为2点伤害。）",
+          "engagement_cost": 40,
+          "threat": 1,
+          "attack": 2,
+          "defense": 0,
+          "health": 3,
+          "quantity": 1
+        },
+        {
+          "code": "01076",
+          "name": "乌苟立安特的后裔",
+          "type_code": "enemy",
+          "traits": "生物. 蜘蛛.",
+          "text": "翻开时：所有当前被指派执行探险的角色获得-1意志力，直到本阶段结束。\n暗影：防守玩家提高其威胁值4点。（如果此攻击未被防御，则改为8点。）",
+          "engagement_cost": 32,
+          "threat": 2,
+          "attack": 5,
+          "defense": 2,
+          "health": 9,
+          "quantity": 1
+        },
+        {
+          "code": "01080",
+          "name": "陷入蛛网",
+          "type_code": "treachery",
+          "text": "翻开时：将陷入蛛网附属到一位玩家控制的一位英雄上。受限。附属英雄获得 -2 意志力。",
+          "quantity": 2
+        },
+        {
+          "code": "01077",
+          "name": "大森林蛛网",
+          "type_code": "location",
+          "traits": "森林.",
+          "text": "强制：在大森林蛛网离开游戏后，每位玩家必须提高其威胁值1点。\n旅行：每位玩家必须横置其控制的1位英雄才能前往此处。",
+          "threat": 2,
+          "quest_points": 2,
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "set_name": "多古尔多半兽人",
+      "cards": [
+        {
+          "code": "01089",
+          "name": "多古尔多半兽人",
+          "type_code": "enemy",
+          "traits": "多古尔都. 半兽人.",
+          "text": "翻开时：起始玩家选择1个当前被指派执行探险的角色。对该角色造成2点伤害。\n暗影：攻击的敌人获得+1攻击力。（如果此攻击未被防御，则改为+3。）",
+          "engagement_cost": 10,
+          "threat": 2,
+          "attack": 2,
+          "defense": 0,
+          "health": 3,
+          "quantity": 3
+        },
+        {
+          "code": "01090",
+          "name": "乌夫萨克酋长",
+          "type_code": "enemy",
+          "traits": "多古尔都. 半兽人.",
+          "text": "乌夫萨克酋长每有1枚资源标记，其攻击力+2。\n强制：在乌夫萨克酋长攻击后，在其上放置1枚资源标记。",
+          "engagement_cost": 35,
+          "threat": 2,
+          "attack": 3,
+          "defense": 3,
+          "health": 6,
+          "quantity": 1
+        },
+        {
+          "code": "01091",
+          "name": "多古尔都驯兽师",
+          "type_code": "enemy",
+          "traits": "多古尔都. 半兽人.",
+          "text": "强制：当多古尔都驯兽师攻击时，为其额外分配1张暗影牌。",
+          "engagement_cost": 35,
+          "threat": 2,
+          "attack": 3,
+          "defense": 1,
+          "health": 5,
+          "quantity": 2
+        },
+        {
+          "code": "01092",
+          "name": "为暗影所驱",
+          "type_code": "treachery",
+          "text": "翻开时：直到本阶段结束，探查区中每张卡牌的威胁值+1。如果探查区中没有卡牌，为暗影所驱获得涌动。\n暗影：选择并弃除防守角色上的1张附属卡。（如果此攻击未被防御，则弃除你控制的所有附属卡。）",
+          "quantity": 2
+        },
+        {
+          "code": "01093",
+          "name": "死灵法师的魔爪",
+          "type_code": "treachery",
+          "text": "翻开时：对每位玩家控制的一个角色造成2点伤害。",
+          "quantity": 2
+        }
+      ]
+    }
+  ],
+  "objective_cards": [
+    {
+      "code": "01108",
+      "name": "甘道夫的地图",
+      "type_code": "objective",
+      "traits": "物品.",
+      "text": "守护. 受限.\n行动：当甘道夫的地图没有遭遇卡附属时，提高你的威胁值2点以认领此目标卡。认领后，将甘道夫的地图附属到你控制的一位英雄上。（视为一张附属卡。若被卸除，则将甘道夫的地图返回探查区。）附属英雄不能攻击或防御。",
+      "quantity": 1
+    },
+    {
+      "code": "01109",
+      "name": "地牢火炬",
+      "type_code": "objective",
+      "traits": "物品.",
+      "text": "守护. 受限.\n行动：当地牢火炬没有遭遇卡附属时，提高你的威胁值2点以认领此目标卡。认领后，将地牢火炬附属到你控制的一位英雄上。（视为一张附属卡。若被卸除，则将地牢火炬返回探查区。）\n强制：在每轮结束时，提高附属英雄控制者的威胁值2点。",
+      "quantity": 1
+    },
+    {
+      "code": "01110",
+      "name": "暗影钥匙",
+      "type_code": "objective",
+      "traits": "物品.",
+      "text": "守护. 受限.\n行动：当暗影钥匙没有遭遇卡附属时，提高你的威胁值2点以认领此目标卡。认领后，将暗影钥匙附属到你控制的一位英雄上。（视为一张附属卡。若被卸除，则将暗影钥匙返回探查区。）\n强制：在每轮结束时，附属英雄受到1点伤害。",
+      "quantity": 1
+    }
+  ],
+  "quest_cards": [
+    {
+      "code": "01134",
+      "name": "逃离多古尔都 - 1A",
+      "type_code": "quest",
+      "stage": "1A",
+      "title": "死灵法师之塔",
+      "text": "准备：从遭遇牌组中搜寻3张目标卡：“甘道夫的地图”、“地牢火炬”和“暗影钥匙”。将每张目标卡分别附属到遭遇牌组顶端的一张卡牌上（这些卡牌守护着目标卡），并将它们加入探查区。然后，从遭遇牌组中搜寻“多古尔都的戒灵”，将其放置在一旁（离开游戏）。将遭遇牌组洗牌。\n随机选择每位玩家的1位英雄，将其变为“被囚禁”状态。（被囚禁的英雄横置，其卡牌文本视为空白，直到被解救。）",
+      "quest_points": null
+    },
+    {
+      "code": "01135",
+      "name": "逃离多古尔都 - 1B",
+      "type_code": "quest",
+      "stage": "1B",
+      "title": "死灵法师之塔",
+      "text": "玩家不能在此阶段推进，除非所有3张目标卡都已被玩家认领。\n当此阶段完成时，被囚禁的英雄被解救（重整，恢复其卡牌文本）。",
+      "quest_points": 9
+    },
+    {
+      "code": "01136",
+      "name": "逃离多古尔都 - 2A",
+      "type_code": "quest",
+      "stage": "2A",
+      "title": "穿越洞窟",
+      "text": "每位玩家每轮只能打出1张盟友卡。",
+      "quest_points": null
+    },
+    {
+      "code": "01137",
+      "name": "逃离多古尔都 - 2B",
+      "type_code": "quest",
+      "stage": "2B",
+      "title": "穿越洞窟",
+      "text": "每位玩家每轮只能打出1张盟友卡。",
+      "quest_points": 15
+    },
+    {
+      "code": "01138",
+      "name": "逃离多古尔都 - 3A",
+      "type_code": "quest",
+      "stage": "3A",
+      "title": "逃出地牢",
+      "text": "当此阶段被翻开时，从一旁取出“多古尔都的戒灵”并将其加入探查区。",
+      "quest_points": null
+    },
+    {
+      "code": "01139",
+      "name": "逃离多古尔都 - 3B",
+      "type_code": "quest",
+      "stage": "3B",
+      "title": "逃出地牢",
+      "text": "玩家不能在此阶段推进，除非“多古尔都的戒灵”不在游戏中。",
+      "quest_points": 7
+    }
+  ]
+}

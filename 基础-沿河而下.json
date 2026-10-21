@@ -1,0 +1,182 @@
+{
+  "pack_code": "core",
+  "scenario_code": "journey_down_the_anduin",
+  "scenario_name": "沿河而下",
+  "translation_version": "revised_ffg",
+  "encounter_sets": [
+    {
+      "set_name": "沿河而下",
+      "cards": [
+        {
+          "code": "01055",
+          "name": "山丘巨魔",
+          "type_code": "enemy",
+          "traits": "巨魔.",
+          "text": "强制：在山丘巨魔攻击后，在其上放置1枚资源标记。\n山丘巨魔每有1枚资源标记，其攻击力+1。\n山丘巨魔造成的多余战斗伤害必须被分配为威胁值的增加。",
+          "engagement_cost": 30,
+          "threat": 1,
+          "attack": 6,
+          "defense": 3,
+          "health": 9,
+          "victory": 4,
+          "quantity": 1
+        },
+        {
+          "code": "01056",
+          "name": "安都因河岸",
+          "type_code": "location",
+          "traits": "河岸.",
+          "text": "强制：如果安都因河岸离开游戏，将其返回遭遇牌组顶端，而非放入弃牌堆。",
+          "threat": 1,
+          "quest_points": 3,
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "set_name": "多尔哥多半兽人",
+      "cards": [
+        {
+          "code": "01089",
+          "name": "多尔哥多半兽人",
+          "type_code": "enemy",
+          "traits": "半兽人.",
+          "text": "当多尔哥多半兽人被消灭时，每位玩家必须提高其威胁值1点。",
+          "engagement_cost": 10,
+          "threat": 2,
+          "attack": 2,
+          "defense": 0,
+          "health": 3,
+          "quantity": 3
+        },
+        {
+          "code": "01091",
+          "name": "多尔哥多驯兽师",
+          "type_code": "enemy",
+          "traits": "半兽人.",
+          "text": "当多尔哥多驯兽师攻击时，其攻击力+1。",
+          "engagement_cost": 35,
+          "threat": 2,
+          "attack": 2,
+          "defense": 1,
+          "health": 5,
+          "quantity": 2
+        },
+        {
+          "code": "01092",
+          "name": "为暗影所驱",
+          "type_code": "treachery",
+          "text": "翻开时：直到本阶段结束，探查区中每张卡牌的威胁值+1。如果探查区中没有卡牌，为暗影所驱获得涌动。\n暗影：选择并弃除防守角色上的1张附属卡。（如果此攻击未被防御，则弃除你控制的所有附属卡。）",
+          "quantity": 2
+        },
+        {
+          "code": "01093",
+          "name": "死灵法师的魔爪",
+          "type_code": "treachery",
+          "text": "翻开时：对每位玩家控制的一个角色造成2点伤害。",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "set_name": "索伦的领地",
+      "cards": [
+        {
+          "code": "01088",
+          "name": "东湾乌鸦",
+          "type_code": "enemy",
+          "traits": "生物.",
+          "text": "涌动。\n强制：在东湾乌鸦被消灭后，将其洗回遭遇牌组。",
+          "engagement_cost": 30,
+          "threat": 1,
+          "attack": 1,
+          "defense": 0,
+          "health": 1,
+          "quantity": 3
+        },
+        {
+          "code": "01094",
+          "name": "死灵法师的关隘",
+          "type_code": "location",
+          "traits": "要塞.",
+          "text": "强制：在死灵法师的关隘成为当前地区后，每位玩家必须提高其威胁值2点。",
+          "threat": 3,
+          "quest_points": 2,
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "set_name": "荒野",
+      "cards": [
+        {
+          "code": "01059",
+          "name": "格莱登平原",
+          "type_code": "location",
+          "traits": "沼泽.",
+          "text": "强制：如果格莱登平原是当前地区，每位玩家在恢复阶段中额外提高其威胁值1点。",
+          "threat": 3,
+          "quest_points": 3,
+          "quantity": 2
+        },
+        {
+          "code": "01060",
+          "name": "夜间集结",
+          "type_code": "treachery",
+          "text": "翻开时：从遭遇牌组中搜寻1张敌人卡，并将其加入探查区。将遭遇牌组洗牌。",
+          "quantity": 1
+        }
+      ]
+    }
+  ],
+  "quest_cards": [
+    {
+      "code": "01128",
+      "name": "沿河而下 - 1A",
+      "type_code": "quest",
+      "stage": "1A",
+      "text": "准备：每位玩家从遭遇牌组顶端翻开1张卡牌并将其加入探查区。然后，从遭遇牌组中搜寻1张“山丘巨魔”（如果它不在游戏中），并将其加入探查区。将遭遇牌组洗牌。",
+      "quest_points": null
+    },
+    {
+      "code": "01129",
+      "name": "沿河而下 - 1B",
+      "type_code": "quest",
+      "stage": "1B",
+      "text": "玩家不能在此阶段推进，除非游戏中没有山丘巨魔。",
+      "quest_points": 8
+    },
+    {
+      "code": "01130",
+      "name": "沿河而下 - 2A",
+      "type_code": "quest",
+      "stage": "2A",
+      "text": "在任务阶段中，每位玩家额外从遭遇牌组翻开1张卡牌。",
+      "quest_points": null
+    },
+    {
+      "code": "01131",
+      "name": "沿河而下 - 2B",
+      "type_code": "quest",
+      "stage": "2B",
+      "text": "在任务阶段中，每位玩家额外从遭遇牌组翻开1张卡牌。",
+      "quest_points": 16
+    },
+    {
+      "code": "01132",
+      "name": "沿河而下 - 3A",
+      "type_code": "quest",
+      "stage": "3A",
+      "text": "当此阶段被翻开时，从遭遇牌组中搜寻1张“山丘巨魔”并将其加入探查区。将遭遇牌组洗牌。",
+      "quest_points": null
+    },
+    {
+      "code": "01133",
+      "name": "沿河而下 - 3B",
+      "type_code": "quest",
+      "stage": "3B",
+      "text": "玩家不能在此阶段推进，除非游戏中没有山丘巨魔。",
+      "quest_points": 0
+    }
+  ]
+}
