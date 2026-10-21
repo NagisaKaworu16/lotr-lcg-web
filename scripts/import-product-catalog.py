@@ -29,16 +29,16 @@ GROUP_ZH = {
     'Revised Dream-chaser': '新版 · 追梦者',
     'Revised Ered Mithrin': '新版 · 埃瑞德米斯林',
     'Revised Lord of the Rings Saga': '新版 · 魔戒传奇',
-    'Shadows of Mirkwood Cycle': '暗影中的魔窟',
-    'Dwarrowdelf Cycle': '卡兹杜姆',
-    'Against the Shadow Cycle': '对抗阴影',
-    'The Ring-maker Cycle': '魔戒匠人',
+    'Shadows of Mirkwood Cycle': '黑森林的魔影',
+    'Dwarrowdelf Cycle': '矮人故乡',
+    'Against the Shadow Cycle': '对抗魔影',
+    'The Ring-maker Cycle': '铸戒者',
     'Angmar Awakened Cycle': '安格玛觉醒',
     'Dream-chaser Cycle': '追梦者',
-    'Haradrim Cycle': '哈拉德林',
+    'Haradrim Cycle': '哈拉德人',
     'Ered Mithrin Cycle': '埃瑞德米斯林',
-    'Oaths of the Rohirrim Cycle': '洛汗誓言',
-    'Vengeance of Mordor Cycle': '复仇魔多',
+    'Oaths of the Rohirrim Cycle': '洛希尔人的誓言',
+    'Vengeance of Mordor Cycle': '魔多的复仇',
     'The Lord of the Rings Saga': '魔戒传奇',
     'The Hobbit Saga': '霍比特人传奇',
     'Gen Con Decks': '官方 POD · Gen Con',
@@ -47,21 +47,21 @@ GROUP_ZH = {
     'Scenario Packs': '官方 POD · 剧本包',
     'Stand Alone Scenarios': '独立剧本合集',
     'Doom Mastered Cycle': '命运主宰',
-    'Fell Summer Cycle': '陨落之夏',
+    'Fell Summer Cycle': '酷夏之劫',
     'The Legacy of Fëanor': '费艾诺的遗产',
     'The First Age': '第一纪元',
 }
 # Nightmare decks reuse the cycle name; map the bare cycle name too.
 NIGHTMARE_ZH = {
-    'Shadows of Mirkwood': '暗影中的魔窟',
-    'Dwarrowdelf': '卡兹杜姆',
-    'Against the Shadow': '对抗阴影',
-    'The Ring-maker': '魔戒匠人',
+    'Shadows of Mirkwood': '黑森林的魔影',
+    'Dwarrowdelf': '矮人故乡',
+    'Against the Shadow': '对抗魔影',
+    'The Ring-maker': '铸戒者',
     'Angmar Awakened': '安格玛觉醒',
     'Dream-chaser': '追梦者',
-    'Haradrim': '哈拉德林',
+    'Haradrim': '哈拉德人',
     'Ered Mithrin': '埃瑞德米斯林',
-    'Vengeance of Mordor': '复仇魔多',
+    'Vengeance of Mordor': '魔多的复仇',
     'The Hobbit Saga': '霍比特人传奇',
     'The Lord of the Rings Saga': '魔戒传奇',
     'The Treachery of Rhudaur': '鲁道尔的背叛',
@@ -264,8 +264,12 @@ def main():
             continue
         ident = 'pod-' + slug_id(it['title_en']).lower()
         art = ''
+        dest = os.path.join(OUT_IMG, ident + '.webp')
         cover = it.get('cover') or ''
-        if cover:
+        if os.path.isfile(dest):
+            # Hand-made cover already dropped in (e.g. 加拉德瑞尔之镜).
+            art = 'assets/products/' + ident + '.webp'
+        elif cover:
             src = os.path.join(args.source, '..', 'lotr-pod-workbuddy', cover.replace('/', os.sep))
             src = os.path.normpath(src)
             if os.path.isfile(src):

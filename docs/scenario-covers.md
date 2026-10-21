@@ -38,7 +38,8 @@ python build.py
 - **支线剧情由 `pod-manifest.json` 定义**（来源 `lotr-pod-workbuddy/pod-import.json`）：官方 POD 14 项
   + ALeP 自制独立作品 5 项 + 你指定保留的黑森林之黯（MEC102）= 20 项。清单外的官方 POD 特性与社区作品
   不会进入这个页签；预购特典（`Preorder Promotion`）一律跳过，因为不含新剧本。
-  清单里目录没采集到的条目（凯兰崔尔之镜）会用缺图占位补录，`art` 留空、`title` 悬停可查原名。
+  清单里目录没采集到的条目（加拉德瑞尔之镜）会自动补录：先在 `assets/products/pod-the-mirror-of-galadriel.webp`
+  放好封面就用它，没有则 `art` 留空走缺图占位。
 - **旧版扩展每个系列只出一条**：一个循环重制成「英雄扩展 + 战役扩展」两盒，剧本只在战役盒里，
   所以英雄盒直接跳过（`HERO_RE`），条目落在战役盒上，标题用系列名（如「安格玛觉醒」）、
   副标题用系列英文名（`Angmar Awakened`），点击后对应的是战役盒。传奇扩展（魔戒同盟等）本来就是单盒，不受影响。
@@ -126,8 +127,12 @@ NODE_PATH="<node workspace>/node_modules" node scripts/check-legacy-packs.cjs
 
 当前覆盖率 165/165。卡片标题显示中文，副标题用去编号的英文名（新版扩展的系列名，如 `Angmar Awakened`；
 完整产品原名与 `MECxx` 编号保留在卡片的 `title` 悬停提示里），便于和官方产品对照。
-译名以**魔戒中文维基译名表**为准（如 Carrock→卡尔岩、Rhosgobel→罗斯戈贝尔、Erech→埃瑞赫、
-Wainriders→战车民、Tharbad→沙巴德、Carn Dûm→卡恩督姆、Nurn→努尔恩、Osgiliath→欧斯吉利亚斯）。
+译名以**银星计划**（魔戒 LCG 中文制作组，ringsdb 中文插件所用的那套）为准，即重置版／文景版体系：
+Galadriel→加拉德瑞尔、Khazad-dûm→卡扎督姆、Osgiliath→欧斯吉力亚斯、Isengard→艾森加德、
+Isengard 之声→艾森加德之声、The Lost Realm→失落的王国、A Shadow in the East→东方魔影、
+The Shire's Reckoning→夏尔纪年、The Siege of Erebor→埃瑞博防卫战、The Hunt for the Dreadnaught→追捕无畏号。
+循环名同步为黑森林的魔影／矮人故乡／对抗魔影／铸戒者／哈拉德人／魔多的复仇，
+社区循环为洛希尔人的誓言／酷夏之劫。
 要改某个名字，直接编辑 `product-zh.json` 再重跑导入脚本即可。
 
 ## 验收

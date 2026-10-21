@@ -1,3 +1,14 @@
+# v0.15.10 · 补上加拉德瑞尔之镜封面，译名统一到银星计划体系（2026-10-21）
+
+- 加拉德瑞尔之镜（The Mirror of Galadriel）不再用缺图占位：新增 `assets/products/pod-the-mirror-of-galadriel.webp`（390×520，裁成 3:4）。导入脚本补录条目时先看这张图在不在，在就直接引用，没有才回退占位。
+- 译名整体切换到**银星计划**（魔戒 LCG 中文制作组、ringsdb 中文插件所用的重置版／文景版体系），共校正 65 条 + 14 个章节名：
+  - Galadriel→加拉德瑞尔、Khazad-dûm→卡扎督姆、Osgiliath→欧斯吉力亚斯、Isengard→艾森加德；
+  - The Lost Realm→失落的王国、A Shadow in the East→东方魔影、The Wilds of Rhovanion→罗瓦尼安的荒野、Heirs of Númenor→努门诺尔的后裔；
+  - The Siege of Annúminas→安努米那斯防卫战、The Hunt for the Dreadnaught→追捕无畏号、The Scouring of the Shire→夏尔平乱、The Nine are Abroad→九戒灵出动、The Siege of Erebor→埃瑞博防卫战；
+  - 传奇：Over Hill and Under Hill→雾山奇缘、On the Doorstep→孤山秘境、The Road Darkens→前路黑暗、The Land of Shadow→魔影之地、The Flame of the West→西方之炎、The Treason of Saruman→萨茹曼的背叛；
+  - 循环名：黑森林的魔影／矮人故乡／对抗魔影／铸戒者／哈拉德人／魔多的复仇；社区循环：洛希尔人的誓言／酷夏之劫。
+- 验证：401 项测试通过（同步更新断言里的旧译名）；两个浏览器验收脚本 1440／768 两档 OK，支线剧情 20 张封面全部解码、0 破损。
+
 # v0.15.9 · 支线剧情按精选清单重分类，社区循环归入旧版扩展（2026-10-21）
 
 - 新增 `pod-manifest.json`：把 `lotr-pod-workbuddy/pod-import.json` 的 19 项（官方 POD 14 + ALeP 自制 5）加上黑森林之黯（MEC102）固化为权威清单，导入脚本按它判定「什么算支线剧情」。
