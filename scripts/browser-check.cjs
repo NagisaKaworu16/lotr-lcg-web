@@ -52,6 +52,18 @@ let browser;
     if (!await el.count()) return false;
     await el.click(); idle = 0; await page.waitForTimeout(380); return true;
   };
+  /* 兜底：智能/强制窗口的选项按钮（卡名目标、响应选项、关闭窗口等）。
+     排除回退／详细模式／重置等危险或不推进流程的按钮。 */
+  const windowOption = async () => {
+    const els = page.locator('.operation-content button:not([disabled])');
+    const n = await els.count();
+    for (let k = 0; k < n; k++) {
+      const t = (await els.nth(k).textContent() || '').trim();
+      if (/回退|详细模式|重新选择剧本|导出|重置|结束当前/.test(t)) continue;
+      await els.nth(k).click(); idle = 0; await page.waitForTimeout(280); return true;
+    }
+    return false;
+  };
   const handleDialog = async () => {
     if (!await page.locator('dialog[open]').count()) return false;
     const dlg = page.locator('dialog[open]').last();
@@ -209,6 +221,8 @@ let browser;
         if (await endAtk.count()) { await endAtk.click(); await page.waitForTimeout(300); continue; }
       }
     }
+    if (await clickBtn('处理强制选择')) continue;
+    if (await clickBtn('处理响应／选择')) continue;
     if (await clickBtn('处理卡牌响应')) continue;
     if (await clickBtn('结算本张暗影／继续')) continue;
     if (await clickBtn('二次确认旅行')) continue;
@@ -228,6 +242,7 @@ let browser;
     if (await clickBtn('：放弃剩余行动')) continue;
     if (await clickBtn('继续到下一决策点')) { idle = 0; continue; }
     if (await clickNext()) continue;
+    if (await windowOption()) continue;
     if (++idle > 3) {
       const stall = await page.evaluate(() => ({
         title: document.querySelector('.operation-title')?.textContent.trim(),

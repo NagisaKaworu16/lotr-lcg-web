@@ -50,8 +50,9 @@ const near = (a, b, tol = 1) => Math.abs(a - b) <= tol;
     const boardZone = one('.public-table .table-zone');
     const matZone = one('.player-mat .table-zone');
     const innerX = [dockInner, boardZone, matZone].filter(Boolean).map(e => +e.getBoundingClientRect().x.toFixed(1));
-    const rowGaps = rows.map(row => row.length > 1 ? +(row[1].x - row[0].x).toFixed(1) : null).filter(v => v !== null);
-    return { panels, railBoxes, headingBoxes, rows, cardWidths, innerX, rowGaps, overflowX: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1 };
+    const rowGaps = rows.map((row, i) => { const el = all('.table-card-row')[i]; if (el && el.closest('.hand-zone')) return null; return row.length > 1 ? +(row[1].x - row[0].x).toFixed(1) : null; }).filter(v => v !== null);
+    const handGaps = rows.map((row, i) => { const el = all('.table-card-row')[i]; if (!el || !el.closest('.hand-zone') || row.length < 2) return null; return +(row[1].x - row[0].x).toFixed(1); }).filter(v => v !== null);
+    return { panels, railBoxes, headingBoxes, rows, cardWidths, innerX, rowGaps, handGaps, overflowX: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1 };
   });
 
   const checks = [];
@@ -72,6 +73,7 @@ const near = (a, b, tol = 1) => Math.abs(a - b) <= tol;
   const rowHeights = geo.rows.filter(r => r.length > 1).map(r => [...new Set(r.map(c => c.h))]);
   add('同一行卡牌等高', rowHeights.every(h => h.length === 1), rowHeights.map(h => h.join('/')).join(' | ') || '无多卡行');
   add('卡牌间距统一', new Set(geo.rowGaps).size <= 1, [...new Set(geo.rowGaps)].join(',') || '无多卡行');
+  add('手牌重叠间距统一', geo.handGaps.length === 0 || new Set(geo.handGaps).size <= 1, geo.handGaps.join(',') || '无多卡手牌行');
   add('无横向溢出', !geo.overflowX, String(geo.overflowX));
 
   await page.screenshot({ path: path.join(OUT, `20-layout-${argWidth}.png`), fullPage: false });
