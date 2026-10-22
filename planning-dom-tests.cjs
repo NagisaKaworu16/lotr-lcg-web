@@ -163,14 +163,20 @@ test('card library merges player and encounter cards behind a three-way player/e
  assert.equal(e.run('catalogStats().total'),players+encounters,'卡池总数应为玩家卡与战役卡之和');
  assert.equal(count(),players+encounters,'两者都时结果数应为全量');
  const body=()=>e.run("$('#catalogResults').innerHTML");
- assert(body().includes('玩家 · 领导')&&body().includes('战役 · 敌人'),'两者都视图应同时出现玩家与战役分组');
- assert(body().includes('战役 · 探险卡'),'探险卡应归入战役分组');
+ assert(body().includes('玩家卡 · 领导')&&body().includes('遭遇卡 · 敌人'),'两者都视图应同时出现玩家卡与遭遇卡分组');
+ assert(body().includes('>探险卡<'),'探险卡应为独立类别分组');
  /* 单侧分类 */
  e.run(`catalogSide='player';render();`);
  assert.equal(count(),players,'玩家分类应只含玩家卡');
- assert(!body().includes('战役 · '),'玩家分类不应混入战役分组');
+ assert(!body().includes('遭遇卡 · ')&&!body().includes('探险卡'),'玩家分类不应混入战役分组');
  e.run(`catalogSide='encounter';render();`);
  assert.equal(count(),encounters,'战役分类应只含遭遇卡与探险卡');
+ /* 按系列包（pod）筛选：基础版全部卡牌都属 Core Set，三类齐全 */
+ e.run(`catalogSide='both';podFilter='Core';render();`);
+ assert.equal((body().match(/class="cat-item"/g)||[]).length,players+encounters,'Core 包筛选应包含全部基础版卡牌');
+ assert(body().includes('玩家卡 · 领导')&&body().includes('遭遇卡 · 敌人')&&body().includes('探险卡'),'系列包筛选下应同时有玩家卡／遭遇卡／探险卡三个类别');
+ assert(e.run("$('#resultCount').textContent").includes(`玩家卡 ${players} / 遭遇卡 ${encounters-10} / 探险卡 10`),'计数应按三类拆分');
+ e.run(`podFilter='';render();`);
  /* 关键词跨两类 */
  e.run(`catalogSide='both';render();$('#search').value='蛛';filterCatalog();`);
  const hit=count();
@@ -202,7 +208,7 @@ test('card library sidebar lists base library by default with reserved expansion
  const html=e.base.get('app').innerHTML;
  assert(html.includes('class="catalog-layout"')&&html.includes('cat-side')&&html.includes('cat-main'),'卡牌库应为侧栏＋主区双栏布局');
  assert(html.includes('aria-label="卡牌库系列导航"'),'侧栏缺 aria 标签');
- assert(html.includes('data-section="base"')&&html.includes('基础卡牌库'),'侧栏应有基础卡牌库默认项');
+ assert(html.includes('data-section="base"')&&html.includes('>卡牌<'),'侧栏应有「卡牌」默认项');
  assert(html.includes('data-section="base" aria-current="page"'),'基础卡牌库应为默认激活项');
  /* 扩展条目动态来自产品目录，不是写死的占位 */
  const revised=e.run('catalogNav().revised.length'),legacy=e.run('catalogNav().legacy.length');
@@ -213,7 +219,7 @@ test('card library sidebar lists base library by default with reserved expansion
  /* 点扩展条目 → 占位面板；返回 base → 恢复搜索与结果区 */
  await e.click({action:'catNav',section:e.run("catalogNav().revised[0].id")});
  const series=e.base.get('app').innerHTML;
- assert(series.includes('尚未收录')&&series.includes('返回基础卡牌库'),'扩展条目应显示占位面板');
+ assert(series.includes('尚未收录')&&series.includes('返回卡牌'),'扩展条目应显示占位面板');
  assert(!series.includes('id="search"'),'系列详情不应显示卡牌搜索框');
  await e.click({action:'catNav',section:'base'});
  assert(e.base.get('app').innerHTML.includes('id="search"')&&e.run("$('#resultCount')!==null&&$('#resultCount').textContent!==''"),'返回后应恢复搜索与结果区');

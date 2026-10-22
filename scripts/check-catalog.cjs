@@ -37,8 +37,9 @@ const OUT=path.join(ROOT,'docs','catalog-tabs');
  check('默认显示全部卡牌',both===totals.player+totals.encounter,{both,totals});
  check('名称列表行数等于总数',(await rows())===both,{rows:await rows(),both});
  const g=await groups();
- check('分组同时含玩家与战役',g.some(x=>x.startsWith('玩家 · '))&&g.some(x=>x.startsWith('战役 · ')),g);
- check('分组含探险卡',g.includes('战役 · 探险卡'),g);
+ check('分组同时含玩家卡与遭遇卡',g.some(x=>x.startsWith('玩家卡 · '))&&g.some(x=>x.startsWith('遭遇卡 · ')),g);
+ check('分组含探险卡',g.includes('探险卡'),g);
+ check('系列包下拉存在且含基础包',await page.evaluate(()=>{const s=document.querySelector('#podFilter');return !!s&&[...s.options].some(o=>o.value==='Core'&&o.textContent.includes('基础包'));}));
  check('默认视图只列名称',await page.evaluate(()=>document.querySelectorAll('#catalogResults .cat-figure').length===0));
  check('每行显示名称与类型摘要',await page.evaluate(()=>{const s=document.querySelector('#catalogResults .cat-item summary');return !!s&&!!s.querySelector('.cat-name')&&!!s.querySelector('.cat-meta');}));
  await shot('all');
@@ -49,7 +50,7 @@ const OUT=path.join(ROOT,'docs','catalog-tabs');
  check('玩家分类只含玩家卡',(await count())===totals.player,{n:await count(),want:totals.player});
  const pg=await groups();
  check('玩家分类按球色分组',pg.length===5&&pg[0]==='领导',pg);
- check('玩家分类不含战役卡',!(await page.evaluate(()=>document.querySelector('#catalogResults').innerHTML.includes('战役 · '))));
+ check('玩家分类不含战役卡',!(await page.evaluate(()=>document.querySelector('#catalogResults').innerHTML.includes('遭遇卡 · '))));
  await shot('player');
  await page.click('button[data-action="catSide"][data-value="encounter"]');
  await page.waitForTimeout(250);
@@ -70,6 +71,22 @@ const OUT=path.join(ROOT,'docs','catalog-tabs');
  await page.fill('#search','');
  await page.waitForTimeout(300);
  check('清空搜索恢复全量',(await count())===totals.player+totals.encounter);
+
+ /* 4.5 按系列包（pod）筛选：三类齐全、计数拆分、与搜索叠加 */
+ await page.selectOption('#podFilter','Core');
+ await page.waitForTimeout(350);
+ check('Core 包筛选含全部基础版卡牌',(await rows())===totals.player+totals.encounter,{rows:await rows(),want:totals.player+totals.encounter});
+ check('系列包下三类分组齐全',await page.evaluate(()=>{const t=document.querySelector('#catalogResults').textContent;return t.includes('玩家卡 · 领导')&&t.includes('遭遇卡 · 敌人')&&t.includes('探险卡');}));
+ check('计数按三类拆分',await page.evaluate(t=>document.querySelector('#resultCount').textContent.includes(`玩家卡 ${t.player} / 遭遇卡 ${t.encounter-10} / 探险卡 10`),totals),{totals});
+ await shot('pod');
+ await page.fill('#search','蛛');
+ await page.waitForTimeout(300);
+ const podSpider=await rows();
+ check('系列包与搜索叠加生效',podSpider>0&&podSpider<totals.player+totals.encounter,{podSpider});
+ await page.fill('#search','');
+ await page.selectOption('#podFilter','');
+ await page.waitForTimeout(300);
+ check('清空系列包恢复全量',(await count())===totals.player+totals.encounter);
 
  /* 5. 卡图视图 */
  await page.click('button[data-action="catView"][data-value="art"]');
