@@ -268,9 +268,9 @@ body:has(.desktop-table) .nav-home .brand-mark{width:17px;height:17px}
 /* 卡牌悬停放大预览：整层不接收指针事件，绝不抢走原来的点击/选择操作 */
 .card-hover-layer{position:fixed;inset:0;pointer-events:none;z-index:9000;opacity:0;visibility:hidden;transition:opacity .14s ease,visibility 0s linear .14s}
 .card-hover-layer.on{opacity:1;visibility:visible;transition:opacity .16s ease,visibility 0s}
-.card-hover-box{position:fixed;border-radius:12px;background:#fffdf6;box-shadow:0 24px 60px #101a1447,0 4px 14px #101a1424,0 0 0 1px #b9a17380,0 0 0 6px #fffdf614;transform:scale(.94);opacity:0;transition:transform .16s cubic-bezier(.2,.8,.25,1),opacity .14s ease,left .12s ease,top .12s ease;will-change:transform,opacity;overflow:hidden}
+.card-hover-box{position:fixed;border-radius:10px;background:#fffdf6;box-shadow:0 14px 34px #101a1438,0 3px 10px #101a141c,0 0 0 1px #b9a17366;transform:scale(.97);opacity:0;transition:transform .13s cubic-bezier(.2,.8,.25,1),opacity .11s ease;will-change:transform,opacity;overflow:hidden}
 .card-hover-layer.on .card-hover-box{transform:scale(1);opacity:1}
-.card-hover-img{display:block;width:100%;height:100%;object-fit:contain;border-radius:12px;image-rendering:auto;background:#f2f0e4}
+.card-hover-img{display:block;width:100%;height:100%;object-fit:contain;border-radius:10px;image-rendering:auto;background:#f2f0e4}
 @media (prefers-reduced-motion:reduce){.card-hover-layer,.card-hover-box{transition:none}.card-hover-box{transform:none}}
 @media (hover:none){.card-hover-layer{display:none}}
 
@@ -8429,7 +8429,7 @@ const WindowUI=(()=>{
 </script><script>
 /* Tabletop view: UI drafts never pay, exhaust, reveal, or bypass phase validation. */
 /* 界面版本徽标唯一来源：须与 CHANGELOG.md 最新条目标题一致（planning-dom-tests 有校验）。 */
-const APP_VERSION='v0.15.25';
+const APP_VERSION='v0.15.26';
 const DesktopUI=(()=>{
  const E=ScenarioEngine,R=E.planning,Q=E.questing,C=E.combat,esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  let combatDraft={key:'',target:null,ids:[]},draftState=null;
@@ -8574,23 +8574,27 @@ const PRODUCT_TABS={"source":"https://hallofbeorn.com/LotR/Products?View=Chronol
 const CardHoverPreview = (() => {
   const SHOW_DELAY = 130;     // 悬停停留多久才弹出，避免横扫时闪烁
   const HIDE_DELAY = 90;      // 移开后延迟收起，允许鼠标短暂划过间隙
-  const GAP = 16;
-  const MAX_H = 0.9;          // 放大卡最高占视口比例
-  const MAX_W = 0.42;
+  const GAP = 14;
+  // 参照 RingsDB 的悬停预览：卡片缩到「能看清字」的大小就够，不做近全屏放大。
+  // 竖版 300 宽约 424 高、横版 400 宽约 283 高，再按视口收紧，最多占半屏高。
+  const TALL_W = 300;
+  const WIDE_W = 400;
+  const MAX_H = 0.58;         // 最高占视口比例
+  const MAX_W = 0.26;         // 最宽占视口比例
+  const MAX_W_PX = 380;
 
   let layer = null, img = null, box = null, timer = 0, raf = 0;
   let cur = null;             // {src, alt, natural, ratio, rect}
-  let axis = 'x';             // 本次显示用横向还是纵向对齐
 
   const isFace = el => el.matches('.card-face img, .card-art img');
   const isProbe = el => !!(el.hasAttribute && el.hasAttribute('data-hover-src'));
   const live = el => el && el.isConnected && !el.closest('dialog[open]');
 
   function srcOf(t) { return isProbe(t) ? t.getAttribute('data-hover-src') : (t.currentSrc || t.src); }
-  // 探针没有真实图片可量，形状由标记给出：竖版卡 424×600，横版探险卡 600×424
+  // 探针没有真实图片可量，形状由标记给出：竖版 300×424，横版探险卡 400×283
   function shapeOf(t) {
     const s = t.getAttribute && t.getAttribute('data-hover-shape');
-    return s === 'wide' ? { w: 600, h: 424 } : s === 'tall' ? { w: 424, h: 600 } : null;
+    return s === 'wide' ? { w: WIDE_W, h: Math.round(WIDE_W * 424 / 600) } : s === 'tall' ? { w: TALL_W, h: Math.round(TALL_W * 600 / 424) } : null;
   }
 
   function ensure() {
@@ -8613,17 +8617,16 @@ const CardHoverPreview = (() => {
   function measure() {
     if (!img || !cur) return null;
     const vw = window.innerWidth, vh = window.innerHeight;
-    const maxW = Math.min(vw * MAX_W, 560);
+    const maxW = Math.min(vw * MAX_W, MAX_W_PX);
     const maxH = vh * MAX_H;
-    const nat = cur.natural || { w: 0, h: 0 };
-    // 竖版按 424 宽、横版按 600 宽还原版心，再整体缩到视口内
-    const wide = cur.ratio ? cur.ratio.w > cur.ratio.h : nat.w > nat.h;
-    const w = wide ? 600 : 424;
-    let h;
-    if (cur.ratio) h = Math.round(w * cur.ratio.h / cur.ratio.w);
-    else if (nat.w && nat.h) h = Math.round(w * nat.h / nat.w);
-    else h = wide ? 424 : 600;
-    const scale = Math.min(maxW / w, maxH / h);
+    // 基准宽度由形状决定，比例取自真实图片或 data-hover-shape；只缩不放
+    const shape = cur.ratio || (cur.natural.w && cur.natural.h ? { w: cur.natural.w, h: cur.natural.h } : null);
+    let w, h;
+    if (shape && shape.w && shape.h) {
+      w = shape.w > shape.h ? WIDE_W : TALL_W;
+      h = Math.round(w * shape.h / shape.w);
+    } else { w = TALL_W; h = Math.round(TALL_W * 600 / 424); }
+    const scale = Math.min(1, maxW / w, maxH / h);
     return { w: Math.round(w * scale), h: Math.round(h * scale) };
   }
 
@@ -8634,28 +8637,27 @@ const CardHoverPreview = (() => {
     const vw = window.innerWidth, vh = window.innerHeight;
     box.style.width = size.w + 'px';
     box.style.height = size.h + 'px';
-    // 横向：先算两侧可用空隙（右侧要扣掉阶段／日志侧栏），选更宽的一侧
+    // 横向：优先贴在触发元素右侧，右不够放左侧；都放不下就压回视口内
     const rail = document.querySelector('.tabletop-rail, .ng-list, aside');
     const railLeft = rail && rail.getBoundingClientRect().left > r.left + r.width ? rail.getBoundingClientRect().left : Infinity;
     const edgeRight = Math.min(vw, railLeft) - GAP;
     const spaceRight = edgeRight - r.right;
     const spaceLeft = r.left - GAP;
-    let left;
-    if (spaceRight >= size.w) { left = r.right + GAP; axis = 'x'; }
-    else if (spaceLeft >= size.w) { left = r.left - GAP - size.w; axis = 'x'; }
-    else if (spaceRight >= spaceLeft && spaceRight >= size.w * 0.55) { left = Math.min(r.right + GAP, edgeRight - size.w); axis = 'x'; }
-    else if (spaceLeft >= spaceRight && spaceLeft >= size.w * 0.55) { left = Math.max(GAP, r.left - GAP - size.w); axis = 'x'; }
-    else { left = Math.min(Math.max(GAP, r.left + r.width / 2 - size.w / 2), vw - size.w - GAP); axis = 'y'; }
-    // 纵向：与卡片顶部对齐，超出视口则向上顶回
-    let top = r.top;
-    if (top + size.h > vh - GAP) top = vh - GAP - size.h;
-    if (top < GAP) top = GAP;
+    let left, originX;
+    if (spaceRight >= size.w) { left = r.right + GAP; originX = '0%'; }
+    else if (spaceLeft >= size.w) { left = r.left - GAP - size.w; originX = '100%'; }
+    else if (spaceRight >= spaceLeft) { left = Math.max(GAP, edgeRight - size.w); originX = '0%'; }
+    else { left = Math.max(GAP, r.left - GAP - size.w); originX = '100%'; }
     left = Math.min(Math.max(GAP, left), vw - size.w - GAP);
+    // 纵向：与触发元素垂直居中，看起来是「从这一行长出来」，再夹进视口
+    const anchorY = r.top + r.height / 2;
+    let top = anchorY - size.h / 2;
+    top = Math.min(Math.max(GAP, top), vh - size.h - GAP);
     box.style.left = Math.round(left) + 'px';
     box.style.top = Math.round(top) + 'px';
-    // 从卡片这一侧展开，视觉上像卡牌长出来一样
-    const ox = left + size.w / 2 < r.left + r.width / 2 ? '100%' : (left > r.left ? '0%' : '50%');
-    box.style.transformOrigin = ox + ' ' + (axis === 'y' ? '50%' : 'calc(50% - ' + (r.top + r.height / 2 - (top + size.h / 2)) + 'px)');
+    // 从贴近触发元素的那一侧、对应它的垂直位置展开
+    const originY = Math.min(Math.max(0, anchorY - top), size.h);
+    box.style.transformOrigin = originX + ' ' + Math.round(originY) + 'px';
   }
 
   function show(target) {
