@@ -151,3 +151,4 @@ test('score panel stays out of the way while the scenario is still running', asy
  assert(html.includes('远征失败 · 过程计分'));
  assert(html.includes('失败局不计入战绩'));
 });
+test('desktop version badge comes from one constant that matches the latest CHANGELOG heading',async()=>{const e=environment();const version=e.run('APP_VERSION');assert.match(String(version),/^v\d+\.\d+\.\d+$/);const heading=fs.readFileSync(__dirname+'/CHANGELOG.md','utf8').split('\n').find(l=>l.startsWith('# v'));assert(heading,'CHANGELOG.md 缺少 "# vX.Y.Z" 形式的最新条目标题');assert(heading.startsWith('# '+version),`界面版本 ${version} 与 CHANGELOG 最新条目「${heading}」不一致`);assert(!/MIDDLE-EARTH EXPEDITION · v\d/.test(fs.readFileSync(__dirname+'/desktop-ui.js','utf8')),'桌面徽标不应再硬编码版本号');await opening(e);assert(e.base.get('app').innerHTML.includes('MIDDLE-EARTH EXPEDITION · '+version),'桌面徽标未使用 APP_VERSION 常量');});
