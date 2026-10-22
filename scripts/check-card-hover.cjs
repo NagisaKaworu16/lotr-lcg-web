@@ -1,7 +1,7 @@
 /* 卡牌悬停放大预览的真实浏览器验收（1440 / 1920 两档）。
  * 用法：node scripts/check-card-hover.cjs
  * 覆盖：登场延迟、放大尺寸、位置不越界、不遮挡右侧栏、移开恢复、点击不被拦截、
- *      竖版/横版两类卡面、开局页封面、Esc 收起、打开对话框时收起。
+ *      竖版/横版两类卡面、Esc 收起、打开对话框时收起；剧本封面明确不放大。
  */
 'use strict';
 const fs = require('fs');
@@ -19,7 +19,7 @@ const candidates = [
 ];
 const executablePath = process.env.CHROME_PATH || candidates.find(p => fs.existsSync(p));
 const results = [];
-const check = (name, ok, data = {}) => { results.push({ name, ok, ...data }); console.log((ok ? 'PASS' : 'FAIL') + ' ' + name + (Object.keys(data).length ? ' ' + JSON.stringify(data) : '')); };
+const check = (name, ok, data) => { data = data || {}; results.push({ name, ok, ...data }); console.log((ok ? 'PASS' : 'FAIL') + ' ' + name + (Object.keys(data).length ? ' ' + JSON.stringify(data) : '')); };
 
 async function boxOf(page) {
   return page.evaluate(() => {
@@ -42,19 +42,14 @@ async function boxOf(page) {
     await page.goto(pageUrl);
     await page.waitForTimeout(700);
 
-    // 1. 开局页封面
+    // 1. 开局页剧本封面：不是卡牌，悬停不放大
     const cover = page.locator('.ng-card').nth(3);
     await cover.hover();
-    await page.waitForTimeout(60);
-    check(`${vp.width} 延迟未到不弹出`, !(await boxOf(page)) || !(await boxOf(page)).on);
-    await page.waitForTimeout(400);
-    const c1 = await boxOf(page);
-    check(`${vp.width} 开局封面弹出`, c1.on && c1.w > 300, c1);
-    check(`${vp.width} 放大层不接收指针`, c1.pe === 'none');
-    check(`${vp.width} 封面不越界`, c1.x >= 0 && c1.y >= 0 && c1.right <= vp.width && c1.bottom <= vp.height);
+    await page.waitForTimeout(460);
+    const cov = await boxOf(page);
+    check(`${vp.width} 剧本封面悬停不放大`, !cov || !cov.on, cov);
     await page.mouse.move(4, vp.height / 2);
-    await page.waitForTimeout(320);
-    check(`${vp.width} 移开后恢复`, !(await boxOf(page)).on);
+    await page.waitForTimeout(200);
 
     // 进入对局
     await page.locator('.ng-card[data-action="ngOpen"]').first().click();
@@ -69,9 +64,13 @@ async function boxOf(page) {
     const last = cards.nth((await cards.count()) - 1);
     await last.scrollIntoViewIfNeeded();
     await last.hover();
+    await page.waitForTimeout(60);
+    const quick = await boxOf(page);
+    check(`${vp.width} 悬停 60ms 内不弹出（防横扫闪烁）`, !quick || !quick.on, quick);
     await page.waitForTimeout(400);
     const h1 = await boxOf(page);
     check(`${vp.width} 手牌弹出且为竖版`, h1.on && h1.h > h1.w);
+    check(`${vp.width} 放大层不接收指针`, h1.pe === 'none');
     check(`${vp.width} 手牌放大不越界`, h1.x >= 0 && h1.y >= 0 && h1.right <= vp.width && h1.bottom <= vp.height, h1);
     const rail = await page.locator('.tabletop-rail').first().boundingBox();
     check(`${vp.width} 不遮挡阶段/日志侧栏`, !rail || h1.right <= rail.x + 1, { right: Math.round(h1.right), railX: rail && Math.round(rail.x) });

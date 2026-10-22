@@ -1,6 +1,7 @@
 /* 卡牌悬停放大预览（参考诡镇奇谈网页版）。
  * 原则：只读 DOM 截图，不写游戏状态；不移动原卡布局；放大层不拦截指针事件。
- * Source: <button class="card-face"> 内的 <img>，或 image-ui.js 的 .card-art 内的 <img>。
+ * 只对「卡牌」生效：<button class="card-face"> 内的 <img>，或 image-ui.js 的 .card-art 内的 <img>。
+ * 开局页的剧本封面（.ng-card-art）不是卡牌，悬停不放大。
  */
 const CardHoverPreview = (() => {
   const SHOW_DELAY = 130;     // 悬停停留多久才弹出，避免横扫时闪烁
@@ -13,7 +14,7 @@ const CardHoverPreview = (() => {
   let cur = null;             // {src, alt, natural, ratio, rect}
   let axis = 'x';             // 本次显示用横向还是纵向对齐
 
-  const isFace = el => el.matches('.card-face img, .ng-card-art img, .card-art img');
+  const isFace = el => el.matches('.card-face img, .card-art img');
   const live = el => el && el.isConnected && !el.closest('dialog[open]');
 
   function ensure() {
@@ -111,7 +112,7 @@ const CardHoverPreview = (() => {
 
   function onOver(e) {
     const t = e.target;
-    const face = t?.closest && t.closest('.card-face, .ng-card-art, .card-art');
+    const face = t?.closest && t.closest('.card-face, .card-art');
     const pic = face && face.querySelector('img');
     if (face && pic && isFace(pic) && !face.closest('dialog[open]')) { schedule(pic); return; }
     if (cur) scheduleHide();
@@ -124,7 +125,7 @@ const CardHoverPreview = (() => {
 
   function reposition() {
     if (!cur) return;
-    const still = document.querySelector('.card-face:hover img, .ng-card-art:hover img, .card-art:hover img');
+    const still = document.querySelector('.card-face:hover img, .card-art:hover img');
     if (still) { cur.rect = still.getBoundingClientRect(); place(); }
     else hide();
   }
@@ -134,7 +135,7 @@ const CardHoverPreview = (() => {
     bind.done = true;
     document.addEventListener('pointerover', onOver, { passive: true });
     document.addEventListener('pointerout', e => {
-      const from = e.target?.closest?.('.card-face, .ng-card-art, .card-art');
+      const from = e.target?.closest?.('.card-face, .card-art');
       if (from && !from.contains(e.relatedTarget)) scheduleHide();
     }, { passive: true });
     document.addEventListener('pointerdown', hide, { passive: true, capture: true });
