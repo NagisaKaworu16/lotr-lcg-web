@@ -96,6 +96,30 @@
     "ok": true
   },
   {
+    "label": "悬停玩家卡名弹出竖版大图",
+    "ok": true
+  },
+  {
+    "label": "放大图用本地中文卡图",
+    "ok": true
+  },
+  {
+    "label": "放大图不越界且不拦指针",
+    "ok": true
+  },
+  {
+    "label": "移开后收起放大图",
+    "ok": true
+  },
+  {
+    "label": "悬停探险卡按横版放大",
+    "ok": true
+  },
+  {
+    "label": "悬停后离开仍收起",
+    "ok": true
+  },
+  {
     "label": "无横向溢出",
     "ok": true
   },

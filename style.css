@@ -348,3 +348,15 @@ body:has(.desktop-table) .nav-home .brand-mark{width:17px;height:17px}
 .cat-figure figcaption b{color:var(--ink);font-size:13px;font-weight:600}
 @media(prefers-reduced-motion:reduce){.cat-sides button,.cat-views button{transition:none}}
 @media(max-width:900px){.cat-list{grid-template-columns:1fr}}
+/* 牌组构建器：沿用卡牌库的密集列表，行右侧是加减牌操作（见 player-ui.js buildRow）。 */
+.build-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:0 26px;align-items:start}
+.build-row{display:flex;align-items:flex-start;gap:6px;border-bottom:1px dotted #cfd5c8;border-radius:6px}
+.build-row .cat-item{flex:1;min-width:0;border-bottom:0}
+.build-row .cat-item[open]{margin:6px 0;padding:0 12px 4px}
+.build-row:has(.cat-item[open]){grid-column:1/-1}
+.build-row.in-deck{background:#f6f2df;box-shadow:inset 3px 0 0 var(--gold)}
+.build-actions{display:flex;align-items:center;gap:4px;flex:none;padding-top:7px}
+.build-actions button{min-width:30px;min-height:30px;padding:0 8px;font-size:14px;line-height:1}
+.build-count{min-width:22px;text-align:center;color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums}
+.build-row .cat-name{overflow-wrap:anywhere}
+@media(max-width:900px){.build-list{grid-template-columns:1fr}}

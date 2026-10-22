@@ -1,6 +1,10 @@
 /* 卡牌悬停放大预览（参考诡镇奇谈网页版）。
  * 原则：只读 DOM 截图，不写游戏状态；不移动原卡布局；放大层不拦截指针事件。
- * 只对「卡牌」生效：<button class="card-face"> 内的 <img>，或 image-ui.js 的 .card-art 内的 <img>。
+ * 三种触发源：
+ *   1. <button class="card-face"> 内的 <img>：桌面上的英雄／盟友／附属／手牌／交战敌人。
+ *   2. image-ui.js 的 .card-art 内的 <img>：当前探险卡、卡图库缩略图、展开后的详情卡图。
+ *   3. 密集列表的卡名行 [data-hover-src]：卡牌库与牌组构建器。这些行为了不一次加载上百张图
+ *      并没有 <img>，悬停时按 data-hover-src 现取一张大图（形状由 data-hover-shape 给出）。
  * 开局页的剧本封面（.ng-card-art）不是卡牌，悬停不放大。
  */
 const CardHoverPreview = (() => {
@@ -15,7 +19,15 @@ const CardHoverPreview = (() => {
   let axis = 'x';             // 本次显示用横向还是纵向对齐
 
   const isFace = el => el.matches('.card-face img, .card-art img');
+  const isProbe = el => !!(el.hasAttribute && el.hasAttribute('data-hover-src'));
   const live = el => el && el.isConnected && !el.closest('dialog[open]');
+
+  function srcOf(t) { return isProbe(t) ? t.getAttribute('data-hover-src') : (t.currentSrc || t.src); }
+  // 探针没有真实图片可量，形状由标记给出：竖版卡 424×600，横版探险卡 600×424
+  function shapeOf(t) {
+    const s = t.getAttribute && t.getAttribute('data-hover-shape');
+    return s === 'wide' ? { w: 600, h: 424 } : s === 'tall' ? { w: 424, h: 600 } : null;
+  }
 
   function ensure() {
     if (layer) return layer;
@@ -39,11 +51,14 @@ const CardHoverPreview = (() => {
     const vw = window.innerWidth, vh = window.innerHeight;
     const maxW = Math.min(vw * MAX_W, 560);
     const maxH = vh * MAX_H;
-    let w = cur.natural.w || 424, h = cur.natural.h || 600;
-    // 竖版一律按 424 宽计算版心（中文卡图像素偏小，仍按标准卡面尺寸放大）
-    if (cur.ratio) { h = w * cur.ratio.h / cur.ratio.w; }
-    else if (cur.natural.w > cur.natural.h) { w = 600; h = Math.round(600 * cur.natural.h / cur.natural.w); }
-    else { w = 424; h = Math.round(424 * (cur.natural.h || 600) / (cur.natural.w || 424)); }
+    const nat = cur.natural || { w: 0, h: 0 };
+    // 竖版按 424 宽、横版按 600 宽还原版心，再整体缩到视口内
+    const wide = cur.ratio ? cur.ratio.w > cur.ratio.h : nat.w > nat.h;
+    const w = wide ? 600 : 424;
+    let h;
+    if (cur.ratio) h = Math.round(w * cur.ratio.h / cur.ratio.w);
+    else if (nat.w && nat.h) h = Math.round(w * nat.h / nat.w);
+    else h = wide ? 424 : 600;
     const scale = Math.min(maxW / w, maxH / h);
     return { w: Math.round(w * scale), h: Math.round(h * scale) };
   }
@@ -79,16 +94,30 @@ const CardHoverPreview = (() => {
     box.style.transformOrigin = ox + ' ' + (axis === 'y' ? '50%' : 'calc(50% - ' + (r.top + r.height / 2 - (top + size.h / 2)) + 'px)');
   }
 
-  function show(face) {
-    if (!live(face)) return;
-    const src = face.currentSrc || face.src;
+  function show(target) {
+    if (!live(target)) return;
+    const src = srcOf(target);
     if (!src) return;
-    if (cur && cur.src === src) { cur.rect = face.getBoundingClientRect(); place(); return; }
+    const rect = target.getBoundingClientRect();
+    if (cur && cur.src === src) { cur.rect = rect; place(); return; }
     ensure();
-    cur = { src, alt: face.alt || '', natural: { w: face.naturalWidth, h: face.naturalHeight }, ratio: null, rect: face.getBoundingClientRect() };
-    // 横版探险卡（600×424）按容器形状还原，避免被竖版比例拉变形
-    const art = face.closest('.quest-card-art, .quest-display');
+    const probe = isProbe(target);
+    cur = {
+      src,
+      alt: target.alt || '',
+      natural: probe ? { w: 0, h: 0 } : { w: target.naturalWidth, h: target.naturalHeight },
+      ratio: probe ? shapeOf(target) : null,
+      rect
+    };
+    // 横版探险卡按容器形状还原，避免被竖版比例拉变形
+    const art = target.closest && target.closest('.quest-card-art, .quest-display');
     if (art && cur.natural.w > cur.natural.h) cur.ratio = { w: cur.natural.w, h: cur.natural.h };
+    // 探针第一次载入这张图，只有 onload 后才能拿到真实比例
+    img.onload = probe ? () => {
+      if (!cur || cur.src !== src) return;
+      const nat = { w: img.naturalWidth, h: img.naturalHeight };
+      if (nat.w && nat.h) { cur.natural = nat; if (!cur.ratio) place(); }
+    } : null;
     img.src = src;
     img.alt = cur.alt;
     place();
@@ -104,10 +133,10 @@ const CardHoverPreview = (() => {
     document.documentElement.classList.remove('has-card-preview');
   }
 
-  function schedule(face) {
+  function schedule(target) {
     clearTimeout(timer);
-    if (cur) { show(face); return; }
-    timer = setTimeout(() => show(face), SHOW_DELAY);
+    if (cur) { show(target); return; }
+    timer = setTimeout(() => show(target), SHOW_DELAY);
   }
 
   function onOver(e) {
@@ -115,6 +144,9 @@ const CardHoverPreview = (() => {
     const face = t?.closest && t.closest('.card-face, .card-art');
     const pic = face && face.querySelector('img');
     if (face && pic && isFace(pic) && !face.closest('dialog[open]')) { schedule(pic); return; }
+    // 卡名行：已经展开的行不再重复弹图（正文里本来就有卡图）
+    const probe = t?.closest && t.closest('[data-hover-src]');
+    if (probe && !probe.closest('dialog[open]') && !probe.closest('details[open]')) { schedule(probe); return; }
     if (cur) scheduleHide();
   }
 
@@ -125,7 +157,7 @@ const CardHoverPreview = (() => {
 
   function reposition() {
     if (!cur) return;
-    const still = document.querySelector('.card-face:hover img, .card-art:hover img');
+    const still = document.querySelector('.card-face:hover img, .card-art:hover img, [data-hover-src]:hover');
     if (still) { cur.rect = still.getBoundingClientRect(); place(); }
     else hide();
   }
@@ -135,7 +167,7 @@ const CardHoverPreview = (() => {
     bind.done = true;
     document.addEventListener('pointerover', onOver, { passive: true });
     document.addEventListener('pointerout', e => {
-      const from = e.target?.closest?.('.card-face, .card-art');
+      const from = e.target?.closest?.('.card-face, .card-art, [data-hover-src]');
       if (from && !from.contains(e.relatedTarget)) scheduleHide();
     }, { passive: true });
     document.addEventListener('pointerdown', hide, { passive: true, capture: true });

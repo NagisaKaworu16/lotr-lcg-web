@@ -350,9 +350,21 @@ body:has(.desktop-table) .nav-home .brand-mark{width:17px;height:17px}
 .cat-figure figcaption b{color:var(--ink);font-size:13px;font-weight:600}
 @media(prefers-reduced-motion:reduce){.cat-sides button,.cat-views button{transition:none}}
 @media(max-width:900px){.cat-list{grid-template-columns:1fr}}
+/* 牌组构建器：沿用卡牌库的密集列表，行右侧是加减牌操作（见 player-ui.js buildRow）。 */
+.build-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:0 26px;align-items:start}
+.build-row{display:flex;align-items:flex-start;gap:6px;border-bottom:1px dotted #cfd5c8;border-radius:6px}
+.build-row .cat-item{flex:1;min-width:0;border-bottom:0}
+.build-row .cat-item[open]{margin:6px 0;padding:0 12px 4px}
+.build-row:has(.cat-item[open]){grid-column:1/-1}
+.build-row.in-deck{background:#f6f2df;box-shadow:inset 3px 0 0 var(--gold)}
+.build-actions{display:flex;align-items:center;gap:4px;flex:none;padding-top:7px}
+.build-actions button{min-width:30px;min-height:30px;padding:0 8px;font-size:14px;line-height:1}
+.build-count{min-width:22px;text-align:center;color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums}
+.build-row .cat-name{overflow-wrap:anywhere}
+@media(max-width:900px){.build-list{grid-template-columns:1fr}}
 
 </style></head><body>
-<header><nav><button id="tableTab" class="active nav-home" title="回到首页"><svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><defs><linearGradient id="brandGold" x1="10" y1="8" x2="54" y2="57" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fdf4cd"/><stop offset=".32" stop-color="#e3c47a"/><stop offset=".55" stop-color="#a9853f"/><stop offset=".78" stop-color="#e8cb86"/><stop offset="1" stop-color="#fffae0"/></linearGradient><radialGradient id="brandField" cx=".5" cy=".42" r=".58"><stop offset="0" stop-color="#8a4a16"/><stop offset=".46" stop-color="#4a2a10"/><stop offset="1" stop-color="#150e07"/></radialGradient></defs><circle cx="32" cy="32" r="21" fill="#0d1710" fill-opacity=".62"/><circle cx="32" cy="32" r="21" fill="none" stroke="url(#brandGold)" stroke-width="7"/><path d="M14.6 19.2A21 21 0 0 1 32.6 10.9" fill="none" stroke="#fffbe8" stroke-width="2.4" stroke-linecap="round" opacity=".55"/></svg>首页</button><button id="catalogTab">基础卡牌库 <span>55</span></button><button id="decksTab">我的卡组</button><button id="playersTab">英雄与玩家牌</button><button id="imagesTab">全部卡图</button><button id="helpTab">说明与完成范围</button></nav><div class="history-nav"><button id="navBack" type="button" title="后退" aria-label="后退">←</button><button id="navFwd" type="button" title="前进" aria-label="前进">→</button></div><div class="header-actions"><button id="undo">撤销一步</button><button id="export">导出存档</button><label class="button" for="import">导入存档</label><input id="import" type="file" accept="application/json" hidden></div></header>
+<header><nav><button id="tableTab" class="active nav-home" title="回到首页"><svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><defs><linearGradient id="brandGold" x1="10" y1="8" x2="54" y2="57" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fdf4cd"/><stop offset=".32" stop-color="#e3c47a"/><stop offset=".55" stop-color="#a9853f"/><stop offset=".78" stop-color="#e8cb86"/><stop offset="1" stop-color="#fffae0"/></linearGradient><radialGradient id="brandField" cx=".5" cy=".42" r=".58"><stop offset="0" stop-color="#8a4a16"/><stop offset=".46" stop-color="#4a2a10"/><stop offset="1" stop-color="#150e07"/></radialGradient></defs><circle cx="32" cy="32" r="21" fill="#0d1710" fill-opacity=".62"/><circle cx="32" cy="32" r="21" fill="none" stroke="url(#brandGold)" stroke-width="7"/><path d="M14.6 19.2A21 21 0 0 1 32.6 10.9" fill="none" stroke="#fffbe8" stroke-width="2.4" stroke-linecap="round" opacity=".55"/></svg>首页</button><button id="catalogTab">基础卡牌库 <span>55</span></button><button id="decksTab">我的卡组</button><button id="imagesTab">全部卡图</button><button id="helpTab">说明与完成范围</button></nav><div class="history-nav"><button id="navBack" type="button" title="后退" aria-label="后退">←</button><button id="navFwd" type="button" title="前进" aria-label="前进">→</button></div><div class="header-actions"><button id="undo">撤销一步</button><button id="export">导出存档</button><label class="button" for="import">导入存档</label><input id="import" type="file" accept="application/json" hidden></div></header>
 <main id="app"></main><div id="toast" role="status" aria-live="polite"></div>
 <script>
 /* 中文名称及规则为本项目工作译名/机制摘要；非官方译文。 */
@@ -5581,7 +5593,7 @@ if (typeof module !== 'undefined') module.exports = ScoreEngine;
 </script><script>
 const PlayerUI=(()=>{
 const P=PlayerCards;
-let snapshot=P.verify(RINGSDB_SNAPSHOT),saved=[],draft=null,importReport=null,filter={text:'',type:'',sphere:''};
+let snapshot=P.verify(RINGSDB_SNAPSHOT),saved=[],draft=null,importReport=null,building=false,filter={text:'',type:'',sphere:''};
 try{let cached=JSON.parse(localStorage.getItem('lotr-ringsdb-core-v1')||'null');if(cached&&Date.parse(cached.fetchedAt)>Date.parse(snapshot.fetchedAt))snapshot=P.verify(cached);}catch{}
 try{let v=JSON.parse(localStorage.getItem('lotr-saved-decks-v1')||'[]');if(Array.isArray(v))saved=v.filter(d=>typeof d.id==='string'&&Array.isArray(d.heroes)&&d.slots&&typeof d.name==='string');}catch{}
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -5594,12 +5606,22 @@ function deckOptions(selected){return decks().map(d=>`<option value="${esc(d.id)
 function configs(n,ids){const selected=[];for(let i=0;i<n;i++){const key=(ids&&ids[i])||document.querySelector('#pc-deck-'+i)?.value||presets()[i].id;const d=decks().find(d=>d.id===key);if(!d)throw Error('找不到所选玩家牌组。');selected.push(d);}const result=P.validateFellowship(selected,snapshot);if(!result.valid)throw Error(result.errors.join('\n'));return selected.map(d=>P.config(d,snapshot));}
 function oneCard(c){const selected=draft.heroes.includes(c.code),count=draft.slots[c.code]||0;return `<article class="card player-card ${c.type} sphere-${c.sphere}"><div class="number"><span>${names[c.type]} · ${esc(c.sphereName)}</span><span>#${c.code}</span></div>${ImageLibrary.art(c.code)}<h3>${c.isUnique?'◆ ':''}${esc(c.nameZh)}</h3><div class="en">${esc(c.name)}</div><div class="stats">${c.type==='hero'?`初始威胁 <b>${c.startingThreat}</b>`:`费用 <b>${esc(c.cost)}</b>`}${c.health!==null?`<br>意志 ${c.willpower??'—'} · 攻 ${c.attack??'—'} · 防 ${c.defense??'—'} · 血 ${c.health}`:''}</div><div class="small muted">${esc(c.traits)}</div><div class="body rules-text">${esc(c.rulesText)}</div><div class="small">每副牌上限 ${c.deckLimit} · 原版盒内 ${c.quantity}${c.hasErrata?' · <b class="warning-text">有勘误</b>':''}</div><p class="small muted">资料已接入 · 能力待实现</p><footer>${c.type==='hero'?button(selected?'移出英雄':'选择英雄','hero',`data-code="${c.code}"`,selected?'primary':''):button('−','minus',`data-code="${c.code}"`)+`<span class="pc-count">${count}</span>`+button('+','plus',`data-code="${c.code}"`)}<a href="${c.sourceUrl}" target="_blank" rel="noreferrer" class="small">RingsDB原卡 ↗</a></footer></article>`;}
 function summary(){const r=P.validateDeck(draft,snapshot),by=P.index(snapshot);return `<aside class="panel deck-editor"><div class="eyebrow">DECK BUILDER · CORE</div><h2>当前牌组</h2><p><input id="pc-name" aria-label="牌组名称" value="${esc(draft.name)}" maxlength="100"></p><label class="small">构筑模式 <select id="pc-mode"><option value="starter" ${draft.mode==='starter'?'selected':''}>原版30张教学预设</option><option value="standard" ${draft.mode==='standard'?'selected':''}>标准构筑（至少50张）</option></select></label>${importReport?`<div class="notice import-report"><b>导入报告</b>${importReport.map(x=>`<p class="small">${esc(x.line?('第'+x.line+'行 '):'')}${x.text?('「'+esc(x.text)+'」'):''}${esc(x.reason||'')}</p>`).join('')}</div>`:''}<div class="deck-counts"><div><strong>${r.heroes.length}/3</strong>英雄</div><div><strong>${r.startingThreat}</strong>初始威胁</div><div><strong>${r.total}</strong>抽牌牌库</div></div><div class="deck-heroes">${draft.heroes.map(code=>`<p>${esc(by[code]?.nameZh||code)} <span class="muted small">#${esc(code)}</span> ${button('移除','hero',`data-code="${esc(code)}"`)}</p>`).join('')||'<p class="muted small">尚未选择英雄</p>'}</div><div class="notice ${r.valid?'deck-valid':''}">${r.valid?'基本构筑校验通过':r.errors.map(esc).join('<br>')}</div><details><summary class="small">构筑提醒 / 自动化状态</summary>${r.warnings.map(w=>`<p class="small muted">${esc(w)}</p>`).join('')}</details><div class="deck-list">${Object.entries(draft.slots).filter(([,n])=>n>0).sort().map(([code,n])=>`<div><span>${esc(by[code]?.nameZh||code)}</span><span>${button('−','minus',`data-code="${esc(code)}"`)} ${n} ${button('+','plus',`data-code="${esc(code)}"`)}</span></div>`).join('')}</div><div class="actions">${button('保存牌组','save','','primary')}${button('导出牌组JSON','export')}${button('清空重建','clear')}</div><p class="small muted">保存后，可在剧本开局处选用。保存的牌组不代表卡牌能力已自动实现。</p></aside>`;}
-function html(){startDraft();return `<div class="intro"><div><div class="eyebrow">RINGSDB · PLAYER CARDS</div><h1>英雄与玩家卡牌</h1><p class="muted">基础版12名英雄 · 20种盟友 · 13种附属 · 28种事件。中文名称为工作译名；能力保留API英文资料。</p></div><div>${button('从RingsDB更新资料','refresh')}<p class="small muted">快照 ${esc(snapshot.fetchedAt.slice(0,10))} · 离线可查</p></div></div><div class="notice">API提供卡牌资料，不提供自动结算能力。当前73种牌均标记为“能力待实现”，不会把读取英文能力文本当成规则已经实现。</div><div class="toolbar"><label>载入预设／已存牌组 <select id="pc-load">${deckOptions(draft.id)}</select></label>${button('载入','load')}<label class="button" for="pc-import">导入牌组JSON文件</label><input type="file" id="pc-import" accept="application/json" hidden><input id="pc-deckurl" placeholder="RingsDB 牌组链接或编号，如 decklist/view/12345" aria-label="RingsDB 牌组链接">${button('从链接导入','importUrl')}${button('粘贴牌表导入','importText')}<a href="https://ringsdb.com/api/" target="_blank" rel="noreferrer" class="small">API说明 ↗</a></div><div class="player-library-layout"><section><div class="toolbar"><input id="pc-search" placeholder="搜索中英文名称、代码、特性或能力…" value="${esc(filter.text)}"><select id="pc-type"><option value="">全部类型</option>${Object.entries(names).map(([k,v])=>`<option value="${k}" ${filter.type===k?'selected':''}>${v}</option>`).join('')}</select><select id="pc-sphere"><option value="">全部领域</option>${['leadership','tactics','spirit','lore','neutral'].map(k=>`<option value="${k}" ${filter.sphere===k?'selected':''}>${P.SPHERES[k]}</option>`).join('')}</select></div><p class="small muted" id="pc-result-count"></p><div class="catalog" id="pc-results"></div></section>${summary()}</div>`;}
-function filterCards(){filter.text=document.querySelector('#pc-search').value;filter.type=document.querySelector('#pc-type').value;filter.sphere=document.querySelector('#pc-sphere').value;let text=filter.text.toLocaleLowerCase();let found=snapshot.cards.filter(c=>(!filter.type||c.type===filter.type)&&(!filter.sphere||c.sphere===filter.sphere)&&`${c.code} ${c.name} ${c.nameZh} ${c.traits} ${c.rulesText}`.toLocaleLowerCase().includes(text));document.querySelector('#pc-result-count').textContent=`找到${found.length}种卡牌`;document.querySelector('#pc-results').innerHTML=found.map(oneCard).join('');ImageLibrary.bindErrors(document.querySelector('#pc-results'));}
+function isBuilding(){return building;}
+function startBuild(id){if(id)loadDeck(id);else{draft={id:'new',name:'自定义基础版牌组',mode:'standard',heroes:[],slots:{}};importReport=null;}building=true;}
+function builder(){startDraft();return `<div class="intro"><div><div class="eyebrow">DECK BUILDER · CORE</div><h1>编辑牌组</h1><p class="muted">点卡名展开详情与加减牌；鼠标停在卡名上直接显示卡图。右侧实时校验，保存后可在剧本开局时选用。快照 ${esc(snapshot.fetchedAt.slice(0,10))} · 离线可查。</p></div><div class="actions">${button('← 返回卡组列表','deckBack')}${button('从RingsDB更新资料','refresh')}</div></div><div class="notice">卡牌资料来自 RingsDB 基础版快照，仅提供资料与构筑校验，不提供自动结算能力；牌组里的牌仍需在桌面上手动结算。</div><div class="toolbar"><label>载入预设／已存牌组 <select id="pc-load">${deckOptions(draft.id)}</select></label>${button('载入','load')}<label class="button" for="pc-import">导入牌组JSON文件</label><input type="file" id="pc-import" accept="application/json" hidden><input id="pc-deckurl" placeholder="RingsDB 牌组链接或编号，如 decklist/view/12345" aria-label="RingsDB 牌组链接">${button('从链接导入','importUrl')}${button('粘贴牌表导入','importText')}</div><div class="player-library-layout"><section><div class="toolbar"><input id="pc-search" placeholder="搜索中英文名称、代码、特性或能力…" value="${esc(filter.text)}" aria-label="搜索玩家卡"><select id="pc-type" aria-label="类型筛选"><option value="">全部类型</option>${Object.entries(TYPE_NAMES).map(([k,v])=>`<option value="${k}" ${filter.type===k?'selected':''}>${v}</option>`).join('')}</select><select id="pc-sphere" aria-label="球色筛选"><option value="">全部球色</option>${SPHERE_ORDER.map(k=>`<option value="${k}" ${filter.sphere===k?'selected':''}>${esc(P.SPHERES[k])}</option>`).join('')}</select></div><p class="small muted" id="pc-result-count"></p><div class="cat-index" id="pc-results"></div></section>${summary()}</div>`;}
+const TYPE_NAMES={hero:'英雄',ally:'盟友',attachment:'附属',event:'事件'};
+const TYPE_ORDER=['hero','ally','attachment','event'];
+const SPHERE_ORDER=['leadership','tactics','spirit','lore','neutral'];
+function hoverSrc(code){const rec=ImageLibrary.by[code];return rec?String(ImageLibrary.safeUrl(rec.imageUrl)||''):'';}
+function buildDetail(c){const rows=[['类型',TYPE_NAMES[c.type]],['球色',c.sphereName],['费用',c.cost],['初始威胁',c.startingThreat],['意志／攻击／防御／生命',c.type==='hero'?`${c.willpower}／${c.attack}／${c.defense}／${c.health}`:null],['特性',c.traits],['卡包',c.packName],['编号',c.code],['每副上限',c.deckLimit]];const dl=`<dl class="cat-facts">${rows.filter(r=>r[1]!==null&&r[1]!==undefined&&r[1]!=='').map(([k,v])=>`<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}</dl>`;return `<div class="cat-detail">${ImageLibrary.art(c.code)}<div class="cat-text">${dl}<p class="small muted">规则文本为 RingsDB 英文原文，未作翻译。</p><p>${esc(c.rulesText||'（暂无规则文本）')}</p></div></div>`;}
+function buildRow(c){const n=draft.slots[c.code]||0,heroOn=draft.heroes.includes(c.code),inDeck=heroOn||n>0,src=hoverSrc(c.code);const actions=c.type==='hero'?button(heroOn?'移出英雄':'选择英雄','hero',`data-code="${c.code}"`,heroOn?'primary':''):`${button('−','minus',`data-code="${c.code}"`)}<span class="build-count">${n}</span>${button('+','plus',`data-code="${c.code}"`)}`;return `<div class="build-row ${inDeck?'in-deck':''}"><details class="cat-item" data-code="${c.code}"><summary${src?` data-hover-src="${esc(src)}" data-hover-shape="tall"`:''}><span class="cat-name">${c.isUnique?'◆ ':''}${esc(c.nameZh)}</span><span class="cat-meta">${TYPE_NAMES[c.type]} · ${esc(c.sphereName)} · #${esc(c.code)}</span></summary><div class="cat-body" data-loaded="0"></div></details><div class="build-actions">${actions}</div></div>`;}
+function buildGroups(list){const map=new Map;for(const c of list){const k=SPHERE_ORDER.includes(c.sphere)?c.sphere:'neutral';if(!map.has(k))map.set(k,[]);map.get(k).push(c);}return [...map.entries()].sort((a,b)=>SPHERE_ORDER.indexOf(a[0])-SPHERE_ORDER.indexOf(b[0])).map(([k,arr])=>{arr.sort((a,b)=>(TYPE_ORDER.indexOf(a.type)-TYPE_ORDER.indexOf(b.type))||String(a.nameZh).localeCompare(String(b.nameZh),'zh'));return `<section class="cat-group"><h2><span>${esc(P.SPHERES[k]||k)}</span><span class="cat-count">${arr.length}</span></h2><div class="build-list">${arr.map(buildRow).join('')}</div></section>`;}).join('');}
+function bindBuildList(){const root=document.querySelector('#pc-results');if(!root||typeof root.addEventListener!=='function'||root.dataset.boundBuild)return;root.dataset.boundBuild='1';root.addEventListener('toggle',ev=>{const d=ev.target;if(!d.classList||typeof d.classList.contains!=='function'||!d.classList.contains('cat-item')||!d.open)return;const body=d.querySelector('.cat-body');if(!body||body.dataset.loaded==='1')return;const c=snapshot.cards.find(x=>x.code===d.dataset.code);if(c)body.innerHTML=buildDetail(c);body.dataset.loaded='1';ImageLibrary.bindErrors(body);},true);}
+function filterCards(){const box=document.querySelector('#pc-search');if(!box)return;filter.text=box.value;filter.type=document.querySelector('#pc-type').value;filter.sphere=document.querySelector('#pc-sphere').value;const text=filter.text.toLocaleLowerCase();const found=snapshot.cards.filter(c=>(!filter.type||c.type===filter.type)&&(!filter.sphere||c.sphere===filter.sphere)&&`${c.code} ${c.name} ${c.nameZh} ${c.traits} ${c.rulesText}`.toLocaleLowerCase().includes(text));const count=document.querySelector('#pc-result-count');if(count)count.textContent=filter.text.trim()?`「${filter.text.trim()}」匹配 ${found.length} 种玩家卡`:`共 ${found.length} 种玩家卡`;const out=document.querySelector('#pc-results');if(!out)return;out.innerHTML=found.length?buildGroups(found):'<p class="empty">没有匹配的卡牌。</p>';ImageLibrary.bindErrors(out);bindBuildList();}
 function capture(){const name=document.querySelector('#pc-name'),mode=document.querySelector('#pc-mode');if(name)draft.name=name.value||'未命名牌组';if(mode)draft.mode=mode.value;}
 function persist(){localStorage.setItem('lotr-saved-decks-v1',JSON.stringify(saved));}
 function download(data,name){const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
-function bind(){filterCards();for(const id of ['pc-search','pc-type','pc-sphere'])document.querySelector('#'+id).oninput=filterCards;document.querySelector('#pc-mode').onchange=()=>{capture();render();};document.querySelector('#pc-import').onchange=async ev=>{const f=ev.target.files[0];if(!f)return;try{if(f.size>1000000)throw Error('牌组文件过大');let d=P.importDeck(JSON.parse(await f.text()),snapshot);draft=d;render();toast('牌组已读入，请查看构筑校验结果。');}catch(e){toast('导入失败：'+e.message);}};}
+function bind(){filterCards();bindBuildList();for(const id of ['pc-search','pc-type','pc-sphere']){const el=document.querySelector('#'+id);if(el)el.oninput=filterCards;}const mode=document.querySelector('#pc-mode');if(mode)mode.onchange=()=>{capture();render();};const imp=document.querySelector('#pc-import');if(imp)imp.onchange=async ev=>{const f=ev.target.files[0];if(!f)return;try{if(f.size>1000000)throw Error('牌组文件过大');let d=P.importDeck(JSON.parse(await f.text()),snapshot);draft=d;importReport=null;render();toast('牌组已读入，请查看右侧构筑校验结果。');}catch(e){toast('导入失败：'+e.message);}};}
 function applyImport(result,label){draft=JSON.parse(JSON.stringify(result.deck));const problems=[...(result.errors||[]),...(result.warnings||[])];importReport=problems.length?problems.slice(0,8):null;const r=P.validateDeck(draft,snapshot);if((result.errors||[]).length)toast(label+'：'+result.errors.length+' 处需要处理，详见右侧导入报告');else if(r.valid)toast(label+'：'+draft.heroes.length+' 名英雄、'+r.total+' 张玩家牌；保存后可在开局选用');else toast(label+'，但构筑校验未通过：'+r.errors.slice(0,2).join('；'));}
 async function importDeckUrl(){const input=document.querySelector('#pc-deckurl'),raw=String(input&&input.value||'').trim();if(!raw){toast('请先粘贴 RingsDB 牌组链接或编号');return;}const m=raw.match(/(?:decklist|deck)\/(?:view\/)?(\d+)/i)||raw.match(/^(\d+)$/);if(!m){toast('无法识别牌组编号；示例 https://ringsdb.com/decklist/view/12345');return;}const id=m[1],cacheKey='lotr-ringsdb-decks-v1';let cache={};try{cache=JSON.parse(localStorage.getItem(cacheKey)||'{}')||{};}catch{}
  const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),15000);
@@ -5608,6 +5630,7 @@ async function importDeckUrl(){const input=document.querySelector('#pc-deckurl')
  finally{clearTimeout(timer);}}
 async function handle(b){startDraft();capture();const action=b.dataset.pc,code=b.dataset.code,by=P.index(snapshot),c=by[code];
  try{
+  if(action==='deckBack'){capture();building=false;render();return;}
   if(action==='hero'){if(!c||c.type!=='hero')throw Error('请选择有效英雄');if(draft.heroes.includes(code))draft.heroes=draft.heroes.filter(x=>x!==code);else{if(draft.heroes.length>=3)throw Error('最多3名英雄，请先移除1名。');draft.heroes.push(code);}draft.mode='standard';}
   if(action==='plus'){if(!c||c.type==='hero')throw Error('无效玩家牌');let n=draft.slots[code]||0;if(n>=c.deckLimit)throw Error(`该牌每副牌最多${c.deckLimit}张。`);draft.slots[code]=n+1;draft.mode='standard';}
   if(action==='minus'){if((draft.slots[code]||0)>0){draft.slots[code]--;if(!draft.slots[code])delete draft.slots[code];draft.mode='standard';}}
@@ -5648,9 +5671,9 @@ function deckMatches(x){const i=deckInfo(x),text=String(deckView.text||'').toLow
 function deckList(){const list=decks().filter(deckMatches);if(deckView.sort==='size')list.sort((a,b)=>deckInfo(b).total-deckInfo(a).total);else list.sort((a,b)=>String(a.name).localeCompare(String(b.name),'zh'));return list;}
 function decksPage(){
  const list=deckList();
- return `<div class="intro"><div><div class="eyebrow">DECK LIBRARY · ${saved.length} 副自建</div><h1>我的卡组</h1><p class="muted">四系教学预组，加上你导入或保存的牌组。开始剧本时会请每位玩家从这里选一副。</p></div><button data-action="deckGoSetup">返回剧本桌面</button></div>
+ return `<div class="intro"><div><div class="eyebrow">DECK LIBRARY · ${saved.length} 副自建</div><h1>我的卡组</h1><p class="muted">四系教学预组，加上你导入或保存的牌组。点「新建牌组」进入卡牌库式列表配牌；开始剧本时会请每位玩家从这里选一副。</p></div><div class="actions"><button class="primary" data-action="deckNew">新建牌组</button><button data-action="deckGoSetup">返回剧本桌面</button></div></div>
  <section class="panel deck-import"><div class="deck-import-tabs"><button data-action="deckViewTab" data-value="link" class="${deckView.tab==='link'?'active':''}">LINK</button><button data-action="deckViewTab" data-value="file" class="${deckView.tab==='file'?'active':''}">FILE</button></div>
- ${deckView.tab==='link'?`<div class="deck-import-row"><input id="deck-import-url" placeholder="在这里填写 RingsDB 牌组链接或编号（decklist/view/12345）" aria-label="RingsDB 牌组链接"><button class="primary" data-action="deckImportUrl">保存</button></div><p class="small muted">国内网络通常无法访问 ringsdb.com；连不上时可用「英雄与玩家牌」页的「粘贴牌表导入」，或先开代理再点保存。</p>`:`<div class="deck-import-row"><label class="button" for="deck-import-file">选择牌组 JSON 文件</label><input type="file" id="deck-import-file" accept="application/json" hidden></div><p class="small muted">支持本站「导出牌组JSON」生成的格式（name／mode／heroes／slots）。</p>`}
+ ${deckView.tab==='link'?`<div class="deck-import-row"><input id="deck-import-url" placeholder="在这里填写 RingsDB 牌组链接或编号（decklist/view/12345）" aria-label="RingsDB 牌组链接"><button class="primary" data-action="deckImportUrl">保存</button></div><p class="small muted">国内网络通常无法访问 ringsdb.com；连不上时可用「新建牌组 → 粘贴牌表导入」，或先开代理再点保存。</p>`:`<div class="deck-import-row"><label class="button" for="deck-import-file">选择牌组 JSON 文件</label><input type="file" id="deck-import-file" accept="application/json" hidden></div><p class="small muted">支持本站「导出牌组JSON」生成的格式（name／mode／heroes／slots）。</p>`}
  </section>
  <div class="toolbar deck-filters"><input id="deck-search" placeholder="搜索牌组名或英雄…" value="${esc(deckView.text)}"><select id="deck-sort"><option value="name" ${deckView.sort==='name'?'selected':''}>排序：名称</option><option value="size" ${deckView.sort==='size'?'selected':''}>排序：张数</option></select><span class="spacer"></span>${['','leadership','tactics','spirit','lore'].map(k=>`<button data-action="deckViewSphere" data-value="${k}" class="${deckView.sphere===k?'primary':''}">${k?esc(P.SPHERES[k]):'全部'}</button>`).join('')}</div>
  <section class="deck-list">${list.map(d=>deckCard(d,deckActions(d))).join('')||'<p class="empty">没有匹配的牌组。</p>'}</section>`;
@@ -5660,14 +5683,16 @@ async function handleDecks(b){const a=b.dataset.action,id=b.dataset.deck;
  if(a==='deckViewTab'){deckView.tab=b.dataset.value;render();return true;}
  if(a==='deckViewSphere'){deckView.sphere=b.dataset.value;render();return true;}
  if(a==='deckImportUrl'){const input=document.querySelector('#deck-import-url'),raw=String(input&&input.value||'').trim(),m=raw.match(/(?:decklist|deck)\/(?:view\/)?(\d+)/i)||raw.match(/^(\d+)$/);if(!m){toast('无法识别牌组编号；示例 https://ringsdb.com/decklist/view/12345');return true;}const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),15000);try{const res=await fetch('https://ringsdb.com/api/public/decklist/'+m[1],{signal:ctrl.signal,headers:{Accept:'application/json'}});if(!res.ok)throw Error('RingsDB 返回 HTTP '+res.status);const d=P.fromRingsdb(await res.json()),r=P.validateDeck(d,snapshot);saveDeck(d);render();toast(r.valid?'已保存 RingsDB 牌组：'+d.name:'已保存 '+d.name+'，但构筑未通过：'+r.errors.slice(0,2).join('；'));}catch(e){toast(e.name==='AbortError'?'RingsDB 请求超时（15秒）；国内网络通常无法访问':'导入失败：'+e.message);}finally{clearTimeout(timer);}return true;}
- if(a==='deckEdit'){loadDeck(id);tab='players';render();return true;}
+ if(a==='deckNew'){startBuild();tab='decks';render();return true;}
+ if(a==='deckBack'){building=false;render();return true;}
+ if(a==='deckEdit'){startBuild(id);tab='decks';render();return true;}
  if(a==='deckExport'){const d=deckById(id);if(d)download(P.exportDeck(d),(d.name||'deck')+'.json');return true;}
  if(a==='deckDelete'){const d=deckById(id);if(!d)return true;if(!confirm('删除牌组「'+d.name+'」？此操作不可撤销。'))return true;removeDeck(id);render();toast('已删除。');return true;}
  if(a==='deckUse'){const d=deckById(id);if(!d)return true;setupDraft.decks[0]=id;tab='table';render();toast('已把「'+d.name+'」设为玩家1牌组；点开始远征时确认。');return true;}
  return false;
 }
 function deckGrid(picks,player){return `<div class="deck-grid">${decks().map(d=>deckCard(d,`<button class="${picks[player]===d.id?'primary':''}" data-action="chooserPick" data-deck="${esc(d.id)}" data-player="${player}">${picks[player]===d.id?'已选':'选用'}</button>`,picks[player]===d.id?'is-selected':'')).join('')}</div>`;}
-return {html,bind,handle,configs,registered,openingPanel,handPanel,getSnapshot:()=>snapshot,decksPage,bindDecks,handleDecks,deckGrid,deckById,deckName,saveDeck,loadDeck,removeDeck,deckInfo};
+return {builder,isBuilding,startBuild,bind,handle,configs,registered,openingPanel,handPanel,getSnapshot:()=>snapshot,decksPage,bindDecks,handleDecks,deckGrid,deckById,deckName,saveDeck,loadDeck,removeDeck,deckInfo};
 })();
 
 </script><script>
@@ -8404,7 +8429,7 @@ const WindowUI=(()=>{
 </script><script>
 /* Tabletop view: UI drafts never pay, exhaust, reveal, or bypass phase validation. */
 /* 界面版本徽标唯一来源：须与 CHANGELOG.md 最新条目标题一致（planning-dom-tests 有校验）。 */
-const APP_VERSION='v0.15.24';
+const APP_VERSION='v0.15.25';
 const DesktopUI=(()=>{
  const E=ScenarioEngine,R=E.planning,Q=E.questing,C=E.combat,esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  let combatDraft={key:'',target:null,ids:[]},draftState=null;
@@ -8539,7 +8564,11 @@ const PRODUCT_TABS={"source":"https://hallofbeorn.com/LotR/Products?View=Chronol
 </script><script>
 /* 卡牌悬停放大预览（参考诡镇奇谈网页版）。
  * 原则：只读 DOM 截图，不写游戏状态；不移动原卡布局；放大层不拦截指针事件。
- * 只对「卡牌」生效：<button class="card-face"> 内的 <img>，或 image-ui.js 的 .card-art 内的 <img>。
+ * 三种触发源：
+ *   1. <button class="card-face"> 内的 <img>：桌面上的英雄／盟友／附属／手牌／交战敌人。
+ *   2. image-ui.js 的 .card-art 内的 <img>：当前探险卡、卡图库缩略图、展开后的详情卡图。
+ *   3. 密集列表的卡名行 [data-hover-src]：卡牌库与牌组构建器。这些行为了不一次加载上百张图
+ *      并没有 <img>，悬停时按 data-hover-src 现取一张大图（形状由 data-hover-shape 给出）。
  * 开局页的剧本封面（.ng-card-art）不是卡牌，悬停不放大。
  */
 const CardHoverPreview = (() => {
@@ -8554,7 +8583,15 @@ const CardHoverPreview = (() => {
   let axis = 'x';             // 本次显示用横向还是纵向对齐
 
   const isFace = el => el.matches('.card-face img, .card-art img');
+  const isProbe = el => !!(el.hasAttribute && el.hasAttribute('data-hover-src'));
   const live = el => el && el.isConnected && !el.closest('dialog[open]');
+
+  function srcOf(t) { return isProbe(t) ? t.getAttribute('data-hover-src') : (t.currentSrc || t.src); }
+  // 探针没有真实图片可量，形状由标记给出：竖版卡 424×600，横版探险卡 600×424
+  function shapeOf(t) {
+    const s = t.getAttribute && t.getAttribute('data-hover-shape');
+    return s === 'wide' ? { w: 600, h: 424 } : s === 'tall' ? { w: 424, h: 600 } : null;
+  }
 
   function ensure() {
     if (layer) return layer;
@@ -8578,11 +8615,14 @@ const CardHoverPreview = (() => {
     const vw = window.innerWidth, vh = window.innerHeight;
     const maxW = Math.min(vw * MAX_W, 560);
     const maxH = vh * MAX_H;
-    let w = cur.natural.w || 424, h = cur.natural.h || 600;
-    // 竖版一律按 424 宽计算版心（中文卡图像素偏小，仍按标准卡面尺寸放大）
-    if (cur.ratio) { h = w * cur.ratio.h / cur.ratio.w; }
-    else if (cur.natural.w > cur.natural.h) { w = 600; h = Math.round(600 * cur.natural.h / cur.natural.w); }
-    else { w = 424; h = Math.round(424 * (cur.natural.h || 600) / (cur.natural.w || 424)); }
+    const nat = cur.natural || { w: 0, h: 0 };
+    // 竖版按 424 宽、横版按 600 宽还原版心，再整体缩到视口内
+    const wide = cur.ratio ? cur.ratio.w > cur.ratio.h : nat.w > nat.h;
+    const w = wide ? 600 : 424;
+    let h;
+    if (cur.ratio) h = Math.round(w * cur.ratio.h / cur.ratio.w);
+    else if (nat.w && nat.h) h = Math.round(w * nat.h / nat.w);
+    else h = wide ? 424 : 600;
     const scale = Math.min(maxW / w, maxH / h);
     return { w: Math.round(w * scale), h: Math.round(h * scale) };
   }
@@ -8618,16 +8658,30 @@ const CardHoverPreview = (() => {
     box.style.transformOrigin = ox + ' ' + (axis === 'y' ? '50%' : 'calc(50% - ' + (r.top + r.height / 2 - (top + size.h / 2)) + 'px)');
   }
 
-  function show(face) {
-    if (!live(face)) return;
-    const src = face.currentSrc || face.src;
+  function show(target) {
+    if (!live(target)) return;
+    const src = srcOf(target);
     if (!src) return;
-    if (cur && cur.src === src) { cur.rect = face.getBoundingClientRect(); place(); return; }
+    const rect = target.getBoundingClientRect();
+    if (cur && cur.src === src) { cur.rect = rect; place(); return; }
     ensure();
-    cur = { src, alt: face.alt || '', natural: { w: face.naturalWidth, h: face.naturalHeight }, ratio: null, rect: face.getBoundingClientRect() };
-    // 横版探险卡（600×424）按容器形状还原，避免被竖版比例拉变形
-    const art = face.closest('.quest-card-art, .quest-display');
+    const probe = isProbe(target);
+    cur = {
+      src,
+      alt: target.alt || '',
+      natural: probe ? { w: 0, h: 0 } : { w: target.naturalWidth, h: target.naturalHeight },
+      ratio: probe ? shapeOf(target) : null,
+      rect
+    };
+    // 横版探险卡按容器形状还原，避免被竖版比例拉变形
+    const art = target.closest && target.closest('.quest-card-art, .quest-display');
     if (art && cur.natural.w > cur.natural.h) cur.ratio = { w: cur.natural.w, h: cur.natural.h };
+    // 探针第一次载入这张图，只有 onload 后才能拿到真实比例
+    img.onload = probe ? () => {
+      if (!cur || cur.src !== src) return;
+      const nat = { w: img.naturalWidth, h: img.naturalHeight };
+      if (nat.w && nat.h) { cur.natural = nat; if (!cur.ratio) place(); }
+    } : null;
     img.src = src;
     img.alt = cur.alt;
     place();
@@ -8643,10 +8697,10 @@ const CardHoverPreview = (() => {
     document.documentElement.classList.remove('has-card-preview');
   }
 
-  function schedule(face) {
+  function schedule(target) {
     clearTimeout(timer);
-    if (cur) { show(face); return; }
-    timer = setTimeout(() => show(face), SHOW_DELAY);
+    if (cur) { show(target); return; }
+    timer = setTimeout(() => show(target), SHOW_DELAY);
   }
 
   function onOver(e) {
@@ -8654,6 +8708,9 @@ const CardHoverPreview = (() => {
     const face = t?.closest && t.closest('.card-face, .card-art');
     const pic = face && face.querySelector('img');
     if (face && pic && isFace(pic) && !face.closest('dialog[open]')) { schedule(pic); return; }
+    // 卡名行：已经展开的行不再重复弹图（正文里本来就有卡图）
+    const probe = t?.closest && t.closest('[data-hover-src]');
+    if (probe && !probe.closest('dialog[open]') && !probe.closest('details[open]')) { schedule(probe); return; }
     if (cur) scheduleHide();
   }
 
@@ -8664,7 +8721,7 @@ const CardHoverPreview = (() => {
 
   function reposition() {
     if (!cur) return;
-    const still = document.querySelector('.card-face:hover img, .card-art:hover img');
+    const still = document.querySelector('.card-face:hover img, .card-art:hover img, [data-hover-src]:hover');
     if (still) { cur.rect = still.getBoundingClientRect(); place(); }
     else hide();
   }
@@ -8674,7 +8731,7 @@ const CardHoverPreview = (() => {
     bind.done = true;
     document.addEventListener('pointerover', onOver, { passive: true });
     document.addEventListener('pointerout', e => {
-      const from = e.target?.closest?.('.card-face, .card-art');
+      const from = e.target?.closest?.('.card-face, .card-art, [data-hover-src]');
       if (from && !from.contains(e.relatedTarget)) scheduleHide();
     }, { passive: true });
     document.addEventListener('pointerdown', hide, { passive: true, capture: true });
@@ -8880,9 +8937,13 @@ function catalogGroups(side){
 }
 function catalog(){
  const st=catalogStats(),kinds=m=>Object.entries(m).map(([k,v])=>enc(k)+' '+v).join(' / ');
- return `<div class="intro"><div><div class="eyebrow">CARD INDEX</div><h1>卡牌库</h1><p class="muted">玩家卡 ${st.player} 种（${kinds(st.playerKinds)}） · 战役卡 ${st.encounter} 种（${kinds(st.encounterKinds)}） · 合计 ${st.total} 种。中文为工作译名与机制摘要。</p></div></div><div class="cat-controls"><div class="cat-sides" role="group" aria-label="卡牌分类">${CAT_SIDES.map(s=>`<button type="button" data-action="catSide" data-value="${s.id}" aria-pressed="${s.id===catalogSide}" title="${enc(s.note)}">${s.label}</button>`).join('')}</div><input id="search" placeholder="搜索名称、规则或特性…" value="${enc(catalogQuery)}" aria-label="搜索卡牌"><div class="cat-views" role="group" aria-label="显示方式"><button type="button" data-action="catView" data-value="list" aria-pressed="${catalogView==='list'}">名称</button><button type="button" data-action="catView" data-value="art" aria-pressed="${catalogView==='art'}">卡图</button></div></div><div class="small muted" id="resultCount"></div><div class="cat-index" id="catalogResults"></div>`;
+ return `<div class="intro"><div><div class="eyebrow">CARD INDEX</div><h1>卡牌库</h1><p class="muted">玩家卡 ${st.player} 种（${kinds(st.playerKinds)}） · 战役卡 ${st.encounter} 种（${kinds(st.encounterKinds)}） · 合计 ${st.total} 种。鼠标停在卡名上直接显示卡图，点开看完整文本与机制；配牌请到「我的卡组 → 新建牌组」。中文为工作译名与机制摘要。</p></div></div><div class="cat-controls"><div class="cat-sides" role="group" aria-label="卡牌分类">${CAT_SIDES.map(s=>`<button type="button" data-action="catSide" data-value="${s.id}" aria-pressed="${s.id===catalogSide}" title="${enc(s.note)}">${s.label}</button>`).join('')}</div><input id="search" placeholder="搜索名称、规则或特性…" value="${enc(catalogQuery)}" aria-label="搜索卡牌"><div class="cat-views" role="group" aria-label="显示方式"><button type="button" data-action="catView" data-value="list" aria-pressed="${catalogView==='list'}">名称</button><button type="button" data-action="catView" data-value="art" aria-pressed="${catalogView==='art'}">卡图</button></div></div><div class="small muted" id="resultCount"></div><div class="cat-index" id="catalogResults"></div>`;
 }
-function catalogItem(e){return `<details class="cat-item" data-code="${enc(e.code)}" data-face="${e.face}"><summary><span class="cat-name">${enc(e.name)}</span><span class="cat-meta">${enc(e.meta)}</span></summary><div class="cat-body"></div></details>`;}
+function catalogHover(e){
+ const key=e.face==='player'?e.code:'enc-'+e.code,rec=ImageLibrary.by[key],url=rec?ImageLibrary.safeUrl(rec.imageUrl):null;
+ return url?{src:url,shape:e.face==='quest'?'wide':'tall'}:null;
+}
+function catalogItem(e){const h=catalogHover(e);return `<details class="cat-item" data-code="${enc(e.code)}" data-face="${e.face}"><summary${h?` data-hover-src="${enc(h.src)}" data-hover-shape="${h.shape}"`:''}><span class="cat-name">${enc(e.name)}</span><span class="cat-meta">${enc(e.meta)}</span></summary><div class="cat-body"></div></details>`;}
 function catalogArt(e){const a=e.face==='player'?ImageLibrary.art(e.code):e.face==='quest'?ImageLibrary.questFaces(e.code):ImageLibrary.encounterArt(e.code);return `<figure class="cat-figure"><figcaption><b>${enc(e.name)}</b><small>${enc(e.meta)}</small></figcaption>${a}</figure>`;}
 function catalogFacts(rows){return `<dl class="cat-facts">${rows.filter(r=>r[1]!==null&&r[1]!==undefined&&r[1]!=='').map(([k,v])=>`<dt>${enc(k)}</dt><dd>${enc(v)}</dd>`).join('')}</dl>`;}
 function catalogDetail(face,code){
@@ -8966,11 +9027,11 @@ async function handleChooser(b){const a=b.dataset.action,c=deckChooser;if(!c)ret
  if(a==='chooserTab'){c.tab=b.dataset.value;render();return;}
  if(a==='chooserPlayer'){c.player=Number(b.dataset.player);render();return;}
  if(a==='chooserPick'){const p=Number(b.dataset.player),id=b.dataset.deck;c.picks[p]=id;const next=c.picks.findIndex(x=>!x);c.player=next>=0?next:Math.min(p,c.players-1);render();return;}
- if(a==='chooserBuilder'){deckChooser=null;tab='players';render();toast('在「英雄与玩家牌」配好牌并保存后，回到首页重新开始远征就能选用。');return;}
+ if(a==='chooserBuilder'){deckChooser=null;PlayerUI.startBuild();tab='decks';render();toast('在「我的卡组 → 编辑牌组」配好牌并保存后，回到首页重新开始远征就能选用。');return;}
  if(a==='chooserImportUrl'){const input=document.querySelector('#chooser-url'),raw=String(input&&input.value||'').trim(),m=raw.match(/(?:decklist|deck)\/(?:view\/)?(\d+)/i)||raw.match(/^(\d+)$/);if(!m){toast('无法识别牌组编号；示例 https://ringsdb.com/decklist/view/12345');return;}const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),15000);try{const res=await fetch('https://ringsdb.com/api/public/decklist/'+m[1],{signal:ctrl.signal,headers:{Accept:'application/json'}});if(!res.ok)throw Error('RingsDB 返回 HTTP '+res.status);const saved=PlayerUI.saveDeck(PlayerCards.fromRingsdb(await res.json()));c.picks[c.player]=saved.id;const next=c.picks.findIndex(x=>!x);if(next>=0)c.player=next;render();toast('已导入并选给玩家'+(c.player+1)+'：'+saved.name);}catch(e){toast(e.name==='AbortError'?'RingsDB 请求超时（15秒）；国内网络通常无法访问':'导入失败：'+e.message);}finally{clearTimeout(timer);}return;}
  if(a==='chooserConfirm'){for(let i=0;i<c.players;i++)setupDraft.decks[i]=c.picks[i];const id=c.scenario;deckChooser=null;beginScenario(id);return;}
 }
-function render(){captureSetup();document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));const navBtn=$('#'+({table:'tableTab',decks:'decksTab',catalog:'catalogTab',players:'playersTab',images:'imagesTab',help:'helpTab'}[tab]));if(navBtn)navBtn.classList.add('active');$('#app').innerHTML=tab==='table'?(deckChooser?chooserPage():table()):tab==='decks'?PlayerUI.decksPage():tab==='catalog'?catalog():tab==='players'?PlayerUI.html():tab==='images'?ImageLibrary.html():help();$('#undo').disabled=!history.length;$('#export').disabled=!state;if(tab==='table'&&state&&$('#hand-player'))$('#hand-player').onchange=ev=>{handView=Number(ev.target.value);render();};if(tab==='table'&&state&&$('#planning-actor'))$('#planning-actor').onchange=ev=>{handView=Number(ev.target.value);render();};if(tab==='table'&&state)QuestUI.bind();if(tab==='table'&&!state)bindSetup();if(tab==='players')PlayerUI.bind();if(tab==='decks')PlayerUI.bindDecks();if(tab==='images')ImageLibrary.bind();else ImageLibrary.bindErrors(document.querySelector('#app'));if(tab==='catalog'){filterCatalog();$('#search').oninput=filterCatalog;}trackView();}
+function render(){captureSetup();document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));const navBtn=$('#'+({table:'tableTab',decks:'decksTab',catalog:'catalogTab',images:'imagesTab',help:'helpTab'}[tab]));if(navBtn)navBtn.classList.add('active');$('#app').innerHTML=tab==='table'?(deckChooser?chooserPage():table()):tab==='decks'?(PlayerUI.isBuilding()?PlayerUI.builder():PlayerUI.decksPage()):tab==='catalog'?catalog():tab==='images'?ImageLibrary.html():help();$('#undo').disabled=!history.length;$('#export').disabled=!state;if(tab==='table'&&state&&$('#hand-player'))$('#hand-player').onchange=ev=>{handView=Number(ev.target.value);render();};if(tab==='table'&&state&&$('#planning-actor'))$('#planning-actor').onchange=ev=>{handView=Number(ev.target.value);render();};if(tab==='table'&&state)QuestUI.bind();if(tab==='table'&&!state)bindSetup();if(tab==='decks'){PlayerUI.bindDecks();PlayerUI.bind();}if(tab==='images')ImageLibrary.bind();else ImageLibrary.bindErrors(document.querySelector('#app'));if(tab==='catalog'){filterCatalog();$('#search').oninput=filterCatalog;}trackView();}
 async function choose(title,body,read){return new Promise(resolve=>{let d=document.createElement('dialog');d.innerHTML=`<h2>${enc(title)}</h2><div>${body}</div><div class="actions"><button class="primary" id="ok">确认</button><button id="cancel">取消</button></div>`;document.body.append(d);d.showModal();d.querySelector('#ok').onclick=()=>{let v=read(d);d.close();d.remove();resolve(v);};d.querySelector('#cancel').onclick=()=>{d.close();d.remove();resolve(null);};d.oncancel=()=>{d.remove();resolve(null);};});}
 function playerOptions(){return state.players.filter(p=>!p.eliminated).map(p=>`<option value="${p.id}">${enc(p.name)}</option>`).join('');}
 $('#app').onclick=async ev=>{const b=ev.target.closest('[data-action]');if(!b||b.disabled)return;const a=b.dataset.action,uid=Number(b.dataset.uid),id=Number(b.dataset.id),pid=Number(b.dataset.player);
@@ -9011,7 +9072,7 @@ $('#app').onclick=async ev=>{const b=ev.target.closest('[data-action]');if(!b||b
  if(handlers[a])mutate(handlers[a]);
 };
 $('#imagesTab').onclick=()=>{tab='images';render();};
-$('#playersTab').onclick=()=>{tab='players';render();};const decksTab=$('#decksTab');if(decksTab)decksTab.onclick=()=>{tab='decks';render();};
+const decksTab=$('#decksTab');if(decksTab)decksTab.onclick=()=>{tab='decks';render();};
 $('#tableTab').onclick=()=>goHome();$('#catalogTab').onclick=()=>{tab='catalog';render();};$('#helpTab').onclick=()=>{tab='help';render();};
 /* 页签上的卡池数量原为 shell.html 里写死的 55，卡池一扩就骗人，这里按数据回填。 */
 const catalogBadge=document.querySelector('#catalogTab span');if(catalogBadge)catalogBadge.textContent=String(catalogStats().total);
@@ -9029,7 +9090,7 @@ function syncHistoryButtons(depth){const back=$('#navBack'),fwd=$('#navFwd');if(
 function trackView(){if(!HAS_VIEW_HISTORY||restoringView)return;const key=viewSignature();if(key===viewKey)return;viewKey=key;
  const depth=((window.history.state&&window.history.state.depth)||0)+1;if(depth>viewMax)viewMax=depth;
  window.history.pushState({...viewSnapshot(),depth},'');syncHistoryButtons(depth);}
-function restoreView(data){tab=(data&&data.tab)||'table';newGame=data&&data.ng?JSON.parse(data.ng):null;deckChooser=data&&data.chooser?JSON.parse(data.chooser):null;viewKey=viewSignature();render();}
+function restoreView(data){tab=(data&&data.tab)||'table';if(tab==='players')tab='decks';newGame=data&&data.ng?JSON.parse(data.ng):null;deckChooser=data&&data.chooser?JSON.parse(data.chooser):null;viewKey=viewSignature();render();}
 function goHome(){tab='table';newGame=null;deckChooser=null;render();}
 if(HAS_VIEW_HISTORY){
  window.history.replaceState({...viewSnapshot(),depth:0},'');viewKey=viewSignature();

@@ -1,0 +1,90 @@
+[
+  {
+    "label": "顶部导航不再有英雄与玩家牌",
+    "ok": true
+  },
+  {
+    "label": "导航项为五项",
+    "ok": true
+  },
+  {
+    "label": "卡组页提供新建牌组",
+    "ok": true
+  },
+  {
+    "label": "新建牌组进入构建器",
+    "ok": true
+  },
+  {
+    "label": "构建器列出全部玩家卡",
+    "ok": true
+  },
+  {
+    "label": "构建器按球色分组",
+    "ok": true
+  },
+  {
+    "label": "每行给出类型与编号",
+    "ok": true
+  },
+  {
+    "label": "悬停卡名弹出竖版大图",
+    "ok": true
+  },
+  {
+    "label": "放大图在视口内",
+    "ok": true
+  },
+  {
+    "label": "移开后收起",
+    "ok": true
+  },
+  {
+    "label": "搜索收窄列表",
+    "ok": true
+  },
+  {
+    "label": "计数与行数一致",
+    "ok": true
+  },
+  {
+    "label": "卡片仍可悬停看图",
+    "ok": true
+  },
+  {
+    "label": "加牌后牌库张数增加",
+    "ok": true
+  },
+  {
+    "label": "选英雄后显示 1/3",
+    "ok": true
+  },
+  {
+    "label": "已在牌组中的行有标记",
+    "ok": true
+  },
+  {
+    "label": "展开后注入卡图与文本",
+    "ok": true
+  },
+  {
+    "label": "不合法牌组保存被拒绝",
+    "ok": true
+  },
+  {
+    "label": "返回后回到卡组列表",
+    "ok": true
+  },
+  {
+    "label": "全程无横向溢出",
+    "ok": true
+  },
+  {
+    "label": "无破图",
+    "ok": true
+  },
+  {
+    "label": "全程无脚本错误",
+    "ok": true
+  }
+]

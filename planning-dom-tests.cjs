@@ -181,6 +181,12 @@ e.run(`$('#search').value='';filterCatalog();`);
  assert(body().includes('cat-figure'),'卡图视图应渲染卡图网格');
  assert(body().includes('assets/cards-zh-core/'),'玩家卡应使用本地中文卡图');
  e.run(`catalogView='list';render();`);
+ /* 每行带悬停卡图：列表本身不预载图片，悬停时才按 data-hover-src 取一张大图 */
+ e.run(`catalogSide='both';render();`);
+ assert(body().includes('data-hover-src="assets/cards-zh-core/01001.jpg"'),'玩家卡列表行应带悬停卡图');
+ assert(body().includes('data-hover-shape="tall"'),'玩家卡应标为竖版悬停卡图');
+ e.run(`catalogSide='encounter';render();`);
+ assert(body().includes('data-hover-shape="wide"'),'探险卡应标为横版悬停卡图');
  /* 详情按需注入 */
  const detail=e.run("catalogDetail('player','01001')");
  assert(detail.includes('领导')&&detail.includes('01001'),'玩家卡详情应含球色与编号');
@@ -189,4 +195,35 @@ e.run(`$('#search').value='';filterCatalog();`);
  assert(e.run("catalogDetail('quest','119')").includes('B面'),'探险卡详情应含 B 面');
  e.run(`$('#search').value='不存在的卡名xyz';filterCatalog();`);
  assert(body().includes('没有匹配的卡牌'),'无结果时应给出空状态');
+});
+
+test('deck builder replaces the old player-cards tab and uses the card library list',async()=>{
+ const e=environment();
+ /* 顶部只剩「我的卡组」，玩家卡不再单独占一个页签 */
+ e.run(`tab='decks';render();`);
+ const list=e.base.get('app').innerHTML;
+ assert(!list.includes('英雄与玩家牌'),'卡组页不应再指向已合并的玩家牌页签');
+ assert(list.includes('data-action="deckNew"'),'我的卡组应提供新建牌组入口');
+ await e.click({action:'deckNew'});
+ const html=e.base.get('app').innerHTML;
+ assert(html.includes('编辑牌组'),'新建牌组应进入构建器');
+ /* 列表是 filterCards 后写进 #pc-results 的，不在 #app 的一次性字符串里 */
+ const rows=()=>e.run("$('#pc-results').innerHTML");
+ assert.equal((rows().match(/class="build-row/g)||[]).length,e.run('PlayerUI.getSnapshot().cards.length'),'构建器应列出全部玩家卡');
+ assert(rows().includes('cat-group'),'构建器应按球色分组');
+ assert(rows().includes('build-count'),'构建器每行应显示当前张数');
+ assert(rows().includes('data-hover-src="assets/cards-zh-core/'),'构建器行应支持悬停看卡图');
+ /* 选英雄与加减牌都写进当前草稿，并由界面回显 */
+ const hero=e.run("PlayerUI.getSnapshot().cards.find(c=>c.type==='hero').code");
+ await e.click({action:'pc',pc:'hero',code:hero});
+ assert(e.base.get('app').innerHTML.includes('1/3'),'选英雄后应显示 1/3 英雄');
+ const ally=e.run("PlayerUI.getSnapshot().cards.find(c=>c.type==='ally').code");
+ await e.click({action:'pc',pc:'plus',code:ally});
+ await e.click({action:'pc',pc:'plus',code:ally});
+ assert(rows().includes('build-count">2'),'加两张后应回显 2');
+ await e.click({action:'pc',pc:'minus',code:ally});
+ assert(rows().includes('build-count">1'),'减一张后应回显 1');
+ /* 返回卡组列表 */
+ await e.click({action:'pc',pc:'deckBack'});
+ assert(e.base.get('app').innerHTML.includes('data-action="deckNew"'),'返回后应回到卡组列表');
 });

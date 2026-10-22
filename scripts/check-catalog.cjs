@@ -100,7 +100,25 @@ const OUT=path.join(ROOT,'docs','catalog-tabs');
  check('遭遇卡详情含数值与规则',await encRow.evaluate(el=>{const t=el.querySelector('.cat-body').textContent;return t.includes('遭遇组')&&(t.includes('敌人')||t.includes('地点')||t.includes('诡计')||t.includes('目标'));}));
  await shot('detail-encounter');
 
- /* 7. 排版与图片健康 */
+ /* 7. 悬停卡名直接看图（不点击、不跳转第三方站） */
+ const hoverBox=()=>page.evaluate(()=>{const l=document.querySelector('.card-hover-layer'),b=document.querySelector('.card-hover-box'),i=b&&b.querySelector('img');if(!l||!l.classList.contains('on'))return null;const r=b.getBoundingClientRect();return{w:Math.round(r.width),h:Math.round(r.height),x:Math.round(r.x),y:Math.round(r.y),right:Math.round(r.right),bottom:Math.round(r.bottom),vw:innerWidth,vh:innerHeight,src:i&&i.getAttribute('src'),pe:getComputedStyle(l).pointerEvents};});
+ const hoverRow=async(sel)=>{await page.locator(sel).first().hover();await page.waitForTimeout(450);return hoverBox();};
+ const away=async()=>{await page.mouse.move(4,600);await page.waitForTimeout(320);return hoverBox();};
+ /* 展开的行正文里本来就有卡图，先把上一段点开的行收起，才能测悬停 */
+ await page.evaluate(()=>document.querySelectorAll('#catalogResults .cat-item[open]').forEach(d=>{d.open=false;}));
+ await page.waitForTimeout(250);
+ const hv=await hoverRow('#catalogResults .cat-item[data-face="player"] summary');
+ check('悬停玩家卡名弹出竖版大图',!!hv&&hv.h>hv.w&&hv.w>=400,hv);
+ check('放大图用本地中文卡图',!!hv&&/assets\/cards-(zh-core|en)\//.test(hv.src||''),hv);
+ check('放大图不越界且不拦指针',!!hv&&hv.x>=0&&hv.y>=0&&hv.right<=hv.vw&&hv.bottom<=hv.vh&&hv.pe==='none',hv);
+ await shot('hover-player');
+ check('移开后收起放大图',(await away())===null);
+ const hq=await hoverRow('#catalogResults .cat-item[data-face="quest"] summary');
+ check('悬停探险卡按横版放大',!!hq&&hq.w>hq.h,hq);
+ await shot('hover-quest');
+ check('悬停后离开仍收起',(await away())===null);
+
+ /* 8. 排版与图片健康 */
  check('无横向溢出',await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth+1));
  check('无破图',await page.evaluate(()=>[...document.querySelectorAll('#catalogResults img')].filter(i=>i.complete&&i.naturalWidth===0).length===0));
  check('键盘可达（summary 可聚焦）',await page.evaluate(()=>{const s=document.querySelector('#catalogResults .cat-item summary');s.focus();return document.activeElement===s;}));
