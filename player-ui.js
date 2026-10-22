@@ -1,6 +1,6 @@
 const PlayerUI=(()=>{
 const P=PlayerCards;
-let snapshot=P.verify(RINGSDB_SNAPSHOT),saved=[],draft=null,importReport=null,building=false,filter={text:'',type:'',sphere:''};
+let snapshot=P.verify(RINGSDB_SNAPSHOT),saved=[],draft=null,importReport=null,building=false,builderOrigin='',filter={text:'',type:'',sphere:''};
 try{let cached=JSON.parse(localStorage.getItem('lotr-ringsdb-core-v1')||'null');if(cached&&Date.parse(cached.fetchedAt)>Date.parse(snapshot.fetchedAt))snapshot=P.verify(cached);}catch{}
 try{let v=JSON.parse(localStorage.getItem('lotr-saved-decks-v1')||'[]');if(Array.isArray(v))saved=v.filter(d=>typeof d.id==='string'&&Array.isArray(d.heroes)&&d.slots&&typeof d.name==='string');}catch{}
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -12,10 +12,58 @@ function button(t,action,attrs='',cls=''){return `<button class="${cls}" data-ac
 function deckOptions(selected){return decks().map(d=>`<option value="${esc(d.id)}" ${selected===d.id?'selected':''}>${esc(d.name)}</option>`).join('');}
 function configs(n,ids){const selected=[];for(let i=0;i<n;i++){const key=(ids&&ids[i])||document.querySelector('#pc-deck-'+i)?.value||presets()[i].id;const d=decks().find(d=>d.id===key);if(!d)throw Error('找不到所选玩家牌组。');selected.push(d);}const result=P.validateFellowship(selected,snapshot);if(!result.valid)throw Error(result.errors.join('\n'));return selected.map(d=>P.config(d,snapshot));}
 function oneCard(c){const selected=draft.heroes.includes(c.code),count=draft.slots[c.code]||0;return `<article class="card player-card ${c.type} sphere-${c.sphere}"><div class="number"><span>${names[c.type]} · ${esc(c.sphereName)}</span><span>#${c.code}</span></div>${ImageLibrary.art(c.code)}<h3>${c.isUnique?'◆ ':''}${esc(c.nameZh)}</h3><div class="en">${esc(c.name)}</div><div class="stats">${c.type==='hero'?`初始威胁 <b>${c.startingThreat}</b>`:`费用 <b>${esc(c.cost)}</b>`}${c.health!==null?`<br>意志 ${c.willpower??'—'} · 攻 ${c.attack??'—'} · 防 ${c.defense??'—'} · 血 ${c.health}`:''}</div><div class="small muted">${esc(c.traits)}</div><div class="body rules-text">${esc(c.rulesText)}</div><div class="small">每副牌上限 ${c.deckLimit} · 原版盒内 ${c.quantity}${c.hasErrata?' · <b class="warning-text">有勘误</b>':''}</div><p class="small muted">资料已接入 · 能力待实现</p><footer>${c.type==='hero'?button(selected?'移出英雄':'选择英雄','hero',`data-code="${c.code}"`,selected?'primary':''):button('−','minus',`data-code="${c.code}"`)+`<span class="pc-count">${count}</span>`+button('+','plus',`data-code="${c.code}"`)}<a href="${c.sourceUrl}" target="_blank" rel="noreferrer" class="small">RingsDB原卡 ↗</a></footer></article>`;}
-function summary(){const r=P.validateDeck(draft,snapshot),by=P.index(snapshot);return `<aside class="panel deck-editor"><div class="eyebrow">DECK BUILDER · CORE</div><h2>当前牌组</h2><p><input id="pc-name" aria-label="牌组名称" value="${esc(draft.name)}" maxlength="100"></p><label class="small">构筑模式 <select id="pc-mode"><option value="starter" ${draft.mode==='starter'?'selected':''}>原版30张教学预设</option><option value="standard" ${draft.mode==='standard'?'selected':''}>标准构筑（至少50张）</option></select></label>${importReport?`<div class="notice import-report"><b>导入报告</b>${importReport.map(x=>`<p class="small">${esc(x.line?('第'+x.line+'行 '):'')}${x.text?('「'+esc(x.text)+'」'):''}${esc(x.reason||'')}</p>`).join('')}</div>`:''}<div class="deck-counts"><div><strong>${r.heroes.length}/3</strong>英雄</div><div><strong>${r.startingThreat}</strong>初始威胁</div><div><strong>${r.total}</strong>抽牌牌库</div></div><div class="deck-heroes">${draft.heroes.map(code=>`<p>${esc(by[code]?.nameZh||code)} <span class="muted small">#${esc(code)}</span> ${button('移除','hero',`data-code="${esc(code)}"`)}</p>`).join('')||'<p class="muted small">尚未选择英雄</p>'}</div><div class="notice ${r.valid?'deck-valid':''}">${r.valid?'基本构筑校验通过':r.errors.map(esc).join('<br>')}</div><details><summary class="small">构筑提醒 / 自动化状态</summary>${r.warnings.map(w=>`<p class="small muted">${esc(w)}</p>`).join('')}</details><div class="deck-list">${Object.entries(draft.slots).filter(([,n])=>n>0).sort().map(([code,n])=>`<div><span>${esc(by[code]?.nameZh||code)}</span><span>${button('−','minus',`data-code="${esc(code)}"`)} ${n} ${button('+','plus',`data-code="${esc(code)}"`)}</span></div>`).join('')}</div><div class="actions">${button('保存牌组','save','','primary')}${button('导出牌组JSON','export')}${button('清空重建','clear')}</div><p class="small muted">保存后，可在剧本开局处选用。保存的牌组不代表卡牌能力已自动实现。</p></aside>`;}
+function summary(){const r=P.validateDeck(draft,snapshot),by=P.index(snapshot);return `<aside class="panel deck-editor"><div class="eyebrow">DECK BUILDER · CORE</div><h2>当前牌组</h2><p><input id="pc-name" aria-label="牌组名称" value="${esc(draft.name)}" maxlength="100"></p><label class="small">构筑模式 <select id="pc-mode"><option value="starter" ${draft.mode==='starter'?'selected':''}>原版30张教学预设</option><option value="standard" ${draft.mode==='standard'?'selected':''}>标准构筑（至少50张）</option></select></label>${importReport?`<div class="notice import-report"><b>导入报告</b>${importReport.map(x=>`<p class="small">${esc(x.line?('第'+x.line+'行 '):'')}${x.text?('「'+esc(x.text)+'」'):''}${esc(x.reason||'')}</p>`).join('')}</div>`:''}<div class="deck-counts"><div><strong>${r.heroes.length}/3</strong>英雄</div><div><strong>${r.startingThreat}</strong>初始威胁</div><div><strong>${r.total}</strong>抽牌牌库</div></div><div class="deck-heroes">${draft.heroes.map(code=>`<p>${esc(by[code]?.nameZh||code)} <span class="muted small">#${esc(code)}</span> ${button('移除','hero',`data-code="${esc(code)}"`)}</p>`).join('')||'<p class="muted small">尚未选择英雄</p>'}</div><div class="notice ${r.valid?'deck-valid':''}">${r.valid?'基本构筑校验通过':r.errors.map(esc).join('<br>')}</div><details><summary class="small">构筑提醒 / 自动化状态</summary>${r.warnings.map(w=>`<p class="small muted">${esc(w)}</p>`).join('')}</details><div class="deck-list">${Object.entries(draft.slots).filter(([,n])=>n>0).sort().map(([code,n])=>`<div><span>${esc(by[code]?.nameZh||code)}</span><span>${button('−','minus',`data-code="${esc(code)}"`)} ${n} ${button('+','plus',`data-code="${esc(code)}"`)}</span></div>`).join('')}</div><div class="actions">${button('保存牌组','save','','primary')}${button('导出牌组JSON','export')}${button('复制分享链接','share')}${button('清空重建','clear')}</div><p class="small muted">保存后，可在剧本开局处选用。复制分享链接会把这副牌的当前内容编成一条链接（需要 http/https 打开；本机双击打开时没有可分享的地址）。</p></aside>`;}
 function isBuilding(){return building;}
-function startBuild(id){if(id)loadDeck(id);else{draft={id:'new',name:'自定义基础版牌组',mode:'standard',heroes:[],slots:{}};importReport=null;}building=true;}
-function builder(){startDraft();return `<div class="intro"><div><div class="eyebrow">DECK BUILDER · CORE</div><h1>编辑牌组</h1><p class="muted">点卡名展开详情与加减牌；鼠标停在卡名上直接显示卡图。右侧实时校验，保存后可在剧本开局时选用。快照 ${esc(snapshot.fetchedAt.slice(0,10))} · 离线可查。</p></div><div class="actions">${button('← 返回卡组列表','deckBack')}${button('从RingsDB更新资料','refresh')}</div></div><div class="notice">卡牌资料来自 RingsDB 基础版快照，仅提供资料与构筑校验，不提供自动结算能力；牌组里的牌仍需在桌面上手动结算。</div><div class="toolbar"><label>载入预设／已存牌组 <select id="pc-load">${deckOptions(draft.id)}</select></label>${button('载入','load')}<label class="button" for="pc-import">导入牌组JSON文件</label><input type="file" id="pc-import" accept="application/json" hidden><input id="pc-deckurl" placeholder="RingsDB 牌组链接或编号，如 decklist/view/12345" aria-label="RingsDB 牌组链接">${button('从链接导入','importUrl')}${button('粘贴牌表导入','importText')}</div><div class="player-library-layout"><section><div class="toolbar"><input id="pc-search" placeholder="搜索中英文名称、代码、特性或能力…" value="${esc(filter.text)}" aria-label="搜索玩家卡"><select id="pc-type" aria-label="类型筛选"><option value="">全部类型</option>${Object.entries(TYPE_NAMES).map(([k,v])=>`<option value="${k}" ${filter.type===k?'selected':''}>${v}</option>`).join('')}</select><select id="pc-sphere" aria-label="球色筛选"><option value="">全部球色</option>${SPHERE_ORDER.map(k=>`<option value="${k}" ${filter.sphere===k?'selected':''}>${esc(P.SPHERES[k])}</option>`).join('')}</select></div><p class="small muted" id="pc-result-count"></p><div class="cat-index" id="pc-results"></div></section>${summary()}</div>`;}
+/* 打开别人分享的链接时自动进组卡器，并清掉 hash 以免刷新后又覆盖当前编辑内容。
+ * 解码失败不阻断启动：留在卡组页，把原因说清楚。 */
+function openSharedDeck(){
+ const code=readHashDeck();
+ if(!code)return false;
+ /* 先清 hash 再解码：解码失败也要清，否则刷新会一直重试同一条坏链接。 */
+ clearHashDeck();
+ try{
+  const {deck,unknown}=P.decodeDeck(code,snapshot),r=P.validateDeck(deck,snapshot);
+  draft=JSON.parse(JSON.stringify(deck));builderOrigin='';building=true;
+  setTimeout(()=>toast(r.valid?'已打开分享牌组「'+deck.name+'」'+(unknown.length?'；有 '+unknown.length+' 张卡不在基础版卡池':''):'已打开分享牌组「'+deck.name+'」，但构筑未通过：'+r.errors.slice(0,2).join('；')),0);
+  return true;
+ }catch(e){setTimeout(()=>toast('分享链接无法解析：'+e.message),0);return false;}
+}
+function startBuild(id){if(id)loadDeck(id);else{draft={id:'new',name:'自定义基础版牌组',mode:'standard',heroes:[],slots:{}};importReport=null;}builderOrigin=id?String(id):'';building=true;}
+function sharing(){return typeof location!=='undefined'&&/^https?:$/.test(location.protocol);}
+function shareLink(deck){if(!sharing())return '';return location.origin+location.pathname+'#deck='+P.encodeDeck(deck);}
+/* 分享码优先于「上次退出位置」恢复：收到别人发来的链接时，应该打开那副牌而不是自己上次的草稿。 */
+function readHashDeck(){
+ if(typeof location==='undefined')return null;
+ const m=/[#&]deck=([A-Za-z0-9_-]+)/.exec(location.hash||'');
+ return m?m[1]:null;
+}
+/* 用 window.history.* 调用而不是裸 history.*：顶层 `history` 变量在真实浏览器里是
+ * Chrome 的全局访问计数对象（它是 window 的属性），直接 history.replaceState 会炸。 */
+function clearHashDeck(){
+ if(typeof window==='undefined'||!window.history)return;
+ if(!/[#&]deck=/.test(window.location.hash||''))return;
+ if(typeof window.history.replaceState!=='function')return;
+ try{window.history.replaceState(null,'',window.location.pathname+window.location.search);}catch{}
+}
+/* 回填入口：正在编辑的草稿一旦偏离原牌组，就给一条一键回到原牌组的路，
+ * 而不是逼玩家「返回列表 → 找到那副牌 → 再点编辑」。 */
+/* 复制分享链接：优先用剪贴板 API（需要安全上下文），失败时退回「选中让你手抄」的弹窗，
+ * 因为 file:// 打开时 navigator.clipboard 通常不可用，而本机调试恰恰常用双击。 */
+async function copyText(text){
+ try{
+  if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(text);toast('分享链接已复制，粘贴给别人即可打开这副牌。');return;}
+ }catch{}
+ await choose('复制分享链接','<p class="small muted">浏览器没有允许自动复制，请手动选中下面的链接。</p><textarea id="pc-sharetext" rows="3" readonly spellcheck="false">'+esc(text)+'</textarea>',d=>{const t=d.querySelector('#pc-sharetext');t.focus();t.select();return t.value;});
+}
+function backLabel(){
+ if(!draft||!builderOrigin)return null;
+ const origin=deckById(builderOrigin);
+ if(!origin)return null;
+ const same=JSON.stringify(P.exportDeck(origin))===JSON.stringify(P.exportDeck(draft));
+ if(same)return null;
+ return {id:origin.id,name:origin.name};
+}
+function builder(){startDraft();const back=backLabel();return `<div class="intro"><div><div class="eyebrow">DECK BUILDER · CORE</div><h1>编辑牌组</h1><p class="muted">点卡名展开详情与加减牌；鼠标停在卡名上直接显示卡图。右侧实时校验，保存后可在剧本开局时选用。快照 ${esc(snapshot.fetchedAt.slice(0,10))} · 离线可查。</p></div><div class="actions">${back?`<button data-action="deckBackTo" data-deck="${esc(back.id)}">← 回填原牌组「${esc(back.name)}」</button>`:''}${button('← 返回卡组列表','deckBack')}${button('从RingsDB更新资料','refresh')}</div></div><div class="notice">卡牌资料来自 RingsDB 基础版快照，仅提供资料与构筑校验，不提供自动结算能力；牌组里的牌仍需在桌面上手动结算。</div><div class="toolbar"><label>载入预设／已存牌组 <select id="pc-load">${deckOptions(draft.id)}</select></label>${button('载入','load')}<label class="button" for="pc-import">导入牌组JSON文件</label><input type="file" id="pc-import" accept="application/json" hidden><input id="pc-deckurl" placeholder="RingsDB 牌组链接或编号，如 decklist/view/12345" aria-label="RingsDB 牌组链接">${button('从链接导入','importUrl')}${button('粘贴牌表导入','importText')}</div><div class="player-library-layout"><section><div class="toolbar"><input id="pc-search" placeholder="搜索中英文名称、代码、特性或能力…" value="${esc(filter.text)}" aria-label="搜索玩家卡"><select id="pc-type" aria-label="类型筛选"><option value="">全部类型</option>${Object.entries(TYPE_NAMES).map(([k,v])=>`<option value="${k}" ${filter.type===k?'selected':''}>${v}</option>`).join('')}</select><select id="pc-sphere" aria-label="球色筛选"><option value="">全部球色</option>${SPHERE_ORDER.map(k=>`<option value="${k}" ${filter.sphere===k?'selected':''}>${esc(P.SPHERES[k])}</option>`).join('')}</select></div><p class="small muted" id="pc-result-count"></p><div class="cat-index" id="pc-results"></div></section>${summary()}</div>`;}
 const TYPE_NAMES={hero:'英雄',ally:'盟友',attachment:'附属',event:'事件'};
 const TYPE_ORDER=['hero','ally','attachment','event'];
 const SPHERE_ORDER=['leadership','tactics','spirit','lore','neutral'];
@@ -43,9 +91,10 @@ async function handle(b){startDraft();capture();const action=b.dataset.pc,code=b
   if(action==='minus'){if((draft.slots[code]||0)>0){draft.slots[code]--;if(!draft.slots[code])delete draft.slots[code];draft.mode='standard';}}
   if(action==='importText'){const text=await choose('粘贴牌表','<p class="small muted">每行一张牌，支持「3x 卡名」「3 卡名」或卡牌代码（如 01014）；英雄行会自动识别，中英文名称都可以，「英雄／牌组」这类分组标题会被忽略。</p><textarea id="pc-decktext" rows="12" spellcheck="false" placeholder="阿拉贡\n希优德\n贝瑞刚德\n\n3x 刚铎摄政王\n2x 突袭\n…"></textarea>',d=>d.querySelector('#pc-decktext').value);if(text===null)return;applyImport(P.parseTextDeck(text,snapshot),'已读取牌表');render();return;}
   if(action==='importUrl'){await importDeckUrl();render();return;}
-  if(action==='load'){let d=decks().find(d=>d.id===document.querySelector('#pc-load').value);if(d)draft=JSON.parse(JSON.stringify(d));importReport=null;}
+  if(action==='load'){let d=decks().find(d=>d.id===document.querySelector('#pc-load').value);if(d){draft=JSON.parse(JSON.stringify(d));builderOrigin=d.id;}importReport=null;}
   if(action==='clear'){if(!confirm('清空当前未保存的牌组？'))return;draft={id:'new',name:'自定义基础版牌组',mode:'standard',heroes:[],slots:{}};importReport=null;}
-  if(action==='save'){let r=P.validateDeck(draft,snapshot);if(!r.valid)throw Error(r.errors.join('\n'));if(draft.id.startsWith('starter-')||['new','custom-import'].includes(draft.id))draft.id='custom-'+Date.now();let i=saved.findIndex(x=>x.id===draft.id),copy=JSON.parse(JSON.stringify(draft));if(i>=0)saved[i]=copy;else saved.push(copy);persist();importReport=null;toast('牌组已保存，可在剧本开局时选用。');}
+  if(action==='save'){let r=P.validateDeck(draft,snapshot);if(!r.valid)throw Error(r.errors.join('\n'));if(draft.id.startsWith('starter-')||['new','custom-import'].includes(draft.id))draft.id='custom-'+Date.now();let i=saved.findIndex(x=>x.id===draft.id),copy=JSON.parse(JSON.stringify(draft));if(i>=0)saved[i]=copy;else saved.push(copy);persist();builderOrigin=draft.id;importReport=null;toast('牌组已保存，可在剧本开局时选用。');}
+  if(action==='share'){const url=shareLink(draft);if(!url){toast('本机双击打开的页面没有可分享的地址；部署到网站后即可复制链接。');return;}await copyText(url);}
   if(action==='export'){download(P.exportDeck(draft),'lotr-core-deck.json');}
   if(action==='refresh'){
    const age=Date.now()-Date.parse(snapshot.fetchedAt);if(age>=0&&age<600000){toast('资料仍在10分钟缓存期内，已使用当前缓存。');return;}
@@ -79,8 +128,8 @@ function deckList(){const list=decks().filter(deckMatches);if(deckView.sort==='s
 function decksPage(){
  const list=deckList();
  return `<div class="intro"><div><div class="eyebrow">DECK LIBRARY · ${saved.length} 副自建</div><h1>我的卡组</h1><p class="muted">四系教学预组，加上你导入或保存的牌组。点「新建牌组」进入卡牌库式列表配牌；开始剧本时会请每位玩家从这里选一副。</p></div><div class="actions"><button class="primary" data-action="deckNew">新建牌组</button><button data-action="deckGoSetup">返回剧本桌面</button></div></div>
- <section class="panel deck-import"><div class="deck-import-tabs"><button data-action="deckViewTab" data-value="link" class="${deckView.tab==='link'?'active':''}">LINK</button><button data-action="deckViewTab" data-value="file" class="${deckView.tab==='file'?'active':''}">FILE</button></div>
- ${deckView.tab==='link'?`<div class="deck-import-row"><input id="deck-import-url" placeholder="在这里填写 RingsDB 牌组链接或编号（decklist/view/12345）" aria-label="RingsDB 牌组链接"><button class="primary" data-action="deckImportUrl">保存</button></div><p class="small muted">国内网络通常无法访问 ringsdb.com；连不上时可用「新建牌组 → 粘贴牌表导入」，或先开代理再点保存。</p>`:`<div class="deck-import-row"><label class="button" for="deck-import-file">选择牌组 JSON 文件</label><input type="file" id="deck-import-file" accept="application/json" hidden></div><p class="small muted">支持本站「导出牌组JSON」生成的格式（name／mode／heroes／slots）。</p>`}
+ <section class="panel deck-import"><div class="deck-import-tabs"><button data-action="deckViewTab" data-value="link" class="${deckView.tab==='link'?'active':''}">LINK</button><button data-action="deckViewTab" data-value="file" class="${deckView.tab==='file'?'active':''}">FILE</button><button data-action="deckViewTab" data-value="share" class="${deckView.tab==='share'?'active':''}">分享链接</button></div>
+ ${deckView.tab==='link'?`<div class="deck-import-row"><input id="deck-import-url" placeholder="在这里填写 RingsDB 牌组链接或编号（decklist/view/12345）" aria-label="RingsDB 牌组链接"><button class="primary" data-action="deckImportUrl">保存</button></div><p class="small muted">国内网络通常无法访问 ringsdb.com；连不上时可用「新建牌组 → 粘贴牌表导入」，或先开代理再点保存。</p>`:deckView.tab==='share'?`<div class="deck-import-row"><input id="deck-import-share" placeholder="粘贴本站的分享链接或分享码" aria-label="分享链接"><button class="primary" data-action="deckImportShare">打开</button></div><p class="small muted">本站组卡器的「复制分享链接」生成的地址，直接打开也会自动进组卡器。分享码只含牌名以外的卡牌代码与张数，不含账号信息。</p>`:`<div class="deck-import-row"><label class="button" for="deck-import-file">选择牌组 JSON 文件</label><input type="file" id="deck-import-file" accept="application/json" hidden></div><p class="small muted">支持本站「导出牌组JSON」生成的格式（name／mode／heroes／slots）。</p>`}
  </section>
  <div class="toolbar deck-filters"><input id="deck-search" placeholder="搜索牌组名或英雄…" value="${esc(deckView.text)}"><select id="deck-sort"><option value="name" ${deckView.sort==='name'?'selected':''}>排序：名称</option><option value="size" ${deckView.sort==='size'?'selected':''}>排序：张数</option></select><span class="spacer"></span>${['','leadership','tactics','spirit','lore'].map(k=>`<button data-action="deckViewSphere" data-value="${k}" class="${deckView.sphere===k?'primary':''}">${k?esc(P.SPHERES[k]):'全部'}</button>`).join('')}</div>
  <section class="deck-list">${list.map(d=>deckCard(d,deckActions(d))).join('')||'<p class="empty">没有匹配的牌组。</p>'}</section>`;
@@ -92,6 +141,8 @@ async function handleDecks(b){const a=b.dataset.action,id=b.dataset.deck;
  if(a==='deckImportUrl'){const input=document.querySelector('#deck-import-url'),raw=String(input&&input.value||'').trim(),m=raw.match(/(?:decklist|deck)\/(?:view\/)?(\d+)/i)||raw.match(/^(\d+)$/);if(!m){toast('无法识别牌组编号；示例 https://ringsdb.com/decklist/view/12345');return true;}const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),15000);try{const res=await fetch('https://ringsdb.com/api/public/decklist/'+m[1],{signal:ctrl.signal,headers:{Accept:'application/json'}});if(!res.ok)throw Error('RingsDB 返回 HTTP '+res.status);const d=P.fromRingsdb(await res.json()),r=P.validateDeck(d,snapshot);saveDeck(d);render();toast(r.valid?'已保存 RingsDB 牌组：'+d.name:'已保存 '+d.name+'，但构筑未通过：'+r.errors.slice(0,2).join('；'));}catch(e){toast(e.name==='AbortError'?'RingsDB 请求超时（15秒）；国内网络通常无法访问':'导入失败：'+e.message);}finally{clearTimeout(timer);}return true;}
  if(a==='deckNew'){startBuild();tab='decks';render();return true;}
  if(a==='deckBack'){building=false;render();return true;}
+ if(a==='deckBackTo'){const d=deckById(id);if(!d){toast('原牌组已不存在。');return true;}if(!confirm('放弃当前未保存的改动，回到「'+d.name+'」？'))return true;startBuild(id);tab='decks';render();toast('已回填原牌组「'+d.name+'」。');return true;}
+ if(a==='deckImportShare'){const raw=String(document.querySelector('#deck-import-share')?.value||'').trim(),m=raw.match(/[#&]deck=([A-Za-z0-9_-]+)/),code=m?m[1]:raw;if(!code){toast('请粘贴完整的分享链接或分享码。');return true;}try{const {deck,unknown}=P.decodeDeck(code,snapshot),r=P.validateDeck(deck,snapshot),tail=unknown.length?'；有 '+unknown.length+' 张卡不在基础版卡池':'';draft=JSON.parse(JSON.stringify(deck));builderOrigin='';building=true;tab='decks';render();toast(r.valid?'已读取分享牌组「'+deck.name+'」'+tail:'已读取分享牌组「'+deck.name+'」，但构筑未通过：'+r.errors.slice(0,2).join('；')+tail);}catch(e){toast('分享链接无效：'+e.message);}return true;}
  if(a==='deckEdit'){startBuild(id);tab='decks';render();return true;}
  if(a==='deckExport'){const d=deckById(id);if(d)download(P.exportDeck(d),(d.name||'deck')+'.json');return true;}
  if(a==='deckDelete'){const d=deckById(id);if(!d)return true;if(!confirm('删除牌组「'+d.name+'」？此操作不可撤销。'))return true;removeDeck(id);render();toast('已删除。');return true;}
@@ -99,5 +150,5 @@ async function handleDecks(b){const a=b.dataset.action,id=b.dataset.deck;
  return false;
 }
 function deckGrid(picks,player){return `<div class="deck-grid">${decks().map(d=>deckCard(d,`<button class="${picks[player]===d.id?'primary':''}" data-action="chooserPick" data-deck="${esc(d.id)}" data-player="${player}">${picks[player]===d.id?'已选':'选用'}</button>`,picks[player]===d.id?'is-selected':'')).join('')}</div>`;}
-return {builder,isBuilding,startBuild,bind,handle,configs,registered,openingPanel,handPanel,getSnapshot:()=>snapshot,decksPage,bindDecks,handleDecks,deckGrid,deckById,deckName,saveDeck,loadDeck,removeDeck,deckInfo};
+return {builder,isBuilding,startBuild,openSharedDeck,shareLink,bind,handle,configs,registered,openingPanel,handPanel,getSnapshot:()=>snapshot,decksPage,bindDecks,handleDecks,deckGrid,deckById,deckName,saveDeck,loadDeck,removeDeck,deckInfo};
 })();

@@ -15,7 +15,8 @@
 | 真实浏览器验收（桌面） | 已完成（2026-10-20，Chrome 155 无头） | tabletop-acceptance、docs/browser-acceptance |
 | 开局取消窗口迁移 | 已完成（2026-10-21）：安都因／多尔哥多改为逐张翻开逐张结算，意志考验／埃莉诺获得合法响应窗口 | setup-reveal-tests、check-setup-reveal（多种子 13 项）、planning-dom-tests（待结算面板回归） |
 | 完整结算计分 | 已完成（2026-10-21）：威胁＋回合×10＋淘汰×100＋英雄伤害−胜利点，含分项明细与评级 | score-tests、check-score、planning-dom-tests |
-| 牌组导入与组卡器 | 我的卡组页、开局选牌、文本/URL 导入已完成；内嵌组卡器回填、扩展卡池与分享链接待做 | player-cards.parseTextDeck/fromRingsdb、player-tests |
+| 牌组导入与组卡器 | 我的卡组页、开局选牌、文本/URL 导入、回填原牌组、分享链接（URL hash 自包含）已完成（2026-10-22）；扩展卡池待做 | player-cards.encodeDeck/decodeDeck、deck-share-tests、check-deck-share、player-tests |
+| 卡牌库系列包筛选 | 已完成（2026-10-22）：玩家卡用 packCode，遭遇卡与探险卡补齐 `pack` 字段（基础版 55 张为 Core），三类分组与计数自动跟随 | pack-data-tests、check-catalog、planning-dom-tests |
 | 新游戏流程（四页签产品墙） | 已接入 165 项封面墙；新版扩展一系列一条，旧版扩展按「大盒 → 6 个剧本」两级展开；连续剧本跨剧本推进、战役恩惠负担待做 | app.js newGame、planning-dom-tests、check-catalog-tabs、check-legacy-packs |
 | 联机 | 后续独立里程碑 | 服务器、身份、私密手牌、断线恢复与操作版本 |
 

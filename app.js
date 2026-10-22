@@ -377,6 +377,8 @@ if(HAS_VIEW_HISTORY){
 const navBack=$('#navBack');if(navBack)navBack.onclick=()=>{if(HAS_VIEW_HISTORY)window.history.back();};
 const navFwd=$('#navFwd');if(navFwd)navFwd.onclick=()=>{if(HAS_VIEW_HISTORY)window.history.forward();};
 if(HAS_VIEW_HISTORY)syncHistoryButtons(0);
+/* 分享链接（#deck=…）优先于恢复上次视图：拿到别人的链接就该看到那副牌。 */
+if(typeof PlayerUI!=='undefined'&&PlayerUI.openSharedDeck&&PlayerUI.openSharedDeck())tab='decks';
 /* 调试与自动化验收出口：仅暴露「让引擎重绘」的最小接口，避免外部直接改内部状态后界面不同步。 */
 if(typeof window!=='undefined')window.LOTR={get state(){return state;},get E(){return E;},refresh:()=>render()};
 render();

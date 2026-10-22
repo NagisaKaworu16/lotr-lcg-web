@@ -54,6 +54,41 @@ function config(deck,snapshot){let r=validateDeck(deck,snapshot);need(r.valid,r.
 function importDeck(raw,snapshot){need(raw&&typeof raw==='object','无效牌组JSON');let slots=raw.slots;need(slots&&typeof slots==='object'&&!Array.isArray(slots),'找不到RingsDB slots字段');const by=index(snapshot),heroes=[],draw={};for(const [code,n] of Object.entries(slots)){need(typeof n==='number'&&Number.isInteger(n)&&n>=0,`${code}数量无效`);if(!n)continue;need(by[code],`本版本仅接入基础版，无法导入${code}`);if(by[code].type==='hero'){need(n===1,'每名英雄只能1张');heroes.push(code);}else draw[code]=n;}
  const h=raw.heroes===undefined?heroes:raw.heroes;need(Array.isArray(h)&&h.every(c=>typeof c==='string'),'heroes须为卡牌代码数组');return {id:'custom-import',name:String(raw.name||'导入牌组').slice(0,100),mode:raw.mode||'standard',heroes:h,slots:draw};}
 function exportDeck(deck){return {name:deck.name,mode:deck.mode,slots:{...deck.slots,...Object.fromEntries(deck.heroes.map(code=>[code,1]))}};}
+/* 分享链接：把牌组压成可贴进聊天框的一串编码，放在 URL hash 里。
+ * 只用 base64url 字符集，避免 '+' '/' '=' 被聊天软件或 URL 解析截断。 */
+function toB64Url(text){
+ const bytes=new TextEncoder().encode(String(text));let bin='';
+ for(const b of bytes)bin+=String.fromCharCode(b);
+ return btoa(bin).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+}
+function fromB64Url(code){
+ const padded=String(code).replace(/-/g,'+').replace(/_/g,'/');
+ const bin=atob(padded+'='.repeat((4-padded.length%4)%4));
+ const bytes=new Uint8Array(bin.length);
+ for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);
+ return new TextDecoder().decode(bytes);
+}
+/* 紧凑载荷：{n:名称,m:模式,h:[英雄代码],s:{代码:张数}}。
+ * 字段名压到 1 字符是因为链接会被贴进聊天软件，长度直接影响可用性。 */
+function encodeDeck(deck){
+ const slots={};for(const [code,n] of Object.entries(deck.slots||{}))if(n>0)slots[code]=n;
+ return toB64Url(JSON.stringify({n:String(deck.name||'未命名牌组').slice(0,60),m:deck.mode||'standard',h:(deck.heroes||[]).slice(0,3),s:slots}));
+}
+function decodeDeck(code,snapshot){
+ const raw=JSON.parse(fromB64Url(code));
+ need(raw&&typeof raw==='object'&&!Array.isArray(raw),'分享码内容不是牌组');
+ need(Array.isArray(raw.h)&&raw.h.every(c=>typeof c==='string'),'分享码缺少英雄列表');
+ need(raw.s&&typeof raw.s==='object'&&!Array.isArray(raw.s),'分享码缺少牌表');
+ const by=index(snapshot),known=[],unknown=[],heroes=[];
+ for(const c of raw.h){if(by[c]&&by[c].type==='hero')heroes.push(c);else unknown.push(c);}
+ const slots={};
+ for(const [c,n] of Object.entries(raw.s)){
+  if(!Number.isInteger(n)||n<1||n>99)continue;
+  if(!by[c]||by[c].type==='hero'){unknown.push(c);continue;}
+  slots[c]=Math.min(n,by[c].deckLimit||3);
+ }
+ return {deck:{id:'custom-import',name:String(raw.n||'分享牌组').slice(0,100),mode:raw.m||'standard',heroes,slots},unknown};
+}
 // ---- deck import: pasted decklist text, or a RingsDB decklist JSON payload ----
 // Names are matched loosely (case, punctuation and apostrophes ignored) so pasted
 // lists from RingsDB, arkham.build-style exports or plain notes all resolve.
@@ -102,6 +137,6 @@ function fromRingsdb(raw){
  return {id:'ringsdb-'+raw.id,name:String(raw.name||('RingsDB 牌组 '+raw.id)).slice(0,100),mode:'standard',heroes,slots,source:'ringsdb:'+raw.id};
 }
 async function fetchCore({fetchImpl=globalThis.fetch,signal}={}){need(typeof fetchImpl==='function','当前浏览器不支持联网读取');const endpoint='https://ringsdb.com/api/public/cards/Core.json';const r=await fetchImpl(endpoint,{method:'GET',cache:'default',signal});need(r.ok,`RingsDB请求失败：HTTP ${r.status}`);return normalizePack(await r.json(),{endpoint,packCode:'Core',fetchedAt:new Date().toISOString(),lastModified:r.headers.get('Last-Modified'),cacheControl:r.headers.get('Cache-Control')});}
-return {SPHERES,NAMES,normalizeCard,normalizePack,verify,index,starter,validateDeck,validateFellowship,config,importDeck,exportDeck,fetchCore,parseTextDeck,fromRingsdb,nameIndex};
+return {SPHERES,NAMES,normalizeCard,normalizePack,verify,index,starter,validateDeck,validateFellowship,config,importDeck,exportDeck,encodeDeck,decodeDeck,fetchCore,parseTextDeck,fromRingsdb,nameIndex};
 })();
 if(typeof module!=='undefined')module.exports=PlayerCards;

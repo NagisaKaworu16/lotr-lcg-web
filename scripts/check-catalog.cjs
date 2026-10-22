@@ -78,6 +78,9 @@ const OUT=path.join(ROOT,'docs','catalog-tabs');
  check('Core 包筛选含全部基础版卡牌',(await rows())===totals.player+totals.encounter,{rows:await rows(),want:totals.player+totals.encounter});
  check('系列包下三类分组齐全',await page.evaluate(()=>{const t=document.querySelector('#catalogResults').textContent;return t.includes('玩家卡 · 领导')&&t.includes('遭遇卡 · 敌人')&&t.includes('探险卡');}));
  check('计数按三类拆分',await page.evaluate(t=>document.querySelector('#resultCount').textContent.includes(`玩家卡 ${t.player} / 遭遇卡 ${t.encounter-10} / 探险卡 10`),totals),{totals});
+ /* 战役卡带的是真实 pack 字段而非 'Core' 兜底：45 张遭遇卡 + 10 张探险卡全部命中 */
+ check('战役卡的 pack 字段全部有值且为基础包',await page.evaluate(()=>D.cards.every(c=>c.pack==='Core')&&D.quests.every(q=>q.pack==='Core')));
+ check('系列包下拉只列出真实存在的包',await page.evaluate(()=>[...document.querySelector('#podFilter').options].filter(o=>o.value).map(o=>o.value).join()==='Core'));
  await shot('pod');
  await page.fill('#search','蛛');
  await page.waitForTimeout(300);

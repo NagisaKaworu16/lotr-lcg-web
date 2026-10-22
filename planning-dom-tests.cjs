@@ -151,6 +151,34 @@ test('score panel stays out of the way while the scenario is still running', asy
  assert(html.includes('远征失败 · 过程计分'));
  assert(html.includes('失败局不计入战绩'));
 });
+test('deck builder offers a one-click backfill once the draft drifts from its source deck',async()=>{const e=environment();
+ /* draft／building 是 player-ui 的模块内变量，vm 里改不到，统一走公开 API + data-action 点击。 */
+ await e.click({action:'deckNew'});
+ assert(e.base.get('app').innerHTML.includes('编辑牌组'),'新建牌组应进入组卡器');
+ assert(!e.base.get('app').innerHTML.includes('deckBackTo'),'新建牌组没有原牌组，不该出现回填按钮');
+ const starter=e.run("PlayerUI.deckById('starter-leadership')?1:0");
+ assert(starter,'预组牌组应收录在卡组列表里');
+ /* 用「载入」把草稿换成预组（此时与源牌组一致，仍不该提示） */
+ e.run("$('#pc-load').value='starter-leadership'");
+ await e.click({action:'pc',pc:'load'});
+ assert(!e.base.get('app').innerHTML.includes('deckBackTo'),'草稿与源牌组一致时不该提示回填');
+ /* 改一笔：草稿偏离源牌组，回填入口出现。用减牌而不是加牌——预组里 01013 已经是上限 3 张，
+    加牌会因「最多3张」被拒，测试就测不到回填逻辑本身了。 */
+ await e.click({action:'pc',pc:'minus',code:'01013'});
+ const html=e.base.get('app').innerHTML;
+ assert(html.includes('data-action="deckBackTo"'),'草稿偏离原牌组时应给出回填入口');
+ assert(html.includes('回填原牌组'),'回填按钮要有可读文案');
+});
+test('shared deck links render the builder copy and the share-code tab on the deck page',async()=>{const e=environment();
+ await e.click({action:'deckNew'});
+ assert(e.base.get('app').innerHTML.includes('data-pc="share"'),'组卡器应提供复制分享链接');
+ await e.click({action:'deckBack'});
+ await e.click({action:'deckViewTab',value:'share'});
+ const html=e.base.get('app').innerHTML;
+ assert(html.includes('data-value="share"'),'卡组页应有分享链接页签');
+ assert(html.includes('id="deck-import-share"'),'卡组页应有粘贴分享链接的输入框');
+ assert(html.includes('data-action="deckImportShare"'),'卡组页应有打开分享链接的按钮');
+});
 test('desktop version badge comes from one constant that matches the latest CHANGELOG heading',async()=>{const e=environment();const version=e.run('APP_VERSION');assert.match(String(version),/^v\d+\.\d+\.\d+$/);const heading=fs.readFileSync(__dirname+'/CHANGELOG.md','utf8').split('\n').find(l=>l.startsWith('# v'));assert(heading,'CHANGELOG.md 缺少 "# vX.Y.Z" 形式的最新条目标题');assert(heading.startsWith('# '+version),`界面版本 ${version} 与 CHANGELOG 最新条目「${heading}」不一致`);assert(!/MIDDLE-EARTH EXPEDITION · v\d/.test(fs.readFileSync(__dirname+'/desktop-ui.js','utf8')),'桌面徽标不应再硬编码版本号');await opening(e);assert(e.base.get('app').innerHTML.includes('MIDDLE-EARTH EXPEDITION · '+version),'桌面徽标未使用 APP_VERSION 常量');});
 
 test('card library merges player and encounter cards behind a three-way player/encounter/both split',async()=>{
