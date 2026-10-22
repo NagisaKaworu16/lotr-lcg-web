@@ -313,6 +313,43 @@ body:has(.desktop-table) .nav-home .brand-mark{width:17px;height:17px}
 .operation-content:has(.score-panel){max-height:none;overflow:visible}
 @media(min-width:1700px){.operation-content:has(.score-panel){max-height:none}}
 @media(max-width:1100px){.operation-content:has(.score-panel){max-height:none}}
+/* 卡牌库：杂志式密集索引。默认只列名称，点开才注入卡图与全文（见 app.js catalogItem/catalogDetail）。 */
+.cat-controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:16px 0 10px}
+.cat-sides,.cat-views{display:inline-flex;flex:none;border:1px solid var(--line);border-radius:999px;background:#fff;overflow:hidden}
+.cat-sides button,.cat-views button{min-height:44px;padding:0 18px;border:0;border-right:1px solid var(--line);background:transparent;color:var(--ink);font:inherit;cursor:pointer;transition:background 160ms ease-out,color 160ms ease-out}
+.cat-sides button:last-child,.cat-views button:last-child{border-right:0}
+.cat-sides button:hover,.cat-views button:hover{background:#f3f0e2}
+.cat-sides button[aria-pressed="true"],.cat-views button[aria-pressed="true"]{background:var(--green);color:#fdf8e7}
+.cat-sides button:focus-visible,.cat-views button:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}
+.cat-controls #search{flex:1;min-width:220px;min-height:44px;border:1px solid var(--line);border-radius:999px;padding:0 18px;background:#fff;color:var(--ink);font:inherit}
+.cat-controls #search:focus{outline:2px solid var(--gold);outline-offset:1px}
+.cat-index{margin-top:6px}
+.cat-group{margin:22px 0 4px}
+.cat-group h2{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:0 0 6px;padding-bottom:6px;border-bottom:1px solid var(--line);color:var(--muted);font-size:12px;font-weight:600;letter-spacing:.14em}
+.cat-count{color:var(--gold);font-variant-numeric:tabular-nums}
+.cat-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:0 26px;align-items:start}
+.cat-item{margin:0;border-bottom:1px dotted #cfd5c8}
+.cat-item>summary{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:38px;padding:6px 4px;list-style:none;border-radius:4px;cursor:pointer}
+.cat-item>summary::-webkit-details-marker{display:none}
+.cat-item>summary:hover{background:#fffdf4}
+.cat-item>summary:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}
+.cat-name{font-weight:600;color:var(--ink)}
+.cat-meta{color:var(--muted);font-size:12px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.cat-item[open]{grid-column:1/-1;margin:6px 0;padding:0 16px 4px;border:1px solid var(--line);border-radius:10px;background:#fffdf4;box-shadow:0 8px 28px rgba(36,57,47,.08)}
+.cat-item[open]>summary{margin-bottom:10px;border-bottom:1px solid var(--line)}
+.cat-detail{display:flex;align-items:flex-start;gap:20px;padding-bottom:12px;flex-wrap:wrap}
+.cat-detail>.card-art{flex:none;width:240px;margin:0}
+.cat-facts{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin:0 0 12px;font-size:13px}
+.cat-facts dt{color:var(--muted)}
+.cat-facts dd{margin:0;font-variant-numeric:tabular-nums}
+.cat-text{flex:1;min-width:260px;max-width:72ch;line-height:1.8}
+.cat-text p{margin:0 0 10px;white-space:pre-wrap}
+.cat-art-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px}
+.cat-figure{display:flex;flex-direction:column;gap:6px;margin:0}
+.cat-figure figcaption{display:flex;flex-direction:column;gap:2px;color:var(--muted);font-size:12px}
+.cat-figure figcaption b{color:var(--ink);font-size:13px;font-weight:600}
+@media(prefers-reduced-motion:reduce){.cat-sides button,.cat-views button{transition:none}}
+@media(max-width:900px){.cat-list{grid-template-columns:1fr}}
 
 </style></head><body>
 <header><nav><button id="tableTab" class="active nav-home" title="回到首页"><svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><defs><linearGradient id="brandGold" x1="10" y1="8" x2="54" y2="57" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fdf4cd"/><stop offset=".32" stop-color="#e3c47a"/><stop offset=".55" stop-color="#a9853f"/><stop offset=".78" stop-color="#e8cb86"/><stop offset="1" stop-color="#fffae0"/></linearGradient><radialGradient id="brandField" cx=".5" cy=".42" r=".58"><stop offset="0" stop-color="#8a4a16"/><stop offset=".46" stop-color="#4a2a10"/><stop offset="1" stop-color="#150e07"/></radialGradient></defs><circle cx="32" cy="32" r="21" fill="#0d1710" fill-opacity=".62"/><circle cx="32" cy="32" r="21" fill="none" stroke="url(#brandGold)" stroke-width="7"/><path d="M14.6 19.2A21 21 0 0 1 32.6 10.9" fill="none" stroke="#fffbe8" stroke-width="2.4" stroke-linecap="round" opacity=".55"/></svg>首页</button><button id="catalogTab">基础卡牌库 <span>55</span></button><button id="decksTab">我的卡组</button><button id="playersTab">英雄与玩家牌</button><button id="imagesTab">全部卡图</button><button id="helpTab">说明与完成范围</button></nav><div class="history-nav"><button id="navBack" type="button" title="后退" aria-label="后退">←</button><button id="navFwd" type="button" title="前进" aria-label="前进">→</button></div><div class="header-actions"><button id="undo">撤销一步</button><button id="export">导出存档</button><label class="button" for="import">导入存档</label><input id="import" type="file" accept="application/json" hidden></div></header>
@@ -8367,7 +8404,7 @@ const WindowUI=(()=>{
 </script><script>
 /* Tabletop view: UI drafts never pay, exhaust, reveal, or bypass phase validation. */
 /* 界面版本徽标唯一来源：须与 CHANGELOG.md 最新条目标题一致（planning-dom-tests 有校验）。 */
-const APP_VERSION='v0.15.23';
+const APP_VERSION='v0.15.24';
 const DesktopUI=(()=>{
  const E=ScenarioEngine,R=E.planning,Q=E.questing,C=E.combat,esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  let combatDraft={key:'',target:null,ids:[]},draftState=null;
@@ -8805,23 +8842,95 @@ function newGameSettings(){const g=newGame,s=seriesById(g.series),packs=s.packs|
 function setup(){return newGame&&newGame.step==='settings'?newGameSettings():newGameList();}
 function phaseHint(){return ['新对局点击推进时，会自动为每名未被囚禁且存活的英雄收集1资源，并为每位玩家抽1张牌。魔法溪流会禁止抽牌；铁镣改写下一次抽牌。','按起始玩家顺序打出盟友和附属；点击手牌选择目标和资源支付。处理响应后结束各自出牌，再由所有玩家让过行动，结算计划阶段结束。','在上方探险面板按步骤操作：选择投入角色、处理响应、逐张翻开遭遇。窗口关闭后自动计算意志、威胁和进度，无需输入数值。','由起始玩家暂定旅行地点，全员二次确认后支付费用和移动地点。完成旅行强制效果与响应后才开放普通行动。','在上方暂定主动交战或不交战，全员二次确认。交战检定前后开放行动；检定逐人循环，强制效果先处理。安都因河航道只跳过检定。','在上方战斗面板暂定攻击／防御名单，全队二次确认。暗影逐张结算，系统计算伤害；各步骤之间保留行动窗口。','先暂定蛛网支付，全员二次确认后重置、增加威胁并轮换先手；行动结束后分开结算阶段结束及回合结束效果，再进入下一回合资源阶段。'][state.phase];}
 function table(){return state?DesktopUI.render(state,handView):setup();}
-/* 基础卡牌库：遭遇卡 + 探险卡检索。v0.9 起就有，5647e83 那次「诡镇式开局流程」重构
-   删掉了这两个函数，页签按钮与 render() 里的调用却留着，点击即 catalog is not defined。
-   计数改为按数据实时统计，避免卡池扩充后文案漂移。 */
+/* 统一卡牌库（参照诡镇奇谈网页版的三档分类）：玩家卡与战役卡同页，「玩家 / 战役 / 两者都」切换。
+   玩家卡来自 RingsDB 基础版快照（73 种），战役卡来自 D.cards（45 种遭遇）+ D.quests（10 张探险）。
+   条目上百，默认只列名称（杂志式密集索引），点开某项才注入卡图与全文，避免一次性加载上百张图。
+   v0.9 时这里只有遭遇卡，5647e83 重构还删掉了函数体，v0.15.23 恢复、v0.15.24 合并玩家卡。 */
+const CAT_SIDES=[{id:'player',label:'玩家',note:'英雄 · 盟友 · 附属 · 事件'},{id:'encounter',label:'战役',note:'敌人 · 地点 · 诡计 · 目标 · 探险卡'},{id:'both',label:'两者都',note:'玩家卡与战役卡同屏'}];
+const CAT_GROUP_ORDER=['领导','战术','精神','学识','中立','敌人','地点','诡计','目标','探险卡'];
+const PLAYER_TYPES={hero:'英雄',ally:'盟友',attachment:'附属',event:'事件'};
+const SPHERE_NAMES={leadership:'领导',tactics:'战术',spirit:'精神',lore:'学识',neutral:'中立'};
+let catalogSide='both',catalogView='list',catalogQuery='',catalogCache=null;
+function catalogEntries(){
+ if(catalogCache)return catalogCache;
+ const out=[],snap=(typeof RINGSDB_SNAPSHOT!=='undefined'&&RINGSDB_SNAPSHOT.cards)||[];
+ for(const c of snap)out.push({side:'player',face:'player',code:c.code,name:c.nameZh||c.name,en:c.name,group:SPHERE_NAMES[c.sphere]||c.sphereName||'中立',kind:PLAYER_TYPES[c.type]||c.type,
+  meta:[PLAYER_TYPES[c.type]||c.type,c.cost!==null&&c.cost!==undefined?'费用 '+c.cost:'',c.startingThreat?'威胁 '+c.startingThreat:''].filter(Boolean).join(' · '),
+  search:[c.nameZh,c.name,c.rulesText,c.traits,c.sphereName].filter(Boolean).join(' ').toLowerCase()});
+ for(const c of D.cards)out.push({side:'encounter',face:'encounter',code:c.id,name:c.name,en:c.en||'',group:types[c.type]||'其他',kind:types[c.type]||'其他',
+  meta:[types[c.type]||c.type,D.sets[c.set]||'',c.quantity?'×'+c.quantity:''].filter(Boolean).join(' · '),
+  search:[c.name,c.en,c.rule,c.shadow].filter(Boolean).join(' ').toLowerCase()});
+ for(const q of D.quests)out.push({side:'encounter',face:'quest',code:q.id,name:q.name,en:'',group:'探险卡',kind:'探险卡',
+  meta:['探险卡','阶段 '+q.stage].join(' · '),search:[q.name,q.front,q.back].filter(Boolean).join(' ').toLowerCase()});
+ return catalogCache=out;
+}
+function catalogStats(){
+ const all=catalogEntries(),player=all.filter(e=>e.side==='player'),encounter=all.filter(e=>e.side==='encounter'),tally=a=>a.reduce((m,e)=>(m[e.kind]=(m[e.kind]||0)+1,m),{});
+ return {player:player.length,encounter:encounter.length,total:all.length,playerKinds:tally(player),encounterKinds:tally(encounter)};
+}
+function catalogGroups(side){
+ const map=new Map;
+ for(const e of catalogEntries()){
+  if(side!=='both'&&e.side!==side)continue;
+  const title=(side==='both'?(e.side==='player'?'玩家 · ':'战役 · '):'')+e.group;
+  if(!map.has(title))map.set(title,{title,order:CAT_GROUP_ORDER.indexOf(e.group),items:[]});
+  map.get(title).items.push(e);
+ }
+ return [...map.values()].sort((a,b)=>(a.order<0?99:a.order)-(b.order<0?99:b.order));
+}
 function catalog(){
- const total=D.cards.reduce((a,c)=>a+(c.quantity||0),0),all=D.cards.length+D.quests.length;
- return `<div class="intro"><div><div class="eyebrow">CORE CARD INDEX</div><h1>基础卡牌库</h1><p class="muted">${D.cards.length}种遭遇卡 / ${total}张 · ${D.quests.length}张双面探险卡，共 ${all} 种。中文为工作译名与机制摘要。</p></div></div><div class="toolbar"><input id="search" placeholder="搜索中文、英文名称或规则…"><select id="setFilter"><option value="">全部遭遇组</option>${Object.entries(D.sets).map(([k,v])=>`<option value="${enc(k)}">${enc(v)}</option>`).join('')}</select><select id="typeFilter"><option value="">全部类型</option>${Object.entries(types).map(([k,v])=>`<option value="${k}">${enc(v)}</option>`).join('')}<option value="Quest">探险卡</option></select></div><div class="small muted" id="resultCount"></div><div class="catalog" id="catalogResults"></div>`;
+ const st=catalogStats(),kinds=m=>Object.entries(m).map(([k,v])=>enc(k)+' '+v).join(' / ');
+ return `<div class="intro"><div><div class="eyebrow">CARD INDEX</div><h1>卡牌库</h1><p class="muted">玩家卡 ${st.player} 种（${kinds(st.playerKinds)}） · 战役卡 ${st.encounter} 种（${kinds(st.encounterKinds)}） · 合计 ${st.total} 种。中文为工作译名与机制摘要。</p></div></div><div class="cat-controls"><div class="cat-sides" role="group" aria-label="卡牌分类">${CAT_SIDES.map(s=>`<button type="button" data-action="catSide" data-value="${s.id}" aria-pressed="${s.id===catalogSide}" title="${enc(s.note)}">${s.label}</button>`).join('')}</div><input id="search" placeholder="搜索名称、规则或特性…" value="${enc(catalogQuery)}" aria-label="搜索卡牌"><div class="cat-views" role="group" aria-label="显示方式"><button type="button" data-action="catView" data-value="list" aria-pressed="${catalogView==='list'}">名称</button><button type="button" data-action="catView" data-value="art" aria-pressed="${catalogView==='art'}">卡图</button></div></div><div class="small muted" id="resultCount"></div><div class="cat-index" id="catalogResults"></div>`;
+}
+function catalogItem(e){return `<details class="cat-item" data-code="${enc(e.code)}" data-face="${e.face}"><summary><span class="cat-name">${enc(e.name)}</span><span class="cat-meta">${enc(e.meta)}</span></summary><div class="cat-body"></div></details>`;}
+function catalogArt(e){const a=e.face==='player'?ImageLibrary.art(e.code):e.face==='quest'?ImageLibrary.questFaces(e.code):ImageLibrary.encounterArt(e.code);return `<figure class="cat-figure"><figcaption><b>${enc(e.name)}</b><small>${enc(e.meta)}</small></figcaption>${a}</figure>`;}
+function catalogFacts(rows){return `<dl class="cat-facts">${rows.filter(r=>r[1]!==null&&r[1]!==undefined&&r[1]!=='').map(([k,v])=>`<dt>${enc(k)}</dt><dd>${enc(v)}</dd>`).join('')}</dl>`;}
+function catalogDetail(face,code){
+ if(face==='player'){
+  const c=((typeof RINGSDB_SNAPSHOT!=='undefined'&&RINGSDB_SNAPSHOT.cards)||[]).find(x=>x.code===code);if(!c)return '';
+  const rows=[['类型',PLAYER_TYPES[c.type]||c.type],['球色',SPHERE_NAMES[c.sphere]||c.sphereName||'—'],['费用',c.cost],['初始威胁',c.startingThreat],['意志／攻击／防御／生命',c.type==='hero'?`${c.willpower}／${c.attack}／${c.defense}／${c.health}`:null],['特性',c.traits],['卡包',c.packName],['编号',c.code]];
+  return `<div class="cat-detail">${ImageLibrary.art(code)}<div class="cat-text">${catalogFacts(rows)}<p class="small muted">规则文本为 RingsDB 英文原文，未作翻译。</p><p>${enc(c.rulesText||'（暂无规则文本）')}</p></div></div>`;
+ }
+ if(face==='quest'){
+  const q=D.quests.find(x=>x.id===Number(code));if(!q)return '';
+  const rows=[['阶段',q.stage],['进度',q.points||'特殊条件'],['编号',q.id]];
+  return `<div class="cat-detail">${ImageLibrary.questFaces(q.id)}<div class="cat-text">${catalogFacts(rows)}<p><b>A面 / 入场</b><br>${enc(q.front)}</p><p><b>B面</b><br>${enc(q.back)}</p></div></div>`;
+ }
+ const c=D.cards.find(x=>x.id===Number(code));if(!c)return '';
+ const rows=[['类型',types[c.type]||c.type],['遭遇组',D.sets[c.set]],['数量','×'+(c.quantity||1)]];
+ if(c.type==='Enemy')rows.push(['交战／威胁',`${c.engagement??'—'}／${c.threat??0}`],['攻击／防御／生命',`${c.attack}／${c.defense}／${c.health}`]);
+ if(c.type==='Location')rows.push(['威胁／探索',`${c.threat}／${c.quest}`]);
+ if(c.victory)rows.push(['胜利点',c.victory]);
+ return `<div class="cat-detail">${ImageLibrary.encounterArt(c.id)}<div class="cat-text">${catalogFacts(rows)}<p>${enc(c.rule)}</p>${c.shadow?`<p><b>暗影效果</b><br>${enc(c.shadow)}</p>`:''}</div></div>`;
 }
 function filterCatalog(){
- const text=$('#search').value.trim().toLowerCase(),set=$('#setFilter').value,type=$('#typeFilter').value;
- const hit=x=>String(x??'').toLowerCase().includes(text);
- const hits=D.cards.filter(c=>(!set||c.set===set)&&(!type||c.type===type)&&hit(`${c.name}${c.en}${c.rule}${c.shadow??''}`));
- const questHits=D.quests.filter(q=>(!type||type==='Quest')&&(!set||D.scenarios.some(s=>s.sets.includes(set)&&s.stages.includes(q.id)))&&hit(`${q.name}${q.front}${q.back}`));
- $('#resultCount').textContent=`找到 ${hits.length+questHits.length} 种卡牌`;
- $('#catalogResults').innerHTML=hits.length+questHits.length?hits.map(c=>card(c)).join('')+questHits.map(q=>`<article class="card Objective"><div class="number">探险卡 #${q.id} · ×1</div>${ImageLibrary.questFaces(q.id)}<h3>${enc(q.name)}</h3><p class="stats">阶段 ${q.stage} · ${q.points?q.points+'进度':'特殊条件'}</p><div class="body"><p><b>A面 / 入场</b><br>${enc(q.front)}</p><p><b>B面</b><br>${enc(q.back)}</p></div></article>`).join(''):empty('没有匹配的卡牌，换个关键词或清空筛选。');
+ const input=$('#search');if(!input)return;
+ catalogQuery=input.value;
+ const q=catalogQuery.trim().toLowerCase();let shown=0;
+ const html=catalogGroups(catalogSide).map(g=>{
+  const hit=g.items.filter(e=>!q||e.search.includes(q));
+  if(!hit.length)return '';
+  shown+=hit.length;
+  return `<section class="cat-group"><h2><span>${enc(g.title)}</span><span class="cat-count">${hit.length}</span></h2>${catalogView==='art'?`<div class="cat-art-grid">${hit.map(catalogArt).join('')}</div>`:`<div class="cat-list">${hit.map(catalogItem).join('')}</div>`}</section>`;
+ }).join('');
+ const side=CAT_SIDES.find(s=>s.id===catalogSide)||CAT_SIDES[2];
+ $('#resultCount').textContent=q?`「${catalogQuery.trim()}」匹配 ${shown} 种`:`${side.note} · 共 ${shown} 种`;
+ $('#catalogResults').innerHTML=html||empty(q?'没有匹配的卡牌，换个关键词。':'这一类暂时没有卡牌。');
  ImageLibrary.bindErrors(document.querySelector('#catalogResults'));
+ bindCatalog();
 }
-function help(){return `<article class="panel help"><div class="eyebrow">VERSION 0.13.1 · MULTIPLAYER SETUP</div><h1>这次推进了什么</h1><p>新局默认智能行动窗口：空窗口自动继续；全队合法事件与能力集中显示，可设置本阶段不再提醒。实际操作的确认与即时响应保留；旧存档无设置时保留详细模式。详见 window-acceptance.md。</p><p>这是从原有桌面布局原型推进到的基础版剧本辅助桌面。规则范围为原版标准模式的独立剧本，并支持官方 Easy Mode（简单）：设置时每位英雄资源池 +1，并从遭遇牌库移除官方清单列出的难度标记卡。噩梦模式需另购对应剧本的噩梦牌组，本版未收录。不含新版战役的恩惠与负担。</p><table><tr><th>模块</th><th>本版状态</th></tr><tr><td>45种遭遇卡、10张双面探险卡</td><td>数量、数值、所属遭遇组、正面机制与暗影摘要已接入；新增45种遭遇卡图片及10张探险卡的A/B两面图片。无背景故事或官方中文译文。</td></tr><tr><td>组牌与开局</td><td>三个剧本按遭遇组组牌，处理固定开局牌、巨魔、守卫目标、场外戒灵和随机囚犯。</td></tr><tr><td>探险推进</td><td>管理地点吸收进度、随机第三阶段、巨魔/蜘蛛/戒灵门槛、目标持有与救援条件。</td></tr><tr><td>遭遇与暗影</td><td>人数翻牌、涌现、厄运、部分数值效果、交战检定、暗影分配与展示；第三阶段遭遇正面效果自动处理，需玩家决定的目标会弹出选择；战斗流程与基础版暗影已接入，第七阶段刷新与回合循环已接入。</td></tr><tr><td>玩家牌与完整规则引擎</td><td>已接入RingsDB基础版玩家牌查询、组牌与开局英雄/初始威胁。已实现起始手牌、资源阶段和计划阶段的出牌、支付、入场响应、主动能力及阶段结束处理。新增第三阶段投入响应、逐张遭遇与取消窗口、自动意志及进度结算；新增第四阶段旅行费用、旅行强制效果与响应、旅行后行动窗口。新增第五阶段主动交战确认、交战检定与行动窗口；新增第六阶段战斗、暗影与攻防流程；新增第七阶段重置、蛛网支付、威胁和先手轮换、回合结束效果与下一回合入口。联机待实现。</td></tr><tr><td>联机与私密手牌</td><td>未实现。当前为同一浏览器上的1–4人辅助桌面。</td></tr></table><h2>如何使用</h2><ol><li>解压后直接双击 index.html；无需 npm 或安装依赖。</li><li>点击任意预组牌开局测试，查看真实英雄和6张手牌，保留或调度后执行剧本设置；再推进到资源阶段结算。进入计划阶段后可打出盟友、附属和合法事件，完成各玩家出牌与行动选择；阶段2结算完成后点击进入探险阶段。</li><li>按顶部阶段进行操作；黄色事项必须按规则处理后再确认。卡牌文字仍需在适用时点自行触发。</li><li>战斗面板选择攻击、防御与响应；系统计算伤害并处理支持的基础版效果。旧手动辅助按钮不代表自动规则流程。</li><li>用“撤销一步”纠正误操作。浏览器尽量自动保存；重要进度请导出存档。切换浏览器或移动文件后建议导入存档。</li></ol><h2>本次验收范围</h2><p>第七阶段验收流程详见 phase7-acceptance.md；第六阶段详见 phase6-acceptance.md；第五阶段详见 phase5-acceptance.md；第四阶段详见 phase4-acceptance.md，第三阶段详见 phase3-acceptance.md。推荐新开四套规则书预组牌测试。安都因和多尔哥多的旧开局遭遇事项仍使用原手动确认入口；这些开局效果的取消窗口尚未迁移。</p><p>阶段2自动验证出牌时点、领域与费用、合法目标、独特和受限限制，并处理已支持的入场响应、行动能力与阶段结束效果。角色选择由玩家决定，资源和数值由程序计算。第三阶段按投入、探查、结果结算和行动窗口推进；完成后可进入第四阶段旅行；本版完成刷新后可进入下一回合资源阶段。</p><p>旧版遭遇、暗影与战斗辅助功能仍保留，不代表后续阶段已经完成。完整阶段2支持范围和操作步骤见 phase2-acceptance.md。</p><h2>玩家牌资料</h2><p>RingsDB基础版包含12名英雄、20种盟友、13种附属、28种事件。所有基础版盟友和附属的正常入场已接入；事件与能力按阶段2时点开放，不适用的触发不能在此使用。其他扩展目前仅供资料和图片查询。</p><h2>资料来源</h2><ul>${D.sources.map(s=>`<li><a href="${s.url}" target="_blank" rel="noreferrer">${s.title}</a></li>`).join('')}</ul><p class="small muted">非官方爱好者原型。未附带卡牌美术。名称和游戏相关权利属于其各自权利人。基础版73种英雄与玩家牌已内置中文卡图，放大后可切换英文版本。更多开发说明见 README.md 和 chinese-core-images.md。</p></article>`;}
+function bindCatalog(){
+ const root=$('#catalogResults');if(!root||typeof root.addEventListener!=='function')return;
+ root.addEventListener('toggle',ev=>{
+  const d=ev.target;
+  if(!d.classList||typeof d.classList.contains!=='function'||!d.classList.contains('cat-item')||!d.open)return;
+  const body=d.querySelector('.cat-body');if(!body||body.dataset.loaded)return;
+  body.innerHTML=catalogDetail(d.dataset.face,d.dataset.code);
+  body.dataset.loaded='1';
+  ImageLibrary.bindErrors(body);
+ },true);
+}
+function help(){return `<article class="panel help"><div class="eyebrow">VERSION 0.13.1 · MULTIPLAYER SETUP</div><h1>这次推进了什么</h1><p>新局默认智能行动窗口：空窗口自动继续；全队合法事件与能力集中显示，可设置本阶段不再提醒。实际操作的确认与即时响应保留；旧存档无设置时保留详细模式。详见 window-acceptance.md。</p><p>这是从原有桌面布局原型推进到的基础版剧本辅助桌面。规则范围为原版标准模式的独立剧本，并支持官方 Easy Mode（简单）：设置时每位英雄资源池 +1，并从遭遇牌库移除官方清单列出的难度标记卡。噩梦模式需另购对应剧本的噩梦牌组，本版未收录。不含新版战役的恩惠与负担。</p><table><tr><th>模块</th><th>本版状态</th></tr><tr><td>45种遭遇卡、10张双面探险卡</td><td>数量、数值、所属遭遇组、正面机制与暗影摘要已接入；新增45种遭遇卡图片及10张探险卡的A/B两面图片。无背景故事或官方中文译文。这些内容与基础版玩家卡一并收录在「基础卡牌库」：进入后按「玩家／战役／两者都」切换，默认只列卡名，点开某一行才载入卡图与全文。</td></tr><tr><td>组牌与开局</td><td>三个剧本按遭遇组组牌，处理固定开局牌、巨魔、守卫目标、场外戒灵和随机囚犯。</td></tr><tr><td>探险推进</td><td>管理地点吸收进度、随机第三阶段、巨魔/蜘蛛/戒灵门槛、目标持有与救援条件。</td></tr><tr><td>遭遇与暗影</td><td>人数翻牌、涌现、厄运、部分数值效果、交战检定、暗影分配与展示；第三阶段遭遇正面效果自动处理，需玩家决定的目标会弹出选择；战斗流程与基础版暗影已接入，第七阶段刷新与回合循环已接入。</td></tr><tr><td>玩家牌与完整规则引擎</td><td>已接入RingsDB基础版玩家牌查询、组牌与开局英雄/初始威胁。已实现起始手牌、资源阶段和计划阶段的出牌、支付、入场响应、主动能力及阶段结束处理。新增第三阶段投入响应、逐张遭遇与取消窗口、自动意志及进度结算；新增第四阶段旅行费用、旅行强制效果与响应、旅行后行动窗口。新增第五阶段主动交战确认、交战检定与行动窗口；新增第六阶段战斗、暗影与攻防流程；新增第七阶段重置、蛛网支付、威胁和先手轮换、回合结束效果与下一回合入口。联机待实现。</td></tr><tr><td>联机与私密手牌</td><td>未实现。当前为同一浏览器上的1–4人辅助桌面。</td></tr></table><h2>如何使用</h2><ol><li>解压后直接双击 index.html；无需 npm 或安装依赖。</li><li>点击任意预组牌开局测试，查看真实英雄和6张手牌，保留或调度后执行剧本设置；再推进到资源阶段结算。进入计划阶段后可打出盟友、附属和合法事件，完成各玩家出牌与行动选择；阶段2结算完成后点击进入探险阶段。</li><li>按顶部阶段进行操作；黄色事项必须按规则处理后再确认。卡牌文字仍需在适用时点自行触发。</li><li>战斗面板选择攻击、防御与响应；系统计算伤害并处理支持的基础版效果。旧手动辅助按钮不代表自动规则流程。</li><li>用“撤销一步”纠正误操作。浏览器尽量自动保存；重要进度请导出存档。切换浏览器或移动文件后建议导入存档。</li></ol><h2>本次验收范围</h2><p>第七阶段验收流程详见 phase7-acceptance.md；第六阶段详见 phase6-acceptance.md；第五阶段详见 phase5-acceptance.md；第四阶段详见 phase4-acceptance.md，第三阶段详见 phase3-acceptance.md。推荐新开四套规则书预组牌测试。安都因和多尔哥多的旧开局遭遇事项仍使用原手动确认入口；这些开局效果的取消窗口尚未迁移。</p><p>阶段2自动验证出牌时点、领域与费用、合法目标、独特和受限限制，并处理已支持的入场响应、行动能力与阶段结束效果。角色选择由玩家决定，资源和数值由程序计算。第三阶段按投入、探查、结果结算和行动窗口推进；完成后可进入第四阶段旅行；本版完成刷新后可进入下一回合资源阶段。</p><p>旧版遭遇、暗影与战斗辅助功能仍保留，不代表后续阶段已经完成。完整阶段2支持范围和操作步骤见 phase2-acceptance.md。</p><h2>玩家牌资料</h2><p>RingsDB基础版包含12名英雄、20种盟友、13种附属、28种事件。所有基础版盟友和附属的正常入场已接入；事件与能力按阶段2时点开放，不适用的触发不能在此使用。其他扩展目前仅供资料和图片查询。</p><h2>资料来源</h2><ul>${D.sources.map(s=>`<li><a href="${s.url}" target="_blank" rel="noreferrer">${s.title}</a></li>`).join('')}</ul><p class="small muted">非官方爱好者原型。未附带卡牌美术。名称和游戏相关权利属于其各自权利人。基础版73种英雄与玩家牌已内置中文卡图，放大后可切换英文版本。更多开发说明见 README.md 和 chinese-core-images.md。</p></article>`;}
 let deckChooser=null;
 function beginScenario(id){captureSetup();const n=setupDraft.players,seed=Number(setupDraft.seed)||Date.now(),first=setupDraft.first,ids=setupDraft.decks.slice(0,n),sess=pendingSession;let cfgs;try{cfgs=PlayerUI.configs(n,ids);}catch(e){toast(e.message);return;}mutate(()=>{state=E.create(id,n,seed,cfgs,{deferSetup:true,first,difficulty:(sess&&sess.difficulty)||'normal'});state.windowPrefs={mode:(sess&&sess.windowMode)||'smart',muted:[]};if(sess)state.session={name:sess.name||'',mode:sess.mode,difficulty:sess.difficulty,scenario:id};handView=0;});pendingSession=null;}
 function openChooser(id){const n=setupDraft.players,fallback=['starter-leadership','starter-tactics','starter-spirit','starter-lore'],picks=Array.from({length:n},(_,i)=>{const want=setupDraft.decks[i]||fallback[i];return PlayerUI.deckById(want)?want:(PlayerUI.deckById(fallback[i])?fallback[i]:null);});deckChooser={scenario:id,players:n,player:Math.max(0,picks.findIndex(x=>!x)),tab:'existing',picks};tab='table';render();}
@@ -8861,7 +8970,7 @@ async function handleChooser(b){const a=b.dataset.action,c=deckChooser;if(!c)ret
  if(a==='chooserImportUrl'){const input=document.querySelector('#chooser-url'),raw=String(input&&input.value||'').trim(),m=raw.match(/(?:decklist|deck)\/(?:view\/)?(\d+)/i)||raw.match(/^(\d+)$/);if(!m){toast('无法识别牌组编号；示例 https://ringsdb.com/decklist/view/12345');return;}const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),15000);try{const res=await fetch('https://ringsdb.com/api/public/decklist/'+m[1],{signal:ctrl.signal,headers:{Accept:'application/json'}});if(!res.ok)throw Error('RingsDB 返回 HTTP '+res.status);const saved=PlayerUI.saveDeck(PlayerCards.fromRingsdb(await res.json()));c.picks[c.player]=saved.id;const next=c.picks.findIndex(x=>!x);if(next>=0)c.player=next;render();toast('已导入并选给玩家'+(c.player+1)+'：'+saved.name);}catch(e){toast(e.name==='AbortError'?'RingsDB 请求超时（15秒）；国内网络通常无法访问':'导入失败：'+e.message);}finally{clearTimeout(timer);}return;}
  if(a==='chooserConfirm'){for(let i=0;i<c.players;i++)setupDraft.decks[i]=c.picks[i];const id=c.scenario;deckChooser=null;beginScenario(id);return;}
 }
-function render(){captureSetup();document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));const navBtn=$('#'+({table:'tableTab',decks:'decksTab',catalog:'catalogTab',players:'playersTab',images:'imagesTab',help:'helpTab'}[tab]));if(navBtn)navBtn.classList.add('active');$('#app').innerHTML=tab==='table'?(deckChooser?chooserPage():table()):tab==='decks'?PlayerUI.decksPage():tab==='catalog'?catalog():tab==='players'?PlayerUI.html():tab==='images'?ImageLibrary.html():help();$('#undo').disabled=!history.length;$('#export').disabled=!state;if(tab==='table'&&state&&$('#hand-player'))$('#hand-player').onchange=ev=>{handView=Number(ev.target.value);render();};if(tab==='table'&&state&&$('#planning-actor'))$('#planning-actor').onchange=ev=>{handView=Number(ev.target.value);render();};if(tab==='table'&&state)QuestUI.bind();if(tab==='table'&&!state)bindSetup();if(tab==='players')PlayerUI.bind();if(tab==='decks')PlayerUI.bindDecks();if(tab==='images')ImageLibrary.bind();else ImageLibrary.bindErrors(document.querySelector('#app'));if(tab==='catalog'){filterCatalog();$('#search').oninput=filterCatalog;$('#setFilter').onchange=filterCatalog;$('#typeFilter').onchange=filterCatalog;ImageLibrary.bindErrors(document.querySelector('#catalogResults'));}trackView();}
+function render(){captureSetup();document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));const navBtn=$('#'+({table:'tableTab',decks:'decksTab',catalog:'catalogTab',players:'playersTab',images:'imagesTab',help:'helpTab'}[tab]));if(navBtn)navBtn.classList.add('active');$('#app').innerHTML=tab==='table'?(deckChooser?chooserPage():table()):tab==='decks'?PlayerUI.decksPage():tab==='catalog'?catalog():tab==='players'?PlayerUI.html():tab==='images'?ImageLibrary.html():help();$('#undo').disabled=!history.length;$('#export').disabled=!state;if(tab==='table'&&state&&$('#hand-player'))$('#hand-player').onchange=ev=>{handView=Number(ev.target.value);render();};if(tab==='table'&&state&&$('#planning-actor'))$('#planning-actor').onchange=ev=>{handView=Number(ev.target.value);render();};if(tab==='table'&&state)QuestUI.bind();if(tab==='table'&&!state)bindSetup();if(tab==='players')PlayerUI.bind();if(tab==='decks')PlayerUI.bindDecks();if(tab==='images')ImageLibrary.bind();else ImageLibrary.bindErrors(document.querySelector('#app'));if(tab==='catalog'){filterCatalog();$('#search').oninput=filterCatalog;}trackView();}
 async function choose(title,body,read){return new Promise(resolve=>{let d=document.createElement('dialog');d.innerHTML=`<h2>${enc(title)}</h2><div>${body}</div><div class="actions"><button class="primary" id="ok">确认</button><button id="cancel">取消</button></div>`;document.body.append(d);d.showModal();d.querySelector('#ok').onclick=()=>{let v=read(d);d.close();d.remove();resolve(v);};d.querySelector('#cancel').onclick=()=>{d.close();d.remove();resolve(null);};d.oncancel=()=>{d.remove();resolve(null);};});}
 function playerOptions(){return state.players.filter(p=>!p.eliminated).map(p=>`<option value="${p.id}">${enc(p.name)}</option>`).join('');}
 $('#app').onclick=async ev=>{const b=ev.target.closest('[data-action]');if(!b||b.disabled)return;const a=b.dataset.action,uid=Number(b.dataset.uid),id=Number(b.dataset.id),pid=Number(b.dataset.player);
@@ -8874,6 +8983,8 @@ $('#app').onclick=async ev=>{const b=ev.target.closest('[data-action]');if(!b||b
  if(a==='quest'){await QuestUI.handle(b);return;}
  if(a==='planning'){await PlanningUI.handle(b);return;}
  if(a==='images'){ImageLibrary.handle(b);return;}
+ if(a==='catSide'){catalogSide=b.dataset.value;render();return;}
+ if(a==='catView'){catalogView=b.dataset.value;render();return;}
  if(a==='pc'){await PlayerUI.handle(b);return;}
  if(a==='start'){beginScenario(b.dataset.id);return;}
  if(a==='startOpen'){openChooser(b.dataset.id);return;}
@@ -8903,7 +9014,7 @@ $('#imagesTab').onclick=()=>{tab='images';render();};
 $('#playersTab').onclick=()=>{tab='players';render();};const decksTab=$('#decksTab');if(decksTab)decksTab.onclick=()=>{tab='decks';render();};
 $('#tableTab').onclick=()=>goHome();$('#catalogTab').onclick=()=>{tab='catalog';render();};$('#helpTab').onclick=()=>{tab='help';render();};
 /* 页签上的卡池数量原为 shell.html 里写死的 55，卡池一扩就骗人，这里按数据回填。 */
-const catalogBadge=document.querySelector('#catalogTab span');if(catalogBadge)catalogBadge.textContent=String(D.cards.length+D.quests.length);
+const catalogBadge=document.querySelector('#catalogTab span');if(catalogBadge)catalogBadge.textContent=String(catalogStats().total);
 $('#undo').onclick=()=>{if(history.length){state=history.pop();save();render();}};
 $('#export').onclick=()=>{if(!state)return;let blob=new Blob([JSON.stringify({format:'lotr-scenario-save',version:1,state},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`lotr-${state.scenario}-round-${state.round}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
 $('#import').onchange=async ev=>{const f=ev.target.files[0];if(!f)return;try{if(f.size>5000000)throw Error('存档过大。');const v=JSON.parse(await f.text());if(v.format!=='lotr-scenario-save'||v.version!==1||!v.state||!D.scenarios.some(s=>s.id===v.state.scenario)||!D.quests.some(q=>q.id===v.state.quest)||!Array.isArray(v.state.players)||v.state.players.length<1||v.state.players.length>4||!Array.isArray(v.state.deck)||!Array.isArray(v.state.pending))throw Error('不是此版本的有效存档。');if(state&&!confirm('导入将覆盖当前桌面；可撤销恢复。'))return;mutate(()=>{state=v.state;if(state.phase===2&&state.questing)E.questing.enableDiscussion(state);});tab='table';render();toast('存档已导入。');}catch(e){toast('导入失败：'+e.message);}finally{ev.target.value='';}};

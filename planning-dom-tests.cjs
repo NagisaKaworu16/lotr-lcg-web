@@ -153,21 +153,40 @@ test('score panel stays out of the way while the scenario is still running', asy
 });
 test('desktop version badge comes from one constant that matches the latest CHANGELOG heading',async()=>{const e=environment();const version=e.run('APP_VERSION');assert.match(String(version),/^v\d+\.\d+\.\d+$/);const heading=fs.readFileSync(__dirname+'/CHANGELOG.md','utf8').split('\n').find(l=>l.startsWith('# v'));assert(heading,'CHANGELOG.md 缺少 "# vX.Y.Z" 形式的最新条目标题');assert(heading.startsWith('# '+version),`界面版本 ${version} 与 CHANGELOG 最新条目「${heading}」不一致`);assert(!/MIDDLE-EARTH EXPEDITION · v\d/.test(fs.readFileSync(__dirname+'/desktop-ui.js','utf8')),'桌面徽标不应再硬编码版本号');await opening(e);assert(e.base.get('app').innerHTML.includes('MIDDLE-EARTH EXPEDITION · '+version),'桌面徽标未使用 APP_VERSION 常量');});
 
-test('basic card library tab renders instead of throwing, and its filters narrow the list',async()=>{
- const e=environment();e.run(`tab='catalog';render();`);
- const html=e.base.get('app').innerHTML;
- assert(html.includes('基础卡牌库'),'卡牌库页签未渲染标题');
- assert(html.includes('id="search"')&&html.includes('id="setFilter"')&&html.includes('id="typeFilter"'),'卡牌库缺少搜索与筛选控件');
- assert(e.run("$('#resultCount').textContent").includes('55 种'),'结果数应为 45 种遭遇卡 + 10 张探险卡');
- assert(e.run("$('#catalogResults').innerHTML").length>1000,'卡牌库列表为空');
- e.run(`$('#search').value='蛛';filterCatalog();`);
- const spider=e.run("Number($('#resultCount').textContent.match(/\\d+/)[0])");
- assert(spider>0&&spider<55,'关键词筛选未生效');
- e.run(`$('#search').value='';$('#typeFilter').value='Quest';filterCatalog();`);
- assert.equal(e.run("$('#resultCount').textContent"),'找到 '+e.run('D.quests.length')+' 种卡牌');
- assert(e.run("$('#catalogResults').innerHTML").includes('探险卡 #'),'探险卡结果缺少阶段标题');
- e.run(`$('#typeFilter').value='';$('#setFilter').value='Spiders of Mirkwood';filterCatalog();`);
- assert.equal(e.run("$('#resultCount').textContent"),'找到 '+e.run("D.cards.filter(c=>c.set==='Spiders of Mirkwood').length+D.quests.filter(q=>D.scenarios.some(s=>s.sets.includes('Spiders of Mirkwood')&&s.stages.includes(q.id))).length")+' 种卡牌');
- e.run(`$('#setFilter').value='';$('#search').value='不存在的卡名xyz';filterCatalog();`);
- assert(e.run("$('#catalogResults').innerHTML").includes('没有匹配的卡牌'),'无结果时应给出空状态');
+test('card library merges player and encounter cards behind a three-way player/encounter/both split',async()=>{
+ const e=environment();e.run(`catalogSide='both';catalogView='list';catalogQuery='';tab='catalog';render();`);
+ const html=e.base.get('app').innerHTML,players=e.run('RINGSDB_SNAPSHOT.cards.length'),encounters=e.run('D.cards.length+D.quests.length');
+ assert(html.includes('卡牌库'),'卡牌库页签未渲染标题');
+ assert(html.includes('data-action="catSide" data-value="player"')&&html.includes('data-action="catSide" data-value="encounter"')&&html.includes('data-action="catSide" data-value="both"'),'缺少玩家／战役／两者都三档分类');
+ assert(html.includes('data-action="catView" data-value="list"')&&html.includes('data-action="catView" data-value="art"'),'缺少名称／卡图视图切换');
+ const count=()=>e.run("Number($('#resultCount').textContent.match(/\\d+/)[0])");
+ assert.equal(e.run('catalogStats().total'),players+encounters,'卡池总数应为玩家卡与战役卡之和');
+ assert.equal(count(),players+encounters,'两者都时结果数应为全量');
+ const body=()=>e.run("$('#catalogResults').innerHTML");
+ assert(body().includes('玩家 · 领导')&&body().includes('战役 · 敌人'),'两者都视图应同时出现玩家与战役分组');
+ assert(body().includes('战役 · 探险卡'),'探险卡应归入战役分组');
+ /* 单侧分类 */
+ e.run(`catalogSide='player';render();`);
+ assert.equal(count(),players,'玩家分类应只含玩家卡');
+ assert(!body().includes('战役 · '),'玩家分类不应混入战役分组');
+ e.run(`catalogSide='encounter';render();`);
+ assert.equal(count(),encounters,'战役分类应只含遭遇卡与探险卡');
+ /* 关键词跨两类 */
+ e.run(`catalogSide='both';render();$('#search').value='蛛';filterCatalog();`);
+ const hit=count();
+ assert(hit>0&&hit<players+encounters,'关键词筛选未生效');
+e.run(`$('#search').value='';filterCatalog();`);
+ /* 卡图视图 */
+ e.run(`catalogView='art';render();`);
+ assert(body().includes('cat-figure'),'卡图视图应渲染卡图网格');
+ assert(body().includes('assets/cards-zh-core/'),'玩家卡应使用本地中文卡图');
+ e.run(`catalogView='list';render();`);
+ /* 详情按需注入 */
+ const detail=e.run("catalogDetail('player','01001')");
+ assert(detail.includes('领导')&&detail.includes('01001'),'玩家卡详情应含球色与编号');
+ assert(detail.includes('assets/cards-zh-core/01001.jpg'),'玩家卡详情应含本地卡图');
+ assert(e.run("catalogDetail('encounter','96')").includes('暗影'),'遭遇卡详情应含暗影效果');
+ assert(e.run("catalogDetail('quest','119')").includes('B面'),'探险卡详情应含 B 面');
+ e.run(`$('#search').value='不存在的卡名xyz';filterCatalog();`);
+ assert(body().includes('没有匹配的卡牌'),'无结果时应给出空状态');
 });

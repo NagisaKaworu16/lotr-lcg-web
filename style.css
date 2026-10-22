@@ -311,3 +311,40 @@ body:has(.desktop-table) .nav-home .brand-mark{width:17px;height:17px}
 .operation-content:has(.score-panel){max-height:none;overflow:visible}
 @media(min-width:1700px){.operation-content:has(.score-panel){max-height:none}}
 @media(max-width:1100px){.operation-content:has(.score-panel){max-height:none}}
+/* 卡牌库：杂志式密集索引。默认只列名称，点开才注入卡图与全文（见 app.js catalogItem/catalogDetail）。 */
+.cat-controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:16px 0 10px}
+.cat-sides,.cat-views{display:inline-flex;flex:none;border:1px solid var(--line);border-radius:999px;background:#fff;overflow:hidden}
+.cat-sides button,.cat-views button{min-height:44px;padding:0 18px;border:0;border-right:1px solid var(--line);background:transparent;color:var(--ink);font:inherit;cursor:pointer;transition:background 160ms ease-out,color 160ms ease-out}
+.cat-sides button:last-child,.cat-views button:last-child{border-right:0}
+.cat-sides button:hover,.cat-views button:hover{background:#f3f0e2}
+.cat-sides button[aria-pressed="true"],.cat-views button[aria-pressed="true"]{background:var(--green);color:#fdf8e7}
+.cat-sides button:focus-visible,.cat-views button:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}
+.cat-controls #search{flex:1;min-width:220px;min-height:44px;border:1px solid var(--line);border-radius:999px;padding:0 18px;background:#fff;color:var(--ink);font:inherit}
+.cat-controls #search:focus{outline:2px solid var(--gold);outline-offset:1px}
+.cat-index{margin-top:6px}
+.cat-group{margin:22px 0 4px}
+.cat-group h2{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:0 0 6px;padding-bottom:6px;border-bottom:1px solid var(--line);color:var(--muted);font-size:12px;font-weight:600;letter-spacing:.14em}
+.cat-count{color:var(--gold);font-variant-numeric:tabular-nums}
+.cat-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:0 26px;align-items:start}
+.cat-item{margin:0;border-bottom:1px dotted #cfd5c8}
+.cat-item>summary{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:38px;padding:6px 4px;list-style:none;border-radius:4px;cursor:pointer}
+.cat-item>summary::-webkit-details-marker{display:none}
+.cat-item>summary:hover{background:#fffdf4}
+.cat-item>summary:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}
+.cat-name{font-weight:600;color:var(--ink)}
+.cat-meta{color:var(--muted);font-size:12px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.cat-item[open]{grid-column:1/-1;margin:6px 0;padding:0 16px 4px;border:1px solid var(--line);border-radius:10px;background:#fffdf4;box-shadow:0 8px 28px rgba(36,57,47,.08)}
+.cat-item[open]>summary{margin-bottom:10px;border-bottom:1px solid var(--line)}
+.cat-detail{display:flex;align-items:flex-start;gap:20px;padding-bottom:12px;flex-wrap:wrap}
+.cat-detail>.card-art{flex:none;width:240px;margin:0}
+.cat-facts{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin:0 0 12px;font-size:13px}
+.cat-facts dt{color:var(--muted)}
+.cat-facts dd{margin:0;font-variant-numeric:tabular-nums}
+.cat-text{flex:1;min-width:260px;max-width:72ch;line-height:1.8}
+.cat-text p{margin:0 0 10px;white-space:pre-wrap}
+.cat-art-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px}
+.cat-figure{display:flex;flex-direction:column;gap:6px;margin:0}
+.cat-figure figcaption{display:flex;flex-direction:column;gap:2px;color:var(--muted);font-size:12px}
+.cat-figure figcaption b{color:var(--ink);font-size:13px;font-weight:600}
+@media(prefers-reduced-motion:reduce){.cat-sides button,.cat-views button{transition:none}}
+@media(max-width:900px){.cat-list{grid-template-columns:1fr}}
