@@ -119,6 +119,21 @@ const OUT=path.join(ROOT,'docs','catalog-tabs');
  await shot('hover-quest');
  check('悬停后离开仍收起',(await away())===null);
 
+ /* 7.5 侧边导航：基础卡牌库默认项 + 扩展包预留条目 */
+ check('侧栏渲染且基础卡牌库默认激活',await page.evaluate(()=>{const b=document.querySelector('.cat-nav-item[data-section="base"]');return !!b&&b.getAttribute('aria-current')==='page'&&!!document.querySelector('.cat-side nav')&&!!document.querySelector('.cat-main');}));
+ check('扩展条目动态来自产品目录（基础项外 ≥21 条）',await page.evaluate(()=>document.querySelectorAll('.cat-nav-item[data-section]:not([data-section="base"])').length>=21));
+ check('旧版扩展折叠在 details 且默认收起',await page.evaluate(()=>{const d=document.querySelector('.cat-nav-fold');return !!d&&d.tagName==='DETAILS'&&!d.open;}));
+ const firstSeries=await page.evaluate(()=>document.querySelector('.cat-nav-item[data-section]:not([data-section="base"])').dataset.section);
+ await page.click(`.cat-nav-item[data-section="${firstSeries}"]`);
+ await page.waitForTimeout(350);
+ check('点扩展条目出占位面板',await page.evaluate(()=>{const p=document.querySelector('.cat-series-panel');return !!p&&p.textContent.includes('尚未收录');}));
+ check('激活态在侧栏同步切换',await page.evaluate(sec=>{const a=document.querySelector(`.cat-nav-item[data-section="${sec}"]`);return !!a&&a.getAttribute('aria-current')==='page'&&document.querySelector('.cat-nav-item[data-section="base"]').getAttribute('aria-current')!=='page';},firstSeries));
+ await shot('sidebar-series');
+ await page.click('.cat-nav-item[data-section="base"]');
+ await page.waitForTimeout(350);
+ check('返回基础卡牌库恢复搜索与列表',await page.evaluate(()=>!!document.querySelector('#search')&&!!document.querySelector('#catalogResults')&&document.querySelector('.cat-nav-item[data-section="base"]').getAttribute('aria-current')==='page'));
+ await shot('sidebar-base');
+
  /* 8. 排版与图片健康 */
  check('无横向溢出',await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth+1));
  check('无破图',await page.evaluate(()=>[...document.querySelectorAll('#catalogResults img')].filter(i=>i.complete&&i.naturalWidth===0).length===0));
@@ -127,6 +142,17 @@ const OUT=path.join(ROOT,'docs','catalog-tabs');
  await page.fill('#search','');
  await page.waitForTimeout(200);
  check('重复进出页签不报错',await (async()=>{await page.click('#helpTab');await page.waitForTimeout(150);await page.click('#catalogTab');await page.waitForTimeout(300);return errors.length===0;})());
+
+ /* 9. 移动端适配（480 宽：侧栏从双栏变条目组） */
+ await page.setViewportSize({width:480,height:860});
+ await page.waitForTimeout(350);
+ check('移动端无横向溢出',await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth+1));
+ check('移动端侧栏取消 sticky 双栏',await page.evaluate(()=>getComputedStyle(document.querySelector('.cat-side')).position==='static'));
+ check('移动端条目改为可换行的 chip',await page.evaluate(()=>getComputedStyle(document.querySelector('.cat-nav-item')).display==='inline-flex'));
+ check('移动端搜索与列表仍可用',await (async()=>{await page.fill('#search','蛛');await page.waitForTimeout(250);const n=await count();await page.fill('#search','');await page.waitForTimeout(150);return n>0;})());
+ await shot('mobile-480');
+ await page.setViewportSize({width:1440,height:1000});
+ await page.waitForTimeout(250);
 
  await page.close();
  await browser.close();

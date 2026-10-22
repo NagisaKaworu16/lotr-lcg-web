@@ -360,3 +360,44 @@ body:has(.desktop-table) .nav-home .brand-mark{width:17px;height:17px}
 .build-count{min-width:22px;text-align:center;color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums}
 .build-row .cat-name{overflow-wrap:anywhere}
 @media(max-width:900px){.build-list{grid-template-columns:1fr}}
+
+/* 卡牌库侧边导航：桌面双栏，基础卡牌库为默认项，扩展包条目为预留占位 */
+.catalog-layout{display:grid;grid-template-columns:236px minmax(0,1fr);gap:26px;align-items:start}
+.cat-side{position:sticky;top:74px;max-height:calc(100vh - 92px);overflow-y:auto;padding:4px 2px 16px;scrollbar-width:thin}
+.cat-nav{display:grid;gap:16px}
+.cat-nav-group{display:grid;gap:4px}
+.cat-nav-group h3{margin:0 0 4px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:700}
+.cat-nav-item{display:flex;align-items:center;gap:9px;width:100%;padding:7px 10px;border:0;border-left:3px solid transparent;border-radius:8px;background:transparent;color:var(--ink);font:inherit;font-size:14px;line-height:1.35;text-align:left;cursor:pointer;transition:background .12s ease,border-color .12s ease}
+.cat-nav-item:hover{background:#36584214;border-color:#36584233}
+.cat-nav-item:focus-visible{outline:2px solid var(--green);outline-offset:1px}
+.cat-nav-item[aria-current="page"]{background:var(--green);border-left-color:var(--gold);color:#fffdf6;font-weight:600}
+.cat-nav-item[aria-current="page"] .cat-nav-name small{color:#fffdf6b8}
+.cat-nav-item img{width:24px;height:24px;flex:0 0 24px;object-fit:cover;border-radius:5px;background:#f2f0e4;box-shadow:0 0 0 1px var(--line)}
+.cat-nav-dot{width:8px;height:8px;flex:0 0 8px;margin:0 8px;border-radius:50%;background:var(--gold);opacity:.85}
+.cat-nav-item[aria-current="page"] .cat-nav-dot{background:#fffdf6}
+.cat-nav-name{overflow-wrap:anywhere}
+.cat-nav-name small{color:var(--muted);font-size:11px;font-weight:400}
+.cat-nav-fold{border-top:1px dashed var(--line);margin-top:6px;padding-top:6px}
+.cat-nav-fold summary{cursor:pointer;font-size:12px;color:var(--muted);padding:5px 10px;border-radius:6px;list-style:none}
+.cat-nav-fold summary::-webkit-details-marker{display:none}
+.cat-nav-fold summary::before{content:"▸ ";color:var(--gold)}
+.cat-nav-fold[open] summary::before{content:"▾ "}
+.cat-nav-fold summary:hover{color:var(--ink);background:#36584210}
+.cat-nav-fold[open] summary{margin-bottom:2px}
+.cat-nav-hint{margin:8px 2px 0;color:var(--muted)}
+.cat-series-panel{display:flex;gap:20px;align-items:flex-start}
+.cat-series-art{width:180px;max-width:38%;border-radius:10px;box-shadow:0 0 0 1px var(--line),0 8px 22px #24392f1c;align-self:flex-start}
+.cat-series-text h2{margin:4px 0 10px;font-size:19px}
+.cat-series-text button{margin-top:6px}
+@media(max-width:960px){
+ .catalog-layout{grid-template-columns:1fr;gap:14px}
+ .cat-side{position:static;max-height:none;overflow:visible;padding:0}
+ .cat-nav{display:block}
+ .cat-nav-group{display:block;margin-bottom:12px}
+ .cat-nav-group h3{margin-bottom:4px}
+ .cat-nav-item{display:inline-flex;width:auto;max-width:100%;margin:2px 6px 2px 0;background:#fffdf6;border:1px solid var(--line);border-left:3px solid transparent}
+ .cat-nav-item[aria-current="page"]{border-color:var(--green)}
+ .cat-nav-fold{border-top:0;padding-top:2px;margin-top:2px}
+ .cat-series-panel{flex-direction:column}
+ .cat-series-art{width:min(240px,60%);max-width:none}
+}

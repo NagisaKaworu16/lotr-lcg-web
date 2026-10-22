@@ -124,6 +124,30 @@
     "ok": true
   },
   {
+    "label": "侧栏渲染且基础卡牌库默认激活",
+    "ok": true
+  },
+  {
+    "label": "扩展条目动态来自产品目录（基础项外 ≥21 条）",
+    "ok": true
+  },
+  {
+    "label": "旧版扩展折叠在 details 且默认收起",
+    "ok": true
+  },
+  {
+    "label": "点扩展条目出占位面板",
+    "ok": true
+  },
+  {
+    "label": "激活态在侧栏同步切换",
+    "ok": true
+  },
+  {
+    "label": "返回基础卡牌库恢复搜索与列表",
+    "ok": true
+  },
+  {
     "label": "无横向溢出",
     "ok": true
   },
@@ -141,6 +165,22 @@
   },
   {
     "label": "重复进出页签不报错",
+    "ok": true
+  },
+  {
+    "label": "移动端无横向溢出",
+    "ok": true
+  },
+  {
+    "label": "移动端侧栏取消 sticky 双栏",
+    "ok": true
+  },
+  {
+    "label": "移动端条目改为可换行的 chip",
+    "ok": true
+  },
+  {
+    "label": "移动端搜索与列表仍可用",
     "ok": true
   }
 ]

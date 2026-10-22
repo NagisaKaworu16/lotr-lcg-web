@@ -363,6 +363,47 @@ body:has(.desktop-table) .nav-home .brand-mark{width:17px;height:17px}
 .build-row .cat-name{overflow-wrap:anywhere}
 @media(max-width:900px){.build-list{grid-template-columns:1fr}}
 
+/* 卡牌库侧边导航：桌面双栏，基础卡牌库为默认项，扩展包条目为预留占位 */
+.catalog-layout{display:grid;grid-template-columns:236px minmax(0,1fr);gap:26px;align-items:start}
+.cat-side{position:sticky;top:74px;max-height:calc(100vh - 92px);overflow-y:auto;padding:4px 2px 16px;scrollbar-width:thin}
+.cat-nav{display:grid;gap:16px}
+.cat-nav-group{display:grid;gap:4px}
+.cat-nav-group h3{margin:0 0 4px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:700}
+.cat-nav-item{display:flex;align-items:center;gap:9px;width:100%;padding:7px 10px;border:0;border-left:3px solid transparent;border-radius:8px;background:transparent;color:var(--ink);font:inherit;font-size:14px;line-height:1.35;text-align:left;cursor:pointer;transition:background .12s ease,border-color .12s ease}
+.cat-nav-item:hover{background:#36584214;border-color:#36584233}
+.cat-nav-item:focus-visible{outline:2px solid var(--green);outline-offset:1px}
+.cat-nav-item[aria-current="page"]{background:var(--green);border-left-color:var(--gold);color:#fffdf6;font-weight:600}
+.cat-nav-item[aria-current="page"] .cat-nav-name small{color:#fffdf6b8}
+.cat-nav-item img{width:24px;height:24px;flex:0 0 24px;object-fit:cover;border-radius:5px;background:#f2f0e4;box-shadow:0 0 0 1px var(--line)}
+.cat-nav-dot{width:8px;height:8px;flex:0 0 8px;margin:0 8px;border-radius:50%;background:var(--gold);opacity:.85}
+.cat-nav-item[aria-current="page"] .cat-nav-dot{background:#fffdf6}
+.cat-nav-name{overflow-wrap:anywhere}
+.cat-nav-name small{color:var(--muted);font-size:11px;font-weight:400}
+.cat-nav-fold{border-top:1px dashed var(--line);margin-top:6px;padding-top:6px}
+.cat-nav-fold summary{cursor:pointer;font-size:12px;color:var(--muted);padding:5px 10px;border-radius:6px;list-style:none}
+.cat-nav-fold summary::-webkit-details-marker{display:none}
+.cat-nav-fold summary::before{content:"▸ ";color:var(--gold)}
+.cat-nav-fold[open] summary::before{content:"▾ "}
+.cat-nav-fold summary:hover{color:var(--ink);background:#36584210}
+.cat-nav-fold[open] summary{margin-bottom:2px}
+.cat-nav-hint{margin:8px 2px 0;color:var(--muted)}
+.cat-series-panel{display:flex;gap:20px;align-items:flex-start}
+.cat-series-art{width:180px;max-width:38%;border-radius:10px;box-shadow:0 0 0 1px var(--line),0 8px 22px #24392f1c;align-self:flex-start}
+.cat-series-text h2{margin:4px 0 10px;font-size:19px}
+.cat-series-text button{margin-top:6px}
+@media(max-width:960px){
+ .catalog-layout{grid-template-columns:1fr;gap:14px}
+ .cat-side{position:static;max-height:none;overflow:visible;padding:0}
+ .cat-nav{display:block}
+ .cat-nav-group{display:block;margin-bottom:12px}
+ .cat-nav-group h3{margin-bottom:4px}
+ .cat-nav-item{display:inline-flex;width:auto;max-width:100%;margin:2px 6px 2px 0;background:#fffdf6;border:1px solid var(--line);border-left:3px solid transparent}
+ .cat-nav-item[aria-current="page"]{border-color:var(--green)}
+ .cat-nav-fold{border-top:0;padding-top:2px;margin-top:2px}
+ .cat-series-panel{flex-direction:column}
+ .cat-series-art{width:min(240px,60%);max-width:none}
+}
+
 </style></head><body>
 <header><nav><button id="tableTab" class="active nav-home" title="回到首页"><svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><defs><linearGradient id="brandGold" x1="10" y1="8" x2="54" y2="57" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fdf4cd"/><stop offset=".32" stop-color="#e3c47a"/><stop offset=".55" stop-color="#a9853f"/><stop offset=".78" stop-color="#e8cb86"/><stop offset="1" stop-color="#fffae0"/></linearGradient><radialGradient id="brandField" cx=".5" cy=".42" r=".58"><stop offset="0" stop-color="#8a4a16"/><stop offset=".46" stop-color="#4a2a10"/><stop offset="1" stop-color="#150e07"/></radialGradient></defs><circle cx="32" cy="32" r="21" fill="#0d1710" fill-opacity=".62"/><circle cx="32" cy="32" r="21" fill="none" stroke="url(#brandGold)" stroke-width="7"/><path d="M14.6 19.2A21 21 0 0 1 32.6 10.9" fill="none" stroke="#fffbe8" stroke-width="2.4" stroke-linecap="round" opacity=".55"/></svg>首页</button><button id="catalogTab">基础卡牌库 <span>55</span></button><button id="decksTab">我的卡组</button><button id="imagesTab">全部卡图</button><button id="helpTab">说明与完成范围</button></nav><div class="history-nav"><button id="navBack" type="button" title="后退" aria-label="后退">←</button><button id="navFwd" type="button" title="前进" aria-label="前进">→</button></div><div class="header-actions"><button id="undo">撤销一步</button><button id="export">导出存档</button><label class="button" for="import">导入存档</label><input id="import" type="file" accept="application/json" hidden></div></header>
 <main id="app"></main><div id="toast" role="status" aria-live="polite"></div>
@@ -8429,7 +8470,7 @@ const WindowUI=(()=>{
 </script><script>
 /* Tabletop view: UI drafts never pay, exhaust, reveal, or bypass phase validation. */
 /* 界面版本徽标唯一来源：须与 CHANGELOG.md 最新条目标题一致（planning-dom-tests 有校验）。 */
-const APP_VERSION='v0.15.26';
+const APP_VERSION='v0.15.27';
 const DesktopUI=(()=>{
  const E=ScenarioEngine,R=E.planning,Q=E.questing,C=E.combat,esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  let combatDraft={key:'',target:null,ids:[]},draftState=null;
@@ -8909,7 +8950,29 @@ const CAT_SIDES=[{id:'player',label:'玩家',note:'英雄 · 盟友 · 附属 ·
 const CAT_GROUP_ORDER=['领导','战术','精神','学识','中立','敌人','地点','诡计','目标','探险卡'];
 const PLAYER_TYPES={hero:'英雄',ally:'盟友',attachment:'附属',event:'事件'};
 const SPHERE_NAMES={leadership:'领导',tactics:'战术',spirit:'精神',lore:'学识',neutral:'中立'};
-let catalogSide='both',catalogView='list',catalogQuery='',catalogCache=null;
+let catalogSide='both',catalogView='list',catalogQuery='',catalogCache=null,catSection='base',catalogNavCache=null;
+/* 侧边栏导航：基础卡牌库是默认项；扩展包条目从产品目录动态生成做占位，
+ * 以后某系列收录卡牌时，把 catalogSeriesPanel 的占位换成该系列的筛选结果即可。 */
+function catalogNav(){
+ if(catalogNavCache)return catalogNavCache;
+ const revised=[],legacy=[];
+ for(const ch of PRODUCT_TABS.revised||[])for(const it of ch.items||[])revised.push({id:it.id,name:it.zh||it.name,en:it.en&&it.en!==it.name?it.en:'',art:it.art||'',meta:it.meta||''});
+ for(const s of legacySeries())legacy.push({id:s.id,name:s.name,en:s.en&&s.en!==s.name?s.en:'',art:s.art||'',meta:s.packs&&s.packs.length?`${s.packs.length} 个扩展`:'循环'});
+ return catalogNavCache={revised,legacy};
+}
+function catNavItem(it){
+ const icon=it.art?`<img src="${enc(it.art)}" alt="" loading="lazy" onerror="const s=this.getAttribute('src')||'';if(/\.webp$/.test(s)){this.setAttribute('src',s.replace(/\.webp$/,'.jpg'))}else{this.remove()}">`:'<span class="cat-nav-dot" aria-hidden="true"></span>';
+ return `<button type="button" class="cat-nav-item" data-action="catNav" data-section="${enc(it.id)}" aria-current="${catSection===it.id?'page':'false'}">${icon}<span class="cat-nav-name">${enc(it.name)}</span></button>`;
+}
+function catNavHtml(){
+ const nav=catalogNav();
+ return `<aside class="cat-side"><nav class="cat-nav" aria-label="卡牌库系列导航"><div class="cat-nav-group"><h3>基础</h3><button type="button" class="cat-nav-item" data-action="catNav" data-section="base" aria-current="${catSection==='base'?'page':'false'}"><span class="cat-nav-dot" aria-hidden="true"></span><span class="cat-nav-name">基础卡牌库<small> ${catalogStats().total} 种</small></span></button></div><div class="cat-nav-group"><h3>扩展包 · 预留</h3>${nav.revised.map(catNavItem).join('')}<details class="cat-nav-fold"${catSection!=='base'&&nav.legacy.some(x=>x.id===catSection)?' open':''}><summary>旧版扩展（${nav.legacy.length}）</summary>${nav.legacy.map(catNavItem).join('')}</details><p class="cat-nav-hint small">系列卡牌尚未收录，点击查看系列详情。</p></div></nav></aside>`;
+}
+function catalogSeriesPanel(id){
+ const it=catalogNav().revised.concat(catalogNav().legacy).find(x=>x.id===id);if(!it)return '';
+ const art=it.art?`<img class="cat-series-art" src="${enc(it.art)}" alt="" loading="lazy" onerror="const s=this.getAttribute('src')||'';if(/\.webp$/.test(s)){this.setAttribute('src',s.replace(/\.webp$/,'.jpg'))}else{this.remove()}">`:'';
+ return `<div class="intro"><div><div class="eyebrow">SERIES · 即将收录</div><h1>${enc(it.name)}</h1>${it.en?`<p class="muted">${enc(it.en)}</p>`:''}</div></div><section class="panel cat-series-panel">${art}<div class="cat-series-text"><h2>该系列的卡牌尚未收录</h2><p>目前卡牌库收录的是基础版 ${catalogStats().total} 种卡牌（玩家卡与战役卡）。这一系列${it.meta?`（${enc(it.meta)}）`:''}的卡牌与规则将随版本更新加入，届时会出现在这里，并可直接按本系列筛选。</p><p class="small muted">想先了解它的剧本？回首页从「新版扩展／旧版扩展」进入对应章节。</p><button type="button" data-action="catNav" data-section="base">← 返回基础卡牌库</button></div></section>`;
+}
 function catalogEntries(){
  if(catalogCache)return catalogCache;
  const out=[],snap=(typeof RINGSDB_SNAPSHOT!=='undefined'&&RINGSDB_SNAPSHOT.cards)||[];
@@ -8938,8 +9001,11 @@ function catalogGroups(side){
  return [...map.values()].sort((a,b)=>(a.order<0?99:a.order)-(b.order<0?99:b.order));
 }
 function catalog(){
- const st=catalogStats(),kinds=m=>Object.entries(m).map(([k,v])=>enc(k)+' '+v).join(' / ');
- return `<div class="intro"><div><div class="eyebrow">CARD INDEX</div><h1>卡牌库</h1><p class="muted">玩家卡 ${st.player} 种（${kinds(st.playerKinds)}） · 战役卡 ${st.encounter} 种（${kinds(st.encounterKinds)}） · 合计 ${st.total} 种。鼠标停在卡名上直接显示卡图，点开看完整文本与机制；配牌请到「我的卡组 → 新建牌组」。中文为工作译名与机制摘要。</p></div></div><div class="cat-controls"><div class="cat-sides" role="group" aria-label="卡牌分类">${CAT_SIDES.map(s=>`<button type="button" data-action="catSide" data-value="${s.id}" aria-pressed="${s.id===catalogSide}" title="${enc(s.note)}">${s.label}</button>`).join('')}</div><input id="search" placeholder="搜索名称、规则或特性…" value="${enc(catalogQuery)}" aria-label="搜索卡牌"><div class="cat-views" role="group" aria-label="显示方式"><button type="button" data-action="catView" data-value="list" aria-pressed="${catalogView==='list'}">名称</button><button type="button" data-action="catView" data-value="art" aria-pressed="${catalogView==='art'}">卡图</button></div></div><div class="small muted" id="resultCount"></div><div class="cat-index" id="catalogResults"></div>`;
+ const main=catSection==='base'?(()=>{
+  const st=catalogStats(),kinds=m=>Object.entries(m).map(([k,v])=>enc(k)+' '+v).join(' / ');
+  return `<div class="intro"><div><div class="eyebrow">CARD INDEX</div><h1>卡牌库</h1><p class="muted">玩家卡 ${st.player} 种（${kinds(st.playerKinds)}） · 战役卡 ${st.encounter} 种（${kinds(st.encounterKinds)}） · 合计 ${st.total} 种。鼠标停在卡名上直接显示卡图，点开看完整文本与机制；配牌请到「我的卡组 → 新建牌组」。中文为工作译名与机制摘要。</p></div></div><div class="cat-controls"><div class="cat-sides" role="group" aria-label="卡牌分类">${CAT_SIDES.map(s=>`<button type="button" data-action="catSide" data-value="${s.id}" aria-pressed="${s.id===catalogSide}" title="${enc(s.note)}">${s.label}</button>`).join('')}</div><input id="search" placeholder="搜索名称、规则或特性…" value="${enc(catalogQuery)}" aria-label="搜索卡牌"><div class="cat-views" role="group" aria-label="显示方式"><button type="button" data-action="catView" data-value="list" aria-pressed="${catalogView==='list'}">名称</button><button type="button" data-action="catView" data-value="art" aria-pressed="${catalogView==='art'}">卡图</button></div></div><div class="small muted" id="resultCount"></div><div class="cat-index" id="catalogResults"></div>`;
+ })():catalogSeriesPanel(catSection);
+ return `<div class="catalog-layout">${catNavHtml()}<div class="cat-main">${main}</div></div>`;
 }
 function catalogHover(e){
  const key=e.face==='player'?e.code:'enc-'+e.code,rec=ImageLibrary.by[key],url=rec?ImageLibrary.safeUrl(rec.imageUrl):null;
@@ -8977,9 +9043,8 @@ function filterCatalog(){
   return `<section class="cat-group"><h2><span>${enc(g.title)}</span><span class="cat-count">${hit.length}</span></h2>${catalogView==='art'?`<div class="cat-art-grid">${hit.map(catalogArt).join('')}</div>`:`<div class="cat-list">${hit.map(catalogItem).join('')}</div>`}</section>`;
  }).join('');
  const side=CAT_SIDES.find(s=>s.id===catalogSide)||CAT_SIDES[2];
- $('#resultCount').textContent=q?`「${catalogQuery.trim()}」匹配 ${shown} 种`:`${side.note} · 共 ${shown} 种`;
- $('#catalogResults').innerHTML=html||empty(q?'没有匹配的卡牌，换个关键词。':'这一类暂时没有卡牌。');
- ImageLibrary.bindErrors(document.querySelector('#catalogResults'));
+ const rc=$('#resultCount');if(rc)rc.textContent=q?`「${catalogQuery.trim()}」匹配 ${shown} 种`:`${side.note} · 共 ${shown} 种`;
+ const cr=$('#catalogResults');if(cr){cr.innerHTML=html||empty(q?'没有匹配的卡牌，换个关键词。':'这一类暂时没有卡牌。');ImageLibrary.bindErrors(cr);}
  bindCatalog();
 }
 function bindCatalog(){
@@ -9033,7 +9098,7 @@ async function handleChooser(b){const a=b.dataset.action,c=deckChooser;if(!c)ret
  if(a==='chooserImportUrl'){const input=document.querySelector('#chooser-url'),raw=String(input&&input.value||'').trim(),m=raw.match(/(?:decklist|deck)\/(?:view\/)?(\d+)/i)||raw.match(/^(\d+)$/);if(!m){toast('无法识别牌组编号；示例 https://ringsdb.com/decklist/view/12345');return;}const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),15000);try{const res=await fetch('https://ringsdb.com/api/public/decklist/'+m[1],{signal:ctrl.signal,headers:{Accept:'application/json'}});if(!res.ok)throw Error('RingsDB 返回 HTTP '+res.status);const saved=PlayerUI.saveDeck(PlayerCards.fromRingsdb(await res.json()));c.picks[c.player]=saved.id;const next=c.picks.findIndex(x=>!x);if(next>=0)c.player=next;render();toast('已导入并选给玩家'+(c.player+1)+'：'+saved.name);}catch(e){toast(e.name==='AbortError'?'RingsDB 请求超时（15秒）；国内网络通常无法访问':'导入失败：'+e.message);}finally{clearTimeout(timer);}return;}
  if(a==='chooserConfirm'){for(let i=0;i<c.players;i++)setupDraft.decks[i]=c.picks[i];const id=c.scenario;deckChooser=null;beginScenario(id);return;}
 }
-function render(){captureSetup();document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));const navBtn=$('#'+({table:'tableTab',decks:'decksTab',catalog:'catalogTab',images:'imagesTab',help:'helpTab'}[tab]));if(navBtn)navBtn.classList.add('active');$('#app').innerHTML=tab==='table'?(deckChooser?chooserPage():table()):tab==='decks'?(PlayerUI.isBuilding()?PlayerUI.builder():PlayerUI.decksPage()):tab==='catalog'?catalog():tab==='images'?ImageLibrary.html():help();$('#undo').disabled=!history.length;$('#export').disabled=!state;if(tab==='table'&&state&&$('#hand-player'))$('#hand-player').onchange=ev=>{handView=Number(ev.target.value);render();};if(tab==='table'&&state&&$('#planning-actor'))$('#planning-actor').onchange=ev=>{handView=Number(ev.target.value);render();};if(tab==='table'&&state)QuestUI.bind();if(tab==='table'&&!state)bindSetup();if(tab==='decks'){PlayerUI.bindDecks();PlayerUI.bind();}if(tab==='images')ImageLibrary.bind();else ImageLibrary.bindErrors(document.querySelector('#app'));if(tab==='catalog'){filterCatalog();$('#search').oninput=filterCatalog;}trackView();}
+function render(){captureSetup();document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));const navBtn=$('#'+({table:'tableTab',decks:'decksTab',catalog:'catalogTab',images:'imagesTab',help:'helpTab'}[tab]));if(navBtn)navBtn.classList.add('active');$('#app').innerHTML=tab==='table'?(deckChooser?chooserPage():table()):tab==='decks'?(PlayerUI.isBuilding()?PlayerUI.builder():PlayerUI.decksPage()):tab==='catalog'?catalog():tab==='images'?ImageLibrary.html():help();$('#undo').disabled=!history.length;$('#export').disabled=!state;if(tab==='table'&&state&&$('#hand-player'))$('#hand-player').onchange=ev=>{handView=Number(ev.target.value);render();};if(tab==='table'&&state&&$('#planning-actor'))$('#planning-actor').onchange=ev=>{handView=Number(ev.target.value);render();};if(tab==='table'&&state)QuestUI.bind();if(tab==='table'&&!state)bindSetup();if(tab==='decks'){PlayerUI.bindDecks();PlayerUI.bind();}if(tab==='images')ImageLibrary.bind();else ImageLibrary.bindErrors(document.querySelector('#app'));if(tab==='catalog'){filterCatalog();const si=$('#search');if(si)si.oninput=filterCatalog;}trackView();}
 async function choose(title,body,read){return new Promise(resolve=>{let d=document.createElement('dialog');d.innerHTML=`<h2>${enc(title)}</h2><div>${body}</div><div class="actions"><button class="primary" id="ok">确认</button><button id="cancel">取消</button></div>`;document.body.append(d);d.showModal();d.querySelector('#ok').onclick=()=>{let v=read(d);d.close();d.remove();resolve(v);};d.querySelector('#cancel').onclick=()=>{d.close();d.remove();resolve(null);};d.oncancel=()=>{d.remove();resolve(null);};});}
 function playerOptions(){return state.players.filter(p=>!p.eliminated).map(p=>`<option value="${p.id}">${enc(p.name)}</option>`).join('');}
 $('#app').onclick=async ev=>{const b=ev.target.closest('[data-action]');if(!b||b.disabled)return;const a=b.dataset.action,uid=Number(b.dataset.uid),id=Number(b.dataset.id),pid=Number(b.dataset.player);
@@ -9048,6 +9113,7 @@ $('#app').onclick=async ev=>{const b=ev.target.closest('[data-action]');if(!b||b
  if(a==='images'){ImageLibrary.handle(b);return;}
  if(a==='catSide'){catalogSide=b.dataset.value;render();return;}
  if(a==='catView'){catalogView=b.dataset.value;render();return;}
+ if(a==='catNav'){catSection=b.dataset.section||'base';render();return;}
  if(a==='pc'){await PlayerUI.handle(b);return;}
  if(a==='start'){beginScenario(b.dataset.id);return;}
  if(a==='startOpen'){openChooser(b.dataset.id);return;}
