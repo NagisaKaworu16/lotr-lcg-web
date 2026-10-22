@@ -3,12 +3,12 @@
   "width": 1440,
   "steps": [
     {
-      "name": "山丘巨魔",
+      "name": "死灵法师之触",
       "cancelCount": 0,
       "hasResolve": true
     },
     {
-      "name": "座狼骑手",
+      "name": "迷雾山脉哥布林",
       "cancelCount": 0,
       "hasResolve": true
     }
@@ -47,7 +47,7 @@
     {
       "name": "开局逐张翻开而不是一次性结算",
       "ok": true,
-      "detail": "山丘巨魔 / 座狼骑手"
+      "detail": "死灵法师之触 / 迷雾山脉哥布林"
     },
     {
       "name": "每一步都要点「结算此牌并继续」",

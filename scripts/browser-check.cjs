@@ -92,11 +92,15 @@ let browser;
     refresh: !!state.refreshing,
   }));
 
-  const startGame = async (players, scenarioText) => {
+  const startGame = async (players, scenario) => {
     await page.selectOption('#playerCount', String(players));
     await page.waitForTimeout(200);
-    await page.locator('.ng-tabs button', { hasText: '支线剧情' }).click(); await page.waitForTimeout(250);
-    await page.locator('.ng-card', { hasText: scenarioText }).first().click(); await page.waitForTimeout(300);
+    await page.locator('.ng-tabs button', { hasText: '新版扩展' }).click(); await page.waitForTimeout(250);
+    await page.locator('.ng-card', { hasText: '基础剧本合集' }).first().click(); await page.waitForTimeout(300);
+    if (scenario) {
+      await page.locator('button[data-action="ngMode"][data-value="standalone"]').click(); await page.waitForTimeout(250);
+      await page.locator('.ng-card', { hasText: scenario }).first().click(); await page.waitForTimeout(300);
+    }
     await page.locator('[data-action="ngNext"]').click(); await page.waitForTimeout(300);
     await page.locator('[data-action="chooserConfirm"]').click();
     await page.waitForTimeout(600);
@@ -107,7 +111,7 @@ let browser;
   };
 
   // ============ 2人 幽暗密林 @1440 ============
-  await startGame(2, '幽暗密林');
+  await startGame(2);
   note('start-2p', await page.evaluate(() => state.players.length === 2 && !state.setupPending));
   await shot('01-2p-setup-1440');
   await clickNext(); await page.waitForTimeout(300);
@@ -246,17 +250,7 @@ let browser;
   await page.setViewportSize({ width: 1920, height: 1080 });
   await page.locator('.expedition-title button[data-action="desktop"][data-desktop="reset"]').click();
   await page.waitForTimeout(400);
-  await page.selectOption('#playerCount', '4');
-  await page.waitForTimeout(200);
-  await page.locator('.ng-tabs button', { hasText: '支线剧情' }).click(); await page.waitForTimeout(250);
-  await page.locator('.ng-card', { hasText: '逃离多尔哥多' }).first().click(); await page.waitForTimeout(300);
-  await page.locator('[data-action="ngNext"]').click(); await page.waitForTimeout(300);
-  await page.locator('[data-action="chooserConfirm"]').click();
-  await page.waitForTimeout(600);
-  for (const x of await page.locator('button[data-action="keepHand"]').all()) await x.click();
-  await page.waitForTimeout(200);
-  await page.locator('button[data-action="finishSetup"]').click();
-  await page.waitForTimeout(400);
+  await startGame(4, '逃离多尔哥多');
   note('start-4p', await page.evaluate(() => state.players.length === 4), { scenario: await page.evaluate(() => state.scenario) });
   await shot('06-4p-1920');
   await page.evaluate(() => { const p = state.players[0]; while (p.hand.length < 16) p.hand.push(structuredClone(p.hand[p.hand.length % 3] || p.hand[0])); render(); });
