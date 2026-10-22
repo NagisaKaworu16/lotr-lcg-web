@@ -152,3 +152,22 @@ test('score panel stays out of the way while the scenario is still running', asy
  assert(html.includes('失败局不计入战绩'));
 });
 test('desktop version badge comes from one constant that matches the latest CHANGELOG heading',async()=>{const e=environment();const version=e.run('APP_VERSION');assert.match(String(version),/^v\d+\.\d+\.\d+$/);const heading=fs.readFileSync(__dirname+'/CHANGELOG.md','utf8').split('\n').find(l=>l.startsWith('# v'));assert(heading,'CHANGELOG.md 缺少 "# vX.Y.Z" 形式的最新条目标题');assert(heading.startsWith('# '+version),`界面版本 ${version} 与 CHANGELOG 最新条目「${heading}」不一致`);assert(!/MIDDLE-EARTH EXPEDITION · v\d/.test(fs.readFileSync(__dirname+'/desktop-ui.js','utf8')),'桌面徽标不应再硬编码版本号');await opening(e);assert(e.base.get('app').innerHTML.includes('MIDDLE-EARTH EXPEDITION · '+version),'桌面徽标未使用 APP_VERSION 常量');});
+
+test('basic card library tab renders instead of throwing, and its filters narrow the list',async()=>{
+ const e=environment();e.run(`tab='catalog';render();`);
+ const html=e.base.get('app').innerHTML;
+ assert(html.includes('基础卡牌库'),'卡牌库页签未渲染标题');
+ assert(html.includes('id="search"')&&html.includes('id="setFilter"')&&html.includes('id="typeFilter"'),'卡牌库缺少搜索与筛选控件');
+ assert(e.run("$('#resultCount').textContent").includes('55 种'),'结果数应为 45 种遭遇卡 + 10 张探险卡');
+ assert(e.run("$('#catalogResults').innerHTML").length>1000,'卡牌库列表为空');
+ e.run(`$('#search').value='蛛';filterCatalog();`);
+ const spider=e.run("Number($('#resultCount').textContent.match(/\\d+/)[0])");
+ assert(spider>0&&spider<55,'关键词筛选未生效');
+ e.run(`$('#search').value='';$('#typeFilter').value='Quest';filterCatalog();`);
+ assert.equal(e.run("$('#resultCount').textContent"),'找到 '+e.run('D.quests.length')+' 种卡牌');
+ assert(e.run("$('#catalogResults').innerHTML").includes('探险卡 #'),'探险卡结果缺少阶段标题');
+ e.run(`$('#typeFilter').value='';$('#setFilter').value='Spiders of Mirkwood';filterCatalog();`);
+ assert.equal(e.run("$('#resultCount').textContent"),'找到 '+e.run("D.cards.filter(c=>c.set==='Spiders of Mirkwood').length+D.quests.filter(q=>D.scenarios.some(s=>s.sets.includes('Spiders of Mirkwood')&&s.stages.includes(q.id))).length")+' 种卡牌');
+ e.run(`$('#setFilter').value='';$('#search').value='不存在的卡名xyz';filterCatalog();`);
+ assert(e.run("$('#catalogResults').innerHTML").includes('没有匹配的卡牌'),'无结果时应给出空状态');
+});
