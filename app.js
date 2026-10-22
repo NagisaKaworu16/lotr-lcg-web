@@ -166,9 +166,9 @@ function catalogSeriesPanel(id){
  const art=it.art?`<img class="cat-series-art" src="${enc(it.art)}" alt="" loading="lazy" onerror="const s=this.getAttribute('src')||'';if(/\.webp$/.test(s)){this.setAttribute('src',s.replace(/\.webp$/,'.jpg'))}else{this.remove()}">`:'';
  return `<div class="intro"><div><div class="eyebrow">SERIES · 即将收录</div><h1>${enc(it.name)}</h1>${it.en?`<p class="muted">${enc(it.en)}</p>`:''}</div></div><section class="panel cat-series-panel">${art}<div class="cat-series-text"><h2>该系列的卡牌尚未收录</h2><p>目前卡牌库收录的是基础版 ${catalogStats().total} 种卡牌（玩家卡与战役卡）。这一系列${it.meta?`（${enc(it.meta)}）`:''}的卡牌与规则将随版本更新加入，届时会出现在这里，并可直接按本系列筛选。</p><p class="small muted">想先了解它的剧本？回首页从「新版扩展／旧版扩展」进入对应章节。</p><button type="button" data-action="catNav" data-section="base">← 返回卡牌</button></div></section>`;
 }
-/* 系列包（pod）：卡牌印载的扩展盒。玩家卡直接用 RingsDB 的 packCode；
- * 战役卡（D.cards／D.quests）目前没有印载扩展字段，统一回退 'Core'——
- * 以后数据补上 c.pack 字段（规范同 RingsDB packCode）后自动跟随，无需改这里。 */
+/* 系列包（pod）：卡牌印载的扩展盒。玩家卡用 RingsDB 的 packCode；
+ * 战役卡（D.cards／D.quests）用 data.js 里的 pack 字段（规范同 packCode，基础版为 'Core'）。
+ * 'Core' 兜底只对历史遗留的缺字段数据生效，新增数据必须写 pack。 */
 const POD_NAMES={Core:'基础包 · Core Set'};
 const podName=id=>POD_NAMES[id]||id;
 function catalogEntries(){

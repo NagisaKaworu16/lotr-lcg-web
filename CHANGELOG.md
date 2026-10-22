@@ -1,3 +1,11 @@
+# v0.15.30 · 遭遇卡与探险卡补齐 pack 字段（2026-10-22）
+
+- 落实 v0.15.28 记录的**数据结构缺口**：`data.js` 里 45 张遭遇卡与 10 张探险卡全部补上 `pack` 字段（规范同 RingsDB `packCode`，基础版一律 `"Core"`），来源与各遭遇组的 `sources`（Core Set）一致。此前 UI 只能靠 `c.pack||'Core'` 兜底——一旦并入非基础版的遭遇卡，它们会被整体错算进基础包，按系列包筛选随即失真。
+- 卡牌库代码无需改动（读取点早已预留），补数据后系列包下拉、三类分组与计数自动跟随；`app.js` 的注释同步更新为「`Core` 兜底仅对历史缺字段数据生效，新增数据必须写 pack」。
+- 新增 `pack-data-tests.cjs`（4 项）：55 张战役卡全部声明 pack、packCode 形态合法、pack 与遭遇组来源一致、pack 可作为筛选键（无连续空格）。
+- `check-catalog.cjs` 新增 2 项真实浏览器检查：「战役卡的 pack 字段全部有值且为基础包」「系列包下拉只列出真实存在的包」，共 54 项全 PASS。
+- 回归：435 项测试通过；check-catalog 54/54、check-catalog-tabs OK、check-legacy-packs OK、check-card-hover 22/22、check-layout 15/15。
+
 # v0.15.29 · 对局桌面重塑：状态条、进度条、叠影牌堆、BGA 式重叠手牌（2026-10-22）
 
 - 参照诡镇奇谈网页版与 BGA 的对局布局补齐缺口，延续森林绿＋羊皮纸＋金线体系。所有 data-action 与既有类名（`.operation-dock`／`.public-table`／`.player-mat`／`.tabletop-rail`）保持不变，交互与规则验证零改动。
