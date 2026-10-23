@@ -488,3 +488,14 @@ body:has(.desktop-table) .expedition-title h1{letter-spacing:-.01em}
 .hand-card.unaffordable .card-face img{filter:grayscale(1) brightness(.72)}
 .hand-card.unaffordable .card-face{cursor:not-allowed}
 .hand-card.unaffordable .card-legality{color:#a35446}
+
+/* 9. v0.15.40 回合流程合并：横向阶段步骤条嵌入操作面板，右侧不再单独列表 */
+.operation-dock .phase-rail{display:flex;flex-wrap:wrap;gap:5px;padding:10px 14px 4px;border-top:1px solid #3f5d72}
+.operation-dock .rail-step{display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border:1px solid #55768c;border-left-width:1px;border-radius:999px;color:#aebfc9;background:#1c3341}
+.operation-dock .rail-step>span{font-size:11px;letter-spacing:0;color:#8fa6b3}
+.operation-dock .rail-step b{font-size:13px}
+.operation-dock .rail-step small{font-size:11px;color:#e4c68c;margin-left:0}
+.operation-dock .rail-step.current{background:#3c5061;border-color:#ddbc75;color:#fff2d7}
+.operation-dock .rail-step.past{opacity:.68}
+.phase-hint{margin:0;padding:5px 16px 10px;color:#9db3c0}
+@media(max-width:760px){.operation-dock .phase-rail{padding:8px 10px 2px}.operation-dock .rail-step{padding:3px 8px}.phase-hint{padding:4px 10px 8px}}

@@ -51,7 +51,7 @@ const WIDTH = arg('width', 1440);
   });
   add('公共桌面存在且位于操作栏下方', marks.board && marks.board.y > marks.dock.y, `${marks.dock?.y} → ${marks.board?.y}`);
   add('底部玩家区位于公共桌面之下', marks.mat && marks.mat.y > marks.board.y, `${marks.board?.y} → ${marks.mat?.y}`);
-  add('右侧阶段与日志同栏且靠右', marks.rail && marks.rail.x > marks.board.x && marks.rail2 && marks.log, `rail x=${marks.rail?.x} board x=${marks.board?.x}`);
+  add('右侧牌堆与日志同栏且靠右', marks.rail && marks.rail.x > marks.board.x && marks.rail2 && marks.log, `rail x=${marks.rail?.x} board x=${marks.board?.x}`);
   add('玩家区与公共桌面同宽同起点', marks.mat.w === marks.board.w && marks.mat.x === marks.board.x, `${marks.mat.w}/${marks.board.w}`);
 
   // ---- 1. sticky dock keeps the task visible ------------------------------
