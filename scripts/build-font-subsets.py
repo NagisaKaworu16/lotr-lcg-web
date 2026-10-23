@@ -36,6 +36,7 @@ print(f'corpus: {len(corpus)} chars -> {corpus_file}')
 JOBS = [
     ('KingHwa.ttf', 'kinghwa-subset.woff2'),
     ('LXGWWenKai-Regular.ttf', 'wenkai-subset.woff2'),
+    ('LXGWWenKai-Medium.ttf', 'wenkai-medium-subset.woff2'),
 ]
 for src_name, out_name in JOBS:
     src, dst = os.path.join(SRC, src_name), os.path.join(OUT, out_name)
