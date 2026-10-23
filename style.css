@@ -482,3 +482,9 @@ body:has(.desktop-table) .expedition-title h1{letter-spacing:-.01em}
 @media(min-width:1700px){.card-tokens{--tk:34px}.card-tokens.attr-tokens{--tk:26px}.peer-cards .card-tokens{--tk:28px}}
 @media(max-width:1100px){.card-tokens{--tk:26px}.card-tokens.attr-tokens{--tk:22px}}
 @media(max-width:760px){.card-tokens{--tk:24px}}
+
+/* 8. v0.15.39 手牌费用检测：匹配领域资源不足时灰化禁用（仍可悬停放大与查看）。 */
+.hand-card.unaffordable{opacity:.82}
+.hand-card.unaffordable .card-face img{filter:grayscale(1) brightness(.72)}
+.hand-card.unaffordable .card-face{cursor:not-allowed}
+.hand-card.unaffordable .card-legality{color:#a35446}

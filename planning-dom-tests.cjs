@@ -156,6 +156,27 @@ test('temporary phase modifiers count into attribute tokens and revert once the 
  const reverted=JSON.parse(e.run(`JSON.stringify(E.planning.stats(state,${uid}))`));
  assert.equal(reverted.attack,b0.attack,'阶段效果过期（phaseModifiers 清理）后攻击应还原');
 });
+
+test('unaffordable hand cards grey out, stay hover-inspectable and live-update with hero resources',async()=>{const e=environment();await opening(e);
+ const code=e.run(`(function(){const sp=E.planning.data(state,{...state.players[0].heroStates[0],owner:0}).sphere;for(const c of state.players[0].playerDeck){const m=E.planning.data(state,{...c,owner:0});if(m.type==='ally'&&m.cost>0&&m.sphere===sp)return c.code;}})()`);
+ assert(code,'测试前提：牌库中应有匹配领域的正费用盟友');
+ const uid=e.run(`mutate(()=>{state.players[0].hand.push({uid:++state.serial,owner:0,code:'${code}'});});state.players[0].hand.at(-1).uid`);
+ const cardBlock=()=>{const all=e.base.get('app').innerHTML,i=all.indexOf(`data-uid="${uid}"`);return all.slice(all.lastIndexOf('<article',i),all.indexOf('</article>',i)+9);};
+ e.run(`mutate(()=>{state.players[0].heroStates.forEach(h=>h.resources=8);});render();`);
+ let blk=cardBlock();
+ assert(blk.includes('hand-card selectable'),'资源充足时应可选且不灰化');
+ assert(!blk.includes('unaffordable'),'资源充足时不应有灰化类');
+ assert(blk.includes('data-action="planning"')&&!/data-plan="play"[^>]*disabled/.test(blk),'资源充足时打出按钮不应禁用');
+ e.run('mutate(()=>{state.players[0].heroStates.forEach(h=>h.resources=0);});render();');
+ blk=cardBlock();
+ assert(blk.includes('unaffordable'),'领域资源不足时手牌应带灰化类');
+ assert(/data-plan="play"[^>]*disabled|disabled[^>]*data-plan="play"/.test(blk),'资源不足时应禁止打出');
+ assert(blk.includes('data-hover-src'),'灰化手牌仍应带悬停放大探针');
+ assert(blk.includes('匹配领域的资源不足'),'应显示资源不足原因');
+ e.run('mutate(()=>{state.players[0].heroStates[0].resources=4;});render();');
+ blk=cardBlock();
+ assert(blk.includes('hand-card selectable')&&!blk.includes('unaffordable'),'资源恢复后应实时恢复可选');
+});
 test('desktop rendering validates optional encounter highlights without changing approvals or log',()=>{const e=environment();encounterScreen(e);e.run('state.staging.push({...E.byId[97],uid:++state.serial});');const before=e.run('JSON.stringify(state)');e.run('render();');assert.equal(e.run('JSON.stringify(state)'),before);assert(e.base.get('app').innerHTML.includes('data-desktop="engage"'));});
 test('operation dock names the current task and shows per-player confirmation progress',async()=>{const e=environment();await combatScreen(e);assert(e.base.get('app').innerHTML.includes('第 6/7 阶段'));await combatAdvance(e);const uid=e.run('state.players[0].engaged[0].uid');await e.click({action:'combatFlow',combat:'enemy',uid:String(uid),player:'0'});let html=e.base.get('app').innerHTML;assert(html.includes('战斗方案待确认（0/2）'));assert(html.includes('玩家1 · 待确认'));assert(html.includes('玩家2 · 待确认'));assert(!html.includes('玩家1 · 已确认'));await e.click({action:'combatFlow',combat:'approve',player:'0'});html=e.base.get('app').innerHTML;assert(html.includes('战斗方案待确认（1/2）'));assert(html.includes('战斗方案待确认（1/2）')&&html.includes('玩家1 · 已确认'));const st=e.run('JSON.stringify(DesktopUI.status(state))');assert(st.includes('1/2'));await e.click({action:'combatFlow',combat:'unapprove',player:'0'});assert(e.base.get('app').innerHTML.includes('战斗方案待确认（0/2）'));});
 test('desktop quest submit switches the view to the next unconfirmed player and names who is pending',async()=>{const e=environment();await e.click({action:'starterTest',sphere:'leadership'});e.run("document.querySelector('#playerCount').value='2';document.querySelector('#seed').value='12345';");await e.click({action:'start',id:'mirkwood'});e.run("E.windows.setMode(state,'detailed');");await e.click({action:'keepHand',player:'0'});await e.click({action:'keepHand',player:'1'});await e.click({action:'finishSetup'});await e.click({action:'next'});await e.click({action:'planning',plan:'endTurn',player:'0'});await e.click({action:'planning',plan:'endTurn',player:'1'});await e.click({action:'planning',plan:'pass',player:'0'});await e.click({action:'planning',plan:'pass',player:'1'});await e.click({action:'next'});await e.click({action:'next'});await e.click({action:'quest',quest:'pass',player:'0'});await e.click({action:'quest',quest:'pass',player:'1'});await e.click({action:'quest',quest:'move'});await e.click({action:'quest',quest:'pass',player:'0'});await e.click({action:'quest',quest:'pass',player:'1'});await e.click({action:'quest',quest:'move'});assert.equal(e.run('state.questing.step'),'commit');const uid1=e.run('state.players[1].heroStates[0].uid');await e.click({action:'desktop',desktop:'pick',uid:String(uid1)});await e.click({action:'desktop',desktop:'submit'});assert(e.run('state.questing.deployments[1].confirmed'));assert.equal(e.run('handView'),0);await e.click({action:'desktop',desktop:'view',player:'1'});const dock=e.base.get('app').innerHTML;assert(dock.includes('等待 玩家1 提交派遣名单（1/2）'));assert(dock.includes('玩家2 · 已提交'));assert(dock.includes('玩家1 · 待提交'));await e.click({action:'desktop',desktop:'view',player:'0'});const uid0=e.run('state.players[0].heroStates[0].uid');await e.click({action:'desktop',desktop:'pick',uid:String(uid0)});await e.click({action:'desktop',desktop:'submit'});assert(e.run('state.questing.deployments[0].confirmed'));assert.equal(e.run('handView'),0);assert.equal(e.run('state.questing.deploymentLocked'),undefined);});
