@@ -104,7 +104,7 @@ test('location and quest progress render as progress tokens on the arkham-style 
  assert(html.includes('quest-tokens'),'当前探险卡应叠进度代币');
  assert(/quest-tokens[\s\S]{0,140}?tk-progress" data-n="1"/.test(html),'探险卡代币应显示当前进度 1');
 });
-test('zero-value tokens stay visible like the arkham online board and allies only gain resource tokens when funded',async()=>{const e=environment();await combatScreen(e);
+test('zero-value tokens stay visible like the arkham online board and allies never show resource tokens',async()=>{const e=environment();await combatScreen(e);
  e.run('mutate(()=>{for(const h of state.players[0].heroStates)h.resources=0;});render();');
  const html=e.base.get('app').innerHTML;
  assert(/tk-resource" data-n="0"/.test(html),'英雄 0 资源也应显示代币（对齐原版）');
@@ -113,9 +113,8 @@ test('zero-value tokens stay visible like the arkham online board and allies onl
  const cardBlock=()=>{const all=e.base.get('app').innerHTML,i=all.indexOf(`data-card-uid="${ally}"`);return all.slice(i,all.indexOf('</article>',i)+9);};
  const block=cardBlock();
  assert(block.includes('tk-damage" data-n="0"'),'盟友应显 0 伤害代币');
- assert(!block.includes('tk-resource'),'盟友 0 资源不应显示资源代币（英雄才常显）');
  e.run(`mutate(()=>{state.players[0].allies[0].resources=2;});`);
- assert(/tk-resource( stack)?" data-n="2"/.test(cardBlock()),'盟友获得资源后应显资源代币');
+ assert(!cardBlock().includes('tk-resource'),'盟友即使有资源也不显示资源代币（资源代币只属于英雄）');
 });
 test('attribute tokens sit above the character card and always show willpower attack defense',async()=>{const e=environment();await combatScreen(e);
  const uid=e.run('state.players[0].heroStates[0].uid');
