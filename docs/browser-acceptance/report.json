@@ -1,7 +1,7 @@
 {
   "pageUrl": "file:///C:/Users/Administrator/WorkBuddy/魔戒LCG/index.html",
   "executablePath": "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe",
-  "startedAt": "2026-10-23T07:54:47.857Z",
+  "startedAt": "2026-10-23T09:41:11.148Z",
   "checks": [
     {
       "name": "start-2p",
@@ -163,6 +163,6 @@
   "consoleErrors": [],
   "pageErrors": [],
   "failedImages": [],
-  "finishedAt": "2026-10-23T07:55:27.107Z",
+  "finishedAt": "2026-10-23T09:41:45.407Z",
   "ok": true
 }
