@@ -457,19 +457,21 @@ body:has(.desktop-table) .expedition-title h1{letter-spacing:-.01em}
  .deck-counts{grid-template-columns:repeat(3,1fr)}
 }
 
-/* 7. v0.15.32 诡镇网页版式代币：圆形图钉在卡面下缘（半压卡面），数字居中；
+/* 7. v0.15.33 诡镇网页版式代币：属性代币（意志/攻击/防御）独立一行在角色卡上方，
+      状态代币（资源/伤害/进度）独立一行在卡牌下方——均为流式行，不再遮挡卡名与牌文；
       同型多枚层叠错位；资源=英雄常显、盟友>0 显，伤害/进度常显（含 0，对齐原版）。 */
-.table-card-caption{position:relative}
-.card-tokens{position:absolute;top:0;left:3px;transform:translateY(-54%);display:flex;gap:3px;z-index:4;pointer-events:none;--tk:30px}
+.card-tokens{display:flex;gap:4px;justify-content:center;align-items:center;flex-wrap:wrap;padding:2px 0;pointer-events:none;--tk:30px}
+.card-tokens.attr-tokens{--tk:26px;padding-top:0}
 .tk{position:relative;width:var(--tk);height:var(--tk);flex:none;border-radius:50%;filter:drop-shadow(0 2px 3px #24392f66)}
 .tk img{width:100%;height:100%;border-radius:50%;display:block;box-shadow:0 0 0 1.5px #fffdf6,0 1px 3px #0008}
 .tk b{position:absolute;inset:0;display:grid;place-items:center;font-size:12px;font-weight:800;color:#fff;line-height:1;font-variant-numeric:tabular-nums;text-shadow:0 1px 1px #000,0 0 3px #000c,1px 0 1px #000a,-1px 0 1px #000a,0 -1px 1px #000a}
 .tk.stack img{box-shadow:0 0 0 1.5px #fffdf6,2.5px 2.5px 0 1.5px #fffdf6,5px 5px 0 1.5px #fffdf6cc,0 3px 5px #0008}
 .tk img:active{cursor:grabbing}
 .tk img:hover{cursor:grab}
-.peer-cards .card-tokens{--tk:26px}
+.peer-cards .card-tokens{--tk:24px}
+.peer-cards .card-tokens.attr-tokens{--tk:22px}
 .quest-art-wrap{position:relative;width:var(--card-w);min-width:0;flex:none}
 .quest-tokens{position:absolute;left:4px;bottom:4px;transform:none}
-@media(min-width:1700px){.card-tokens{--tk:34px}.peer-cards .card-tokens{--tk:28px}}
-@media(max-width:1100px){.card-tokens{--tk:26px}}
+@media(min-width:1700px){.card-tokens{--tk:34px}.card-tokens.attr-tokens{--tk:28px}.peer-cards .card-tokens{--tk:28px}}
+@media(max-width:1100px){.card-tokens{--tk:26px}.card-tokens.attr-tokens{--tk:23px}}
 @media(max-width:760px){.card-tokens{--tk:24px}}
