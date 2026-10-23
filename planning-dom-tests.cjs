@@ -128,6 +128,7 @@ test('attribute tokens sit above the character card and always show willpower at
  assert(hasTok('willpower',v.willpower||0),'意志代币应显示 stats 意志值');
  assert(hasTok('attack',v.attack||0),'攻击代币应显示 stats 攻击值');
  assert(hasTok('defense',v.defense||0),'防御代币应显示 stats 防御值');
+ assert(hasTok('hitPoints',v.health||0),'生命代币应显示 stats 生命值（替代文字行）');
  assert(!/tk-willpower[^>]*draggable/.test(attrRow),'属性代币是静态数值，不应可拖放');
  assert(/tk-willpower[\s\S]*?<b>\d+<\/b>[\s\S]*?<\/button>/.test(b1)||b1.indexOf('tk-willpower')<b1.indexOf('card-face'),'属性代币应渲染在卡面之前');
 });

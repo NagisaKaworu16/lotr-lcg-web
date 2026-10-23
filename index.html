@@ -468,7 +468,7 @@ body:has(.desktop-table) .expedition-title h1{letter-spacing:-.01em}
       状态代币（资源/伤害/进度）独立一行在卡牌下方——均为流式行，不再遮挡卡名与牌文；
       同型多枚层叠错位；资源=英雄常显、盟友>0 显，伤害/进度常显（含 0，对齐原版）。 */
 .card-tokens{display:flex;gap:4px;justify-content:center;align-items:center;flex-wrap:wrap;padding:2px 0;pointer-events:none;--tk:30px}
-.card-tokens.attr-tokens{--tk:26px;padding-top:0}
+.card-tokens.attr-tokens{--tk:24px;padding-top:0}
 .tk{position:relative;width:var(--tk);height:var(--tk);flex:none;border-radius:50%;filter:drop-shadow(0 2px 3px #24392f66)}
 .tk img{width:100%;height:100%;border-radius:50%;display:block;box-shadow:0 0 0 1.5px #fffdf6,0 1px 3px #0008}
 .tk b{position:absolute;inset:0;display:grid;place-items:center;font-size:14px;font-weight:800;color:#fff;line-height:1;font-variant-numeric:tabular-nums;text-shadow:0 1px 1px #000,0 0 3px #000c,1px 0 1px #000a,-1px 0 1px #000a,0 -1px 1px #000a}
@@ -476,11 +476,11 @@ body:has(.desktop-table) .expedition-title h1{letter-spacing:-.01em}
 .tk img:active{cursor:grabbing}
 .tk img:hover{cursor:grab}
 .peer-cards .card-tokens{--tk:24px}
-.peer-cards .card-tokens.attr-tokens{--tk:22px}
+.peer-cards .card-tokens.attr-tokens{--tk:20px}
 .quest-art-wrap{position:relative;width:var(--card-w);min-width:0;flex:none}
 .quest-tokens{position:absolute;left:4px;bottom:4px;transform:none}
-@media(min-width:1700px){.card-tokens{--tk:34px}.card-tokens.attr-tokens{--tk:28px}.peer-cards .card-tokens{--tk:28px}}
-@media(max-width:1100px){.card-tokens{--tk:26px}.card-tokens.attr-tokens{--tk:23px}}
+@media(min-width:1700px){.card-tokens{--tk:34px}.card-tokens.attr-tokens{--tk:26px}.peer-cards .card-tokens{--tk:28px}}
+@media(max-width:1100px){.card-tokens{--tk:26px}.card-tokens.attr-tokens{--tk:22px}}
 @media(max-width:760px){.card-tokens{--tk:24px}}
 
 </style></head><body>
@@ -8690,7 +8690,7 @@ const WindowUI=(()=>{
 </script><script>
 /* Tabletop view: UI drafts never pay, exhaust, reveal, or bypass phase validation. */
 /* 界面版本徽标唯一来源：须与 CHANGELOG.md 最新条目标题一致（planning-dom-tests 有校验）。 */
-const APP_VERSION='v0.15.36';
+const APP_VERSION='v0.15.37';
 const DesktopUI=(()=>{
  const E=ScenarioEngine,R=E.planning,Q=E.questing,C=E.combat,esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  let combatDraft={key:'',target:null,ids:[]},draftState=null;
@@ -8713,7 +8713,7 @@ const DesktopUI=(()=>{
  function art(code){const rec=ImageLibrary.by[code],url=ImageLibrary.safeUrl(rec?.faces?.B||rec?.imageUrl);return url?`<img src="${esc(url)}" alt="${esc(rec.nameZhCard||rec.name||code)}" loading="lazy" referrerpolicy="no-referrer">`:'<span class="table-card-fallback">卡图暂缺<br>请查看牌名与数值</span>';}
  function inspect(code){return `<button class="inspect-card" data-action="images" data-image-action="open" data-code="${esc(code)}" aria-label="查看卡牌详情">查看</button>`;}
  function character(s,c,m){const h=c.state,v=R.find(s,c.uid)?R.stats(s,c.uid):c.meta,selectable=eligible(s,m,c.uid),selected=!!m&&ids(s,m).includes(c.uid),ability=R.abilitySpec(s,c.controller,c.uid),a=selectable?'data-action="desktop" data-desktop="pick"':!m&&ability.legal?'data-action="planning" data-plan="ability"':'',captured=c.kind==='hero'&&!s.rescued&&s.prisoner?.player===c.controller&&s.prisoner?.hero===h.index;
-  return `<article class="table-card character-card ${h.exhausted?'exhausted':''} ${selectable?'selectable':''} ${selected?'selected':''} ${h.destroyed||captured?'unavailable':''}" data-card-uid="${c.uid}">${tokenRow('attr-tokens',tk('willpower',v.willpower||0,false)+tk('attack',v.attack||0,false)+tk('defense',v.defense||0,false))}<button class="card-face" ${a} data-player="${c.controller}" data-uid="${c.uid}" ${a?'':'disabled'} aria-label="${esc(c.meta.nameZh)}${selectable?'，点击选择':''}" aria-pressed="${selected}">${art(c.meta.code)}${selected?'<span class="selection-mark">已选</span>':''}</button><div class="table-card-caption"><b>${esc(c.meta.nameZh)}</b><span>意 ${v.willpower||0} · 攻 ${v.attack||0} · 防 ${v.defense||0}</span><span>${c.kind==='hero'?'资源 '+h.resources+' · ':''}伤害 ${h.damage||0}/${v.health||0}</span><span>${h.destroyed?'已离场':captured?'囚禁':h.exhausted?'横置':'重置'}${h.committed?' · 已投入':''}</span></div>${tokenRow('state-tokens',c.kind==='hero'?tk('resource',h.resources||0)+tk('damage',h.damage||0):tk('damage',h.damage||0))}${inspect(c.meta.code)}</article>`;
+  return `<article class="table-card character-card ${h.exhausted?'exhausted':''} ${selectable?'selectable':''} ${selected?'selected':''} ${h.destroyed||captured?'unavailable':''}" data-card-uid="${c.uid}" aria-label="${esc(c.meta.nameZh)}：意志 ${v.willpower||0} 攻击 ${v.attack||0} 防御 ${v.defense||0} 生命 ${v.health||0}${c.kind==='hero'?' 资源 '+(h.resources||0):''} 伤害 ${h.damage||0}${selectable?'，点击选择':''}">${tokenRow('attr-tokens',tk('willpower',v.willpower||0,false)+tk('attack',v.attack||0,false)+tk('defense',v.defense||0,false)+tk('hitPoints',v.health||0,false))}<button class="card-face" ${a} data-player="${c.controller}" data-uid="${c.uid}" ${a?'':'disabled'} aria-label="${esc(c.meta.nameZh)}${selectable?'，点击选择':''}" aria-pressed="${selected}">${art(c.meta.code)}${selected?'<span class="selection-mark">已选</span>':''}</button><div class="table-card-caption"><b>${esc(c.meta.nameZh)}</b>${c.kind!=='hero'&&h.resources?`<span>资源 ${h.resources}</span>`:''}<span>${h.destroyed?'已离场':captured?'囚禁':h.exhausted?'横置':'重置'}${h.committed?' · 已投入':''}</span></div>${tokenRow('state-tokens',c.kind==='hero'?tk('resource',h.resources||0)+tk('damage',h.damage||0):tk('damage',h.damage||0))}${inspect(c.meta.code)}</article>`;
  }
  function playerChars(s,p){return [...p.heroStates.map(h=>({kind:'hero',uid:h.uid,controller:p.id,owner:p.id,state:h,meta:R.data(s,{...h,owner:p.id})})),...p.allies.map(c=>({kind:'ally',uid:c.uid,controller:p.id,owner:c.owner,state:c,meta:R.data(s,c)}))];}
  function encounter(s,c,zone,m){const found=R.find(s,c.uid),v=found?R.stats(s,c.uid):c;let attrs='',legal=false,selected=false;
