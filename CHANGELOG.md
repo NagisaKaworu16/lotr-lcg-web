@@ -1,3 +1,10 @@
+# v0.15.34 · 中土字体栈：京華老宋体标题 + 霞鹜文楷正文 + Cinzel 眉题（2026-10-23）
+
+- **字体方案**（均 OFL/免费商用）：标题与章节名用「Cinzel（西文碑刻风）+ 京華老宋体（61-1 老宋复刻）」，正文与界面用「霞鹜文楷」，中文回落 Microsoft YaHei、西文数字在标题内跟随 Cinzel。`h1/h2/h3`、`.eyebrow`、剧本封面统一走 `--font-title`，`body` 走 `--font-body`。
+- **按语料子集化**：新增 `scripts/build-font-subsets.py`——扫描仓库 `*.js`+`shell.html` 的全部实际用字（1282 字）生成 WOFF2：`assets/fonts/kinghwa-subset.woff2`（865KB）、`wenkai-subset.woff2`（270KB），Cinzel 全量 125KB；合计约 1.2MB 且全部在 assets/ 随行，不增大离线 index.html。`font-display:swap`，字体加载失败自动回落系统字体，界面永不白屏。
+- **维护方式**：UI 或卡牌数据新增生僻字后，把新 TTF 放回 `assets/fonts/_src/`（KingHwa.ttf / LXGWWenKai-Regular.ttf / Cinzel.ttf，不入库）重跑 `scripts/build-font-subsets.py` 即可；玩家自输文本（会话名等）超出语料时回落系统字体，属预期。
+- 来源与协议：京華老宋体 v3.0（SIL OFL）、霞鹜文楷 v1.520（OFL）、Cinzel（Google Fonts OFL）。
+
 # v0.15.33 · 代币布局对齐诡镇网页版：属性在卡上、状态在卡下（2026-10-23）
 
 - **代币不再遮挡卡牌文字**：v0.15.32 的状态代币（资源/伤害/进度）原钉在说明区顶部、半压卡面与卡名。现按《诡镇奇谈》网页版布局改为独立流式行——**角色（英雄/盟友）的属性代币（意志/攻击/防御）一行在卡牌上方，状态代币（资源/伤害）一行在卡牌下方**；敌军伤害与地点进度代币同样移到卡牌下方。当前探险卡的进度代币维持左下角叠加不变。
