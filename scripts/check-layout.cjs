@@ -44,8 +44,12 @@ const near = (a, b, tol = 1) => Math.abs(a - b) <= tol;
     const panels = ['.operation-dock', '.public-table', '.player-mat'].map(s => { const e = one(s); return { sel: s, ...r(e), pad: st(e, 'padding'), radius: st(e, 'borderRadius') }; });
     const rail = one('.tabletop-rail');
     /* v0.15.45：牌堆/说明框已移除，右栏只剩竖轴与无框日志，取样改为日志面板本身。 */
-    const railBoxes = all('.tabletop-rail>.table-log')
-      .map(e => ({ ...r(e), pad: st(e, 'padding'), radius: st(e, 'borderRadius') }));
+    const railEl = document.querySelector('.tabletop-rail');
+    const railBox = railEl ? rail.getBoundingClientRect() : null;
+    const railAxis = document.querySelector('.phase-rail-v');
+    const railKids = railEl ? railEl.children.length : 0;
+    const railH = railAxis ? Math.round(railAxis.getBoundingClientRect().height) : 0;
+    const railBoxH = railBox ? Math.round(railBox.height) : 0;
     const headingBoxes = all('.zone-heading').map(e => ({ text: e.textContent.trim().slice(0, 10), ...r(e) }));
     const rows = all('.table-card-row').map(row => all('.table-card').filter(c => c.parentElement === row).map(c => ({ ...r(c), radius: st(c, 'borderRadius') })));
     const cardWidths = [...new Set(all('.table-card').map(c => +c.getBoundingClientRect().width.toFixed(1)))];
@@ -55,7 +59,7 @@ const near = (a, b, tol = 1) => Math.abs(a - b) <= tol;
     const innerX = [dockInner, boardZone, matZone].filter(Boolean).map(e => +e.getBoundingClientRect().x.toFixed(1));
     const rowGaps = rows.map((row, i) => { const el = all('.table-card-row')[i]; if (el && el.closest('.hand-zone')) return null; return row.length > 1 ? +(row[1].x - row[0].x).toFixed(1) : null; }).filter(v => v !== null);
     const handGaps = rows.map((row, i) => { const el = all('.table-card-row')[i]; if (!el || !el.closest('.hand-zone') || row.length < 2) return null; return +(row[1].x - row[0].x).toFixed(1); }).filter(v => v !== null);
-    return { panels, railBoxes, headingBoxes, rows, cardWidths, innerX, rowGaps, handGaps,
+    return { panels, railKids, railH, railBoxH, headingBoxes, rows, cardWidths, innerX, rowGaps, handGaps,
       rail: rail ? r(rail) : null,
       overflowX: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
       overflowY: document.documentElement.scrollHeight > innerHeight + 1,
@@ -79,9 +83,10 @@ const near = (a, b, tol = 1) => Math.abs(a - b) <= tol;
   add('玩家区与牌堆栏顶部对齐', near(mat.y, geo.rail.y, 2), `${mat.y} / ${geo.rail.y}`);
   add('公共桌面在玩家区之上', board.y + board.h <= mat.y + 1, `${(board.y + board.h).toFixed(1)} → ${mat.y}`);
   add('面板圆角统一 10px', [dock, board, mat].every(p => p.radius === '10px'), geo.panels.map(p => `${p.sel}:${p.radius}`).join(' | '));
-  add('右侧栏各框宽度一致', new Set(geo.railBoxes.map(b => b.w)).size === 1, [...new Set(geo.railBoxes.map(b => b.w))].join(','));
-  add('右侧栏各框圆角一致', new Set(geo.railBoxes.map(b => b.radius)).size === 1, [...new Set(geo.railBoxes.map(b => b.radius))].join(','));
-  add('右侧栏各框内边距一致', new Set(geo.railBoxes.map(b => b.pad)).size === 1, [...new Set(geo.railBoxes.map(b => b.pad))].join(','));
+  /* v0.15.49：右栏只被阶段竖轴占据，日志改为按需展开的抽屉（.table-log 已移出 rail）。
+     右栏一致性的对象改为竖轴自身：有且只有一个框、占满栏高。 */
+  add('右栏只有阶段竖轴一个框', geo.railKids === 1, 'kids=' + geo.railKids);
+  add('竖轴占满右栏高度', geo.railH > 0 && Math.abs(geo.railH - geo.railBoxH) <= 2, `rail=${geo.railH} box=${geo.railBoxH}`);
   add('卡牌宽度按分区统一（公共牌/玩家牌/对手牌各一档）', [geo.cardWidthsByZone.pub, geo.cardWidthsByZone.mat, geo.cardWidthsByZone.peer].every(a => a.length <= 1), JSON.stringify(geo.cardWidthsByZone));
   const rowHeights = geo.rows.filter(r => r.length > 1).map(r => [...new Set(r.map(c => c.h))]);
   add('同一行卡牌等高', rowHeights.every(h => h.length === 1), rowHeights.map(h => h.join('/')).join(' | ') || '无多卡行');

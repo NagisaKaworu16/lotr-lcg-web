@@ -20,6 +20,10 @@ function APP_LOG_SCOPE(){return logScope;}
    同样是纯视图偏好，刷新后重置，不写对局、不进撤销历史。 */
 let railOpen=new Set();
 function APP_RAIL_OPEN(){return railOpen;}
+/* v0.15.49：日志抽屉开关（右栏只留阶段竖轴后，日志改为按需展开的浮层）。
+   纯视图偏好，刷新重置，不入撤销历史。 */
+let logOpen=false;
+function APP_LOG_OPEN(){return logOpen;}
 const setupDraft={players:1,seed:'',first:0,decks:['starter-leadership','starter-tactics','starter-spirit','starter-lore']};
 function captureSetup(){if(state)return;const count=$('#playerCount');if(!count)return;const n=Number(count.value);if(Number.isInteger(n)&&n>=1&&n<=4)setupDraft.players=n;setupDraft.seed=$('#seed')?.value||'';setupDraft.first=Number($('#pc-first')?.value||0);if(setupDraft.first>=setupDraft.players)setupDraft.first=0;for(let i=0;i<4;i++){const value=$('#pc-deck-'+i)?.value;if(value)setupDraft.decks[i]=value;}}
 function bindSetup(){if(state||tab!=='table')return;const count=$('#playerCount');if(!count)return;count.onchange=()=>{captureSetup();render();};for(const id of ['seed','pc-first','pc-deck-0','pc-deck-1','pc-deck-2','pc-deck-3']){const el=$('#'+id);if(el){el.onchange=captureSetup;if(id==='seed')el.oninput=captureSetup;}}}
@@ -333,6 +337,7 @@ function playerOptions(){return state.players.filter(p=>!p.eliminated).map(p=>`<
 $('#app').onclick=async ev=>{const b=ev.target.closest('[data-action]');if(!b||b.disabled)return;const a=b.dataset.action,uid=Number(b.dataset.uid),id=Number(b.dataset.id),pid=Number(b.dataset.player);
  if(a==='desktop'){DesktopUI.handle(b);return;}
  if(a==='logScope'){const v=b.dataset.scope;if(!['round','all'].includes(v))return;logScope=v;render();return;}
+ if(a==='logToggle'){logOpen=!logOpen;render();return;}
  if(a==='undoLog'){const seq=Number(b.dataset.seq),j=seq-historyBase;
   if(!Number.isInteger(seq)||j<0||j>=history.length)return;
   /* 回退到该次操作之前：状态、历史、日志标记一起截断到那一刻。 */
