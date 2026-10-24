@@ -691,6 +691,9 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
  .tabletop-layout{grid-template-columns:1fr;grid-template-rows:auto;
   grid-template-areas:"dock" "table" "mat" "rail";height:auto}
  .operation-dock{position:relative;overflow:visible}
+ /* v0.15.44：横排阶段胶囊移除后，面板里少了约 30px；若仍固定 34vh，
+    内容少的阶段（资源/计划）底部会留一大片空白，而右栏竖轴却还要滚动。
+    改成按内容收缩、只在真超长时滚动，把省下的高度让给竖轴。 */
  .operation-content{max-height:34vh;overflow:auto}
  .public-table,.player-mat,.tabletop-rail{overflow:visible}
  .tabletop-rail{grid-template-rows:auto auto}
@@ -909,13 +912,16 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
  .tabletop-layout{grid-template-rows:minmax(0,1fr) 286px}
 }
 
-/* 33. 最后 18px：玩家区 286→268（手牌 128→118，角色行 min 88→82） */
+/* 33. 矮屏高度回收：玩家区 286→268（手牌 128→118，角色行 min 88→82）
+       v0.15.44：右栏不再是「牌堆+日志」两小块，而是通高的 20 窗口竖轴，
+       268px 装不下（需 334px）。这里把玩家区回调到 300，让出的 32px 给右栏；
+       手牌高度不再为省 18px 而砍到 100px。 */
 @media(max-height:820px){
- .tabletop-layout{grid-template-rows:minmax(0,1fr) 268px}
- .player-mat>.hand-zone{flex:0 0 118px}
- .player-mat>.hand-zone .table-card-row{height:118px}
- .player-mat .hand-card,.player-mat .hand-card .card-face,.player-mat .hand-card .card-face img{height:100px}
- .player-mat .hand-card .card-face{flex:0 0 100px}
+ .tabletop-layout{grid-template-rows:minmax(0,1fr) 336px}
+ .player-mat>.hand-zone{flex:0 0 126px}
+ .player-mat>.hand-zone .table-card-row{height:126px}
+ .player-mat .hand-card,.player-mat .hand-card .card-face,.player-mat .hand-card .card-face img{height:108px}
+ .player-mat .hand-card .card-face{flex:0 0 108px}
 }
 
 /* 34. 同一行卡牌必须等高：遭遇卡底部有可展开的「牌文」，内容长短不一会把

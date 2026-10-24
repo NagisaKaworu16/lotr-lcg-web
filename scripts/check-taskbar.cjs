@@ -47,7 +47,7 @@ const WIDTH = arg('width', 1440);
 
   const marks = await page.evaluate(() => {
     const box = s => { const e = document.querySelector(s); if (!e) return null; const b = e.getBoundingClientRect(); return { x: Math.round(b.x), y: Math.round(b.y + window.scrollY), w: Math.round(b.width) }; };
-    return { dock: box('.operation-dock'), board: box('.public-table'), mat: box('.player-mat'), rail: box('.tabletop-rail'), log: box('.table-log'), rail2: box('.phase-rail') };
+    return { dock: box('.operation-dock'), board: box('.public-table'), mat: box('.player-mat'), rail: box('.tabletop-rail'), log: box('.table-log'), rail2: box('.phase-rail-v')  /* v0.15.44：横排阶段胶囊已移除，改指右栏竖轴 */ };
   });
   /* v0.15.41 单屏布局：操作栏改到右列，与公共桌面并排而不是上下叠放。 */
   add('公共桌面与操作栏并排（左桌右栏）', marks.board && marks.dock
