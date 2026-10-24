@@ -1,4 +1,12 @@
+# v0.15.54 · 修复：打出附属后手牌与结束阶段被裁掉（2026-10-24）
+
+- **根因**：附属卡独占一行 `.table-zone`（标题 + 122px 卡面 ≈ 267px），而 `.player-mat` 是 `overflow:hidden` 的固定高度网格行。打出附属后内容总高 639px 远超 380px 容器——flex 布局压缩角色行也填不平，手牌行（152px）与 `.mat-phase`（结束阶段，96px）被整块推出容器底部裁掉，表现为「只剩附属卡，没有手牌也没有结束阶段」。
+- **修法**：附属并入「英雄与盟友」同一行（附属本来就附着在角色上，语义一致），标题计数显示「盟友区 · n · 附属 m」；`.own-characters` 改为 `min-height:0 + 内部滚动`，角色行内容再多也只在自己范围内滚动，永不挤压/顶走手牌与结束阶段。修复后 mat 内容 377px ≤ 380px，手牌 7 张与结束阶段按钮均可见。
+- **回归脚本**：新增 `scripts/check-attachment.cjs`（真实浏览器打附属 → 断言附属入场、不溢出、手牌可见、结束阶段可见），5/5 通过。
+- 验收：check-layout 16/16、check-taskbar 23/23、check-score 19/19、check-onescreen 五区可见、check-contrast 0 低对比。
+
 # v0.15.53 · 竖轴再放大一档（2026-10-24）
+
 
 - 通高实测 697px 后再放开：行高 24→31px（20 × 31 = 620，留 77px 余量不滚动）、编号 14px、标签 13.5px、行内间距 8px、右内边距 8px、阶段名 14px/字距 4px/上下留白 10px、竖轴列宽 176→190px。32px 档实测溢出 1px，回调 31px 后 scrollHeight == height 无滚动。
 - 验收：check-layout 16/16、check-taskbar 23/23、check-onescreen 五区可见、check-contrast 0 低对比。

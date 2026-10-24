@@ -721,7 +721,10 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
 .public-table{max-height:100%}
 /* 手牌区固定 172px（牌面 86px 宽 ≈ 122px 高 + 标签 24px + 内边距），角色区吃剩余 */
 .player-mat>.hand-zone{flex:0 0 172px}
-.player-mat>.own-characters{flex:1 1 auto}
+/* v0.15.54：附属并入角色行后，角色行内容可能超高——改为自身滚动，
+   绝不挤压/顶走手牌与结束阶段（overflow:hidden 曾把两者裁掉）。 */
+.player-mat>.own-characters{flex:1 1 auto;min-height:0;overflow:hidden}
+.player-mat>.own-characters>.table-card-row{overflow:auto;max-height:100%}
 
 /* 15. 牌桌区重排：探险条 + 地点并排（地点空时自动收窄），探查区与玩家角色区吃满。
        手牌区高度改为按牌面宽度算，避免宽屏下牌被裁成条。 */
