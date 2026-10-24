@@ -502,6 +502,557 @@ body:has(.desktop-table) .expedition-title h1{letter-spacing:-.01em}
 .phase-hint{margin:0;padding:5px 16px 10px;color:#9db3c0}
 @media(max-width:760px){.operation-dock .phase-rail{padding:8px 10px 2px}.operation-dock .rail-step{padding:3px 8px}.phase-hint{padding:4px 10px 8px}}
 
+/* ── v0.15.41 单屏对局桌面 ────────────────────────────────────────────
+   目标：1440×900 一屏看完，页面本身不滚动；关键信息分区清晰；操作按钮
+   触手可及。参照 BGA / 诡镇奇谈网页版：牌桌占据主体，操作区与牌堆在右，
+   手牌永远贴底可见。
+
+   DOM 不改，纯 CSS 重排：
+     .tabletop-main 用 display:contents 拆壳，其下 operation-dock 与
+     public-table 直接参与外层网格。
+     ┌───────────────────────────┬──────────┐
+     │ 探险 / 当前地点            │ 当前操作 │
+     │ 探查区（遭遇牌）           │ 阶段步骤 │
+     ├───────────────────────────┼──────────┤
+     │ 玩家区（角色/盟友）        │ 牌堆统计 │
+     │ 手牌（贴底，BGA 重叠）     │ 日志     │
+     └───────────────────────────┴──────────┘ */
+
+/* ── 1. 视口锁定 ─────────────────────────────────────────────────── */
+body:has(.desktop-table){height:100vh;overflow:hidden;display:flex;flex-direction:column}
+body:has(.desktop-table) header{flex:0 0 auto}
+body:has(.desktop-table) main{flex:1 1 auto;min-height:0;padding:8px 14px 10px;overflow:hidden}
+.desktop-table{height:100%;display:grid;grid-template-rows:auto minmax(0,1fr);gap:8px;min-height:0}
+
+/* ── 2. 标题压成一行 ─────────────────────────────────────────────── */
+.expedition-title{margin:0;gap:14px;flex-wrap:nowrap;align-items:center;min-height:44px}
+.expedition-title .eyebrow{font-size:10.5px;letter-spacing:1.1px;line-height:1.2}
+.expedition-title h1{font-size:19px;margin:1px 0 0;line-height:1.15;white-space:nowrap}
+.expedition-title>span{font-size:12.5px;color:#768174;white-space:nowrap}
+.expedition-title>.player-tabs{margin-left:auto;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+.expedition-title>.player-tabs::-webkit-scrollbar{display:none}
+body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;gap:1px}
+.player-tabs button .tab-name{font-size:12.5px;line-height:1.3}
+.player-tabs button .tab-stats{font-size:10.5px;line-height:1.3}
+.player-tabs .first-mark,.player-tabs .elim-mark{font-size:9.5px;padding:0 5px;align-self:center;margin-top:1px}
+.expedition-title>button:last-child{padding:7px 11px;font-size:13px;flex:0 0 auto}
+
+/* ── 3. 四区网格 ─────────────────────────────────────────────────── */
+.tabletop-layout{
+ display:grid;height:100%;min-height:0;gap:9px;
+ grid-template-columns:minmax(0,1fr) clamp(320px,26vw,400px);
+ grid-template-rows:minmax(0,1fr) minmax(0,.92fr);
+ grid-template-areas:"table dock" "mat rail"}
+.tabletop-main{display:contents}
+.tabletop-main>.public-table{grid-area:table}
+.tabletop-main>.operation-dock{grid-area:dock}
+.player-mat{grid-area:mat}
+.tabletop-rail{grid-area:rail}
+
+/* ── 4. 各区独立滚动，页面不滚 ───────────────────────────────────── */
+.public-table,.player-mat{min-height:0;overflow:hidden;display:flex;flex-direction:column}
+.tabletop-rail{min-height:0;overflow:hidden;display:grid;grid-template-rows:auto minmax(0,1fr);gap:7px}
+.public-table{padding:10px;gap:8px}
+
+/* ── 5. 牌桌：探险+地点同一行，探查区吃满剩余 ────────────────────── */
+.quest-location-row{
+ display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:10px;
+ padding-bottom:8px;border-bottom:1px solid #e1e3d8;flex:0 0 auto}
+.quest-display{gap:10px;align-items:flex-start}
+.quest-art-wrap{width:96px}
+.quest-display h3{font-size:14.5px;margin:0 0 1px;line-height:1.3}
+.quest-display p{font-size:12.5px;line-height:1.5;margin:2px 0;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.quest-display .small.muted{font-size:11.5px;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+.quest-progress{height:11px;margin-top:6px}
+.quest-progress-label{font-size:10.5px}
+.table-zone>.zone-heading::before{display:none}
+.zone-heading{min-height:0;margin-bottom:5px;line-height:1.25}
+.zone-heading h2{font-size:12.5px;letter-spacing:0}
+.zone-heading>span,.threat-total{font-size:11.5px}
+.threat-total{margin-left:8px}
+.public-table .table-zone:last-of-type{flex:1 1 auto;min-height:0;display:flex;flex-direction:column}
+.public-table .table-zone:last-of-type>.table-card-row{flex:1 1 auto;min-height:0;overflow:auto;align-content:flex-start}
+.public-table .table-card-row{gap:7px;align-items:flex-start}
+.public-table .zone-empty{min-height:40px;font-size:11.5px}
+.active-zone .table-card-row{min-height:0}
+
+/* ── 6. 操作区：标题条固定，内容区自己滚，阶段条一行 ─────────────── */
+.operation-dock{position:static;display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.operation-title{padding:7px 11px;gap:7px;flex:0 0 auto}
+.operation-title strong{font-size:13.5px;line-height:1.35}
+.operation-title>.small{font-size:11.5px}
+.operation-dock .phase-rail{padding:5px 9px 1px;gap:3px;flex:0 0 auto}
+.operation-dock .rail-step{padding:2px 7px;gap:3px;border-radius:999px}
+.operation-dock .rail-step b{font-size:11.5px}
+.operation-dock .rail-step>span,.operation-dock .rail-step small{font-size:9.5px}
+.phase-hint{padding:2px 11px 5px;font-size:11px;line-height:1.4;flex:0 0 auto;
+ display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.operation-content{padding:0 11px;flex:1 1 auto;min-height:0;overflow:auto;max-height:none}
+.operation-content>.panel{padding:7px 0}
+.operation-content h2{font-size:13.5px}
+.operation-content p{font-size:12.5px;line-height:1.5}
+.operation-content .actions{margin-top:6px;display:flex;gap:6px;flex-wrap:wrap}
+.operation-content .card-art{max-width:88px;margin:0 10px 6px 0}
+
+/* ── 7. 玩家区：角色区吃剩余高度，手牌贴底固定 ───────────────────── */
+.player-mat{padding:9px 10px 6px;gap:5px;border-top-width:2px}
+.player-mat>.zone-heading{flex:0 0 auto;margin-bottom:0}
+.player-mat>.zone-heading h2{font-size:13.5px}
+.player-mat>.own-characters{flex:1 1 auto;min-height:0;overflow:auto;padding-top:7px}
+.player-mat>.table-zone+.table-zone{padding-top:5px}
+.player-mat>p.small.muted{display:none}
+.player-mat .table-card-row{gap:7px}
+.player-mat>.own-characters .table-card{width:100px;flex:0 0 100px}
+.player-mat>.hand-zone{
+ flex:0 0 auto;margin-top:auto;padding-top:3px;border-top:1px solid #e2e5d9;
+ display:flex;flex-direction:column;min-height:0}
+.player-mat>.hand-zone>.zone-heading{min-height:0;margin-bottom:0;flex:0 0 auto}
+.player-mat>.hand-zone>.zone-heading h2{font-size:12.5px}
+.player-mat>.hand-zone>.zone-heading .small{font-size:11px}
+.player-mat>.hand-zone .table-card-row{
+ flex:0 0 auto;padding-top:12px;padding-bottom:4px;
+ flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;align-items:flex-end;scrollbar-width:thin}
+.player-mat>.hand-zone .table-card-row::-webkit-scrollbar{height:5px}
+.player-mat .hand-card{width:86px;flex:0 0 86px;background:#fffdf6}
+.player-mat .hand-card+.hand-card{margin-left:-52px}
+.player-mat .hand-card .table-card-caption{display:none}
+.player-mat .hand-card .card-legality{display:none}
+.player-mat .hand-card .inspect-card{display:none}
+.player-mat .hand-card .card-tokens{display:none}
+.player-mat .hand-card .card-face{min-height:0}
+.player-mat .hand-card:hover,.player-mat .hand-card:focus-within{transform:translateY(-10px)}
+.player-mat .hand-card .card-face img{max-height:none}
+
+/* ── 8. 卡面：按原始比例完整显示，不裁切 ─────────────────────────── */
+.table-card{max-height:none}
+.table-card .card-face{min-height:0;padding:0}
+.table-card .card-face img{
+ width:100%;height:auto;max-height:none;aspect-ratio:424/600;object-fit:cover;display:block}
+.public-table .table-card{width:100px;flex:0 0 100px}
+.public-table .peer-cards .table-card{width:88px;flex:0 0 88px}
+.table-card-caption{padding:2px 2px 0;line-height:1.3}
+.table-card-caption b{font-size:12px}
+.table-card-caption span{font-size:10.5px}
+.card-legality{font-size:10px;padding:1px 2px}
+.table-card .inspect-card{font-size:11px;padding:2px 6px;min-height:0}
+
+/* 角色卡：属性代币压卡面上缘、状态代币压下缘，卡名只留一行 */
+.character-card{position:relative;overflow:visible}
+.character-card .attr-tokens{position:absolute;top:-8px;left:50%;transform:translateX(-50%);z-index:3;padding:0;--tk:21px}
+.character-card .state-tokens{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:3;padding:0;--tk:25px}
+.character-card .table-card-caption{padding-top:1px}
+.character-card .table-card-caption b{
+ display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;font-size:11.5px}
+.character-card .table-card-caption span{display:none}
+.character-card .inspect-card{position:absolute;right:1px;top:1px;z-index:4;opacity:0;transition:opacity .12s}
+.character-card:hover .inspect-card,.character-card:focus-within .inspect-card{opacity:1}
+
+/* ── 9. 右栏：牌堆统计紧凑，日志吃满 ─────────────────────────────── */
+.tabletop-rail>section,.tabletop-rail>details{
+ padding:8px 9px;border-radius:8px;min-height:0;overflow:auto}
+.tabletop-rail h2{font-size:12.5px;margin-bottom:5px}
+.deck-counts{gap:5px}
+.deck-counts .pile{padding:5px 2px 4px;gap:3px}
+.deck-counts .pile strong{font-size:15px}
+.deck-counts .pile small{font-size:10px}
+.pile-cards{width:28px;height:19px}
+.deck-rail details summary{font-size:11.5px}
+.table-log{display:flex;flex-direction:column;min-height:0}
+.table-log>div{max-height:none;flex:1 1 auto;min-height:0;overflow:auto}
+.table-log p{font-size:11.5px;line-height:1.45;padding-bottom:4px;margin:0 0 4px}
+.table-log summary{font-size:12px}
+
+/* ── 10. 自适应：矮屏/中屏收紧，窄屏退回单列 ─────────────────────── */
+@media(max-height:860px){
+ .expedition-title .eyebrow{display:none}
+ .public-table .table-card,.public-table .peer-cards .table-card{width:92px;flex-basis:92px}
+ .player-mat>.own-characters .table-card{width:92px;flex-basis:92px}
+ .player-mat .hand-card{width:78px;flex:0 0 78px}
+ .player-mat .hand-card+.hand-card{margin-left:-46px}
+ .quest-art-wrap{width:84px}
+}
+@media(max-height:760px){
+ .operation-dock .phase-rail{display:none}      /* 极矮时让操作内容优先 */
+ .player-mat .hand-card{width:70px;flex:0 0 70px}
+ .player-mat .hand-card+.hand-card{margin-left:-40px}
+}
+@media(max-width:1279px){
+ body:has(.desktop-table){height:auto;overflow:auto}
+ body:has(.desktop-table) main{overflow:visible}
+ .desktop-table{height:auto;grid-template-rows:auto auto}
+ .tabletop-layout{grid-template-columns:1fr;grid-template-rows:auto;
+  grid-template-areas:"dock" "table" "mat" "rail";height:auto}
+ .operation-dock{position:relative;overflow:visible}
+ .operation-content{max-height:34vh;overflow:auto}
+ .public-table,.player-mat,.tabletop-rail{overflow:visible}
+ .tabletop-rail{grid-template-rows:auto auto}
+ .player-mat>p.small.muted{display:block}
+ .player-mat .hand-card+ .hand-card{margin-left:-58px}
+}
+
+/* 13. display:contents 需压过旧规则 .tabletop-main{display:grid} */
+.tabletop-layout>.tabletop-main{display:contents!important}
+
+/* 14. 行高按内容需求分配：玩家区需要「角色行 + 手牌行」两段，
+       牌桌区只需一张牌面加探险条。用 auto 让内容定高、minmax 兜底溢出。 */
+.tabletop-layout{
+ grid-template-rows:minmax(0,1fr) minmax(232px,auto);
+ align-items:stretch}
+.player-mat{max-height:100%}
+.public-table{max-height:100%}
+/* 手牌区固定 172px（牌面 86px 宽 ≈ 122px 高 + 标签 24px + 内边距），角色区吃剩余 */
+.player-mat>.hand-zone{flex:0 0 172px}
+.player-mat>.own-characters{flex:1 1 auto}
+
+/* 15. 牌桌区重排：探险条 + 地点并排（地点空时自动收窄），探查区与玩家角色区吃满。
+       手牌区高度改为按牌面宽度算，避免宽屏下牌被裁成条。 */
+.quest-location-row{grid-template-columns:minmax(0,1.6fr) minmax(150px,.55fr)}
+.quest-display p{-webkit-line-clamp:2}
+.quest-display{gap:8px}
+.quest-art-wrap{width:82px}
+.quest-display h3{font-size:13.5px}
+.public-table>.table-zone{flex:1 1 auto;min-height:0;display:flex;flex-direction:column}
+.public-table>.table-zone>.table-card-row{flex:1 1 auto;min-height:0;overflow:auto;align-content:flex-start}
+.public-table>.other-player{flex:0 0 auto}
+.public-table>.other-player .table-card-row{max-height:150px;overflow:auto}
+/* 手牌：宽度 92px → 高度约 130px；整行 156px 足够牌面 + 横向滚动条 */
+.player-mat>.hand-zone{flex:0 0 156px}
+.player-mat .hand-card{width:92px;flex:0 0 92px}
+.player-mat .hand-card+.hand-card{margin-left:-46px}
+.player-mat>.hand-zone .table-card-row{padding-top:10px;padding-bottom:6px}
+.character-card .table-card-caption b{font-size:11px}
+
+/* 16. 修正：探查区必须有最小高度，不能因 min-height:0 被压成 0
+       （标题与遭遇卡就此消失）；其他玩家区才是可压缩的那一块。 */
+.public-table>.table-zone{flex:1 1 auto;min-height:132px}
+.public-table>.table-zone>.table-card-row{min-height:106px}
+.public-table>.other-player{flex:0 1 auto;min-height:0;overflow:auto}
+.public-table>.other-player .table-card-row{max-height:none}
+
+/* 17. 分区高度再平衡：牌桌区需要容纳 探险条(128) + 探查区(132) + 其他玩家(120+)
+       合计约 390；玩家区角色行 + 手牌 156 约需 380。先给牌桌区下限，余额给玩家区。 */
+.tabletop-layout{grid-template-rows:minmax(390px,1.05fr) minmax(0,1fr)}
+.player-mat>.hand-zone{flex:0 0 152px}
+.public-table>.other-player{flex:0 0 auto;min-height:0}
+.public-table>.other-player .table-card-row{max-height:120px;overflow:auto}
+
+/* 18. 手牌尺寸用显式高度，不用 aspect-ratio：flex 容器里的 auto 高度会被压缩。
+       92px 宽 → 130px 高（424:600）。手牌行 = 130 + 上内边距 10 + 滚动条 6 = 146。
+       卡名、状态、查看按钮在手牌里全部隐藏，只保留牌面。 */
+.player-mat .hand-card{width:92px;flex:0 0 92px;height:130px}
+.player-mat .hand-card .card-face{display:block;width:100%;height:130px;padding:0;border:0}
+.player-mat .hand-card .card-face img{width:100%;height:130px;object-fit:cover;aspect-ratio:auto}
+.player-mat>.hand-zone{flex:0 0 148px}
+.player-mat>.hand-zone .table-card-row{height:148px;padding-top:8px;padding-bottom:2px}
+.player-mat>.hand-zone .table-card-row .hand-card{align-self:flex-start}
+
+/* 19. .table-card 是 flex 列，子项会被压缩；手牌卡面必须显式不参与伸缩 */
+.player-mat .hand-card .card-face{flex:0 0 130px;min-height:0;overflow:hidden}
+.player-mat .hand-card .card-face img{display:block;height:130px}
+
+/* 20. 其他玩家区压缩为「一行小卡」：只露牌面 + 名字，血量看代币。
+       这是次要信息，给主玩家和牌桌让位。 */
+.public-table>.other-player{flex:0 0 auto;padding-top:6px!important;border-top:1px solid #e2e5d9}
+.public-table>.other-player .zone-heading{margin-bottom:2px}
+.public-table>.other-player .zone-heading h3{font-size:12px}
+.public-table>.other-player .zone-heading>span{font-size:11px}
+.public-table>.other-player .zone-heading button{font-size:11px;padding:2px 7px;min-height:0}
+.public-table>.other-player .table-card-row{max-height:none;overflow:visible;gap:5px;padding-top:8px}
+.public-table>.other-player .table-card{width:62px;flex:0 0 62px}
+.public-table>.other-player .table-card .card-face{height:88px;flex:0 0 88px;overflow:hidden}
+.public-table>.other-player .table-card .card-face img{height:88px;width:62px;object-fit:cover;aspect-ratio:auto}
+.public-table>.other-player .table-card-caption{display:none}
+.public-table>.other-player .card-tokens{--tk:17px}
+.public-table>.other-player .attr-tokens{top:-6px}
+.public-table>.other-player .state-tokens{bottom:auto;top:52px}
+
+/* 21. 收尾：地点区无卡时不占宽度（只留标题），把横向空间还给探险文字；
+       探险牌文放宽到 4 行，进度条拉满。 */
+.quest-location-row:not(:has(.active-zone .table-card)){grid-template-columns:minmax(0,1fr) auto}
+.quest-location-row:not(:has(.active-zone .table-card)) .active-zone{width:150px}
+.quest-display p{-webkit-line-clamp:4}
+.quest-display .small.muted{-webkit-line-clamp:2}
+.quest-progress{height:12px;margin-top:8px}
+.quest-tokens{--tk:22px;left:3px;bottom:3px}
+/* 牌桌区底部：其他玩家区与探查区留白由 grid 行自适应，避免出现大空洞 */
+.public-table{align-content:start}
+
+/* 22. 矮屏（≤820px 高）分区再平衡：牌桌区不能吃掉玩家区的角色行。
+       牌桌区改为按内容自适应并设上限，玩家区保底「角色行 + 手牌行」。 */
+@media(max-height:820px){
+ .tabletop-layout{grid-template-rows:minmax(0,.92fr) minmax(0,1.08fr)}
+ .player-mat>.hand-zone{flex:0 0 136px}
+ .player-mat .hand-card,.player-mat .hand-card .card-face,.player-mat .hand-card .card-face img{height:118px}
+ .player-mat .hand-card .card-face{flex:0 0 118px}
+ .player-mat>.hand-zone .table-card-row{height:136px}
+ .player-mat>.own-characters{min-height:96px}
+ .quest-display p{-webkit-line-clamp:2}
+ .public-table>.table-zone{min-height:118px}
+ .public-table>.table-zone>.table-card-row{min-height:92px}
+ .public-table>.other-player .table-card .card-face,
+ .public-table>.other-player .table-card .card-face img{height:72px}
+ .public-table>.other-player .table-card{width:52px;flex:0 0 52px}
+}
+
+/* 23. 其他玩家区不能被压成 0：给它内容最小高度（标题 18 + 小卡 72 + 间距） */
+.public-table>.other-player{flex:0 0 auto;min-height:104px}
+@media(max-height:820px){.public-table>.other-player{min-height:96px}}
+
+/* 24. 高度预算制：不再用 fr 猜比例，改为按各区实际内容需求给固定行高。
+       以可用高度 A（1024 高视口约 751px）为基准：
+         牌桌区 = 探险条 128 + 探查区 128 + 其他玩家 100 + 间距 ≈ 368
+         玩家区 = 角色行 150 + 手牌行 140 + 标题 24 ≈ 314
+       两者相加 682 < 751，余量给牌桌区的探查区（遭遇牌最多的地方）。 */
+.tabletop-layout{
+ grid-template-rows:minmax(0,1fr) minmax(300px,auto);
+ grid-template-rows:minmax(0,1fr) clamp(300px,40vh,380px)}
+/* 牌桌区内部按「剩余给探查区」分配，其他玩家区拿固定 104 */
+.public-table{display:flex;flex-direction:column}
+.public-table>.table-zone{flex:1 1 auto;min-height:0}
+.public-table>.table-zone>.table-card-row{flex:1 1 auto;min-height:0;overflow:auto}
+.public-table>.other-player{flex:0 0 auto}
+.quest-location-row{flex:0 0 auto}
+
+/* 25. 探查区是牌桌上信息量最大的区，必须优先保底；其他玩家区可压缩。 */
+.public-table>.table-zone{flex:1 1 auto;min-height:126px}
+.public-table>.table-zone>.table-card-row{min-height:100px}
+.public-table>.other-player{flex:0 1 auto;min-height:0;overflow:auto}
+@media(max-height:820px){
+ .public-table>.table-zone{min-height:118px}
+ .public-table>.table-zone>.table-card-row{min-height:92px}
+}
+
+/* 26. 矮屏（≤820）：牌桌区不再承载「其他玩家区」，改为在玩家区标题右侧
+       以紧凑头像串展示——把纵向空间让给探查区（遭遇牌才是要读的）。 */
+@media(max-height:820px){
+ .public-table>.other-player{display:none}
+ .player-mat>.zone-heading::after{content:"";display:block}
+}
+
+/* 27. 撤销 26：隐藏对手角色信息不可接受（关键信息必须一屏可见）。
+       矮屏下改为「单行微型头像条」：每张头像 46×46，只显示血量代币，
+       高 84px 即可容纳标题 + 一行。完整信息仍可点「查看手牌与完整区域」。 */
+@media(max-height:820px){
+ .public-table>.other-player{display:block;min-height:0;flex:0 0 auto;overflow:visible;padding-top:4px!important}
+ .public-table>.other-player .zone-heading{min-height:0;margin-bottom:0;gap:6px}
+ .public-table>.other-player .zone-heading h3{font-size:11px}
+ .public-table>.other-player .zone-heading>span{font-size:10.5px}
+ .public-table>.other-player .zone-heading button{font-size:10.5px;padding:1px 6px}
+ .public-table>.other-player .table-card-row{padding-top:6px;gap:4px;overflow:visible}
+ .public-table>.other-player .table-card{width:46px;flex:0 0 46px}
+ .public-table>.other-player .table-card .card-face{height:46px;flex:0 0 46px;overflow:hidden;border-radius:4px}
+ .public-table>.other-player .table-card .card-face img{width:46px;height:46px;object-fit:cover;object-position:50% 18%}
+ .public-table>.other-player .card-tokens{--tk:14px}
+ .public-table>.other-player .attr-tokens{display:none}
+ .public-table>.other-player .state-tokens{bottom:-6px;top:auto;left:auto;right:-4px;transform:none}
+ .public-table>.other-player .inspect-card{display:none}
+ .player-mat>.zone-heading::after{display:none}
+}
+
+/* 28. 矮屏：探险区压成单行信息条（牌文点击「查看」看全文），
+       给探查区与对手头像条腾出 60px。 */
+@media(max-height:820px){
+ .quest-location-row{grid-template-columns:minmax(0,1fr) 130px;padding-bottom:6px;gap:8px}
+ .quest-display .quest-art-wrap{width:54px}
+ .quest-display h3{font-size:12.5px}
+ .quest-display p,.quest-display .small.muted{display:none}
+ .quest-progress{height:9px;margin-top:4px}
+ .quest-progress-label{font-size:9.5px}
+ .quest-zone .zone-heading{margin-bottom:3px}
+ .quest-zone .zone-heading h2{font-size:11.5px}
+}
+
+/* 29. 矮屏探险区硬上限：卡片 54px 宽 → 76px 高 + 标题 18 + 进度 9 + 间距 ≈ 110，
+       超出即裁掉（牌文与门限说明可点「查看」看全文）。 */
+@media(max-height:820px){
+ .quest-zone{max-height:112px;overflow:hidden}
+ .quest-display{align-items:center}
+ .quest-zone .zone-heading{min-height:0}
+}
+
+/* 30. 矮屏牌桌区预算：探险 112 + 探查 118 + 对手 84 + 间距 ≈ 330，
+       而牌桌区只有约 303 —— 缺口 30px 从「卡面尺寸」里出：
+       矮屏下公共牌 92→84 宽（124→113 高），省 11px；再收一次间距。 */
+@media(max-height:820px){
+ .public-table{padding:8px;gap:6px}
+ .public-table .table-card,.public-table .peer-cards .table-card{width:84px;flex:0 0 84px}
+ .public-table>.table-zone{min-height:112px}
+ .public-table>.table-zone>.table-card-row{min-height:88px}
+ .zone-heading{margin-bottom:3px}
+ .quest-location-row{padding-bottom:5px}
+}
+
+/* 31. 1366×768 这类矮屏真正的解法：牌桌区与玩家区按「内容需求」分配，
+       而不是对半分。牌桌区需求 342，玩家区需求 ≈ 24(标题)+124(角色)+136(手牌) = 284。
+       总可用 619 → 牌桌 340 / 玩家 279，玩家区手牌再压 10px 即可。 */
+@media(max-height:820px){
+ .tabletop-layout{grid-template-rows:minmax(0,1fr) minmax(272px,auto)}
+ .player-mat{padding:7px 9px 4px}
+ .player-mat .hand-card,.player-mat .hand-card .card-face,.player-mat .hand-card .card-face img{height:110px}
+ .player-mat .hand-card .card-face{flex:0 0 110px}
+ .player-mat>.hand-zone{flex:0 0 128px}
+ .player-mat>.hand-zone .table-card-row{height:128px;padding-top:6px}
+ .player-mat>.own-characters{min-height:88px;padding-top:5px}
+}
+
+/* 32. 修正方向：玩家区给固定高度（其内容本就定高），牌桌区吃掉剩余。
+       牌桌区内容可变（遭遇牌数量不定），才需要弹性。 */
+@media(max-height:820px){
+ .tabletop-layout{grid-template-rows:minmax(0,1fr) 286px}
+}
+
+/* 33. 最后 18px：玩家区 286→268（手牌 128→118，角色行 min 88→82） */
+@media(max-height:820px){
+ .tabletop-layout{grid-template-rows:minmax(0,1fr) 268px}
+ .player-mat>.hand-zone{flex:0 0 118px}
+ .player-mat>.hand-zone .table-card-row{height:118px}
+ .player-mat .hand-card,.player-mat .hand-card .card-face,.player-mat .hand-card .card-face img{height:100px}
+ .player-mat .hand-card .card-face{flex:0 0 100px}
+}
+
+/* 34. 同一行卡牌必须等高：遭遇卡底部有可展开的「牌文」，内容长短不一会把
+       同一行的高矮拉开。裁掉超出部分，全文通过「查看」按钮看。 */
+.public-table .table-card-row{align-items:stretch}
+.public-table .table-card{display:flex;flex-direction:column}
+.public-table .table-card>details{display:none}          /* 牌文收进查看弹窗 */
+.public-table .encounter-card .table-card-caption{flex:1 1 auto;overflow:hidden}
+.public-table .encounter-card .claim-btn,.public-table .encounter-card>button[data-action="claim"]{flex:0 0 auto}
+
+/* ══════════════════════════════════════════════════════════════════
+   v0.15.41 · 终局计分面板压缩
+   单屏布局把操作区固定在右列（高度 = 公共桌面行高），计分面板内容
+   （5 行分项 + 总分块 + 评级 + 玩家归一化 + 底部按钮）会超出这一行。
+   处理原则：总分是终局唯一结论，任何情况下都必须无需滚动即可见。
+   ① 解禁垂直滚动（overflow-y:auto），只压行高不裁内容；纵向可滚，横向永不溢出。
+   ② 面板内所有竖向留白按 0.6 收缩，5 行分项压进约 150px。
+   ══════════════════════════════════════════════════════════════════ */
+.operation-content:not(:has(.score-panel)){overflow-x:hidden}
+.operation-content{overflow-x:hidden;overflow-y:auto}
+.operation-content .score-panel{padding:8px 10px 9px;border-width:1px}
+.operation-content .score-panel h2{font-size:13px;margin:0 0 4px}
+.operation-content .score-panel>.small,
+.operation-content .score-panel p{font-size:11.5px;line-height:1.45;margin:3px 0}
+.operation-content .score-table{margin:5px 0}
+.operation-content .score-table th,
+.operation-content .score-table td{padding:3px 6px;font-size:12.5px;line-height:1.35}
+.operation-content .score-table .score-value{font-size:13.5px;min-width:52px}
+.operation-content .score-total{padding:6px 11px;margin:6px 0;gap:9px}
+.operation-content .score-total strong{font-size:25px}
+.operation-content .score-total span{font-size:10.5px;letter-spacing:1px}
+.operation-content .score-total small{font-size:11.5px}
+.operation-content .score-panel .actions{margin-top:6px}
+@media(max-height:820px){
+ .operation-content .score-table td,
+ .operation-content .score-table th{padding:2px 5px}
+ .operation-content .score-total strong{font-size:22px}
+ .operation-content .score-panel p{font-size:11px}
+}
+
+/* 15. 计分面板：解除 30vh 上限（旧规则 318/319/320 行）的同时恢复垂直滚动，
+       否则单屏行高装不下 5 行分项 + 总分块，总分会被裁掉。 */
+.operation-content:has(.score-panel){max-height:100%;overflow-x:hidden!important;overflow-y:auto!important}
+
+/* 16. 计分面板在单屏右列（约 265px 内容宽、267px 内容高）内完整呈现：
+       dims 化布局——说明文字折行节省两行，总分块与按钮横向并排，5 行分项压到 26px。 */
+.operation-content .score-panel{padding:7px 9px 8px}
+.operation-content .score-panel .panel-title{margin:0 0 3px}
+.operation-content .score-panel .panel-title .badge{display:none}
+.operation-content .score-panel>p.small:first-of-type{display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+.operation-content .score-table th,
+.operation-content .score-table td{padding:1px 4px;font-size:12px;line-height:1.25}
+.operation-content .score-table .score-value{font-size:12.5px;min-width:44px}
+.operation-content .score-total{padding:4px 9px;margin:5px 0 4px;gap:7px;align-items:center}
+.operation-content .score-total strong{font-size:21px}
+.operation-content .score-total small{font-size:11px;line-height:1.3}
+.operation-content .score-panel>p.small.muted{font-size:11px;line-height:1.35;margin:2px 0 0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.operation-content .score-panel .actions{margin-top:5px;display:flex;gap:5px;flex-wrap:nowrap}
+.operation-content .score-panel .actions button{flex:1 1 0;min-height:34px;padding:0 8px;font-size:12.5px;white-space:nowrap}
+
+/* 17. 终局：计分面板独占操作区。终局阶段本就没有可选操作，
+       window-panel（阶段提示 + 下一步/结束回合）只剩噪音，把它的高度让给计分。 */
+.operation-content:has(.score-panel)>.window-panel{display:none}
+@media(max-width:640px){
+ /* 18. 手机窄屏：玩家切换标签横排改竖排，避免撑破 390px 视口 */
+ body:has(.desktop-table) .expedition-title>.player-tabs{width:100%;margin-left:0;gap:4px}
+ body:has(.desktop-table) .expedition-title>.player-tabs button{flex:1 1 100%;flex-direction:row;justify-content:space-between;min-height:36px;padding:3px 9px}
+ body:has(.desktop-table) .expedition-title>.player-tabs button b{font-size:12.5px}
+ body:has(.desktop-table) .expedition-title>.player-tabs button .tab-stats,
+ body:has(.desktop-table) .expedition-title>.player-tabs button span{font-size:11px}
+}
+@media(max-width:640px){
+ /* 19. 窄屏视口用 dvw 锁定，grid 列宽不再被内容顶宽 */
+ body:has(.desktop-table) main{width:100dvw;max-width:100dvw}
+ .expedition-title,.tabletop-layout{width:100%;max-width:100%;min-width:0}
+ .public-table,.player-mat,.operation-dock,.tabletop-rail{min-width:0;max-width:100%}
+ .expedition-title h1{font-size:19px;overflow-wrap:anywhere}
+ .expedition-title h1,.expedition-title .eyebrow{min-width:0}
+ .operation-title{flex-wrap:wrap;min-width:0}
+ .operation-title strong{overflow-wrap:anywhere}
+ .score-table th,.score-table td{white-space:normal!important}
+ .score-table .score-value{min-width:38px!important}
+}
+@media(max-width:640px){
+ /* 20. 终局头部「重新选择剧本」按钮（.expedition-title>button:last-child）
+        原先 flex:0 0 auto + nowrap，369px 可用宽里放不下，把文档顶到 425px。 */
+ .expedition-title{align-items:flex-start;gap:6px 10px;margin-bottom:8px}
+ .expedition-title>button:last-child{flex:0 1 auto;max-width:100%;min-height:34px;
+  padding:3px 9px;font-size:12px;white-space:normal;line-height:1.25}
+}
+
+
+/* 21. 手牌扇叠在单屏内的尺寸对齐：
+       卡高（100/118/130）与行高（118/148）分属不同断点，矮屏下卡底会溢出玩家区底部。
+       这里把两者绑定到同一条变量上，重叠、行高、卡高、悬停位移全部由它推导。 */
+.player-mat .hand-zone{--hc:130px;flex:0 0 calc(var(--hc) + 22px)}
+.player-mat>.hand-zone .table-card-row{padding-top:12px;padding-bottom:6px;overflow-x:auto;overflow-y:hidden;align-items:flex-end}
+.player-mat .hand-card,.player-mat .hand-card .card-face{height:var(--hc)}
+.player-mat .hand-card .card-face{flex:0 0 var(--hc);min-height:0;overflow:hidden}
+.player-mat .hand-card .card-face img{display:block;width:100%;height:var(--hc);object-fit:cover;aspect-ratio:auto}
+.player-mat .hand-card:hover,.player-mat .hand-card:focus-within{transform:translateY(calc(-1 * var(--hc) * 0.16))}
+@media(max-height:860px){
+ .player-mat .hand-zone{--hc:100px}
+ .player-mat .hand-card{width:78px;flex:0 0 78px}
+ .player-mat .hand-card+.hand-card{margin-left:-46px}
+ /* 行高 = 卡高 + 上 12 + 下 6；少算这一步会让卡底被行盒裁掉 14px */
+ .player-mat>.hand-zone .table-card-row{padding-top:2px;padding-bottom:4px}
+ /* 重叠手牌靠 hover 上浮，行内不做滚动；overflow-x:auto 会变成 y 也 auto，裁掉卡底 */
+ .player-mat>.hand-zone .table-card-row{overflow:visible}
+}
+@media(max-height:800px){
+ .player-mat .hand-zone{--hc:96px}
+ .player-mat .hand-card{width:70px;flex:0 0 70px}
+ .player-mat .hand-card+.hand-card{margin-left:-40px}
+ .player-mat>.hand-zone .table-card-row{padding-top:2px;padding-bottom:4px}
+}
+
+/* 22. 单屏下「其他玩家」区已被压成 62px 小卡横排，若仍允许滚动会把最后一排裁掉，
+       把可压缩性交回给玩家区（.player-mat>p.small.muted 在矮屏隐藏）。 */
+.public-table>.other-player{overflow:visible;min-height:0;display:flex;flex-direction:column}
+/* 22b. 小卡行按卡面高度撑开：行本身 56px 装不下 62px 卡（含 2px 边框），
+        会连带卡名标签一起被公共桌面裁掉 5px。两处一起改，避免再次错位。 */
+.public-table>.other-player>.table-card-row{flex:0 0 auto;min-height:0;padding-top:2px;padding-bottom:10px;
+ align-items:flex-start;overflow:visible}
+/* 22c. 状态代币（伤害/资源）绝对定位在卡面下方 -6px 处，会被行盒裁掉；
+        行留 12px 下内边距接住它，小卡自身也不再压扁。 */
+.public-table>.other-player .table-card{align-self:flex-start}
+@media(max-height:820px){
+ .player-mat>p.small.muted{display:none}
+ .public-table>.other-player .table-card-row{min-height:62px}
+}
+
+@media(max-height:820px){
+ /* 23. 矮屏：对手小卡再缩一圈（62→52px 卡面），连带代币按比例收缩，换取 14px 高度；
+        公共桌面没有纵向滚动，省下的高度直接留给玩家区的手牌。 */
+ .public-table>.other-player{display:flex;flex-direction:column}
+ .public-table>.other-player .zone-heading{margin-bottom:2px}
+ .public-table>.other-player .table-card-row{padding-top:2px;padding-bottom:9px;gap:3px}
+ .public-table>.other-player .table-card{width:52px;flex:0 0 52px;padding:3px}
+ .public-table>.other-player .table-card .card-face{height:40px;flex:0 0 40px;overflow:hidden}
+ .public-table>.other-player .table-card .card-face img{width:100%;height:40px;object-fit:cover;object-position:50% 16%}
+ .public-table>.other-player .card-tokens{--tk:11px}
+ .public-table>.other-player .state-tokens{bottom:-5px;right:-3px}
+}
+
 </style></head><body>
 <header><nav><button id="tableTab" class="active nav-home" title="回到首页"><svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><defs><linearGradient id="brandGold" x1="10" y1="8" x2="54" y2="57" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fdf4cd"/><stop offset=".32" stop-color="#e3c47a"/><stop offset=".55" stop-color="#a9853f"/><stop offset=".78" stop-color="#e8cb86"/><stop offset="1" stop-color="#fffae0"/></linearGradient><radialGradient id="brandField" cx=".5" cy=".42" r=".58"><stop offset="0" stop-color="#8a4a16"/><stop offset=".46" stop-color="#4a2a10"/><stop offset="1" stop-color="#150e07"/></radialGradient></defs><circle cx="32" cy="32" r="21" fill="#0d1710" fill-opacity=".62"/><circle cx="32" cy="32" r="21" fill="none" stroke="url(#brandGold)" stroke-width="7"/><path d="M14.6 19.2A21 21 0 0 1 32.6 10.9" fill="none" stroke="#fffbe8" stroke-width="2.4" stroke-linecap="round" opacity=".55"/></svg>首页</button><button id="catalogTab">卡牌 <span>55</span></button><button id="decksTab">我的卡组</button><button id="imagesTab">全部卡图</button><button id="helpTab">说明与完成范围</button></nav><div class="history-nav"><button id="navBack" type="button" title="后退" aria-label="后退">←</button><button id="navFwd" type="button" title="前进" aria-label="前进">→</button></div><div class="header-actions"><button id="undo">撤销一步</button><button id="export">导出存档</button><label class="button" for="import">导入存档</label><input id="import" type="file" accept="application/json" hidden></div></header>
 <main id="app"></main><div id="toast" role="status" aria-live="polite"></div>
@@ -8709,7 +9260,7 @@ const WindowUI=(()=>{
 </script><script>
 /* Tabletop view: UI drafts never pay, exhaust, reveal, or bypass phase validation. */
 /* 界面版本徽标唯一来源：须与 CHANGELOG.md 最新条目标题一致（planning-dom-tests 有校验）。 */
-const APP_VERSION='v0.15.40';
+const APP_VERSION='v0.15.41';
 const DesktopUI=(()=>{
  const E=ScenarioEngine,R=E.planning,Q=E.questing,C=E.combat,esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  let combatDraft={key:'',target:null,ids:[]},draftState=null;

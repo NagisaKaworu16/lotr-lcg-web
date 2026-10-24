@@ -18,6 +18,7 @@
 | 牌组导入与组卡器 | 我的卡组页、开局选牌、文本/URL 导入、回填原牌组、分享链接（URL hash 自包含）已完成（2026-10-22）；扩展卡池待做 | player-cards.encodeDeck/decodeDeck、deck-share-tests、check-deck-share、player-tests |
 | 卡牌库系列包筛选 | 已完成（2026-10-22）：玩家卡用 packCode，遭遇卡与探险卡补齐 `pack` 字段（基础版 55 张为 Core），三类分组与计数自动跟随 | pack-data-tests、check-catalog、planning-dom-tests |
 | 新游戏流程（四页签产品墙） | 已接入 165 项封面墙；新版扩展一系列一条，旧版扩展按「大盒 → 6 个剧本」两级展开；连续剧本跨剧本推进、战役恩惠负担待做 | app.js newGame、planning-dom-tests、check-catalog-tabs、check-legacy-packs |
+| 单屏桌面布局（BGA 式左桌右栏） | 已完成（2026-10-23，v0.15.41）：锁定 100vh 单屏不滚动，四区网格 `table/dock/mat/rail`，1920×1080 / 1600×900 / 1440×900 / 1366×768 五区全在视口内；终局计分总分不折叠；窄屏 ≤1279 退回单列 | check-onescreen、check-layout、check-taskbar、check-score |
 | 联机 | 后续独立里程碑 | 服务器、身份、私密手牌、断线恢复与操作版本 |
 
-桌面真实浏览器验收已完成；开局取消窗口迁移与完整计分已于 2026-10-21 完成。当前优先收集用户上手反馈，并审计跨阶段规则的卡牌时点。新增功能放到独立分支，保留已验证基线。
+桌面真实浏览器验收已完成；开局取消窗口迁移与完整计分已于 2026-10-21 完成；单屏布局改版于 2026-10-23 完成（纯 CSS 重排，未动 DOM 与规则引擎）。当前优先收集用户上手反馈，并审计跨阶段规则的卡牌时点。新增功能放到独立分支，保留已验证基线。

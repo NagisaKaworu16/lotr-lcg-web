@@ -49,16 +49,22 @@ const WIDTH = arg('width', 1440);
     const box = s => { const e = document.querySelector(s); if (!e) return null; const b = e.getBoundingClientRect(); return { x: Math.round(b.x), y: Math.round(b.y + window.scrollY), w: Math.round(b.width) }; };
     return { dock: box('.operation-dock'), board: box('.public-table'), mat: box('.player-mat'), rail: box('.tabletop-rail'), log: box('.table-log'), rail2: box('.phase-rail') };
   });
-  add('公共桌面存在且位于操作栏下方', marks.board && marks.board.y > marks.dock.y, `${marks.dock?.y} → ${marks.board?.y}`);
+  /* v0.15.41 单屏布局：操作栏改到右列，与公共桌面并排而不是上下叠放。 */
+  add('公共桌面与操作栏并排（左桌右栏）', marks.board && marks.dock
+    && marks.board.x === marks.mat.x && marks.dock.x > marks.board.x, `board x=${marks.board?.x} dock x=${marks.dock?.x}`);
   add('底部玩家区位于公共桌面之下', marks.mat && marks.mat.y > marks.board.y, `${marks.board?.y} → ${marks.mat?.y}`);
   add('右侧牌堆与日志同栏且靠右', marks.rail && marks.rail.x > marks.board.x && marks.rail2 && marks.log, `rail x=${marks.rail?.x} board x=${marks.board?.x}`);
   add('玩家区与公共桌面同宽同起点', marks.mat.w === marks.board.w && marks.mat.x === marks.board.x, `${marks.mat.w}/${marks.board.w}`);
 
   // ---- 1. sticky dock keeps the task visible ------------------------------
-  await page.evaluate(() => window.scrollTo(0, 700));
-  await page.waitForTimeout(250);
-  const stickyTop = await page.evaluate(() => Math.round(document.querySelector('.operation-dock').getBoundingClientRect().top));
-  add('操作栏滚动后仍固定在视口顶部', stickyTop >= 0 && stickyTop <= 40, `top=${stickyTop}`);
+  /* v0.15.41：整页锁定视口高度，页面本身不再滚动；操作栏始终在视口内。 */
+  const noScroll = await page.evaluate(() => document.documentElement.scrollHeight <= innerHeight + 1);
+  add('对局页面不产生纵向滚动', noScroll, `docH=${await page.evaluate(() => document.documentElement.scrollHeight)} vh=${await page.evaluate(() => innerHeight)}`);
+  const dockInView = await page.evaluate(() => {
+    const b = document.querySelector('.operation-dock').getBoundingClientRect();
+    return b.top >= 0 && b.bottom <= innerHeight + 0.5;
+  });
+  add('操作栏完整位于视口内', dockInView, 'dock in viewport');
   const baseTitle = await dockText();
   add('操作栏标题显示当前任务与阶段', /阶段/.test(baseTitle) && baseTitle.length > 4, baseTitle);
   await page.evaluate(() => window.scrollTo(0, 0));

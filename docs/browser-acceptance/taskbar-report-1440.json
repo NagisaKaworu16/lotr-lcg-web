@@ -1,32 +1,37 @@
 {
  "width": 1440,
- "at": "2026-10-23T10:08:20.281Z",
+ "at": "2026-10-24T07:36:01.954Z",
  "ok": true,
  "checks": [
   {
-   "name": "公共桌面存在且位于操作栏下方",
+   "name": "公共桌面与操作栏并排（左桌右栏）",
    "ok": true,
-   "detail": "174 → 468"
+   "detail": "board x=14 dock x=1052"
   },
   {
    "name": "底部玩家区位于公共桌面之下",
    "ok": true,
-   "detail": "468 → 1515"
+   "detail": "139 → 560"
   },
   {
    "name": "右侧牌堆与日志同栏且靠右",
    "ok": true,
-   "detail": "rail x=1162 board x=22"
+   "detail": "rail x=1052 board x=14"
   },
   {
    "name": "玩家区与公共桌面同宽同起点",
    "ok": true,
-   "detail": "1122/1122"
+   "detail": "1029/1029"
   },
   {
-   "name": "操作栏滚动后仍固定在视口顶部",
+   "name": "对局页面不产生纵向滚动",
    "ok": true,
-   "detail": "top=8"
+   "detail": "docH=950 vh=950"
+  },
+  {
+   "name": "操作栏完整位于视口内",
+   "ok": true,
+   "detail": "dock in viewport"
   },
   {
    "name": "操作栏标题显示当前任务与阶段",
