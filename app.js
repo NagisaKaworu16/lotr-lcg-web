@@ -1,6 +1,10 @@
 'use strict';
 const E=ScenarioEngine,D=LOTR_DATA,$=s=>document.querySelector(s);
 let state=null,history=[],tab='table',handView=0;
+/* 日志显示范围：'round'（默认，仅本回合）| 'all'。纯视图偏好，不写入对局状态、
+   不进撤销历史，刷新页面沿用本次会话内的选择；后续要加「按阶段筛选」等维度时，
+   在这里扩成对象（如 {scope:'round',phases:[]}）再传给 PhaseLog.panel 即可。 */
+let logScope='round';
 /* 日志回退：history[j] 存的是第 j 次操作「之前」的状态，但并非每次操作都会写日志，
    所以两者不能按下标直接对应。logMarks[j] 记录第 j 次操作把日志从几条变成几条（[before,after]），
    日志条目据此精确定位到「产生它的那次操作」，回退时才能停在正确的前态。
@@ -10,6 +14,8 @@ let state=null,history=[],tab='table',handView=0;
     所以定位回退点一律用 seq 反查（history[seq - baseSeq]）。 */
 let logMarks=[],historyBase=0;
 function APP_LOG_MARKS(){return {logMarks,base:historyBase,length:history.length};}
+/* 供桌面右栏日志读取当前显示范围（纯视图偏好，见上方 logScope 注释）。 */
+function APP_LOG_SCOPE(){return logScope;}
 const setupDraft={players:1,seed:'',first:0,decks:['starter-leadership','starter-tactics','starter-spirit','starter-lore']};
 function captureSetup(){if(state)return;const count=$('#playerCount');if(!count)return;const n=Number(count.value);if(Number.isInteger(n)&&n>=1&&n<=4)setupDraft.players=n;setupDraft.seed=$('#seed')?.value||'';setupDraft.first=Number($('#pc-first')?.value||0);if(setupDraft.first>=setupDraft.players)setupDraft.first=0;for(let i=0;i<4;i++){const value=$('#pc-deck-'+i)?.value;if(value)setupDraft.decks[i]=value;}}
 function bindSetup(){if(state||tab!=='table')return;const count=$('#playerCount');if(!count)return;count.onchange=()=>{captureSetup();render();};for(const id of ['seed','pc-first','pc-deck-0','pc-deck-1','pc-deck-2','pc-deck-3']){const el=$('#'+id);if(el){el.onchange=captureSetup;if(id==='seed')el.oninput=captureSetup;}}}
@@ -322,6 +328,7 @@ async function choose(title,body,read){return new Promise(resolve=>{let d=docume
 function playerOptions(){return state.players.filter(p=>!p.eliminated).map(p=>`<option value="${p.id}">${enc(p.name)}</option>`).join('');}
 $('#app').onclick=async ev=>{const b=ev.target.closest('[data-action]');if(!b||b.disabled)return;const a=b.dataset.action,uid=Number(b.dataset.uid),id=Number(b.dataset.id),pid=Number(b.dataset.player);
  if(a==='desktop'){DesktopUI.handle(b);return;}
+ if(a==='logScope'){const v=b.dataset.scope;if(!['round','all'].includes(v))return;logScope=v;render();return;}
  if(a==='undoLog'){const seq=Number(b.dataset.seq),j=seq-historyBase;
   if(!Number.isInteger(seq)||j<0||j>=history.length)return;
   /* 回退到该次操作之前：状态、历史、日志标记一起截断到那一刻。 */

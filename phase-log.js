@@ -43,13 +43,18 @@ const PhaseLog=(()=>{
   for(let j=marks.length-1;j>=0;j--)if(marks[j].before<=target&&target<marks[j].after)return marks[j].seq;
   return null;
  }
+ /* 按回合分组：只做「相邻同回合合并」，再按回合号从新到旧排序。
+    日志是 newest-first，但同回合内可能夹着跨回合的杂项（阶段切换、补写记录），
+    单纯扫描会把同一回合拆成多段并排到后面，出现「回合2 / 回合3 / 回合1」的乱序。 */
  function group(entries){
-  const out=[];
+  const out=[],byRound=new Map();
   for(const e of entries){
-   const last=out[out.length-1];
-   if(last&&last.round===e.round)last.items.push(e);else out.push({round:e.round,items:[e]});
+   let g=byRound.get(e.round);
+   if(!g){g={round:e.round,items:[]};byRound.set(e.round,g);out.push(g);}
+   g.items.push(e);
   }
-  return out;
+  /* 回合号大的是更新的回合，排在上面；回合号 0（无法解析）沉底。 */
+  return out.sort((a,b)=>(b.round||0)-(a.round||0));
  }
  /* 仅当前阶段的记录高亮，其余淡化——和截图里「MYTHOS 段整块亮、其余灰」一致。 */
  function rail(s){
@@ -72,24 +77,47 @@ const PhaseLog=(()=>{
    </button>`:''}
   </li>`;
  }
- /* log: 原始日志（newest-first）；marks: app.js 的操作日志标记（可省略） */
- function panel(s,marks=null){
+ /* 显示范围：默认只显示本回合。round=0 表示「全部回合」。
+   范围只影响渲染，不改写 state.log，也不进撤销历史——切换范围属于纯视图操作。 */
+ const SCOPES=[{key:'round',label:'本回合'},{key:'all',label:'全部'}];
+ const SCOPE_KEYS=SCOPES.map(x=>x.key);
+ function normalizeScope(scope){return SCOPE_KEYS.includes(scope)?scope:'round';}
+ /* 本回合能显示多少条：日志 newest-first，扫到第一条第 round 小于当前回合的记录为止。
+    用长度而不是筛掉旧记录，保证「本回合」模式下 index 与原日志下标一致，回退映射不需要换算。 */
+ function roundSpan(lines,round){
+  let n=0;
+  for(const line of lines){if(parse(line).round!==round)break;n++;}
+  return n;
+ }
+ /* log: 原始日志（newest-first）；marks: app.js 的操作日志标记；scope: 'round'|'all' */
+ function panel(s,marks=null,scope='round'){
   if(!s)return '';
-  const raw=(s.log||[]).slice(0,120);
+  const mode=normalizeScope(scope),all=s.log||[],room=120;
+  const span=mode==='round'?roundSpan(all,s.round):all.length;
+  /* 总数取渲染窗口内的条数：回退映射只在这个窗口里有意义 */
+  const raw=all.slice(0,Math.min(room,span));
   /* 下标必须随解析一起落库（日志是 newest-first，index 越小越新）。
      早先版本用 entries.indexOf(e) 反查，同文本条目会全部命中第一条，导致只有一条能撤回。 */
   const entries=raw.map((line,i)=>({...parse(line,PHASE_COLOR[s.phase]?.key),index:i}));
   const groups=group(entries);
   const total=entries.length;
+  const hidden=all.length-span;
   const body=groups.length?groups.map(g=>`
    <div class="log-round">
     <div class="log-round-head"><span>回合 ${g.round||'—'}</span></div>
     <ol class="log-list">${g.items.map(e=>entry(e,e.index,total,marks)).join('')}</ol>
-   </div>`).join(''):'<p class="log-empty">尚无可显示的记录。推进阶段后这里会按阶段着色记录每一步。</p>';
-  return `<section class="phase-log" aria-label="阶段与行动日志">
+   </div>`).join(''):`<p class="log-empty">${mode==='round'?'本回合还没有记录；推进阶段或执行操作后会出现在这里。':'尚无可显示的记录。'}</p>`;
+  /* 本回合模式下明确告知还有多少旧记录，并给一键切换（不写游戏状态） */
+  const more=mode==='round'&&hidden>0?`<button type="button" class="log-more small" data-action="logScope" data-scope="all">更早 ${hidden} 条 · 查看全部回合</button>`:'';
+  return `<section class="phase-log" aria-label="阶段与行动日志" data-scope="${mode}">
    ${rail(s)}
+   <div class="log-bar">
+    <div class="log-scope" role="group" aria-label="日志范围">${SCOPES.map(o=>`<button type="button" class="log-scope-btn${o.key===mode?' active':''}" data-action="logScope" data-scope="${o.key}" aria-pressed="${o.key===mode}">${o.label}</button>`).join('')}</div>
+    <span class="log-count small">${mode==='round'?`本回合 ${total} 条`:`共 ${total} 条`}</span>
+   </div>
    <div class="log-stream">${body}</div>
+   ${more}
   </section>`;
  }
- return {panel,parse,undoFor,PHASE_COLOR};
+ return {panel,parse,undoFor,PHASE_COLOR,SCOPES,normalizeScope,roundSpan};
 })();

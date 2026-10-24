@@ -427,3 +427,43 @@ test('clicking a log undo button restores the state before that operation',async
  /* 无效序号不改变任何状态 */
  const snap=e.run('JSON.stringify(state)');await e.click({action:'undoLog',seq:'9999'});
  assert.equal(e.run('JSON.stringify(state)'),snap);});
+/* ── 日志显示范围（默认本回合，可切全部） ─────────────────────────── */
+test('log scope defaults to the current round and can switch to all rounds',async()=>{const e=environment();await opening(e);
+ /* 造旧回合记录：日志 newest-first，旧回合必须排在现有记录之后（push），
+    否则会被后续本回合记录挤到队首之外，roundSpan 数不到本回合条目。 */
+ e.run(`state.log.push('回合1 · §P0§开局前记录');
+        state.log.push('回合2 · §P1§计划 · 玩家2抽取1张牌');`);
+ e.run('render()');   /* 直接改日志不走 mutate，需要手动重绘 */
+ const view=()=>e.base.get('app').innerHTML;
+ /* 默认 = 本回合 */
+ const html=view();
+ assert(html.includes('data-scope="round"'),'默认范围应是本回合');
+ assert(html.includes('log-scope-btn active" data-action="logScope" data-scope="round"'),'「本回合」应为选中态');
+ assert(html.includes('更早 '),'存在更早记录时应给出查看全部的入口');
+ assert(!html.includes('回合 2'),'本回合视图不应渲染旧回合分组');
+ /* 切到全部后旧回合出现 */
+ await e.click({action:'logScope',scope:'all'});
+ const all=view();
+ assert(all.includes('data-scope="all"'));
+ assert(all.includes('回合 2')&&all.includes('回合 1'),'全部视图应包含所有回合');
+ /* 切回本回合 */
+ await e.click({action:'logScope',scope:'round'});
+ assert(view().includes('data-scope="round"'));
+ /* 非法范围被忽略，不改视图状态 */
+ const snap=e.base.get('app').innerHTML;await e.click({action:'logScope',scope:'bogus'});
+ assert.equal(e.base.get('app').innerHTML,snap);});
+
+test('log scope switching is view-only: no game state, history or log mutation',async()=>{const e=environment();await opening(e);
+ const snap=e.run('JSON.stringify(state)'),hist=e.run('history.length'),marks=e.run('APP_LOG_MARKS().logMarks.length');
+ await e.click({action:'logScope',scope:'all'});
+ await e.click({action:'logScope',scope:'round'});
+ assert.equal(e.run('JSON.stringify(state)'),snap,'切换范围不应改游戏状态');
+ assert.equal(e.run('history.length'),hist,'切换范围不应写入撤销历史');
+ assert.equal(e.run('APP_LOG_MARKS().logMarks.length'),marks,'切换范围不应新增日志标记');});
+
+test('log rounds are ordered newest first even when entries interleave',()=>{const e=environment();
+ e.run(`const s={phase:0,round:1,log:['回合2 · a','回合3 · b','回合2 · c','回合1 · d']};`);
+ const html=e.run(`PhaseLog.panel({phase:0,round:1,log:['回合2 · a','回合3 · b','回合2 · c','回合1 · d']},null,'all')`);
+ const order=[...html.matchAll(/log-round-head"><span>回合 (\d+)/g)].map(m=>m[1]);
+ assert.deepEqual(order,['3','2','1'],'回合分组须从新到旧，同回合不可被拆开');
+ assert.equal((html.match(/回合 2/g)||[]).length,1,'同一回合只应出现一个分组头');});

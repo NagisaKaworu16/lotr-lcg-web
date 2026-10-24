@@ -8,6 +8,8 @@ const DesktopUI=(()=>{
  const who=(s,id)=>esc(s.players[id]?.name||('玩家'+(id+1)));
  /* 日志回退标记由 app.js 提供（哪次操作产生了哪几条日志）；测试环境无此钩子时返回 null，只渲染不可回退的日志。 */
  const logMarks=()=>{try{return typeof APP_LOG_MARKS==='function'?APP_LOG_MARKS().logMarks:null;}catch(e){return null;}};
+ /* 日志显示范围由 app.js 的视图偏好决定；模块单独加载（测试环境）时退回「本回合」。 */
+ const logScope=()=>{try{return typeof APP_LOG_SCOPE==='function'?APP_LOG_SCOPE():'round';}catch(e){return 'round';}};
  const chip=(text,tone='wait')=>`<span class="op-chip ${tone}">${esc(text)}</span>`;
  /* 诡镇网页版式代币：圆形徽章、数字居中，同型多枚层叠。数量由规则引擎结算，拖放仅作视觉表现。
     属性代币（意志/攻击/防御）是静态数值快照，不参与拖放。 */
@@ -129,7 +131,7 @@ const DesktopUI=(()=>{
 <div class="pile ${s.deck.length?'':'empty'}"><span class="pile-cards" aria-hidden="true"></span><strong>${s.deck.length}</strong><small>牌库</small></div>
 <div class="pile discard ${s.discard.length?'':'empty'}"><span class="pile-cards" aria-hidden="true"></span><strong>${s.discard.length}</strong><small>弃牌</small></div>
 <div class="pile victory ${s.victory.length?'':'empty'}"><span class="pile-cards" aria-hidden="true"></span><strong>${s.victory.reduce((n,c)=>n+(c.victory||0),0)}</strong><small>胜利点</small></div>
-</div><details><summary>查看弃牌与胜利区</summary><p>${esc(s.discard.map(c=>c.name).join('、')||'空')}</p><p>${esc(s.victory.map(c=>c.name).join('、')||'空')}</p></details></section>${s.conditions.length?`<section><h2>持续条件</h2>${s.conditions.map(c=>`<p>${esc(c.name)} · ${esc(R.find(s,c.target)?.meta.nameZh||'玩家'+((c.targetPlayer??0)+1))}</p>`).join('')}</section>`:''}<section class="table-log" aria-label="远征日志">${PhaseLog.panel(s,logMarks())}</section><details><summary>阶段与界面说明</summary><p>蓝色边框表示可操作，金色边框表示暂定已选。桌面点选不执行效果；确认后仍需全员核对。已翻开信息无法收回。</p></details></aside></div></div>`;
+</div><details><summary>查看弃牌与胜利区</summary><p>${esc(s.discard.map(c=>c.name).join('、')||'空')}</p><p>${esc(s.victory.map(c=>c.name).join('、')||'空')}</p></details></section>${s.conditions.length?`<section><h2>持续条件</h2>${s.conditions.map(c=>`<p>${esc(c.name)} · ${esc(R.find(s,c.target)?.meta.nameZh||'玩家'+((c.targetPlayer??0)+1))}</p>`).join('')}</section>`:''}<section class="table-log" aria-label="远征日志">${PhaseLog.panel(s,logMarks(),logScope())}</section><details><summary>阶段与界面说明</summary><p>蓝色边框表示可操作，金色边框表示暂定已选。桌面点选不执行效果；确认后仍需全员核对。已翻开信息无法收回。</p></details></aside></div></div>`;
  }
  function handle(el){const k=el.dataset.desktop,uid=+el.dataset.uid,pid=+el.dataset.player,m=mode(state,handView),d=draft(state,m);
   if(k==='view'){handView=pid;render();return;}if(k==='reset'){if(confirm('结束当前桌面并重新选择剧本？建议先导出存档。'))mutate(()=>state=null);return;}
