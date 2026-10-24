@@ -1,6 +1,6 @@
 {
  "width": 1440,
- "at": "2026-10-24T14:18:44.652Z",
+ "at": "2026-10-24T14:36:12.273Z",
  "cardWidths": [
   100,
   62,
@@ -40,17 +40,17 @@
   {
    "name": "面板圆角统一 10px",
    "ok": true,
-   "detail": ".operation-dock:10px | .public-table:10px | .player-mat:10px"
+   "detail": ".operation-dock:0px | .public-table:10px | .player-mat:10px"
   },
   {
-   "name": "右栏只有阶段竖轴一个框",
+   "name": "右栏是一个框体（竖轴+日志两列）",
    "ok": true,
-   "detail": "kids=1"
+   "detail": "kids=2"
   },
   {
-   "name": "竖轴占满右栏高度",
+   "name": "竖轴占满右栏内容高度",
    "ok": true,
-   "detail": "rail=380 box=380"
+   "detail": "rail=358 box=380"
   },
   {
    "name": "卡牌宽度按分区统一（公共牌/玩家牌/对手牌各一档）",

@@ -82,11 +82,11 @@ const near = (a, b, tol = 1) => Math.abs(a - b) <= tol;
   add('公共桌面与操作栏顶部对齐', near(board.y, dock.y, 2), `${board.y} / ${dock.y}`);
   add('玩家区与牌堆栏顶部对齐', near(mat.y, geo.rail.y, 2), `${mat.y} / ${geo.rail.y}`);
   add('公共桌面在玩家区之上', board.y + board.h <= mat.y + 1, `${(board.y + board.h).toFixed(1)} → ${mat.y}`);
-  add('面板圆角统一 10px', [dock, board, mat].every(p => p.radius === '10px'), geo.panels.map(p => `${p.sel}:${p.radius}`).join(' | '));
-  /* v0.15.49：右栏只被阶段竖轴占据，日志改为按需展开的抽屉（.table-log 已移出 rail）。
-     右栏一致性的对象改为竖轴自身：有且只有一个框、占满栏高。 */
-  add('右栏只有阶段竖轴一个框', geo.railKids === 1, 'kids=' + geo.railKids);
-  add('竖轴占满右栏高度', geo.railH > 0 && Math.abs(geo.railH - geo.railBoxH) <= 2, `rail=${geo.railH} box=${geo.railBoxH}`);
+  /* v0.15.50：操作条去框化（透明无圆角），圆角检查只针对仍有边框的面板。 */
+  add('面板圆角统一 10px', [board, mat].every(p => p.radius === '10px') && dock.radius === '0px', geo.panels.map(p => `${p.sel}:${p.radius}`).join(' | '));
+  /* v0.15.50：右栏回归「一个框体」——.tabletop-rail 内含阶段竖轴（左列）+ 日志（右列）。 */
+  add('右栏是一个框体（竖轴+日志两列）', geo.railKids === 2, 'kids=' + geo.railKids);
+  add('竖轴占满右栏内容高度', geo.railH > 0 && Math.abs(geo.railH + 22 - geo.railBoxH) <= 2, `rail=${geo.railH} box=${geo.railBoxH}`);
   add('卡牌宽度按分区统一（公共牌/玩家牌/对手牌各一档）', [geo.cardWidthsByZone.pub, geo.cardWidthsByZone.mat, geo.cardWidthsByZone.peer].every(a => a.length <= 1), JSON.stringify(geo.cardWidthsByZone));
   const rowHeights = geo.rows.filter(r => r.length > 1).map(r => [...new Set(r.map(c => c.h))]);
   add('同一行卡牌等高', rowHeights.every(h => h.length === 1), rowHeights.map(h => h.join('/')).join(' | ') || '无多卡行');

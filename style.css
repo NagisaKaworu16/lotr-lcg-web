@@ -551,13 +551,16 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
 
 /* ── 4. 各区独立滚动，页面不滚 ───────────────────────────────────── */
 .public-table,.player-mat{min-height:0;overflow:hidden;display:flex;flex-direction:column}
-.tabletop-rail{min-height:0;overflow:hidden;display:grid;gap:6px;
- /* v0.15.49：右栏只被阶段竖轴占据；日志改为按需展开的右侧抽屉（.table-log.open），
-    不再固定占半栏。 */
- grid-template-columns:1fr;
- grid-template-rows:minmax(0,1fr)}
+.tabletop-rail{min-height:0;overflow:hidden;display:grid;gap:10px;
+ /* v0.15.50：阶段竖轴与日志合并为同一个框体——竖轴在左、日志贴右，
+    外层 rail 统一提供边框与底色，内部不再各自套框。 */
+ grid-template-columns:128px minmax(0,1fr);
+ grid-template-rows:minmax(0,1fr);
+ background:#23323e;border:1px solid #475b6b;border-radius:8px;padding:10px}
 .tabletop-rail>.phase-rail-v{
  grid-column:1;grid-row:1;min-height:0;height:100%;overflow:auto}
+.tabletop-rail>.table-log{grid-column:2;grid-row:1;min-height:0;min-width:0;
+ border-left:1px solid #3d5361;padding-left:10px}
 /* v0.15.45：牌堆栏与说明框移除，右栏只剩竖轴 + 日志两列，日志直接占第二列 */
 .public-table{padding:10px;gap:8px}
 
@@ -583,18 +586,22 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
 .public-table .zone-empty{min-height:40px;font-size:11.5px}
 .active-zone .table-card-row{min-height:0}
 
-/* ── 6. 操作区：标题条固定，内容区自己滚，阶段条一行 ─────────────── */
-.operation-dock{position:static;display:flex;flex-direction:column;min-height:0;overflow:hidden}
-.operation-title{padding:7px 11px;gap:7px;flex:0 0 auto}
+/* ── 6. 操作区：标题条固定，内容区自己滚，阶段条一行 ───────────────
+   v0.15.50：用户要求去掉这个框体——grid 行高让它内容再少也显示一大块空框
+   （开局阶段尤其明显）。去边框、去底色、去阴影，只留标题行与内容本身；
+   需要与公共桌面分隔时靠间距，不再靠框。 */
+.operation-dock{position:static;display:flex;flex-direction:column;min-height:0;overflow:visible;
+ background:transparent;border:0;box-shadow:none;border-radius:0}
+.operation-title{padding:2px 0;gap:7px;flex:0 0 auto;background:transparent}
 .operation-title strong{font-size:13.5px;line-height:1.35}
 .operation-title>.small{font-size:11.5px}
 .operation-dock .phase-rail{padding:5px 9px 1px;gap:3px;flex:0 0 auto}
 .operation-dock .rail-step{padding:2px 7px;gap:3px;border-radius:999px}
 .operation-dock .rail-step b{font-size:11.5px}
 .operation-dock .rail-step>span,.operation-dock .rail-step small{font-size:9.5px}
-.phase-hint{padding:2px 11px 5px;font-size:11px;line-height:1.4;flex:0 0 auto;
+.phase-hint{padding:2px 0 5px;font-size:11px;line-height:1.4;flex:0 0 auto;
  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.operation-content{padding:0 11px;flex:1 1 auto;min-height:0;overflow:auto;max-height:none}
+.operation-content{padding:0;flex:1 1 auto;min-height:0;overflow:auto;max-height:none}
 .operation-content>.panel{padding:7px 0}
 .operation-content h2{font-size:13.5px}
 .operation-content p{font-size:12.5px;line-height:1.5}
@@ -1187,15 +1194,10 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
 .log-entry .log-undo:focus-visible{outline:2px solid #c8a96a;outline-offset:1px}
 .log-empty{font-size:11px;color:#8b9385;line-height:1.5}
 
-/* v0.15.49：日志抽屉。默认收起（hidden 属性），点顶栏「远征日志」展开为
-   右侧浮层，覆盖在阶段竖轴之上；不再固定占据右栏。 */
+/* v0.15.50：日志回到 rail 框内第二列（与竖轴同一框体）。 */
 .table-log{
- position:fixed;top:76px;right:12px;bottom:12px;width:min(420px,44vw);z-index:60;
- display:flex;flex-direction:column;min-height:0;overflow:hidden;
- padding:10px 12px;border:1px solid #4c606c;border-radius:10px;
- background:#25343ef2;box-shadow:-8px 0 24px #0005;backdrop-filter:blur(2px)}
+ display:flex;flex-direction:column;min-height:0;min-width:0;overflow:hidden}
 .table-log>.phase-log{flex:1 1 auto;min-height:0}
-.table-log[hidden]{display:none}
 
 @media(max-height:860px){
  .log-entry .log-text{font-size:10.5px;-webkit-line-clamp:2}

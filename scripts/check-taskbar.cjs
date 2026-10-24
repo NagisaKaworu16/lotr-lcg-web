@@ -30,7 +30,7 @@ const WIDTH = arg('width', 1440);
   const add = (name, ok, detail = '') => checks.push({ name, ok: !!ok, detail: String(detail) });
 
   /* v0.15.46：完整阶段面板已从操作条搬到角色卡下方的 .mat-phase，两处都要找。 */
-  const PANEL = '.operation-content, .mat-phase';
+  const PANEL = ':is(.operation-content, .mat-phase)';
   const clickBtn = async t => { const el = page.locator(PANEL + ' button:not([disabled])', { hasText: t }).first(); if (!await el.count()) return false; await el.click(); await page.waitForTimeout(260); return true; };
   const clickNext = async () => { const el = page.locator('.operation-title button.primary:not([disabled])').first(); if (!await el.count()) return false; await el.click(); await page.waitForTimeout(400); return true; };
   const dockText = () => page.evaluate(() => document.querySelector('.operation-title')?.innerText.replace(/\n/g, ' | ') || '');

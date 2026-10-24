@@ -1,4 +1,10 @@
-# v0.15.49 · 右栏只留阶段竖轴，日志改为按需展开的抽屉（2026-10-24）
+# v0.15.50 · 操作条去框 + 阶段与日志合并为同一框体（2026-10-24）
+
+- **操作区空框删除**：右侧第 6 节（操作条）此前虽无内容仍印一个带底色描边的框，用户截图质问「这个框体去不掉吗」。`.operation-dock` 改为透明容器（`background:transparent;border:0;box-shadow:none;border-radius:0`），`.operation-title`/`.phase-hint` 同步去底——操作条只剩文字与控件，不再是一个「框」。
+- **阶段竖轴与日志合并成一个框体**：v0.15.49 的抽屉方案回滚。`.tabletop-rail` 恢复为一个完整框体（深底 + 描边 + 圆角 + 内边距），内部改两列网格（`128px 竖轴 | 1fr 日志`）：阶段竖轴居左通高，远征日志居右以竖分隔线隔开，日志行内「回退」撤销入口保留。`logDrawer()`、顶栏「远征日志」按钮与 app.js 的 `logToggle`/`APP_LOG_OPEN` 一并删除。
+- **验收脚本修正**：check-taskbar 的 `PANEL='.operation-content, .mat-phase'` 拼接后逗号优先级使整个 `.operation-content` div 也成为匹配项，`.first().click()` 点在 div 上——提交流程 7 项假失败。改为 `:is(...)` 后 23/23。check-layout 三项改为：圆角检查豁免透明 dock、右栏断言为「一个框体两列（kids=2）」、竖轴高度按 rail 内边距+边框 22px 放宽容差。
+- 验收：14 个套件全绿；check-layout 15/15、check-taskbar 23/23、check-onescreen 五区可见、check-contrast 0 低对比、check-score 19/19。浏览器实测：`dock{bg:rgba(0,0,0,0),bd:none}`、`railCols:2`、`logInRail:true`、`entries:7`、`undo:true`。
+
 
 - **需求**：整个右侧区域只被竖着的阶段条占据，没有其他框体。此前右栏是「竖轴（108px）+ 日志流（其余宽）」两列，日志面板固定占掉大半栏。
 - **改法**：`.tabletop-rail` 改单列，只渲染阶段竖轴（通高占满 374px 栏宽）；`.table-log` 移出 rail 变成 `position:fixed` 的右侧抽屉（`min(420px,44vw)` 宽、半透明深底），默认 `hidden` 收起。顶栏新增「远征日志 / 收起日志」按钮（`data-action="logToggle"`）开关；抽屉内保留日志条目、按阶段着色与本回合/全部切换，**日志行内「回退」撤销入口不变**。
