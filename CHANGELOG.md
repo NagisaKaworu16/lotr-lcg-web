@@ -1,3 +1,11 @@
+# v0.15.48 · 删除行动窗口空壳面板，模式切换缩成标题行小按钮（2026-10-24）
+
+- **问题**：右侧操作条里「行动窗口 · 智能推进」面板无论有没有可做的行动都印一整块（标题 + 一段长说明 + 空列表），和右侧阶段竖轴表达同一件事——玩家问「这个窗口为什么还在」。
+- **修法**：`window-ui.js` 的 `panel()` 只在智能模式且 action 窗口**真的有可选项**时渲染紧凑面板（选项行 + 让过/恢复按钮，删掉长说明）；其余情况返回空。模式切换缩成操作条标题行的一枚 `.mode-chip` 小按钮（`WindowUI.modeChip`），文本随模式在「行动窗口 · 智能推进 / 详细模式」间切换。
+- **有选项时面板并入 taskPanel**：`desktop-ui.js` 的 `taskPanel()` 增加通用分支渲染 `WindowUI.panel(s)`，符合「操作条只留此刻必须做的输入」原则；战斗阶段的攻击选择、静音提醒等按钮行为不变。
+- **对比度修正**：chip 原为透明底，落到浅色 setup 页面对比只有 1.73；改实底 `#1d2d38` 后 0 低对比。
+- 验收：14 个套件全绿（planning-dom 70 项含窗口模式切换断言）；check-layout 16/16、check-taskbar 23/23、check-onescreen 五区可见、check-contrast 0 低对比、check-score 19/19、check-card-hover 22/22、check-setup-reveal 13/13、check-deck-share 16/16、check-history 无脚本错误。浏览器实测：资源阶段 `panel:false, ops:0`（空壳确无），chip 双向切换正常。
+
 # v0.15.47 · 开局设置搬到角色卡下方（2026-10-24）
 
 - **「开局步骤 · 起始手牌」从右栏移到角色卡下方**：它原来渲染在 `.operation-content` 里，把右侧 320px 的窄条占满，而角色卡下方那块 `.mat-phase` 在开局阶段是空的。现在 `openingPanel` 与 `setupPanel` 一起落到 `.mat-phase`，与阶段面板同一位置——开局设置本来就是「第 1 阶段之前的那一步」，位置一致更符合直觉。

@@ -1303,3 +1303,19 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
 .questing-panel.compact .compact-chips{margin:4px 0}
 .questing-panel.compact .quest-commit-list{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0}
 .questing-panel.compact .quest-commit-list label{font-size:13px;display:flex;gap:4px;align-items:center}
+/* ── 18. 行动窗口模式小按钮 + 紧凑面板（v0.15.48） ───────────────────
+   空壳面板删除后，模式切换缩成操作条标题行的一枚 chip；有可选项时
+   taskPanel 才渲染紧凑面板（无长说明，只有选项行与让过/恢复按钮）。 */
+.operation-title .mode-chip{font-size:11px;padding:3px 9px;min-height:22px;
+ background:#1d2d38;border:1px solid #4a5e6c;color:#c3d0da;flex:0 0 auto}
+.operation-title .mode-chip:hover{border-color:#c8ab6b;color:#e8dcc0}
+.window-panel.compact>.panel-title{margin-bottom:4px}
+.window-panel.compact>.panel-title h2{font-size:13px;margin:0}
+.window-panel.compact>.panel-title button{font-size:11px;padding:3px 9px;min-height:22px}
+.window-panel.compact .window-option{display:flex;align-items:center;flex-wrap:wrap;gap:6px;
+ padding:4px 0;border-bottom:1px dashed #3d5361;font-size:12.5px}
+.window-panel.compact .window-option:last-of-type{border-bottom:0}
+.window-panel.compact .window-option span{flex:1 1 auto;min-width:0;color:#d3dde4}
+.window-panel.compact .window-option button{font-size:11.5px;padding:3px 9px;min-height:24px}
+.window-panel.compact>.actions{margin-top:4px;display:flex;flex-wrap:wrap;gap:6px}
+.window-panel.compact>.actions button{font-size:11.5px;padding:3px 9px;min-height:24px}
