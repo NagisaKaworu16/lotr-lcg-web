@@ -557,9 +557,8 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
  grid-template-rows:minmax(0,1fr)}
 .tabletop-rail>.phase-rail-v{
  grid-column:1;grid-row:1;min-height:0;height:100%;overflow:auto}
-.tabletop-rail>.rail-content{
- grid-column:2;grid-row:1;display:grid;gap:6px;min-height:0;min-width:0;overflow:hidden;
- grid-template-rows:auto minmax(0,1fr) auto}
+/* v0.15.45：牌堆栏与说明框移除，右栏只剩竖轴 + 日志两列，日志直接占第二列 */
+.tabletop-rail>.table-log{grid-column:2;grid-row:1;min-height:0;min-width:0}
 .public-table{padding:10px;gap:8px}
 
 /* ── 5. 牌桌：探险+地点同一行，探查区吃满剩余 ────────────────────── */
@@ -1191,7 +1190,7 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
 /* 日志作为右栏第三块：直接占满剩余高度（不放 details 里，details 的内容高度会反过来撑高自身）。 */
 .tabletop-rail .table-log{
  flex:1 1 auto;display:flex;flex-direction:column;min-height:0;overflow:hidden;
- padding:8px 9px;border-radius:8px;background:#f8f7ee;border:1px solid #d8dcd0}
+ padding:0;border:0;border-radius:0;background:transparent}
 .table-log>.phase-log{flex:1 1 auto;min-height:0}
 
 @media(max-height:860px){

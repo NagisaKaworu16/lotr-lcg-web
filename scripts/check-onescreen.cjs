@@ -52,7 +52,7 @@ const W = arg('width', 1440), H = arg('height', 900);
         dock: inView('.operation-dock'),
         hand: inView('.hand-zone'),
         activeZone: inView('.active-zone'),
-        deckRail: inView('.deck-rail'),
+        phaseWin: inView('.phase-rail-v'),  /* v0.15.45：牌堆栏移除，改查阶段窗口竖轴 */
         log: inView('.table-log'),
       },
       cards: document.querySelectorAll('.table-card').length,

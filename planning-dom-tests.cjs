@@ -411,8 +411,10 @@ test('desktop log panel renders the phase rail with colour-coded groups',async()
  assert(html.includes('class="phase-rail-v"'),'应渲染竖排阶段色带');
  /* 竖轴是右栏顶层的一列（通高），不再是日志面板里的子块：
     塞在 125px 的日志区里只能压到不可读，见 v0.15.43 的布局说明。 */
- assert(/class="rail-content"/.test(html),'内容列须与竖轴并列');
+ /* v0.15.45：牌堆/说明框移除，右栏就是「竖轴 + 日志」两列 */
  assert(/<aside class="tabletop-rail"><div class="phase-rail-v"/.test(html),'竖轴须是右栏第一列');
+ assert(!html.includes('class="deck-rail"'),'牌堆栏应已移除');
+ assert(!html.includes('阶段与界面说明'),'说明折叠框应已移除');
  /* 两级结构：7 个阶段头 + 20 条窗口编号（1.1 / 2.1 / 6.4 …） */
  assert.equal((html.match(/class="rail-grp(?:\s|")/g)||[]).length,7,'竖轴须显示全部 7 个阶段');
  assert(/class="rail-grp current"/.test(html),'当前阶段应整段高亮');

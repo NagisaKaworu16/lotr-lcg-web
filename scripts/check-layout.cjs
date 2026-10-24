@@ -43,11 +43,8 @@ const near = (a, b, tol = 1) => Math.abs(a - b) <= tol;
     const all = s => [...document.querySelectorAll(s)];
     const panels = ['.operation-dock', '.public-table', '.player-mat'].map(s => { const e = one(s); return { sel: s, ...r(e), pad: st(e, 'padding'), radius: st(e, 'borderRadius') }; });
     const rail = one('.tabletop-rail');
-    /* v0.15.43：竖轴成为右栏第一列后，牌堆/日志/说明被包进 .rail-content，
-       所以取样要顺着内容列取，不能再用 .tabletop-rail>section 的直接子代。 */
-    /* 只取真正带框的卡片（牌堆 / 日志 / 说明），.rail-content 是布局容器，自身无边框圆角。 */
-    const railBoxes = all('.tabletop-rail .rail-content>section, .tabletop-rail .rail-content>details')
-      .filter(e => st(e, 'borderStyle') !== 'none')
+    /* v0.15.45：牌堆/说明框已移除，右栏只剩竖轴与无框日志，取样改为日志面板本身。 */
+    const railBoxes = all('.tabletop-rail>.table-log')
       .map(e => ({ ...r(e), pad: st(e, 'padding'), radius: st(e, 'borderRadius') }));
     const headingBoxes = all('.zone-heading').map(e => ({ text: e.textContent.trim().slice(0, 10), ...r(e) }));
     const rows = all('.table-card-row').map(row => all('.table-card').filter(c => c.parentElement === row).map(c => ({ ...r(c), radius: st(c, 'borderRadius') })));
@@ -92,7 +89,7 @@ const near = (a, b, tol = 1) => Math.abs(a - b) <= tol;
   add('无横向溢出', !geo.overflowX, String(geo.overflowX));
   add('无纵向溢出（单屏）', !geo.overflowY, String(geo.overflowY));
   const vh = await page.evaluate(() => innerHeight);
-  const inView = await page.evaluate(() => ['.operation-dock', '.public-table', '.player-mat', '.tabletop-rail', '.hand-zone', '.deck-rail']
+  const inView = await page.evaluate(() => ['.operation-dock', '.public-table', '.player-mat', '.tabletop-rail', '.hand-zone', '.phase-rail-v']
     .every(sel => { const e = document.querySelector(sel); if (!e) return true; const b = e.getBoundingClientRect(); return b.top >= 0 && b.bottom <= innerHeight + 0.5; }));
   add('关键区全部落在视口内', inView, `vh=${vh}`);
 
