@@ -558,7 +558,7 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
 .tabletop-rail{min-height:0;overflow:hidden;display:grid;gap:10px;
  /* v0.15.50：阶段竖轴与日志合并为同一个框体——竖轴在左、日志贴右，
     外层 rail 统一提供边框与底色，内部不再各自套框。 */
- grid-template-columns:128px minmax(0,1fr);
+ grid-template-columns:176px minmax(0,1fr);
  grid-template-rows:minmax(0,1fr);
  background:#23323e;border:1px solid #475b6b;border-radius:8px;padding:10px}
 .tabletop-rail>.phase-rail-v{
@@ -1117,8 +1117,8 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
 .rail-grp.future>.rail-head>span{color:rgba(255,255,255,.72)}
 .rail-grp>.rail-head>span{
  writing-mode:vertical-rl;text-orientation:mixed;
- font-size:10px;font-weight:700;line-height:1;letter-spacing:0;
- color:#fff;padding:3px 0;white-space:nowrap;
+ font-size:12.5px;font-weight:700;line-height:1;letter-spacing:2px;
+ color:#fff;padding:6px 0;white-space:nowrap;
  text-shadow:0 1px 1px rgba(0,0,0,.32)}
 /* 已过阶段：色块压暗，仍保留色相，方便回看「上一步是什么」 */
 .rail-grp.past>.rail-head{filter:saturate(.42) brightness(.72)}
@@ -1130,11 +1130,11 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
 .rail-wins{
  list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0;min-width:0;
  background:#3a3f46}
-/* 行高压到 13px：20 条窗口在 130px 高的日志区里刚好排得下，
-   不靠滚动也能一眼看到全轴——参考图的价值就在于「整条竖轴同时可见」。 */
+/* v0.15.52：右栏通高后行高放开——20 条窗口 × 24px ≈ 480px，
+   不靠滚动也能一眼看到全轴，字号同步放大。 */
 .rail-win{
- position:relative;display:grid;grid-template-columns:3px auto minmax(0,1fr);
- align-items:center;gap:3px;min-height:15px;padding:0 2px 0 0;
+ position:relative;display:grid;grid-template-columns:4px auto minmax(0,1fr);
+ align-items:center;gap:5px;min-height:24px;padding:0 4px 0 0;
  border-bottom:1px solid rgba(255,255,255,.05)}
 .rail-win:last-child{border-bottom:0}
 /* 触发竖线：金=规则触发 / 绿=行动窗口 / 红=强制结算，贴在编号块左缘 */
@@ -1143,10 +1143,10 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
 .rail-win .rail-win-line[data-timing="action"]{background:#6ea86b}
 .rail-win .rail-win-line[data-timing="forced"]{background:#c9544a}
 .rail-win .rail-win-no{
- font-size:11px;line-height:1;font-weight:700;font-variant-numeric:tabular-nums;
- color:#c2c8cf;padding-left:3px;white-space:nowrap}
+ font-size:13px;line-height:1;font-weight:700;font-variant-numeric:tabular-nums;
+ color:#c2c8cf;padding-left:4px;white-space:nowrap}
 .rail-win .rail-win-label{
- font-size:10.5px;line-height:1;color:#a4acb5;
+ font-size:12.5px;line-height:1;color:#a4acb5;
  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 /* 当前窗口：整条提亮，编号与说明都变白 */
 .rail-win.hit{background:color-mix(in srgb,var(--pc) 46%,#3a3f46)}
@@ -9855,7 +9855,7 @@ const WindowUI=(()=>{
 </script><script src="phase-log.js"></script><script>
 /* Tabletop view: UI drafts never pay, exhaust, reveal, or bypass phase validation. */
 /* 界面版本徽标唯一来源：须与 CHANGELOG.md 最新条目标题一致（planning-dom-tests 有校验）。 */
-const APP_VERSION='v0.15.51';
+const APP_VERSION='v0.15.52';
 const DesktopUI=(()=>{
  const E=ScenarioEngine,R=E.planning,Q=E.questing,C=E.combat,esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  let combatDraft={key:'',target:null,ids:[]},draftState=null;

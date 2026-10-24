@@ -123,7 +123,7 @@ const PhaseLog=(()=>{
     return `<li class="rail-win${hit?' hit':''}" style="--pc:${p.color}" ${hit?'data-current="1"':''}>
      <span class="rail-win-line" data-timing="${esc(w.timing)}" aria-hidden="true"></span>
      <span class="rail-win-no">${w.no}</span>
-     <span class="rail-win-label">${esc(w.label)}</span>
+     <span class="rail-win-label" title="${esc(w.label)}">${esc(w.label)}</span>
     </li>`;
    }).join('');
    /* 全部阶段一律展开：竖轴通高 360px，20 条窗口 × 15px = 300px 刚好排得下，
