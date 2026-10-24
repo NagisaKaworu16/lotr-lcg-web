@@ -26,21 +26,24 @@ const MIN = arg('min', 3);
 const AUDIT = (min) => {
   const lum = c => { const f = v => { v /= 255; return v <= .03928 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; }; return .2126 * f(c[0]) + .7152 * f(c[1]) + .0722 * f(c[2]); };
   const parse = s => (s.match(/[\d.]+/g) || []).slice(0, 4).map(Number);
+  /* 注：Chrome 对 color-mix() 计算出的底色会返回 oklab()/color() 浮点写法，
+     直接取数字会得到 0~1 的小数，算出的对比度全部失真。这里先把浮点分量归一到 0~255。 */
+  const norm = c => c.slice(0, 3).map(v => (v <= 1 ? Math.round(v * 255) : Math.round(v)));
   const bgOf = el => {
     let n = el;
     while (n) {
       const c = parse(getComputedStyle(n).backgroundColor);
-      if (c.length >= 3 && (c[3] === undefined || c[3] > .5)) return c.slice(0, 3);
+      if (c.length >= 3 && (c[3] === undefined || c[3] > .5)) return norm(c);
       n = n.parentElement;
     }
     return [255, 255, 255];
   };
   const seen = new Set(), out = [];
-  for (const el of document.querySelectorAll('button,.button,select,input,.op-chip,.rail-step,.table-card-caption b,.table-card-caption span,.ng-card-body h3,.ng-card-en,.ng-card-go,.ng-chapter-head span,.ng-tabs button')) {
+  for (const el of document.querySelectorAll('button,.button,select,input,.op-chip,.rail-step,.table-card-caption b,.table-card-caption span,.ng-card-body h3,.ng-card-en,.ng-card-go,.ng-chapter-head span,.ng-tabs button,.log-entry .log-text,.rail-v-step b,.log-round-head,.log-empty')) {
     if (el.closest('[hidden]') || el.offsetParent === null) continue;
     const s = getComputedStyle(el);
     if (s.visibility === 'hidden' || Number(s.opacity) < .5) continue;
-    const fg = parse(s.color).slice(0, 3), bg = bgOf(el);
+    const fg = norm(parse(s.color)), bg = bgOf(el);
     const ratio = (Math.max(lum(fg), lum(bg)) + .05) / (Math.min(lum(fg), lum(bg)) + .05);
     if (ratio < min) {
       const key = el.className + '|' + s.color + '|' + bg.join(',');

@@ -19,7 +19,9 @@ const clone=x=>JSON.parse(JSON.stringify(x));
 const roster=[['阿拉贡','希奥德雷德','葛罗因'],['金雳','莱戈拉斯','沙林'],['伊欧玟','埃莉诺','杜内希尔'],['丹内梭尔','葛罗芬戴尔','贝拉沃']];
 function rng(s){let x=s.seed|0;x^=x<<13;x^=x>>>17;x^=x<<5;s.seed=x>>>0;return s.seed/4294967296;}
 function shuffle(s,a){for(let i=a.length-1;i>0;i--){let j=Math.floor(rng(s)*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-function log(s,t){s.log.unshift(`回合${s.round} · ${t}`);}
+/* 日志条目 = 「回合N · [阶段标记]文本」。阶段标记 §P3§ 供右栏日志按阶段着色分组，
+   纯文本消费方（存档外部工具）可直接按 § 切掉；不带标记时按当前阶段归组。 */
+function log(s,t,phaseMark){s.log.unshift(`回合${s.round} · ${phaseMark?'§'+phaseMark+'§':''}${t}`);}
 function task(s,text,kind='manual',args={}){s.pending.push({id:++s.serial,text,kind,args});}
 function assert(v,msg){if(!v)throw Error(msg);}
 function ready(s){assert(!s.setupPending,'请先确认起始手牌并执行剧本设置。');assert(s.status==='playing','对局已经结束。');assert(!s.pending.length,'请先处理待结算事项。');}
@@ -67,7 +69,7 @@ function initializePlayer(s,p){
  p.heroStates=p.heroCards.map((c,index)=>({uid:++s.serial,code:c.code,index,exhausted:false,damage:0,resources:s.difficulty==='easy'?1:0,committed:false,destroyed:false}));
  p.playerDeck=[];p.hand=[];p.playerDiscard=[];p.playerRemoved=[];p.allies=[];p.attachments=[];p.mulliganTaken=false;p.openingConfirmed=false;
  for(const [code,n] of Object.entries(p.registeredDeck.slots)){assert(by[code]&&['ally','attachment','event'].includes(by[code].type),'无效的玩家牌库卡牌。');assert(Number.isInteger(n)&&n>=0,'无效的玩家牌数量。');for(let i=0;i<n;i++)p.playerDeck.push({uid:++s.serial,code,owner:p.id});}
- shuffle(s,p.playerDeck);drawPlayer(s,p,6,true);log(s,`${p.name}抽取6张起始手牌（牌库剩${p.playerDeck.length}张）`);
+ shuffle(s,p.playerDeck);drawPlayer(s,p,6,true);log(s,`${p.name}抽取6张起始手牌（牌库剩${p.playerDeck.length}张）`,'P0');
 }
 function drawPlayer(s,p,n,setup=false){
  assert(Number.isInteger(n)&&n>=0,'抽牌数必须为非负整数。');
@@ -77,13 +79,13 @@ function drawPlayer(s,p,n,setup=false){
 }
 function openingChoice(s,pid,mulligan=false){
  assert(s.setupPending&&s.status==='playing','当前不是起始手牌选择步骤。');const p=s.players[pid];assert(p?.playerDeck,'无效玩家。');assert(!p.openingConfirmed,'该玩家已确认起始手牌。');
- if(mulligan){assert(!p.mulliganTaken,'每位玩家只能调度一次。');assert(p.hand.length===6,'调度必须将完整6张起始手牌洗回。');p.playerDeck.push(...p.hand.splice(0));shuffle(s,p.playerDeck);drawPlayer(s,p,6,true);p.mulliganTaken=true;log(s,`${p.name}整手调度一次，重抽6张并保留`);}else log(s,`${p.name}保留起始手牌`);
+ if(mulligan){assert(!p.mulliganTaken,'每位玩家只能调度一次。');assert(p.hand.length===6,'调度必须将完整6张起始手牌洗回。');p.playerDeck.push(...p.hand.splice(0));shuffle(s,p.playerDeck);drawPlayer(s,p,6,true);p.mulliganTaken=true;log(s,`${p.name}整手调度一次，重抽6张并保留`,'P0');}else log(s,`${p.name}保留起始手牌`,'P0');
  p.openingConfirmed=true;
 }
-function startScenario(s){assert(s.setupPending,'剧本设置已经执行。');assert(s.players.every(p=>p.openingConfirmed),'所有玩家须先保留或调度起始手牌。');assert(!s.setupReveal,'起始手牌已确认，剧本设置已开始；请继续翻开开局遭遇牌。');s.setupDone=true;s.setupPending=false;applyScenarioSetup(s);log(s,'起始手牌已确认，剧本设置已执行；准备第1回合资源阶段');}
+function startScenario(s){assert(s.setupPending,'剧本设置已经执行。');assert(s.players.every(p=>p.openingConfirmed),'所有玩家须先保留或调度起始手牌。');assert(!s.setupReveal,'起始手牌已确认，剧本设置已开始；请继续翻开开局遭遇牌。');s.setupDone=true;s.setupPending=false;applyScenarioSetup(s);log(s,'起始手牌已确认，剧本设置已执行；准备第1回合资源阶段','P0');}
 function resourcePhase(s){
  ready(s);assert(s.phase===0,'仅能在资源阶段收集资源和抽牌。');assert(s.resourceRound!==s.round,'本回合资源阶段已结算。');
- for(const p of live(s))if(p.heroStates){for(const h of p.heroStates){if(h.destroyed||(!s.rescued&&s.prisoner?.player===p.id&&s.prisoner.hero===h.index))continue;h.resources++;}const count=drawPlayer(s,p,1);log(s,`${p.name}每名可用英雄获得1资源，抽取${count}张牌`);}
+ for(const p of live(s))if(p.heroStates){for(const h of p.heroStates){if(h.destroyed||(!s.rescued&&s.prisoner?.player===p.id&&s.prisoner.hero===h.index))continue;h.resources++;}const count=drawPlayer(s,p,1);log(s,`${p.name}每名可用英雄获得1资源，抽取${count}张牌`,'P0');}
  s.resourceRound=s.round;
 }
 /* 官方 Easy Mode（LOTR Easy Mode Rules / MEC65 规则书）：setup 时每位英雄资源池 +1，
@@ -112,7 +114,7 @@ function create(scenarioId,players=1,seed=Date.now(),configs=null,options={}){
  if(options.openingTest)s.openingTest=true;
  if(options.first!==undefined){assert(Number.isInteger(options.first)&&options.first>=0&&options.first<players,'起始玩家必须在本局人数范围内。');s.first=options.first;}
  for(const p of s.players)if(p.registeredDeck){initializePlayer(s,p);p.openingConfirmed=!options.deferSetup;}
- if(options.deferSetup){assert(s.players.every(p=>p.playerDeck),'需要为每位玩家选择有效牌组。');s.setupPending=true;log(s,'已抽取起始手牌，等待保留或调度；尚未执行剧本设置');return s;}
+ if(options.deferSetup){assert(s.players.every(p=>p.playerDeck),'需要为每位玩家选择有效牌组。');s.setupPending=true;log(s,'已抽取起始手牌，等待保留或调度；尚未执行剧本设置','P0');return s;}
  applyScenarioSetup(s);return s;
 }
 function applyScenarioSetup(s){
@@ -299,11 +301,11 @@ function nextPhase(s){ready(s);if(s.phase===1&&s.planning){if(s.planning.complet
  }else s.phase++;
  if(s.phase===1&&s.players.some(p=>p.heroStates))P2.start(s);
  if(s.phase===2&&s.quest===125)guards(s);
- log(s,`进入${phases[s.phase]}阶段`);
+ log(s,`进入${phases[s.phase]}阶段`,`P${s.phase}`);
 }
 function questFailure(s,n){ready(s);assert(s.phase===2&&s.stagedRound===s.round,'须在探查后结算。');assert(Number.isInteger(n)&&n>0,'失败差值须为正整数。');for(const p of live(s))adjustThreat(s,p,n);for(const c of s.staging.filter(c=>c.id===101)){let o=s.objectives.find(o=>!o.holder);if(o){s.objectives=s.objectives.filter(x=>x.uid!==o.uid);if(o.guard){let g=s.staging.find(c=>c.uid===o.guard);if(g)delete g.guard;}delete o.guard;s.deck.push(o);shuffle(s,s.deck);log(s,'地牢狱卒将无人持有的目标洗回牌库');}}}
 function resolveQuest(s,willpower){assert(!s.questing,'意志由投入角色自动计算');ready(s);assert(s.phase===2&&s.stagedRound===s.round,'须先执行探查。');assert(s.resolvedRound!==s.round,'本回合探险已经结算。');assert(Number.isInteger(willpower)&&willpower>=0,'总意志须为非负整数。');const delta=willpower-threat(s);s.resolvedRound=s.round;if(delta>=0)addProgress(s,delta);else questFailure(s,-delta);log(s,`探险结算：意志${willpower}，威胁${threat(s)}，差值${delta}`);}
-const api={refreshing:P7,combat:P6,encountering:P5,traveling:P4,questing:P3,planning:P2,openingChoice,startScenario,setupRevealStep,settleSetupCard,setupCancelOptions,setupCancel,resourcePhase,drawPlayer,extraShadow,resolveQuest,D,byId,phases,create,quest,gate,threat,stage,addProgress,advance,travel,engage,encounterChecks,defeat,shadows,revealShadows,returnEnemy,claim,returnObjective,nextPhase,resolve,rescue,questFailure,adjustThreat,clone};
+const api={refreshing:P7,combat:P6,encountering:P5,traveling:P4,questing:P3,planning:P2,openingChoice,startScenario,setupRevealStep,settleSetupCard,setupCancelOptions,setupCancel,resourcePhase,drawPlayer,extraShadow,resolveQuest,D,byId,phases,create,quest,gate,threat,stage,addProgress,advance,travel,engage,encounterChecks,defeat,shadows,revealShadows,returnEnemy,claim,returnObjective,nextPhase,resolve,rescue,questFailure,adjustThreat,clone,log};
 const WindowFactory=typeof WindowRulesFactory!=='undefined'?WindowRulesFactory:require('./window-engine.js');api.windows=WindowFactory(api);return api;
 })();
 if(typeof module!=='undefined')module.exports=ScenarioEngine;

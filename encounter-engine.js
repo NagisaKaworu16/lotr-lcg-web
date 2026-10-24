@@ -1,7 +1,7 @@
 /* Original Core encounter framework. All optional choices lock before any move. */
 const EncounterRulesFactory=(H,R,Q)=>{
  const need=(v,m)=>{if(!v)throw Error(m);},live=s=>s.players.filter(p=>!p.eliminated),x=s=>s.encountering;
- const log=(s,m)=>H.log(s,'遭遇 · '+m);
+ const log=(s,m)=>H.log(s,'遭遇 · '+m,'P4');
  function check(s){need(s.phase===4&&x(s)?.round===s.round&&!x(s).completed&&s.status==='playing','当前没有进行中的遭遇阶段');need(!s.pending.length&&!x(s).queue.length,'请先处理强制效果或卡牌响应');}
  function start(s){need(s.phase===4&&s.traveling?.completed,'须先完成第四阶段');need(x(s)?.round!==s.round,'本回合遭遇阶段已初始化');const order=live(s).map(p=>p.id).sort((a,b)=>(a-s.first+s.players.length)%s.players.length-(b-s.first+s.players.length)%s.players.length);s.encountering={round:s.round,step:'optional',order:[...order],turnOrder:[...order],index:order.length,optionalIndex:0,checkIndex:0,choices:{},approvals:[],finalPasses:[],queue:[],tasks:[],discussion:true,completed:false,closing:false};log(s,'暂定主动交战或不交战，全员二次确认之前不移动敌人');}
  function validate(s,choices,complete=false){const remaining=s.staging.filter(c=>c.type==='Enemy');for(const pid of x(s).turnOrder){if(s.players[pid].eliminated)continue;const choice=choices[pid];if(!choice){need(!complete,'请先由所有玩家提交暂定交战选择');continue;}if(choice.uid===null)continue;need(s.players[pid].optionalRound!==s.round,'本阶段已主动交战');const at=remaining.findIndex(c=>c.uid===choice.uid);need(at>=0,'敌人不在探查区或被重复选择');const c=remaining[at];need(c.id!==83||remaining.length===1,'仍有其他敌人，不能主动交战哥布林狙击手（按起始玩家顺序判断）');remaining.splice(at,1);}}

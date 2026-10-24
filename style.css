@@ -549,7 +549,10 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
 
 /* ── 4. 各区独立滚动，页面不滚 ───────────────────────────────────── */
 .public-table,.player-mat{min-height:0;overflow:hidden;display:flex;flex-direction:column}
-.tabletop-rail{min-height:0;overflow:hidden;display:grid;grid-template-rows:auto minmax(0,1fr);gap:7px}
+.tabletop-rail{min-height:0;overflow:hidden;display:grid;gap:7px;
+ /* v0.15.42：右栏现在三块（牌堆 / 日志 / 说明），给日志留出剩余高度；
+    原先两行定义会让第三块落到隐式行、把日志挤出视口。 */
+ grid-template-rows:auto minmax(0,1fr) auto}
 .public-table{padding:10px;gap:8px}
 
 /* ── 5. 牌桌：探险+地点同一行，探查区吃满剩余 ────────────────────── */
@@ -1049,4 +1052,78 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
  .public-table>.other-player .table-card .card-face img{width:100%;height:40px;object-fit:cover;object-position:50% 16%}
  .public-table>.other-player .card-tokens{--tk:11px}
  .public-table>.other-player .state-tokens{bottom:-5px;right:-3px}
+}
+
+/* ── 15. 阶段竖图 + 结构化日志（参照诡镇奇谈网页版） ─────────────────
+   左列一条竖排阶段色带，右列按回合分组的日志流；每条记录按所属阶段着色，
+   悬停浮出回退按钮。替换原先「远征日志」纯文本列表。 */
+.phase-log{
+ display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);
+ gap:4px;min-height:0;height:100%;overflow:hidden}
+/* 阶段条：横排七枚小胶囊，当前阶段用自身色相点亮。竖排会挤成 40px 宽、
+   中文两字被拆成两行，可读性反而更差。 */
+.phase-log .phase-rail-v{
+ display:flex;flex-direction:row;flex-wrap:nowrap;gap:2px;min-width:0;
+ padding-bottom:3px;border-bottom:1px solid #e4e7db}
+.rail-v-step{
+ display:flex;align-items:center;justify-content:center;gap:2px;
+ flex:1 1 0;min-width:0;padding:2px 1px;border-radius:3px;
+ border-bottom:2px solid transparent;color:#a6aa9e;transition:color .15s,background .15s}
+.rail-v-step>span{font-size:9px;line-height:1;letter-spacing:0;color:#8a927f}
+.rail-v-step>b{font-size:10px;font-weight:500;line-height:1;white-space:nowrap;color:#6c7566}
+.rail-v-step.past>b{color:#7d8677}
+.rail-v-step.current{
+ color:#2f3c28;background:color-mix(in srgb,var(--pc) 22%,#f8f7ee);
+ border-bottom-color:var(--pc);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--pc) 28%,transparent)}
+.rail-v-step.current>span{color:color-mix(in srgb,var(--pc) 70%,#2f3c28)}
+.rail-v-step.current>b{font-weight:700;color:#2a3623}
+.phase-log .log-stream{
+ display:flex;flex-direction:column;gap:4px;min-height:0;overflow:auto;
+ padding-right:2px;scrollbar-width:thin}
+.log-round{display:flex;flex-direction:column;gap:1px}
+.log-round-head{
+ position:sticky;top:0;z-index:1;padding:0 0 1px;
+ background:#f8f7ee;font-size:9.5px;letter-spacing:.6px;color:#6f7867}
+.log-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:1px}
+.log-entry{
+ position:relative;display:grid;grid-template-columns:6px minmax(0,1fr);
+ align-items:start;gap:4px;padding:2px 4px 2px 3px;border-radius:3px;
+ border-left:3px solid var(--pc);
+ background:color-mix(in srgb,var(--pc) 10%,#fffdf6)}
+.log-entry .log-dot{
+ width:5px;height:5px;margin-top:4px;border-radius:50%;
+ background:var(--pc)}
+.log-entry .log-text{
+ font-size:11px;line-height:1.38;color:#4c5748;
+ display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
+ word-break:break-word}
+.log-entry .log-undo{
+ position:absolute;right:1px;top:1px;display:none;align-items:center;justify-content:center;
+ width:16px;height:16px;padding:0;border:1px solid #d6dacd;border-radius:3px;
+ background:#fdfcf5;color:#6d7a68;cursor:pointer}
+.log-entry:hover .log-undo,.log-entry:focus-within .log-undo{display:inline-flex}
+.log-entry .log-undo:hover{background:#f0efe2;color:#3c4a3a}
+.log-entry .log-undo:focus-visible{outline:2px solid #c8a96a;outline-offset:1px}
+.log-empty{font-size:11px;color:#8b9385;line-height:1.5}
+
+/* 日志作为右栏第三块：直接占满剩余高度（不放 details 里，details 的内容高度会反过来撑高自身）。 */
+.tabletop-rail .table-log{
+ flex:1 1 auto;display:flex;flex-direction:column;min-height:0;overflow:hidden;
+ padding:8px 9px;border-radius:8px;background:#f8f7ee;border:1px solid #d8dcd0}
+.table-log>.phase-log{flex:1 1 auto;min-height:0}
+
+@media(max-height:860px){
+ .log-entry .log-text{font-size:10.5px;-webkit-line-clamp:2}
+ .rail-v-step>b{font-size:9px}
+ /* 矮屏把牌堆栏压成单行计数，把高度让给日志（768 高时日志只剩 80px，只够一条） */
+ .tabletop-rail .deck-rail{padding:5px 7px}
+ .tabletop-rail .deck-rail h2{display:none}
+ .tabletop-rail .deck-counts{gap:4px}
+ .tabletop-rail .deck-counts .pile{padding:2px 2px 1px;gap:1px}
+ .tabletop-rail .deck-counts .pile strong{font-size:13px}
+ .tabletop-rail .deck-counts .pile small{font-size:9px}
+ .tabletop-rail .deck-rail details{display:none}
+}
+@media(max-width:760px){
+ .tabletop-rail .table-log{max-height:46vh}
 }

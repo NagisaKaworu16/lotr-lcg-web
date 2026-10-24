@@ -5,8 +5,8 @@
 ## 当前基线
 
 - 离线网页版魔戒 LCG 桌面，原版基础版普通模式、三个独立剧本、1–4人同机。
-- 游戏版本 v0.15.19：开局页卡片文字对比度修正（2.66→5.91:1）并把开局页纳入对比度验收；七个浏览器验收脚本改为跨平台浏览器探测。此前 v0.15.18：新增卡牌悬停放大预览（card-hover-preview.js，真实浏览器 26 项验收）；此前 v0.14.2：v0.14.0 桌面改版＋真实浏览器验收＋派遣提交自动切换视图＋卡图全量本地化（v0.14.1/0.14.2）；七阶段框架、回合循环及智能普通行动窗口；保留开局迁移限制。
-- 最近验证：391项 Node 规则／模拟DOM测试通过；2026-10-20 真实浏览器（本机 Chrome 155 无头）完成桌面验收，2人局从开局走到第2回合、4人1920开局、长手牌与溢出检查全部通过，详见 tabletop-acceptance.md 与 docs/browser-acceptance/。
+- 游戏版本 v0.15.42（2026-10-24）：远征日志重构为「阶段色带 + 按阶段着色 + 单条回退」，修复右栏三块网格把日志挤出视口、对比度脚本不解析 color-mix 计算色两个真实缺陷；此前 v0.15.41 单屏四区布局、v0.15.19 开局页对比度修正；开局页卡片文字对比度修正（2.66→5.91:1）并把开局页纳入对比度验收；七个浏览器验收脚本改为跨平台浏览器探测。此前 v0.15.18：新增卡牌悬停放大预览（card-hover-preview.js，真实浏览器 26 项验收）；此前 v0.14.2：v0.14.0 桌面改版＋真实浏览器验收＋派遣提交自动切换视图＋卡图全量本地化（v0.14.1/0.14.2）；七阶段框架、回合循环及智能普通行动窗口；保留开局迁移限制。
+- 最近验证：455项 Node 规则／模拟DOM测试通过（2026-10-24）；2026-10-20 真实浏览器（本机 Chrome 155 无头）完成桌面验收，2人局从开局走到第2回合、4人1920开局、长手牌与溢出检查全部通过，详见 tabletop-acceptance.md 与 docs/browser-acceptance/。
 - 卡图已全量本地化：ringsdb.com／hallofbeorn.com 国内被墙，1511张引用卡图镜像为 assets 下 WebP（约96MB），local-image-map.js 映射，页面不再发出外网图片请求；维护脚本 scripts/fetch-card-images.py＋scripts/optimize-card-images.py（需代理）。
 - 包含73种基础英雄／玩家牌本地中文卡图；45种遭遇、10张双面探险卡机制说明。其他扩展主要用于资料／图片查询。
 - 外部游戏资料使用 RingsDB 快照；工作中文释义不是官方译文。
@@ -57,7 +57,8 @@
 | combat-engine.js / combat-ui.js | 第六阶段攻防名单、暗影、响应、伤害与战斗界面 |
 | encounter-engine.js / encounter-ui.js | 第五阶段主动交战方案、检定、同值选择、强制效果与界面 |
 | travel-engine.js | 第四阶段旅行、费用与旅行响应 |
-| app.js / *-ui.js | 桌面、表单、交互、存档 |
+| app.js / *-ui.js | 桌面、表单、交互、存档；`mutate()` 记录 logMarks（操作前后日志条数＋绝对序号）供日志回退 |
+| phase-log.js | 远征日志：行解析（回合/阶段/文本）、阶段色带、按阶段着色、单条回退定位纯函数 |
 | card-hover-preview.js | 卡牌悬停放大预览（只读 DOM 截图，不写游戏状态） |
 | data.js / ringsdb-snapshot.js | 遭遇／探险定义与基础玩家牌快照 |
 | shell.html / style.css / build.py | 页面源文件与离线构建 |
@@ -65,7 +66,9 @@
 
 ## 继续工作
 
-先看 docs/memory/ROADMAP.md 和 ISSUES.md。真实浏览器桌面验收已完成（2026-10-20）；开局取消窗口迁移与完整计分已于 2026-10-21 完成。下一优先事项：用户上手验收并收集反馈、全流程规则审计（跨阶段卡牌时点）、牌组导入与内嵌组卡器。阶段说明见 phase2-acceptance.md 至 phase7-acceptance.md，桌面与浏览器验收见 tabletop-acceptance.md；现行版本说明优先于旧历史。
+先看 docs/memory/ROADMAP.md 和 ISSUES.md。
+
+2026-10-24：远征日志已重构（phase-log.js）。日志格式为「回合N · §Pn§文本」，`§` 标记可被外部工具直接切掉，`PhaseLog.parse()` 对旧存档无标记行按关键词猜测、认不出时归当前阶段。回退依赖 `app.js` 的 `logMarks`（每次 mutate 记录操作前后日志条数 + 绝对序号 seq），**不要**改回「history 下标 = 日志下标」的写法：history 存操作前状态、日志在操作后写入，两者天然错位一格，早期实现会把玩家退回建局前。真实浏览器桌面验收已完成（2026-10-20）；开局取消窗口迁移与完整计分已于 2026-10-21 完成。下一优先事项：用户上手验收并收集反馈、全流程规则审计（跨阶段卡牌时点）、牌组导入与内嵌组卡器。阶段说明见 phase2-acceptance.md 至 phase7-acceptance.md，桌面与浏览器验收见 tabletop-acceptance.md；现行版本说明优先于旧历史。
 
 产品目录现状（v0.15.12）：新游戏页四个页签（新版扩展／旧版扩展／支线剧情／噩梦包），数据由 `scripts/import-product-catalog.py` 从 Hall of Beorn 快照生成到 `product-catalog.js`，共 164 条。**两级结构**：新版扩展每个循环只出一条（系列名，英雄盒被 `HERO_RE` 跳过）；旧版扩展列表显示 15 个系列（11 个官方循环/传奇 + 4 个社区循环），点开后由 `legacySeries()` 提供其中的剧本。两个核心包都已跳过，「黑森林的魔影」没有大盒，用章节名当系列名（章节数据带 `box`/`key`，别改回「首项即大盒」）。**支线剧情由 `pod-manifest.json` 定义**（来源 `lotr-pod-workbuddy`）：官方 POD 15（含黑森林之黯）+ ALeP 自制 5 = 20，基础三剧本不再出现在这里。设置页的「选择冒险」网格只在剧本 `playable` 为 true 时可玩，目前只有基础版三个剧本。**难度只有官方两种**：标准 Standard 与简单 Easy（设置时每位英雄 +1 资源、按官方清单移除遭遇牌库的难度标记卡，清单在 `engine.js` 的 `EASY_REMOVE`）；官方第三种 Nightmare 需噩梦牌组，未收录。不要恢复「困难」选项。中文译名在 `product-zh.json`，以**银星计划**（重置版／文景版体系，ringsdb 中文插件同一套）为准，不要再按魔戒中文维基的旧译名改回去。三个战役扩展封面来自战役书 PDF 首页（`scripts/extract-pdf-covers.py`，导入脚本不会还原）。改目录或译名后必须重跑导入脚本 + `python build.py`，并跑 `scripts/check-catalog-tabs.cjs` 与 `scripts/check-legacy-packs.cjs` 做真实浏览器验收。
 

@@ -551,7 +551,10 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
 
 /* ── 4. 各区独立滚动，页面不滚 ───────────────────────────────────── */
 .public-table,.player-mat{min-height:0;overflow:hidden;display:flex;flex-direction:column}
-.tabletop-rail{min-height:0;overflow:hidden;display:grid;grid-template-rows:auto minmax(0,1fr);gap:7px}
+.tabletop-rail{min-height:0;overflow:hidden;display:grid;gap:7px;
+ /* v0.15.42：右栏现在三块（牌堆 / 日志 / 说明），给日志留出剩余高度；
+    原先两行定义会让第三块落到隐式行、把日志挤出视口。 */
+ grid-template-rows:auto minmax(0,1fr) auto}
 .public-table{padding:10px;gap:8px}
 
 /* ── 5. 牌桌：探险+地点同一行，探查区吃满剩余 ────────────────────── */
@@ -1051,6 +1054,80 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
  .public-table>.other-player .table-card .card-face img{width:100%;height:40px;object-fit:cover;object-position:50% 16%}
  .public-table>.other-player .card-tokens{--tk:11px}
  .public-table>.other-player .state-tokens{bottom:-5px;right:-3px}
+}
+
+/* ── 15. 阶段竖图 + 结构化日志（参照诡镇奇谈网页版） ─────────────────
+   左列一条竖排阶段色带，右列按回合分组的日志流；每条记录按所属阶段着色，
+   悬停浮出回退按钮。替换原先「远征日志」纯文本列表。 */
+.phase-log{
+ display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);
+ gap:4px;min-height:0;height:100%;overflow:hidden}
+/* 阶段条：横排七枚小胶囊，当前阶段用自身色相点亮。竖排会挤成 40px 宽、
+   中文两字被拆成两行，可读性反而更差。 */
+.phase-log .phase-rail-v{
+ display:flex;flex-direction:row;flex-wrap:nowrap;gap:2px;min-width:0;
+ padding-bottom:3px;border-bottom:1px solid #e4e7db}
+.rail-v-step{
+ display:flex;align-items:center;justify-content:center;gap:2px;
+ flex:1 1 0;min-width:0;padding:2px 1px;border-radius:3px;
+ border-bottom:2px solid transparent;color:#a6aa9e;transition:color .15s,background .15s}
+.rail-v-step>span{font-size:9px;line-height:1;letter-spacing:0;color:#8a927f}
+.rail-v-step>b{font-size:10px;font-weight:500;line-height:1;white-space:nowrap;color:#6c7566}
+.rail-v-step.past>b{color:#7d8677}
+.rail-v-step.current{
+ color:#2f3c28;background:color-mix(in srgb,var(--pc) 22%,#f8f7ee);
+ border-bottom-color:var(--pc);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--pc) 28%,transparent)}
+.rail-v-step.current>span{color:color-mix(in srgb,var(--pc) 70%,#2f3c28)}
+.rail-v-step.current>b{font-weight:700;color:#2a3623}
+.phase-log .log-stream{
+ display:flex;flex-direction:column;gap:4px;min-height:0;overflow:auto;
+ padding-right:2px;scrollbar-width:thin}
+.log-round{display:flex;flex-direction:column;gap:1px}
+.log-round-head{
+ position:sticky;top:0;z-index:1;padding:0 0 1px;
+ background:#f8f7ee;font-size:9.5px;letter-spacing:.6px;color:#6f7867}
+.log-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:1px}
+.log-entry{
+ position:relative;display:grid;grid-template-columns:6px minmax(0,1fr);
+ align-items:start;gap:4px;padding:2px 4px 2px 3px;border-radius:3px;
+ border-left:3px solid var(--pc);
+ background:color-mix(in srgb,var(--pc) 10%,#fffdf6)}
+.log-entry .log-dot{
+ width:5px;height:5px;margin-top:4px;border-radius:50%;
+ background:var(--pc)}
+.log-entry .log-text{
+ font-size:11px;line-height:1.38;color:#4c5748;
+ display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
+ word-break:break-word}
+.log-entry .log-undo{
+ position:absolute;right:1px;top:1px;display:none;align-items:center;justify-content:center;
+ width:16px;height:16px;padding:0;border:1px solid #d6dacd;border-radius:3px;
+ background:#fdfcf5;color:#6d7a68;cursor:pointer}
+.log-entry:hover .log-undo,.log-entry:focus-within .log-undo{display:inline-flex}
+.log-entry .log-undo:hover{background:#f0efe2;color:#3c4a3a}
+.log-entry .log-undo:focus-visible{outline:2px solid #c8a96a;outline-offset:1px}
+.log-empty{font-size:11px;color:#8b9385;line-height:1.5}
+
+/* 日志作为右栏第三块：直接占满剩余高度（不放 details 里，details 的内容高度会反过来撑高自身）。 */
+.tabletop-rail .table-log{
+ flex:1 1 auto;display:flex;flex-direction:column;min-height:0;overflow:hidden;
+ padding:8px 9px;border-radius:8px;background:#f8f7ee;border:1px solid #d8dcd0}
+.table-log>.phase-log{flex:1 1 auto;min-height:0}
+
+@media(max-height:860px){
+ .log-entry .log-text{font-size:10.5px;-webkit-line-clamp:2}
+ .rail-v-step>b{font-size:9px}
+ /* 矮屏把牌堆栏压成单行计数，把高度让给日志（768 高时日志只剩 80px，只够一条） */
+ .tabletop-rail .deck-rail{padding:5px 7px}
+ .tabletop-rail .deck-rail h2{display:none}
+ .tabletop-rail .deck-counts{gap:4px}
+ .tabletop-rail .deck-counts .pile{padding:2px 2px 1px;gap:1px}
+ .tabletop-rail .deck-counts .pile strong{font-size:13px}
+ .tabletop-rail .deck-counts .pile small{font-size:9px}
+ .tabletop-rail .deck-rail details{display:none}
+}
+@media(max-width:760px){
+ .tabletop-rail .table-log{max-height:46vh}
 }
 
 </style></head><body>
@@ -5311,7 +5388,8 @@ const PlanningRulesFactory=(H)=>{
  const clone=x=>JSON.parse(JSON.stringify(x)),need=(v,m)=>{if(!v)throw Error(m);};
  const num=x=>Number(x),same=(a,b)=>String(a)===String(b);
  const context=s=>s.phase===6?s.refreshing:s.phase===5?s.combat:s.phase===4?s.encountering:s.phase===3?s.traveling:s.phase===2?s.questing:s.planning;
- const log=(s,t)=>H.log(s,(s.phase===5?'战斗':s.phase===4?'遭遇':s.phase===3?'旅行':s.phase===2?'探险':'计划')+' · '+t);
+ /* 日志带阶段标记（§P1§…），右栏按阶段着色；标记同时保留原中文阶段前缀，纯文本仍可读。 */
+ const log=(s,t)=>{const k=s.phase===5?['P5','战斗']:s.phase===4?['P4','遭遇']:s.phase===3?['P3','旅行']:s.phase===2?['P2','探险']:['P1','计划'];return H.log(s,k[1]+' · '+t,k[0]);};
  const alive=s=>s.players.filter(p=>!p.eliminated);
  function data(s,x){const p=s.players[x.owner??x.controller];return p?.heroCards?.find(c=>c.code===x.code)||p?.registeredDeck?.cards?.find(c=>c.code===x.code)||BASE[x.code];}
  function captured(s,p,index){return !s.rescued&&s.prisoner?.player===p&&s.prisoner?.hero===index;}
@@ -5587,7 +5665,7 @@ if(typeof module!=='undefined')module.exports=PlanningRulesFactory;
 const QuestRulesFactory=(H,R)=>{
  const need=(v,m)=>{if(!v)throw Error(m);},same=(a,b)=>String(a)===String(b),q=s=>s.phase===6?s.refreshing:s.phase===5?s.combat:s.phase===4?s.encountering:s.phase===3?s.traveling:s.questing;
  const alive=s=>s.players.filter(p=>!p.eliminated),chars=s=>R.chars(s),committed=s=>chars(s).filter(c=>c.state.committed);
- const log=(s,t)=>H.log(s,(s.phase===5?'战斗':s.phase===4?'遭遇':s.phase===3?'旅行':'探险')+' · '+t),opt=c=>({value:String(c.uid),label:(c.meta?.nameZh||c.name||c.meta?.name)+' #'+c.uid});
+ const log=(s,t)=>{const k=s.phase===5?['P5','战斗']:s.phase===4?['P4','遭遇']:s.phase===3?['P3','旅行']:['P2','探险'];return H.log(s,k[1]+' · '+t,k[0]);},opt=c=>({value:String(c.uid),label:(c.meta?.nameZh||c.name||c.meta?.name)+' #'+c.uid});
  const field=(key,label,items)=>({key,label,options:items.map(opt)});
  const task=(s,kind,actor,payload={},optional=false)=>q(s).tasks.push({id:++s.serial,kind,actor,payload,optional});
  function check(s){need([2,3,4,5,6].includes(s.phase)&&q(s)?.round===s.round&&!q(s).completed&&s.status==='playing','当前没有进行中的探险阶段');need(!s.pending.length,'请先处理剧本事项');need(!q(s).queue.length,'请先处理卡牌响应');}
@@ -5706,7 +5784,7 @@ if(typeof module!=='undefined')module.exports=QuestRulesFactory;
 const TravelRulesFactory=(H,R,Q)=>{
  const need=(v,m)=>{if(!v)throw Error(m);},same=(a,b)=>String(a)===String(b),live=s=>s.players.filter(p=>!p.eliminated),t=s=>s.traveling;
  const spirit=(s,c)=>c.meta.sphere==='spirit'||c.kind==='hero'&&R.icons(s,c).includes('spirit');
- const log=(s,m)=>H.log(s,'旅行 · '+m),opt=(v,label)=>({value:String(v),label}),f=(key,label,options)=>({key,label,options});
+ const log=(s,m)=>H.log(s,'旅行 · '+m,'P3'),opt=(v,label)=>({value:String(v),label}),f=(key,label,options)=>({key,label,options});
  function check(s){need(s.phase===3&&t(s)?.round===s.round&&!t(s).completed&&s.status==='playing','当前没有进行中的旅行阶段');need(!s.pending.length&&!t(s).queue.length,'请先结算剧本事项或卡牌响应');}
  function start(s){need(s.phase===3&&s.questing?.completed,'须先完成第三阶段');need(s.traveling?.round!==s.round,'本回合旅行阶段已初始化');const order=live(s).map(p=>p.id).sort((a,b)=>(a-s.first+s.players.length)%s.players.length-(b-s.first+s.players.length)%s.players.length);s.traveling={round:s.round,step:'choice',order,index:order.length,finalPasses:[],queue:[],tasks:[],remaining:[],encounterModifiers:[],discussion:true,approvals:[],proposal:null,completed:false,closing:false,revealed:0,traveled:false};log(s,'开始，先由起始玩家决定旅行地点；普通行动窗口在旅行步骤之后');}
  function spec(s,uid){let out={legal:false,fields:[],reason:''};try{check(s);need(t(s).step==='choice'&&!t(s).traveled,'本次旅行步骤已经结束');if(uid===null||uid==='skip'){need(s.active||!s.staging.some(c=>c.id===88),'东湾强制旅行，不能跳过');out.legal=true;return out;}
@@ -5759,7 +5837,7 @@ if(typeof module!=='undefined')module.exports=TravelRulesFactory;
 /* Original Core encounter framework. All optional choices lock before any move. */
 const EncounterRulesFactory=(H,R,Q)=>{
  const need=(v,m)=>{if(!v)throw Error(m);},live=s=>s.players.filter(p=>!p.eliminated),x=s=>s.encountering;
- const log=(s,m)=>H.log(s,'遭遇 · '+m);
+ const log=(s,m)=>H.log(s,'遭遇 · '+m,'P4');
  function check(s){need(s.phase===4&&x(s)?.round===s.round&&!x(s).completed&&s.status==='playing','当前没有进行中的遭遇阶段');need(!s.pending.length&&!x(s).queue.length,'请先处理强制效果或卡牌响应');}
  function start(s){need(s.phase===4&&s.traveling?.completed,'须先完成第四阶段');need(x(s)?.round!==s.round,'本回合遭遇阶段已初始化');const order=live(s).map(p=>p.id).sort((a,b)=>(a-s.first+s.players.length)%s.players.length-(b-s.first+s.players.length)%s.players.length);s.encountering={round:s.round,step:'optional',order:[...order],turnOrder:[...order],index:order.length,optionalIndex:0,checkIndex:0,choices:{},approvals:[],finalPasses:[],queue:[],tasks:[],discussion:true,completed:false,closing:false};log(s,'暂定主动交战或不交战，全员二次确认之前不移动敌人');}
  function validate(s,choices,complete=false){const remaining=s.staging.filter(c=>c.type==='Enemy');for(const pid of x(s).turnOrder){if(s.players[pid].eliminated)continue;const choice=choices[pid];if(!choice){need(!complete,'请先由所有玩家提交暂定交战选择');continue;}if(choice.uid===null)continue;need(s.players[pid].optionalRound!==s.round,'本阶段已主动交战');const at=remaining.findIndex(c=>c.uid===choice.uid);need(at>=0,'敌人不在探查区或被重复选择');const c=remaining[at];need(c.id!==83||remaining.length===1,'仍有其他敌人，不能主动交战哥布林狙击手（按起始玩家顺序判断）');remaining.splice(at,1);}}
@@ -5784,7 +5862,7 @@ if(typeof module!=='undefined')module.exports=EncounterRulesFactory;
 </script><script>
 /* Original Core / FAQ 1.9 combat. Proposals contain choices, never executed effects. */
 const CombatRulesFactory=(H,R,Q)=>{
- const need=(v,m)=>{if(!v)throw Error(m);},eq=(a,b)=>String(a)===String(b),x=s=>s.combat,live=s=>s.players.filter(p=>!p.eliminated),log=(s,t)=>H.log(s,'战斗 · '+t);
+ const need=(v,m)=>{if(!v)throw Error(m);},eq=(a,b)=>String(a)===String(b),x=s=>s.combat,live=s=>s.players.filter(p=>!p.eliminated),log=(s,t)=>H.log(s,'战斗 · '+t,'P5');
  const actionSteps=['enemyAction','beforeDefend','beforeShadows','beforeDamage','afterEnemy','playerAction','playerStrength','playerDamage','afterPlayer','endAction'];
  const enemy=(s,uid)=>R.enemies(s).find(c=>eq(c.uid,uid))?.state,chars=s=>R.chars(s),own=(s,pid)=>chars(s).filter(c=>c.controller===pid),current=s=>x(s).attack;
  const held=(s,uid)=>R.attaches(s).filter(c=>eq(c.state.target,uid));
@@ -5898,7 +5976,7 @@ if(typeof module!=='undefined')module.exports=CombatRulesFactory;
 const RefreshRulesFactory=(H,R,Q)=>{
  const need=(v,m)=>{if(!v)throw Error(m);},alive=s=>s.players.filter(p=>!p.eliminated),x=s=>s.refreshing;
  const order=s=>alive(s).map(p=>p.id).sort((a,b)=>(a-s.first+s.players.length)%s.players.length-(b-s.first+s.players.length)%s.players.length);
- const log=(s,t)=>H.log(s,'刷新 · '+t);
+ const log=(s,t)=>H.log(s,'刷新 · '+t,'P6');
  function check(s,step){need(s.phase===6&&x(s)?.round===s.round&&!x(s).completed&&s.status==='playing','当前没有进行中的刷新阶段');need(!s.pending.length&&!x(s).queue.length,'请先结算卡牌响应');if(step)need(x(s).step===step,'当前刷新步骤不允许此操作');}
  function start(s){need(s.phase===6&&s.combat?.completed,'请先完成战斗阶段');need(x(s)?.round!==s.round,'本回合刷新已初始化');const ids=order(s);s.refreshing={round:s.round,step:'ready',order:ids,index:ids.length,queue:[],tasks:[],finalPasses:[],approvals:[],payPlans:{},discussion:true,completed:false,closing:false};log(s,'先选择蛛网费用，全员确认后执行重置、威胁与先手轮换');}
  function webs(s,pid){return R.chars(s).filter(c=>c.kind==='hero'&&c.controller===pid&&c.state.exhausted).map(c=>({...c,cost:2*s.conditions.filter(a=>a.id===80&&String(a.target)===String(c.uid)).length})).filter(c=>c.cost);}
@@ -5980,7 +6058,9 @@ const clone=x=>JSON.parse(JSON.stringify(x));
 const roster=[['阿拉贡','希奥德雷德','葛罗因'],['金雳','莱戈拉斯','沙林'],['伊欧玟','埃莉诺','杜内希尔'],['丹内梭尔','葛罗芬戴尔','贝拉沃']];
 function rng(s){let x=s.seed|0;x^=x<<13;x^=x>>>17;x^=x<<5;s.seed=x>>>0;return s.seed/4294967296;}
 function shuffle(s,a){for(let i=a.length-1;i>0;i--){let j=Math.floor(rng(s)*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-function log(s,t){s.log.unshift(`回合${s.round} · ${t}`);}
+/* 日志条目 = 「回合N · [阶段标记]文本」。阶段标记 §P3§ 供右栏日志按阶段着色分组，
+   纯文本消费方（存档外部工具）可直接按 § 切掉；不带标记时按当前阶段归组。 */
+function log(s,t,phaseMark){s.log.unshift(`回合${s.round} · ${phaseMark?'§'+phaseMark+'§':''}${t}`);}
 function task(s,text,kind='manual',args={}){s.pending.push({id:++s.serial,text,kind,args});}
 function assert(v,msg){if(!v)throw Error(msg);}
 function ready(s){assert(!s.setupPending,'请先确认起始手牌并执行剧本设置。');assert(s.status==='playing','对局已经结束。');assert(!s.pending.length,'请先处理待结算事项。');}
@@ -6028,7 +6108,7 @@ function initializePlayer(s,p){
  p.heroStates=p.heroCards.map((c,index)=>({uid:++s.serial,code:c.code,index,exhausted:false,damage:0,resources:s.difficulty==='easy'?1:0,committed:false,destroyed:false}));
  p.playerDeck=[];p.hand=[];p.playerDiscard=[];p.playerRemoved=[];p.allies=[];p.attachments=[];p.mulliganTaken=false;p.openingConfirmed=false;
  for(const [code,n] of Object.entries(p.registeredDeck.slots)){assert(by[code]&&['ally','attachment','event'].includes(by[code].type),'无效的玩家牌库卡牌。');assert(Number.isInteger(n)&&n>=0,'无效的玩家牌数量。');for(let i=0;i<n;i++)p.playerDeck.push({uid:++s.serial,code,owner:p.id});}
- shuffle(s,p.playerDeck);drawPlayer(s,p,6,true);log(s,`${p.name}抽取6张起始手牌（牌库剩${p.playerDeck.length}张）`);
+ shuffle(s,p.playerDeck);drawPlayer(s,p,6,true);log(s,`${p.name}抽取6张起始手牌（牌库剩${p.playerDeck.length}张）`,'P0');
 }
 function drawPlayer(s,p,n,setup=false){
  assert(Number.isInteger(n)&&n>=0,'抽牌数必须为非负整数。');
@@ -6038,13 +6118,13 @@ function drawPlayer(s,p,n,setup=false){
 }
 function openingChoice(s,pid,mulligan=false){
  assert(s.setupPending&&s.status==='playing','当前不是起始手牌选择步骤。');const p=s.players[pid];assert(p?.playerDeck,'无效玩家。');assert(!p.openingConfirmed,'该玩家已确认起始手牌。');
- if(mulligan){assert(!p.mulliganTaken,'每位玩家只能调度一次。');assert(p.hand.length===6,'调度必须将完整6张起始手牌洗回。');p.playerDeck.push(...p.hand.splice(0));shuffle(s,p.playerDeck);drawPlayer(s,p,6,true);p.mulliganTaken=true;log(s,`${p.name}整手调度一次，重抽6张并保留`);}else log(s,`${p.name}保留起始手牌`);
+ if(mulligan){assert(!p.mulliganTaken,'每位玩家只能调度一次。');assert(p.hand.length===6,'调度必须将完整6张起始手牌洗回。');p.playerDeck.push(...p.hand.splice(0));shuffle(s,p.playerDeck);drawPlayer(s,p,6,true);p.mulliganTaken=true;log(s,`${p.name}整手调度一次，重抽6张并保留`,'P0');}else log(s,`${p.name}保留起始手牌`,'P0');
  p.openingConfirmed=true;
 }
-function startScenario(s){assert(s.setupPending,'剧本设置已经执行。');assert(s.players.every(p=>p.openingConfirmed),'所有玩家须先保留或调度起始手牌。');assert(!s.setupReveal,'起始手牌已确认，剧本设置已开始；请继续翻开开局遭遇牌。');s.setupDone=true;s.setupPending=false;applyScenarioSetup(s);log(s,'起始手牌已确认，剧本设置已执行；准备第1回合资源阶段');}
+function startScenario(s){assert(s.setupPending,'剧本设置已经执行。');assert(s.players.every(p=>p.openingConfirmed),'所有玩家须先保留或调度起始手牌。');assert(!s.setupReveal,'起始手牌已确认，剧本设置已开始；请继续翻开开局遭遇牌。');s.setupDone=true;s.setupPending=false;applyScenarioSetup(s);log(s,'起始手牌已确认，剧本设置已执行；准备第1回合资源阶段','P0');}
 function resourcePhase(s){
  ready(s);assert(s.phase===0,'仅能在资源阶段收集资源和抽牌。');assert(s.resourceRound!==s.round,'本回合资源阶段已结算。');
- for(const p of live(s))if(p.heroStates){for(const h of p.heroStates){if(h.destroyed||(!s.rescued&&s.prisoner?.player===p.id&&s.prisoner.hero===h.index))continue;h.resources++;}const count=drawPlayer(s,p,1);log(s,`${p.name}每名可用英雄获得1资源，抽取${count}张牌`);}
+ for(const p of live(s))if(p.heroStates){for(const h of p.heroStates){if(h.destroyed||(!s.rescued&&s.prisoner?.player===p.id&&s.prisoner.hero===h.index))continue;h.resources++;}const count=drawPlayer(s,p,1);log(s,`${p.name}每名可用英雄获得1资源，抽取${count}张牌`,'P0');}
  s.resourceRound=s.round;
 }
 /* 官方 Easy Mode（LOTR Easy Mode Rules / MEC65 规则书）：setup 时每位英雄资源池 +1，
@@ -6073,7 +6153,7 @@ function create(scenarioId,players=1,seed=Date.now(),configs=null,options={}){
  if(options.openingTest)s.openingTest=true;
  if(options.first!==undefined){assert(Number.isInteger(options.first)&&options.first>=0&&options.first<players,'起始玩家必须在本局人数范围内。');s.first=options.first;}
  for(const p of s.players)if(p.registeredDeck){initializePlayer(s,p);p.openingConfirmed=!options.deferSetup;}
- if(options.deferSetup){assert(s.players.every(p=>p.playerDeck),'需要为每位玩家选择有效牌组。');s.setupPending=true;log(s,'已抽取起始手牌，等待保留或调度；尚未执行剧本设置');return s;}
+ if(options.deferSetup){assert(s.players.every(p=>p.playerDeck),'需要为每位玩家选择有效牌组。');s.setupPending=true;log(s,'已抽取起始手牌，等待保留或调度；尚未执行剧本设置','P0');return s;}
  applyScenarioSetup(s);return s;
 }
 function applyScenarioSetup(s){
@@ -6260,11 +6340,11 @@ function nextPhase(s){ready(s);if(s.phase===1&&s.planning){if(s.planning.complet
  }else s.phase++;
  if(s.phase===1&&s.players.some(p=>p.heroStates))P2.start(s);
  if(s.phase===2&&s.quest===125)guards(s);
- log(s,`进入${phases[s.phase]}阶段`);
+ log(s,`进入${phases[s.phase]}阶段`,`P${s.phase}`);
 }
 function questFailure(s,n){ready(s);assert(s.phase===2&&s.stagedRound===s.round,'须在探查后结算。');assert(Number.isInteger(n)&&n>0,'失败差值须为正整数。');for(const p of live(s))adjustThreat(s,p,n);for(const c of s.staging.filter(c=>c.id===101)){let o=s.objectives.find(o=>!o.holder);if(o){s.objectives=s.objectives.filter(x=>x.uid!==o.uid);if(o.guard){let g=s.staging.find(c=>c.uid===o.guard);if(g)delete g.guard;}delete o.guard;s.deck.push(o);shuffle(s,s.deck);log(s,'地牢狱卒将无人持有的目标洗回牌库');}}}
 function resolveQuest(s,willpower){assert(!s.questing,'意志由投入角色自动计算');ready(s);assert(s.phase===2&&s.stagedRound===s.round,'须先执行探查。');assert(s.resolvedRound!==s.round,'本回合探险已经结算。');assert(Number.isInteger(willpower)&&willpower>=0,'总意志须为非负整数。');const delta=willpower-threat(s);s.resolvedRound=s.round;if(delta>=0)addProgress(s,delta);else questFailure(s,-delta);log(s,`探险结算：意志${willpower}，威胁${threat(s)}，差值${delta}`);}
-const api={refreshing:P7,combat:P6,encountering:P5,traveling:P4,questing:P3,planning:P2,openingChoice,startScenario,setupRevealStep,settleSetupCard,setupCancelOptions,setupCancel,resourcePhase,drawPlayer,extraShadow,resolveQuest,D,byId,phases,create,quest,gate,threat,stage,addProgress,advance,travel,engage,encounterChecks,defeat,shadows,revealShadows,returnEnemy,claim,returnObjective,nextPhase,resolve,rescue,questFailure,adjustThreat,clone};
+const api={refreshing:P7,combat:P6,encountering:P5,traveling:P4,questing:P3,planning:P2,openingChoice,startScenario,setupRevealStep,settleSetupCard,setupCancelOptions,setupCancel,resourcePhase,drawPlayer,extraShadow,resolveQuest,D,byId,phases,create,quest,gate,threat,stage,addProgress,advance,travel,engage,encounterChecks,defeat,shadows,revealShadows,returnEnemy,claim,returnObjective,nextPhase,resolve,rescue,questFailure,adjustThreat,clone,log};
 const WindowFactory=typeof WindowRulesFactory!=='undefined'?WindowRulesFactory:require('./window-engine.js');api.windows=WindowFactory(api);return api;
 })();
 if(typeof module!=='undefined')module.exports=ScenarioEngine;
@@ -9257,15 +9337,17 @@ const WindowUI=(()=>{
  return {panel,handle};
 })();
 
-</script><script>
+</script><script src="phase-log.js"></script><script>
 /* Tabletop view: UI drafts never pay, exhaust, reveal, or bypass phase validation. */
 /* 界面版本徽标唯一来源：须与 CHANGELOG.md 最新条目标题一致（planning-dom-tests 有校验）。 */
-const APP_VERSION='v0.15.41';
+const APP_VERSION='v0.15.42';
 const DesktopUI=(()=>{
  const E=ScenarioEngine,R=E.planning,Q=E.questing,C=E.combat,esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  let combatDraft={key:'',target:null,ids:[]},draftState=null;
  const live=s=>s.players.filter(p=>!p.eliminated);
  const who=(s,id)=>esc(s.players[id]?.name||('玩家'+(id+1)));
+ /* 日志回退标记由 app.js 提供（哪次操作产生了哪几条日志）；测试环境无此钩子时返回 null，只渲染不可回退的日志。 */
+ const logMarks=()=>{try{return typeof APP_LOG_MARKS==='function'?APP_LOG_MARKS().logMarks:null;}catch(e){return null;}};
  const chip=(text,tone='wait')=>`<span class="op-chip ${tone}">${esc(text)}</span>`;
  /* 诡镇网页版式代币：圆形徽章、数字居中，同型多枚层叠。数量由规则引擎结算，拖放仅作视觉表现。
     属性代币（意志/攻击/防御）是静态数值快照，不参与拖放。 */
@@ -9387,7 +9469,7 @@ const DesktopUI=(()=>{
 <div class="pile ${s.deck.length?'':'empty'}"><span class="pile-cards" aria-hidden="true"></span><strong>${s.deck.length}</strong><small>牌库</small></div>
 <div class="pile discard ${s.discard.length?'':'empty'}"><span class="pile-cards" aria-hidden="true"></span><strong>${s.discard.length}</strong><small>弃牌</small></div>
 <div class="pile victory ${s.victory.length?'':'empty'}"><span class="pile-cards" aria-hidden="true"></span><strong>${s.victory.reduce((n,c)=>n+(c.victory||0),0)}</strong><small>胜利点</small></div>
-</div><details><summary>查看弃牌与胜利区</summary><p>${esc(s.discard.map(c=>c.name).join('、')||'空')}</p><p>${esc(s.victory.map(c=>c.name).join('、')||'空')}</p></details></section>${s.conditions.length?`<section><h2>持续条件</h2>${s.conditions.map(c=>`<p>${esc(c.name)} · ${esc(R.find(s,c.target)?.meta.nameZh||'玩家'+((c.targetPlayer??0)+1))}</p>`).join('')}</section>`:''}<details class="table-log" open><summary>远征日志</summary><div>${s.log.slice(0,60).map(t=>`<p>${esc(t)}</p>`).join('')}</div></details><details><summary>阶段与界面说明</summary><p>蓝色边框表示可操作，金色边框表示暂定已选。桌面点选不执行效果；确认后仍需全员核对。已翻开信息无法收回。</p></details></aside></div></div>`;
+</div><details><summary>查看弃牌与胜利区</summary><p>${esc(s.discard.map(c=>c.name).join('、')||'空')}</p><p>${esc(s.victory.map(c=>c.name).join('、')||'空')}</p></details></section>${s.conditions.length?`<section><h2>持续条件</h2>${s.conditions.map(c=>`<p>${esc(c.name)} · ${esc(R.find(s,c.target)?.meta.nameZh||'玩家'+((c.targetPlayer??0)+1))}</p>`).join('')}</section>`:''}<section class="table-log" aria-label="远征日志">${PhaseLog.panel(s,logMarks())}</section><details><summary>阶段与界面说明</summary><p>蓝色边框表示可操作，金色边框表示暂定已选。桌面点选不执行效果；确认后仍需全员核对。已翻开信息无法收回。</p></details></aside></div></div>`;
  }
  function handle(el){const k=el.dataset.desktop,uid=+el.dataset.uid,pid=+el.dataset.player,m=mode(state,handView),d=draft(state,m);
   if(k==='view'){handView=pid;render();return;}if(k==='reset'){if(confirm('结束当前桌面并重新选择剧本？建议先导出存档。'))mutate(()=>state=null);return;}
@@ -9618,6 +9700,15 @@ if (typeof module !== 'undefined') module.exports = CardHoverPreview;
 'use strict';
 const E=ScenarioEngine,D=LOTR_DATA,$=s=>document.querySelector(s);
 let state=null,history=[],tab='table',handView=0;
+/* 日志回退：history[j] 存的是第 j 次操作「之前」的状态，但并非每次操作都会写日志，
+   所以两者不能按下标直接对应。logMarks[j] 记录第 j 次操作把日志从几条变成几条（[before,after]），
+   日志条目据此精确定位到「产生它的那次操作」，回退时才能停在正确的前态。
+   纯视图操作（切换查看玩家等）不入栈，因此不会出现在这里。 */
+ /* logMarks 条目形如 {seq,before,after}：seq 是该次操作在 history 中的绝对序号。
+    history 超过 80 步会从头裁掉，此时 history 下标不再等于 seq，
+    所以定位回退点一律用 seq 反查（history[seq - baseSeq]）。 */
+let logMarks=[],historyBase=0;
+function APP_LOG_MARKS(){return {logMarks,base:historyBase,length:history.length};}
 const setupDraft={players:1,seed:'',first:0,decks:['starter-leadership','starter-tactics','starter-spirit','starter-lore']};
 function captureSetup(){if(state)return;const count=$('#playerCount');if(!count)return;const n=Number(count.value);if(Number.isInteger(n)&&n>=1&&n<=4)setupDraft.players=n;setupDraft.seed=$('#seed')?.value||'';setupDraft.first=Number($('#pc-first')?.value||0);if(setupDraft.first>=setupDraft.players)setupDraft.first=0;for(let i=0;i<4;i++){const value=$('#pc-deck-'+i)?.value;if(value)setupDraft.decks[i]=value;}}
 function bindSetup(){if(state||tab!=='table')return;const count=$('#playerCount');if(!count)return;count.onchange=()=>{captureSetup();render();};for(const id of ['seed','pc-first','pc-deck-0','pc-deck-1','pc-deck-2','pc-deck-3']){const el=$('#'+id);if(el){el.onchange=captureSetup;if(id==='seed')el.oninput=captureSetup;}}}
@@ -9626,7 +9717,7 @@ const enc=escape;
 try{let s=localStorage.getItem('lotr-core-v02');if(s){let v=JSON.parse(s);if(v.version===1){state=v;if(state.phase===2&&state.questing)E.questing.enableDiscussion(state);}}}catch{}
 function save(){try{if(state)localStorage.setItem('lotr-core-v02',JSON.stringify(state));else localStorage.removeItem('lotr-core-v02');}catch{toast('浏览器未允许本地保存，可使用导出存档。');}}
 function toast(t){$('#toast').textContent=t;$('#toast').style.display='block';clearTimeout(toast.timer);toast.timer=setTimeout(()=>$('#toast').style.display='none',5000);}
-function mutate(fn){let before=state?E.clone(state):null;try{fn();if(state)E.windows.run(state);history.push(before);if(history.length>80)history.shift();save();render();}catch(e){state=before;toast(e.message);}}
+function mutate(fn){let before=state?E.clone(state):null,logsBefore=before?before.log.length:0;try{fn();if(state)E.windows.run(state);const seq=historyBase+history.length;history.push(before);logMarks.push({seq,before:logsBefore,after:state?state.log.length:0});if(history.length>80){history.shift();logMarks.shift();historyBase++;}save();render();}catch(e){state=before;toast(e.message);}}
 function btn(text,action,args='',cls='',disabled=false){return `<button class="${cls}" data-action="${action}" ${args} ${disabled?'disabled':''}>${text}</button>`;}
 function empty(t='此区域暂无卡牌'){return `<div class="empty">${t}</div>`;}
 const types={Enemy:'敌人',Location:'地点',Treachery:'诡计',Objective:'目标'};
@@ -9930,6 +10021,10 @@ async function choose(title,body,read){return new Promise(resolve=>{let d=docume
 function playerOptions(){return state.players.filter(p=>!p.eliminated).map(p=>`<option value="${p.id}">${enc(p.name)}</option>`).join('');}
 $('#app').onclick=async ev=>{const b=ev.target.closest('[data-action]');if(!b||b.disabled)return;const a=b.dataset.action,uid=Number(b.dataset.uid),id=Number(b.dataset.id),pid=Number(b.dataset.player);
  if(a==='desktop'){DesktopUI.handle(b);return;}
+ if(a==='undoLog'){const seq=Number(b.dataset.seq),j=seq-historyBase;
+  if(!Number.isInteger(seq)||j<0||j>=history.length)return;
+  /* 回退到该次操作之前：状态、历史、日志标记一起截断到那一刻。 */
+  state=history[j];history=history.slice(0,j);logMarks=logMarks.filter(m=>m.seq<seq);save();render();return;}
  if(a==='windowFlow'){WindowUI.handle(b);return;}
  if(a==='refreshFlow'){await RefreshUI.handle(b);return;}
  if(a==='combatFlow'){await CombatUI.handle(b);return;}

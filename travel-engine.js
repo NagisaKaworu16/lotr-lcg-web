@@ -2,7 +2,7 @@
 const TravelRulesFactory=(H,R,Q)=>{
  const need=(v,m)=>{if(!v)throw Error(m);},same=(a,b)=>String(a)===String(b),live=s=>s.players.filter(p=>!p.eliminated),t=s=>s.traveling;
  const spirit=(s,c)=>c.meta.sphere==='spirit'||c.kind==='hero'&&R.icons(s,c).includes('spirit');
- const log=(s,m)=>H.log(s,'旅行 · '+m),opt=(v,label)=>({value:String(v),label}),f=(key,label,options)=>({key,label,options});
+ const log=(s,m)=>H.log(s,'旅行 · '+m,'P3'),opt=(v,label)=>({value:String(v),label}),f=(key,label,options)=>({key,label,options});
  function check(s){need(s.phase===3&&t(s)?.round===s.round&&!t(s).completed&&s.status==='playing','当前没有进行中的旅行阶段');need(!s.pending.length&&!t(s).queue.length,'请先结算剧本事项或卡牌响应');}
  function start(s){need(s.phase===3&&s.questing?.completed,'须先完成第三阶段');need(s.traveling?.round!==s.round,'本回合旅行阶段已初始化');const order=live(s).map(p=>p.id).sort((a,b)=>(a-s.first+s.players.length)%s.players.length-(b-s.first+s.players.length)%s.players.length);s.traveling={round:s.round,step:'choice',order,index:order.length,finalPasses:[],queue:[],tasks:[],remaining:[],encounterModifiers:[],discussion:true,approvals:[],proposal:null,completed:false,closing:false,revealed:0,traveled:false};log(s,'开始，先由起始玩家决定旅行地点；普通行动窗口在旅行步骤之后');}
  function spec(s,uid){let out={legal:false,fields:[],reason:''};try{check(s);need(t(s).step==='choice'&&!t(s).traveled,'本次旅行步骤已经结束');if(uid===null||uid==='skip'){need(s.active||!s.staging.some(c=>c.id===88),'东湾强制旅行，不能跳过');out.legal=true;return out;}

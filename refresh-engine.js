@@ -2,7 +2,7 @@
 const RefreshRulesFactory=(H,R,Q)=>{
  const need=(v,m)=>{if(!v)throw Error(m);},alive=s=>s.players.filter(p=>!p.eliminated),x=s=>s.refreshing;
  const order=s=>alive(s).map(p=>p.id).sort((a,b)=>(a-s.first+s.players.length)%s.players.length-(b-s.first+s.players.length)%s.players.length);
- const log=(s,t)=>H.log(s,'刷新 · '+t);
+ const log=(s,t)=>H.log(s,'刷新 · '+t,'P6');
  function check(s,step){need(s.phase===6&&x(s)?.round===s.round&&!x(s).completed&&s.status==='playing','当前没有进行中的刷新阶段');need(!s.pending.length&&!x(s).queue.length,'请先结算卡牌响应');if(step)need(x(s).step===step,'当前刷新步骤不允许此操作');}
  function start(s){need(s.phase===6&&s.combat?.completed,'请先完成战斗阶段');need(x(s)?.round!==s.round,'本回合刷新已初始化');const ids=order(s);s.refreshing={round:s.round,step:'ready',order:ids,index:ids.length,queue:[],tasks:[],finalPasses:[],approvals:[],payPlans:{},discussion:true,completed:false,closing:false};log(s,'先选择蛛网费用，全员确认后执行重置、威胁与先手轮换');}
  function webs(s,pid){return R.chars(s).filter(c=>c.kind==='hero'&&c.controller===pid&&c.state.exhausted).map(c=>({...c,cost:2*s.conditions.filter(a=>a.id===80&&String(a.target)===String(c.uid)).length})).filter(c=>c.cost);}

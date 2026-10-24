@@ -10,7 +10,7 @@ function environment(){const dialogs=[],base=new Map;const attr=(s,k)=>new RegEx
  for(const id of ['app','toast','undo','export','import','tableTab','catalogTab','playersTab','imagesTab','helpTab']){let e=new El;e.id=id;base.set(id,e);}
  const document={querySelector:s=>base.get(s.slice(1))||base.get('app').querySelector(s),querySelectorAll:()=>[],createElement:t=>new El(t),body:{append(){}}};
  const ctx=vm.createContext({module:undefined,document,localStorage:{getItem:()=>null,setItem(){},removeItem(){}},setTimeout:()=>1,clearTimeout(){},console,Blob,URL,confirm:()=>true});
- for(const f of ['data.js','starter-decks.js','player-cards.js','ringsdb-snapshot.js','planning-engine.js','quest-engine.js','travel-engine.js','encounter-engine.js','combat-engine.js','refresh-engine.js','window-engine.js','engine.js','score-engine.js','player-ui.js','image-index.js','encounter-image-index.js','chinese-core-images.js','image-ui.js','planning-ui.js','quest-ui.js','travel-ui.js','encounter-ui.js','combat-ui.js','refresh-ui.js','window-ui.js','desktop-ui.js','product-catalog.js','app.js'])vm.runInContext(fs.readFileSync(__dirname+'/'+f,'utf8'),ctx,{filename:f});
+ for(const f of ['data.js','starter-decks.js','player-cards.js','ringsdb-snapshot.js','planning-engine.js','quest-engine.js','travel-engine.js','encounter-engine.js','combat-engine.js','refresh-engine.js','window-engine.js','engine.js','score-engine.js','player-ui.js','image-index.js','encounter-image-index.js','chinese-core-images.js','image-ui.js','planning-ui.js','quest-ui.js','travel-ui.js','encounter-ui.js','combat-ui.js','refresh-ui.js','window-ui.js','phase-log.js','desktop-ui.js','product-catalog.js','app.js'])vm.runInContext(fs.readFileSync(__dirname+'/'+f,'utf8'),ctx,{filename:f});
  const run=s=>vm.runInContext(s,ctx);const click=d=>run(`$('#app').onclick({target:{closest:()=>({dataset:${JSON.stringify(d)}})}})`);
  return {ctx,run,click,dialogs,base};
 }
@@ -380,3 +380,50 @@ test('deck builder replaces the old player-cards tab and uses the card library l
  await e.click({action:'pc',pc:'deckBack'});
  assert(e.base.get('app').innerHTML.includes('data-action="deckNew"'),'返回后应回到卡组列表');
 });
+/* ── 阶段竖图 + 结构化日志（v0.15.42） ─────────────────────────────── */
+test('log lines are parsed into round and phase, with guesses for legacy lines',()=>{const e=environment();const parse=(l,f)=>e.run(`JSON.stringify(PhaseLog.parse(${JSON.stringify(l)},${JSON.stringify(f)}))`);
+ /* §P4§ 是第五阶段（遭遇）；§P5§ 是第六阶段（战斗）——与引擎阶段名对应 */
+ assert.deepEqual(JSON.parse(parse('回合3 · §P4§兽人守卫翻出')),{round:3,phase:'encounter',text:'兽人守卫翻出'});
+ assert.deepEqual(JSON.parse(parse('回合3 · §P5§兽人守卫被击败')),{round:3,phase:'combat',text:'兽人守卫被击败'});
+ assert.deepEqual(JSON.parse(parse('回合2 · §P3.2§按顺序投入')),{round:2,phase:'travel',text:'按顺序投入'});
+ /* 旧存档没有阶段标记：按关键词归组，认不出时落到当前阶段 */
+ assert.equal(JSON.parse(parse('回合1 · 探险结算：意志6')).phase,'quest');
+ assert.equal(JSON.parse(parse('回合1 · 玩家1打出盟友「警戒者」')).phase,'planning');
+ assert.equal(JSON.parse(parse('回合1 · 某条无法判断的记录','combat')).phase,'combat');
+ assert.equal(JSON.parse(parse('')).round,0);});
+
+test('log undo maps each entry to the operation that produced it',()=>{
+ /* history[j] 是第 j 次操作之前的状态；marks 记录每次操作前后日志条数。
+    newest-first 下第 i 条日志出现前的条数 = total-1-i，落在哪次操作的 [before,after) 内即回退到它的 seq。 */
+ const e=environment();
+ const marks=[{seq:0,before:0,after:1},{seq:1,before:1,after:1},{seq:2,before:1,after:3},{seq:3,before:3,after:4}];
+ const at=(i,total)=>e.run(`PhaseLog.undoFor(${i},${total},${JSON.stringify(marks)})`);
+ assert.equal(at(3,4),0);   /* 最早一条 → 第 0 次操作 */
+ assert.equal(at(2,4),2);   /* 第 2 次操作一次写入两条，两条都回到 seq 2 */
+ assert.equal(at(1,4),2);
+ assert.equal(at(0,4),3);
+ /* 没有标记（旧存档 / 纯 DOM 环境）时不提供回退 */
+ assert.equal(e.run('PhaseLog.undoFor(0,4,null)'),null);
+ assert.equal(e.run('PhaseLog.undoFor(0,4,[])'),null);});
+test('desktop log panel renders the phase rail with colour-coded groups',async()=>{const e=environment();await opening(e);
+ const html=e.base.get('app').innerHTML;
+ assert(html.includes('class="phase-log"'),'右栏应渲染结构化日志面板');
+ assert(html.includes('class="phase-rail-v"'),'应渲染竖排阶段色带');
+ assert.equal((html.match(/class="rail-v-step/g)||[]).length,7,'阶段色带须显示全部 7 个阶段');
+ assert(html.includes('rail-v-step current'),'当前阶段应高亮');
+ assert(html.includes('class="log-round"'),'日志须按回合分组');
+ assert(/class="log-entry tone-/.test(html),'日志条目须带阶段色调类');
+ /* 旧版纯文本 <p> 列表已移除 */
+ assert(!/table-log[\s\S]{0,40}<div><p>回合/.test(html),'不应再输出旧版纯文本日志');});
+
+test('clicking a log undo button restores the state before that operation',async()=>{const e=environment();await opening(e);
+ const steps=e.run('APP_LOG_MARKS().logMarks.length');
+ assert(steps>1,'开局后应有多步可回退操作');
+ const seq=e.run('APP_LOG_MARKS().logMarks.at(-1).seq');
+ const expectLog=e.run(`history[${seq}-APP_LOG_MARKS().base].log.length`);
+ await e.click({action:'undoLog',seq:String(seq)});
+ assert.equal(e.run('APP_LOG_MARKS().logMarks.length'),steps-1,'日志标记应同步截断');
+ assert.equal(e.run('state.log.length'),expectLog,'状态应回到该操作之前');
+ /* 无效序号不改变任何状态 */
+ const snap=e.run('JSON.stringify(state)');await e.click({action:'undoLog',seq:'9999'});
+ assert.equal(e.run('JSON.stringify(state)'),snap);});

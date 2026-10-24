@@ -1,6 +1,6 @@
 /* Original Core / FAQ 1.9 combat. Proposals contain choices, never executed effects. */
 const CombatRulesFactory=(H,R,Q)=>{
- const need=(v,m)=>{if(!v)throw Error(m);},eq=(a,b)=>String(a)===String(b),x=s=>s.combat,live=s=>s.players.filter(p=>!p.eliminated),log=(s,t)=>H.log(s,'战斗 · '+t);
+ const need=(v,m)=>{if(!v)throw Error(m);},eq=(a,b)=>String(a)===String(b),x=s=>s.combat,live=s=>s.players.filter(p=>!p.eliminated),log=(s,t)=>H.log(s,'战斗 · '+t,'P5');
  const actionSteps=['enemyAction','beforeDefend','beforeShadows','beforeDamage','afterEnemy','playerAction','playerStrength','playerDamage','afterPlayer','endAction'];
  const enemy=(s,uid)=>R.enemies(s).find(c=>eq(c.uid,uid))?.state,chars=s=>R.chars(s),own=(s,pid)=>chars(s).filter(c=>c.controller===pid),current=s=>x(s).attack;
  const held=(s,uid)=>R.attaches(s).filter(c=>eq(c.state.target,uid));

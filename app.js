@@ -1,6 +1,15 @@
 'use strict';
 const E=ScenarioEngine,D=LOTR_DATA,$=s=>document.querySelector(s);
 let state=null,history=[],tab='table',handView=0;
+/* 日志回退：history[j] 存的是第 j 次操作「之前」的状态，但并非每次操作都会写日志，
+   所以两者不能按下标直接对应。logMarks[j] 记录第 j 次操作把日志从几条变成几条（[before,after]），
+   日志条目据此精确定位到「产生它的那次操作」，回退时才能停在正确的前态。
+   纯视图操作（切换查看玩家等）不入栈，因此不会出现在这里。 */
+ /* logMarks 条目形如 {seq,before,after}：seq 是该次操作在 history 中的绝对序号。
+    history 超过 80 步会从头裁掉，此时 history 下标不再等于 seq，
+    所以定位回退点一律用 seq 反查（history[seq - baseSeq]）。 */
+let logMarks=[],historyBase=0;
+function APP_LOG_MARKS(){return {logMarks,base:historyBase,length:history.length};}
 const setupDraft={players:1,seed:'',first:0,decks:['starter-leadership','starter-tactics','starter-spirit','starter-lore']};
 function captureSetup(){if(state)return;const count=$('#playerCount');if(!count)return;const n=Number(count.value);if(Number.isInteger(n)&&n>=1&&n<=4)setupDraft.players=n;setupDraft.seed=$('#seed')?.value||'';setupDraft.first=Number($('#pc-first')?.value||0);if(setupDraft.first>=setupDraft.players)setupDraft.first=0;for(let i=0;i<4;i++){const value=$('#pc-deck-'+i)?.value;if(value)setupDraft.decks[i]=value;}}
 function bindSetup(){if(state||tab!=='table')return;const count=$('#playerCount');if(!count)return;count.onchange=()=>{captureSetup();render();};for(const id of ['seed','pc-first','pc-deck-0','pc-deck-1','pc-deck-2','pc-deck-3']){const el=$('#'+id);if(el){el.onchange=captureSetup;if(id==='seed')el.oninput=captureSetup;}}}
@@ -9,7 +18,7 @@ const enc=escape;
 try{let s=localStorage.getItem('lotr-core-v02');if(s){let v=JSON.parse(s);if(v.version===1){state=v;if(state.phase===2&&state.questing)E.questing.enableDiscussion(state);}}}catch{}
 function save(){try{if(state)localStorage.setItem('lotr-core-v02',JSON.stringify(state));else localStorage.removeItem('lotr-core-v02');}catch{toast('浏览器未允许本地保存，可使用导出存档。');}}
 function toast(t){$('#toast').textContent=t;$('#toast').style.display='block';clearTimeout(toast.timer);toast.timer=setTimeout(()=>$('#toast').style.display='none',5000);}
-function mutate(fn){let before=state?E.clone(state):null;try{fn();if(state)E.windows.run(state);history.push(before);if(history.length>80)history.shift();save();render();}catch(e){state=before;toast(e.message);}}
+function mutate(fn){let before=state?E.clone(state):null,logsBefore=before?before.log.length:0;try{fn();if(state)E.windows.run(state);const seq=historyBase+history.length;history.push(before);logMarks.push({seq,before:logsBefore,after:state?state.log.length:0});if(history.length>80){history.shift();logMarks.shift();historyBase++;}save();render();}catch(e){state=before;toast(e.message);}}
 function btn(text,action,args='',cls='',disabled=false){return `<button class="${cls}" data-action="${action}" ${args} ${disabled?'disabled':''}>${text}</button>`;}
 function empty(t='此区域暂无卡牌'){return `<div class="empty">${t}</div>`;}
 const types={Enemy:'敌人',Location:'地点',Treachery:'诡计',Objective:'目标'};
@@ -313,6 +322,10 @@ async function choose(title,body,read){return new Promise(resolve=>{let d=docume
 function playerOptions(){return state.players.filter(p=>!p.eliminated).map(p=>`<option value="${p.id}">${enc(p.name)}</option>`).join('');}
 $('#app').onclick=async ev=>{const b=ev.target.closest('[data-action]');if(!b||b.disabled)return;const a=b.dataset.action,uid=Number(b.dataset.uid),id=Number(b.dataset.id),pid=Number(b.dataset.player);
  if(a==='desktop'){DesktopUI.handle(b);return;}
+ if(a==='undoLog'){const seq=Number(b.dataset.seq),j=seq-historyBase;
+  if(!Number.isInteger(seq)||j<0||j>=history.length)return;
+  /* 回退到该次操作之前：状态、历史、日志标记一起截断到那一刻。 */
+  state=history[j];history=history.slice(0,j);logMarks=logMarks.filter(m=>m.seq<seq);save();render();return;}
  if(a==='windowFlow'){WindowUI.handle(b);return;}
  if(a==='refreshFlow'){await RefreshUI.handle(b);return;}
  if(a==='combatFlow'){await CombatUI.handle(b);return;}

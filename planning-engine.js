@@ -5,7 +5,8 @@ const PlanningRulesFactory=(H)=>{
  const clone=x=>JSON.parse(JSON.stringify(x)),need=(v,m)=>{if(!v)throw Error(m);};
  const num=x=>Number(x),same=(a,b)=>String(a)===String(b);
  const context=s=>s.phase===6?s.refreshing:s.phase===5?s.combat:s.phase===4?s.encountering:s.phase===3?s.traveling:s.phase===2?s.questing:s.planning;
- const log=(s,t)=>H.log(s,(s.phase===5?'战斗':s.phase===4?'遭遇':s.phase===3?'旅行':s.phase===2?'探险':'计划')+' · '+t);
+ /* 日志带阶段标记（§P1§…），右栏按阶段着色；标记同时保留原中文阶段前缀，纯文本仍可读。 */
+ const log=(s,t)=>{const k=s.phase===5?['P5','战斗']:s.phase===4?['P4','遭遇']:s.phase===3?['P3','旅行']:s.phase===2?['P2','探险']:['P1','计划'];return H.log(s,k[1]+' · '+t,k[0]);};
  const alive=s=>s.players.filter(p=>!p.eliminated);
  function data(s,x){const p=s.players[x.owner??x.controller];return p?.heroCards?.find(c=>c.code===x.code)||p?.registeredDeck?.cards?.find(c=>c.code===x.code)||BASE[x.code];}
  function captured(s,p,index){return !s.rescued&&s.prisoner?.player===p&&s.prisoner?.hero===index;}

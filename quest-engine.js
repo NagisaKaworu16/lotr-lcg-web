@@ -2,7 +2,7 @@
 const QuestRulesFactory=(H,R)=>{
  const need=(v,m)=>{if(!v)throw Error(m);},same=(a,b)=>String(a)===String(b),q=s=>s.phase===6?s.refreshing:s.phase===5?s.combat:s.phase===4?s.encountering:s.phase===3?s.traveling:s.questing;
  const alive=s=>s.players.filter(p=>!p.eliminated),chars=s=>R.chars(s),committed=s=>chars(s).filter(c=>c.state.committed);
- const log=(s,t)=>H.log(s,(s.phase===5?'战斗':s.phase===4?'遭遇':s.phase===3?'旅行':'探险')+' · '+t),opt=c=>({value:String(c.uid),label:(c.meta?.nameZh||c.name||c.meta?.name)+' #'+c.uid});
+ const log=(s,t)=>{const k=s.phase===5?['P5','战斗']:s.phase===4?['P4','遭遇']:s.phase===3?['P3','旅行']:['P2','探险'];return H.log(s,k[1]+' · '+t,k[0]);},opt=c=>({value:String(c.uid),label:(c.meta?.nameZh||c.name||c.meta?.name)+' #'+c.uid});
  const field=(key,label,items)=>({key,label,options:items.map(opt)});
  const task=(s,kind,actor,payload={},optional=false)=>q(s).tasks.push({id:++s.serial,kind,actor,payload,optional});
  function check(s){need([2,3,4,5,6].includes(s.phase)&&q(s)?.round===s.round&&!q(s).completed&&s.status==='playing','当前没有进行中的探险阶段');need(!s.pending.length,'请先处理剧本事项');need(!q(s).queue.length,'请先处理卡牌响应');}
