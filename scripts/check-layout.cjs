@@ -43,7 +43,12 @@ const near = (a, b, tol = 1) => Math.abs(a - b) <= tol;
     const all = s => [...document.querySelectorAll(s)];
     const panels = ['.operation-dock', '.public-table', '.player-mat'].map(s => { const e = one(s); return { sel: s, ...r(e), pad: st(e, 'padding'), radius: st(e, 'borderRadius') }; });
     const rail = one('.tabletop-rail');
-    const railBoxes = all('.tabletop-rail>section, .tabletop-rail>details').map(e => ({ ...r(e), pad: st(e, 'padding'), radius: st(e, 'borderRadius') }));
+    /* v0.15.43：竖轴成为右栏第一列后，牌堆/日志/说明被包进 .rail-content，
+       所以取样要顺着内容列取，不能再用 .tabletop-rail>section 的直接子代。 */
+    /* 只取真正带框的卡片（牌堆 / 日志 / 说明），.rail-content 是布局容器，自身无边框圆角。 */
+    const railBoxes = all('.tabletop-rail .rail-content>section, .tabletop-rail .rail-content>details')
+      .filter(e => st(e, 'borderStyle') !== 'none')
+      .map(e => ({ ...r(e), pad: st(e, 'padding'), radius: st(e, 'borderRadius') }));
     const headingBoxes = all('.zone-heading').map(e => ({ text: e.textContent.trim().slice(0, 10), ...r(e) }));
     const rows = all('.table-card-row').map(row => all('.table-card').filter(c => c.parentElement === row).map(c => ({ ...r(c), radius: st(c, 'borderRadius') })));
     const cardWidths = [...new Set(all('.table-card').map(c => +c.getBoundingClientRect().width.toFixed(1)))];

@@ -1,0 +1,91 @@
+{
+ "width": 1600,
+ "at": "2026-10-24T09:45:02.435Z",
+ "cardWidths": [
+  100,
+  62,
+  92
+ ],
+ "checks": [
+  {
+   "name": "左列：公共桌面与玩家区同宽同起点",
+   "ok": true,
+   "detail": "14/14 | 1163/1163"
+  },
+  {
+   "name": "右列：操作栏与牌堆栏同宽同起点",
+   "ok": true,
+   "detail": "1186/1186 | 400/400"
+  },
+  {
+   "name": "左列在右列之左且不重叠",
+   "ok": true,
+   "detail": "board right=1177.0 dock left=1186"
+  },
+  {
+   "name": "公共桌面与操作栏顶部对齐",
+   "ok": true,
+   "detail": "139.3 / 139.3"
+  },
+  {
+   "name": "玩家区与牌堆栏顶部对齐",
+   "ok": true,
+   "detail": "560 / 560"
+  },
+  {
+   "name": "公共桌面在玩家区之上",
+   "ok": true,
+   "detail": "551.0 → 560"
+  },
+  {
+   "name": "面板圆角统一 10px",
+   "ok": true,
+   "detail": ".operation-dock:10px | .public-table:10px | .player-mat:10px"
+  },
+  {
+   "name": "右侧栏各框宽度一致",
+   "ok": true,
+   "detail": "286"
+  },
+  {
+   "name": "右侧栏各框圆角一致",
+   "ok": true,
+   "detail": "8px"
+  },
+  {
+   "name": "右侧栏各框内边距一致",
+   "ok": true,
+   "detail": "8px 9px"
+  },
+  {
+   "name": "卡牌宽度按分区统一（公共牌/玩家牌/对手牌各一档）",
+   "ok": true,
+   "detail": "{\"pub\":[100],\"mat\":[100],\"peer\":[62]}"
+  },
+  {
+   "name": "同一行卡牌等高",
+   "ok": true,
+   "detail": "270.4 | 98 | 151.8 | 130"
+  },
+  {
+   "name": "手牌重叠间距统一",
+   "ok": true,
+   "detail": "53"
+  },
+  {
+   "name": "无横向溢出",
+   "ok": true,
+   "detail": "false"
+  },
+  {
+   "name": "无纵向溢出（单屏）",
+   "ok": true,
+   "detail": "false"
+  },
+  {
+   "name": "关键区全部落在视口内",
+   "ok": true,
+   "detail": "vh=950"
+  }
+ ]
+}

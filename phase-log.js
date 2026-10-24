@@ -56,13 +56,86 @@ const PhaseLog=(()=>{
   /* 回合号大的是更新的回合，排在上面；回合号 0（无法解析）沉底。 */
   return out.sort((a,b)=>(b.round||0)-(a.round||0));
  }
- /* 仅当前阶段的记录高亮，其余淡化——和截图里「MYTHOS 段整块亮、其余灰」一致。 */
- function rail(s){
-  const cur=s.phase;
-  return `<div class="phase-rail-v" role="list" aria-label="回合阶段">${PHASE_COLOR.map((p,i)=>{
-   const state=i===cur?'current':i<cur?'past':'';
-   return `<div class="rail-v-step ${state}" role="listitem" style="--pc:${p.color}" ${i===cur?'aria-current="step"':''}>
-    <span class="rail-v-no">${i+1}</span><b>${esc(p.name)}</b></div>`;
+ /* 阶段-窗口树：照规则书把每个阶段拆成「步骤 / 窗口」，编号形如 1.1、2.2.1。
+    timing 标记该窗口的性质，决定右侧竖线颜色：
+     - 'trigger'（金）：规则触发的强制结算，玩家无选择权
+     - 'action' （绿）：行动窗口，玩家可以在此打出事件 / 使用能力
+     - 'forced' （红）：必须结算且可能造成损失的步骤（暗影、伤害、攻击）
+     - 'step'   （无）：纯流程推进，不开放行动
+    key 对应引擎里各阶段 context.step 的取值，用于在当前窗口上点亮。 */
+ const WINDOWS=[
+  {id:'1',phase:'resource',windows:[
+   {no:'1.1',key:'',label:'重置英雄',timing:'step'},
+   {no:'1.2',key:'',label:'获得资源',timing:'step'},
+   {no:'1.3',key:'',label:'抽牌',timing:'trigger'}]},
+  {id:'2',phase:'planning',windows:[
+   {no:'2.1',key:'action',label:'计划行动',timing:'action'},
+   {no:'2.2',key:'afterResult',label:'阶段结束',timing:'step'}]},
+  {id:'3',phase:'quest',windows:[
+   {no:'3.1',key:'beforeCommit',label:'投入前行动',timing:'action'},
+   {no:'3.2',key:'staging',label:'探查区',timing:'forced'},
+   {no:'3.3',key:'afterResult',label:'任务结算',timing:'trigger'}]},
+  {id:'4',phase:'travel',windows:[
+   {no:'4.1',key:'choice',label:'选择地点',timing:'step'},
+   {no:'4.2',key:'action',label:'旅行行动',timing:'action'}]},
+  {id:'5',phase:'encounter',windows:[
+   {no:'5.1',key:'beforeChecks',label:'交战选择',timing:'step'},
+   {no:'5.2',key:'checks',label:'交战检定',timing:'forced'},
+   {no:'5.3',key:'afterChecks',label:'检定后行动',timing:'action'}]},
+  {id:'6',phase:'combat',windows:[
+   {no:'6.1',key:'enemyAction',label:'敌人攻击',timing:'forced'},
+   {no:'6.2',key:'playerAction',label:'玩家攻击',timing:'action'},
+   {no:'6.3',key:'shadows',label:'暗影结算',timing:'forced'},
+   {no:'6.4',key:'endAction',label:'战斗结束',timing:'step'}]},
+  {id:'7',phase:'refresh',windows:[
+   {no:'7.1',key:'action',label:'刷新行动',timing:'action'},
+   {no:'7.2',key:'completed',label:'重置卡牌',timing:'trigger'},
+   {no:'7.3',key:'roundEnd',label:'回合结束',timing:'forced'}]}
+ ];
+ /* 当前步骤：引擎的 step 只在部分阶段存在，这里按引擎真实的 phase 编号取子对象：
+    0 资源 / 1 计划 / 2 探险 / 3 旅行 / 4 遭遇 / 5 战斗 / 6 刷新。
+    计划阶段（phase 1）用的是 planning.completed 标志而非 step，单独换算；
+    资源阶段（phase 0）没有子对象，交给 rail 退回第一行。
+    取不到时返回空串，竖轴退回「点亮该阶段第一行」，不会整段全暗。 */
+ function stepKey(s){
+  if(!s)return '';
+  if(s.phase===0)return '';
+  if(s.phase===1)return s.planning?.completed?'afterResult':'action';
+  const byPhase={2:s.questing,3:s.traveling,4:s.encountering,5:s.combat,6:s.refreshing};
+  const ctx=byPhase[s.phase];
+  return (ctx&&ctx.step)||'';
+ }
+ /* 阶段竖轴：左侧通高色块 + 竖排阶段名，右侧逐条窗口（编号右对齐 + 触发竖线）。
+    这是规则书里那张「阶段与时机」图的结构，不是装饰性的标签条——
+    玩家扫一眼就知道当前处在哪个阶段的第几个窗口、后面还有哪些窗口要过。 */
+ function rail(s,openSet){
+  const cur=s.phase,curKey=stepKey(s);
+  const extra=openSet||new Set();
+  return `<div class="phase-rail-v" role="list" aria-label="阶段与窗口">${WINDOWS.map((grp,i)=>{
+   const p=PHASE_COLOR.find(x=>x.key===grp.phase)||PHASE_COLOR[1];
+   const st=i===cur?'current':i<cur?'past':'';
+   /* 精确匹配到窗口就点亮那一条；step 拿不到（资源阶段、旧存档）时点亮该阶段第一行，
+      既表明「在这个阶段」，又不假装知道具体走到第几步。 */
+   const exact=curKey&&grp.windows.some(w=>w.key===curKey);
+   const fallback=!exact&&i===cur;
+   const rows=grp.windows.map((w,wi)=>{
+    const hit=i===cur&&(exact?w.key===curKey:fallback&&wi===0);
+    return `<li class="rail-win${hit?' hit':''}" style="--pc:${p.color}" ${hit?'data-current="1"':''}>
+     <span class="rail-win-line" data-timing="${esc(w.timing)}" aria-hidden="true"></span>
+     <span class="rail-win-no">${w.no}</span>
+     <span class="rail-win-label">${esc(w.label)}</span>
+    </li>`;
+   }).join('');
+   /* 全部阶段默认展开：竖轴通高 360px，20 条窗口 × 15px = 300px 刚好排得下，
+      与参考图「整条竖轴一次看全」的形态一致（早期版本塞在 125px 的日志面板里
+      只能折叠，点阶段块可临时收起某个阶段）。 */
+   const future=i>cur&&extra.has(i);
+   const cls=['rail-grp',st,future?'future':''].filter(Boolean).join(' ');
+   return `<div class="${cls}" role="listitem" style="--pc:${p.color}">
+    <button type="button" class="rail-head" data-action="railPhase" data-phase="${i}" aria-expanded="${!future}" title="${esc(p.name)}阶段：${grp.windows.length} 个窗口">
+     <span>${esc(p.name)}阶段</span></button>
+    ${future?`<div class="rail-fold"><span>${grp.windows.length}</span></div>`:`<ol class="rail-wins">${rows}</ol>`}
+   </div>`;
   }).join('')}</div>`;
  }
  function entry(e,i,total,marks){
@@ -90,7 +163,7 @@ const PhaseLog=(()=>{
   return n;
  }
  /* log: 原始日志（newest-first）；marks: app.js 的操作日志标记；scope: 'round'|'all' */
- function panel(s,marks=null,scope='round'){
+ function panel(s,marks=null,scope='round',openSet=null,withRail=true){
   if(!s)return '';
   const mode=normalizeScope(scope),all=s.log||[],room=120;
   const span=mode==='round'?roundSpan(all,s.round):all.length;
@@ -110,14 +183,13 @@ const PhaseLog=(()=>{
   /* 本回合模式下明确告知还有多少旧记录，并给一键切换（不写游戏状态） */
   const more=mode==='round'&&hidden>0?`<button type="button" class="log-more small" data-action="logScope" data-scope="all">更早 ${hidden} 条 · 查看全部回合</button>`:'';
   return `<section class="phase-log" aria-label="阶段与行动日志" data-scope="${mode}">
-   ${rail(s)}
    <div class="log-bar">
     <div class="log-scope" role="group" aria-label="日志范围">${SCOPES.map(o=>`<button type="button" class="log-scope-btn${o.key===mode?' active':''}" data-action="logScope" data-scope="${o.key}" aria-pressed="${o.key===mode}">${o.label}</button>`).join('')}</div>
     <span class="log-count small">${mode==='round'?`本回合 ${total} 条`:`共 ${total} 条`}</span>
    </div>
-   <div class="log-stream">${body}</div>
+   <div class="log-body${withRail?'':' solo'}">${withRail?rail(s,openSet):''}<div class="log-stream">${body}</div></div>
    ${more}
   </section>`;
  }
- return {panel,parse,undoFor,PHASE_COLOR,SCOPES,normalizeScope,roundSpan};
+ return {panel,parse,undoFor,PHASE_COLOR,SCOPES,normalizeScope,roundSpan,WINDOWS,stepKey,rail};
 })();

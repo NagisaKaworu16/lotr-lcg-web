@@ -409,8 +409,15 @@ test('desktop log panel renders the phase rail with colour-coded groups',async()
  const html=e.base.get('app').innerHTML;
  assert(html.includes('class="phase-log"'),'右栏应渲染结构化日志面板');
  assert(html.includes('class="phase-rail-v"'),'应渲染竖排阶段色带');
- assert.equal((html.match(/class="rail-v-step/g)||[]).length,7,'阶段色带须显示全部 7 个阶段');
- assert(html.includes('rail-v-step current'),'当前阶段应高亮');
+ /* 竖轴是右栏顶层的一列（通高），不再是日志面板里的子块：
+    塞在 125px 的日志区里只能压到不可读，见 v0.15.43 的布局说明。 */
+ assert(/class="rail-content"/.test(html),'内容列须与竖轴并列');
+ assert(/<aside class="tabletop-rail"><div class="phase-rail-v"/.test(html),'竖轴须是右栏第一列');
+ /* 两级结构：7 个阶段头 + 20 条窗口编号（1.1 / 2.1 / 6.4 …） */
+ assert.equal((html.match(/class="rail-grp(?:\s|")/g)||[]).length,7,'竖轴须显示全部 7 个阶段');
+ assert(/class="rail-grp current"/.test(html),'当前阶段应整段高亮');
+ assert.equal((html.match(/rail-win-no/g)||[]).length,20,'全部阶段默认展开，须列出 20 条窗口');
+ assert(/class="rail-win hit"/.test(html),'当前窗口须点亮');
  assert(html.includes('class="log-round"'),'日志须按回合分组');
  assert(/class="log-entry tone-/.test(html),'日志条目须带阶段色调类');
  /* 旧版纯文本 <p> 列表已移除 */
@@ -467,3 +474,47 @@ test('log rounds are ordered newest first even when entries interleave',()=>{con
  const order=[...html.matchAll(/log-round-head"><span>回合 (\d+)/g)].map(m=>m[1]);
  assert.deepEqual(order,['3','2','1'],'回合分组须从新到旧，同回合不可被拆开');
  assert.equal((html.match(/回合 2/g)||[]).length,1,'同一回合只应出现一个分组头');});
+
+test('phase rail lists every phase window and lights exactly the current one',()=>{const e=environment();
+ /* 竖轴窗口编号取自规则书「阶段与时机」图，引擎 step 必须能精确落到某一条上。 */
+ const cases=[
+  [0,null,'1.1'],[1,{planning:{completed:false}},'2.1'],[1,{planning:{completed:true}},'2.2'],
+  [2,{questing:{step:'beforeCommit'}},'3.1'],[2,{questing:{step:'staging'}},'3.2'],[2,{questing:{step:'afterResult'}},'3.3'],
+  [3,{traveling:{step:'choice'}},'4.1'],[3,{traveling:{step:'action'}},'4.2'],
+  [4,{encountering:{step:'optional'}},'5.1'],[4,{encountering:{step:'checks'}},'5.2'],[4,{encountering:{step:'afterChecks'}},'5.3'],
+  [5,{combat:{step:'enemyAction'}},'6.1'],[5,{combat:{step:'playerAction'}},'6.2'],[5,{combat:{step:'shadows'}},'6.3'],
+  [6,{refreshing:{step:'ready'}},'7.1']];
+ for(const [ph,extra,want] of cases){
+  const html=e.run(`PhaseLog.rail(${JSON.stringify({phase:ph,...(extra||{})})})`);
+  assert.equal((html.match(/rail-win hit/g)||[]).length,1,`阶段${ph} 只能点亮一个窗口`);
+  const hit=/rail-win hit[^>]*>\s*<span[^>]*><\/span>\s*<span class="rail-win-no">([\d.]+)/.exec(html)?.[1];
+  assert.equal(hit,want,`阶段${ph} ${JSON.stringify(extra)} 应点亮 ${want}`);
+ }
+ /* 结构完整性：7 个阶段色块恒定存在（竖轴不中断），窗口总数 20 */
+ const winTotal=e.run('PhaseLog.WINDOWS.reduce((n,g)=>n+g.windows.length,0)');
+ assert.equal(winTotal,20,'须定义全部 20 个窗口');
+ const all=e.run('PhaseLog.rail({phase:0})');
+ assert.equal((all.match(/rail-head/g)||[]).length,7,'须有 7 个阶段色块');
+ assert.equal((all.match(/rail-win-no/g)||[]).length,20,'默认全部展开，须列出 20 条窗口');
+ const nos=[...all.matchAll(/rail-win-no">([\d.]+)</g)].map(m=>m[1]);
+ assert.deepEqual(nos,nos.slice().sort((a,b)=>a.localeCompare(b,undefined,{numeric:true})),'窗口编号须按顺序排列');
+ /* 触发线语义：金/绿/红三类，缺一类都说明时机标注丢了 */
+ for(const t of ['trigger','action','forced'])assert(all.includes(`data-timing="${t}"`),`缺少 ${t} 类触发线`);});
+
+test('rail shows all phases by default and collapses only the ones the user folds',()=>{
+ const e=environment();
+ /* 默认全展开：竖轴通高 360px，20×15px 刚好排满，与参考图的形态一致 */
+ const r=e.run('PhaseLog.rail({phase:0})');
+ assert.equal((r.match(/rail-grp future/g)||[]).length,0,'默认不应折叠任何阶段');
+ assert.equal((r.match(/rail-fold/g)||[]).length,0,'默认不显示计数条');
+ assert.equal((r.match(/rail-win-no/g)||[]).length,20,'20 条窗口须一次看全');
+ /* 用户点一下收起某阶段：换成计数条，其余不动 */
+ const folded=e.run('PhaseLog.rail({phase:0},new Set([5]))');
+ assert.equal((folded.match(/rail-grp future/g)||[]).length,1,'只收起被点的那一个阶段');
+ assert.equal((folded.match(/rail-fold/g)||[]).length,1,'收起阶段显示窗口计数');
+ assert(!folded.includes('6.4'),'收起的战斗阶段不再列出窗口');
+ assert(folded.includes('6.4')===false&&folded.includes('>4<'),'计数条显示该阶段窗口数');
+ /* aria-expanded 反映真实展开状态 */
+ assert(/data-action="railPhase" data-phase="0" aria-expanded="true"/.test(r),'展开阶段 aria-expanded 须为 true');
+ assert(/data-action="railPhase" data-phase="6" aria-expanded="true"/.test(r),'默认全展开时 aria-expanded 全为 true');
+ assert(/data-action="railPhase" data-phase="5" aria-expanded="false"/.test(folded),'收起后 aria-expanded 须为 false');});
