@@ -1258,13 +1258,42 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
 .mat-phase{margin-top:6px;padding-top:6px;border-top:1px solid #455762;
  /* v0.15.46：角色卡区只有 360px（1366×768 下 336px），面板不许把「结束阶段」顶出视口。
     上限 96px（约 2 行面板内容）；min-height 保证按钮那一行不被 flex 压扁——
-    压扁后 .player-mat 的 overflow:hidden 会把按钮下半截直接裁掉。 */
+    压扁后 .player-mat 的 overflow:hidden 会把按钮下半截直接裁掉。
+    v0.15.47：开局阶段（手牌确认）没有结束阶段按钮，内容必须完整可见，故解除三项限制。 */
  flex:0 0 auto;max-height:96px;overflow:auto;scrollbar-width:thin;
  min-height:76px;display:flex;flex-direction:column;gap:2px}
+.mat-phase:has(>.opening-panel){max-height:none;overflow:visible;min-height:0}
+/* 开局阶段把英雄区与手牌的高度让给「起始手牌」面板：此时桌面上还没有可查看的角色，
+   而确认手牌是唯一要事。手牌区只留一条可横向滚动的窄带，面板完整露出。
+   注意手牌行原本是 flex:0 0 auto + min-height:104px，不在这里显式改 flex 与 min-height
+   就仍会撑满 170px，把面板顶出角色区。 */
+.player-mat:has(.mat-phase>.opening-panel)>.own-characters{flex:0 0 auto;min-height:0;max-height:0;overflow:hidden;padding:0}
+.player-mat:has(.mat-phase>.opening-panel)>.hand-zone{flex:0 0 auto;min-height:0;padding-top:0}
+.player-mat:has(.mat-phase>.opening-panel)>.hand-zone>.table-card-row{flex:0 0 62px;min-height:0;padding-top:6px;padding-bottom:2px}
+.player-mat:has(.mat-phase>.opening-panel) .hand-card{width:56px;flex:0 0 56px}
+.player-mat:has(.mat-phase>.opening-panel) .hand-card+.hand-card{margin-left:-34px}
+.player-mat:has(.mat-phase>.opening-panel) .hand-card .card-face img{height:100%;object-fit:cover}
 .mat-phase>.panel{flex:0 1 auto;min-height:0;overflow:auto;
  border:0;background:transparent;padding:0;margin:0}
 .mat-phase>.panel>h2,.mat-phase .panel-title h2{font-size:13px;color:#e6dcc2;margin:0 0 3px}
 .mat-phase p{font-size:12px;color:#cfdadf;margin:3px 0;line-height:1.45}
+/* v0.15.47：开局步骤（opening-panel）从右栏搬到角色卡下方。它本身是浅色纸感底，
+   直接放进来会在深色卡区里突兀、且浅色文字不可读，所以按卡区的深底重绘一遍。
+   开局面板没有「结束阶段」按钮，不受 96px 上限约束——那里要放得下每位玩家一行。 */
+.mat-phase>.opening-panel{
+ background:#2b3d33;border:1px solid #c6ac74;border-radius:7px;padding:7px 9px;
+ max-height:none;overflow:visible}
+.mat-phase>.opening-panel>p.small{font-size:11.5px;color:#b9c9bd;margin:2px 0 6px}
+.mat-phase>.opening-panel .badge{background:#3a3220;border-color:#c6ac74;color:#e8dcc0}
+.mat-phase>.opening-panel .opening-choices{
+ grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:6px;margin:6px 0 8px}
+.mat-phase>.opening-panel .opening-choices>div{
+ border:1px solid #4a5e6c;background:#1d2d38;border-radius:5px;padding:5px 8px;gap:6px}
+.mat-phase>.opening-panel .opening-choices>div>b{font-size:12px;color:#e8dcc0}
+.mat-phase>.opening-panel .opening-choices>div>span{font-size:11px;color:#a9b8c2}
+.mat-phase>.opening-panel .opening-choices button{font-size:11.5px;padding:3px 9px;min-height:24px}
+.mat-phase>.opening-panel .actions{margin-top:0}
+.mat-phase>.opening-panel .actions button{font-size:12px;min-height:28px}
 .mat-phase .small.muted{color:#a9b8c2}
 .mat-phase .actions{margin-top:4px;display:flex;flex-wrap:wrap;gap:6px}
 .mat-phase .notice{background:#2b3d33;border-left-color:#c6ac74;color:#dfe8dc;padding:4px 8px;font-size:11.5px}

@@ -1,3 +1,10 @@
+# v0.15.47 · 开局设置搬到角色卡下方（2026-10-24）
+
+- **「开局步骤 · 起始手牌」从右栏移到角色卡下方**：它原来渲染在 `.operation-content` 里，把右侧 320px 的窄条占满，而角色卡下方那块 `.mat-phase` 在开局阶段是空的。现在 `openingPanel` 与 `setupPanel` 一起落到 `.mat-phase`，与阶段面板同一位置——开局设置本来就是「第 1 阶段之前的那一步」，位置一致更符合直觉。
+- **开局面板按深色卡区重绘**：它本身是浅色纸感底（`#f8f2df`），直接放进深色 `.player-mat` 会突兀且文字不可读。改为深绿底 + 金色描边（`#2b3d33` / `#c6ac74`），玩家行卡片改成深底，标题与说明转成暖白。
+- **开局阶段让出高度**：`.mat-phase` 原本有 `max-height:96px` + `min-height:76px`（为保住「结束阶段」按钮不被裁）。开局面板没有那个按钮，但内容有 174px，三条角色区规则一起放开：`.mat-phase:has(>.opening-panel)` 解除高度限制；英雄区 `max-height:0`；手牌行改 `flex:0 0 62px`（原来是 `flex:0 0 auto` + `min-height:104px`，不改 flex 与 min-height 光是改 min-height 没用，仍会撑满 170px）。
+- 验收：14 个套件全绿；check-layout 16/16、check-taskbar 23/23、check-onescreen 五区可见、check-contrast 0 低对比、check-score 19/19、check-card-hover 22/22、check-setup-reveal 13/13、check-deck-share 16/16、check-history 无脚本错误。三档分辨率实测面板底边均在 `.player-mat` 内（1440×900: 883/890，1366×768: 753/758，1920×1080: 1063/1070）。
+
 # v0.15.46 · 阶段智能推进：一键结束阶段 + 面板搬到角色卡下方（2026-10-24）
 
 - **阶段面板去掉重复出口**：探险 / 旅行 / 遭遇 / 战斗 / 刷新五个面板里那排「回退一步（整桌）」按钮与长段说明全部删除。撤销统一走顶栏「撤销一步」与日志行内回退，面板底部只留一个「结束阶段」出口。
