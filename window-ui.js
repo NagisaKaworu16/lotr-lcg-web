@@ -11,11 +11,8 @@ const WindowUI=(()=>{
   const eligible=W.eligible(s);
   return `<section class="panel window-panel compact"><div class="panel-title"><h2>行动窗口 · 智能推进</h2>${b('切换为详细模式','mode','data-mode="detailed"')}</div>${opts.map(o=>`<div class="window-option"><span>${esc(s.players[o.player].name)} · ${esc(o.name)}${o.muted?'（本阶段不再提醒）':''}</span> ${o.kind==='objective'?`<button data-action="claim" data-uid="${o.uid}" ${eligible?'':'disabled'}>领取目标</button>`:`<button data-action="planning" data-plan="${o.kind}" data-player="${o.player}" data-uid="${o.uid}" ${eligible?'':'disabled'}>选择${o.kind==='play'?'事件':'能力'}</button>`} ${b('本阶段不再提醒','mute',`data-kind="${o.kind}" data-player="${o.player}" data-uid="${o.uid}"`,o.muted||!eligible)}</div>`).join('')}<div class="actions">${b('全队继续到下一决策点','next','',!eligible)}${b('恢复本阶段能力提醒','restore','',!(s.windowPrefs?.muted||[]).length)}</div></section>`;
  }
- /* 操作条标题行的模式小按钮：没有面板时它是唯一的切换入口。
-    开局（setupPending/翻牌）阶段也显示——测试与玩家在此阶段就可切换偏好。 */
- function modeChip(s){if(!s||s.status!=='playing')return '';
-  const smart=W.settings(s).mode==='smart';
-  return `<button class="mode-chip" data-action="windowFlow" data-window="mode" data-mode="${smart?'detailed':'smart'}" title="智能推进：空行动窗口自动让过、普通行动集中提醒；详细模式：每个窗口逐一确认">${smart?'行动窗口 · 智能推进':'行动窗口 · 详细模式'}</button>`;}
+ /* v0.15.51：modeChip 删除——玩家不需要在标题行看到「行动窗口 · 智能推进」，
+    模式切换仅在面板真实出现时提供。 */
  function handle(el){const k=el.dataset.window;mutate(()=>{if(k==='mode')W.setMode(state,el.dataset.mode);if(k==='mute')W.mute(state,el.dataset.kind,+el.dataset.player,+el.dataset.uid);if(k==='restore')W.restore(state);if(k==='next')W.next(state);});}
- return {panel,modeChip,handle};
+ return {panel,handle};
 })();

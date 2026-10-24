@@ -543,8 +543,10 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
 .tabletop-layout{
  display:grid;height:100%;min-height:0;gap:9px;
  grid-template-columns:minmax(0,1fr) clamp(320px,26vw,400px);
- grid-template-rows:minmax(0,1fr) minmax(0,.92fr);
- grid-template-areas:"table dock" "mat rail"}
+ /* v0.15.51：操作条去框后移到顶部通栏；右栏（阶段+日志）横跨两行，
+    占据页面右侧全部高度。 */
+ grid-template-rows:auto minmax(0,1fr) minmax(0,.92fr);
+ grid-template-areas:"dock dock" "table rail" "mat rail"}
 .tabletop-main{display:contents}
 .tabletop-main>.public-table{grid-area:table}
 .tabletop-main>.operation-dock{grid-area:dock}
@@ -715,7 +717,7 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
 /* 14. 行高按内容需求分配：玩家区需要「角色行 + 手牌行」两段，
        牌桌区只需一张牌面加探险条。用 auto 让内容定高、minmax 兜底溢出。 */
 .tabletop-layout{
- grid-template-rows:minmax(0,1fr) minmax(232px,auto);
+ grid-template-rows:auto minmax(0,1fr) minmax(232px,auto);
  align-items:stretch}
 .player-mat{max-height:100%}
 .public-table{max-height:100%}
@@ -750,7 +752,7 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
 
 /* 17. 分区高度再平衡：牌桌区需要容纳 探险条(128) + 探查区(132) + 其他玩家(120+)
        合计约 390；玩家区角色行 + 手牌 156 约需 380。先给牌桌区下限，余额给玩家区。 */
-.tabletop-layout{grid-template-rows:minmax(390px,1.05fr) minmax(0,1fr)}
+.tabletop-layout{grid-template-rows:auto minmax(390px,1.05fr) minmax(0,1fr)}
 .player-mat>.hand-zone{flex:0 0 152px}
 .public-table>.other-player{flex:0 0 auto;min-height:0}
 .public-table>.other-player .table-card-row{max-height:120px;overflow:auto}
@@ -823,8 +825,8 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
          玩家区 = 角色行 150 + 手牌行 140 + 标题 24 ≈ 314
        两者相加 682 < 751，余量给牌桌区的探查区（遭遇牌最多的地方）。 */
 .tabletop-layout{
- grid-template-rows:minmax(0,1fr) minmax(300px,auto);
- grid-template-rows:minmax(0,1fr) clamp(300px,40vh,380px)}
+ grid-template-rows:auto minmax(0,1fr) clamp(300px,40vh,380px)}
+/* v0.15.50 遗留的两行声明被上一行取代 */
 /* 牌桌区内部按「剩余给探查区」分配，其他玩家区拿固定 104 */
 .public-table{display:flex;flex-direction:column}
 .public-table>.table-zone{flex:1 1 auto;min-height:0}
@@ -905,7 +907,7 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
        而不是对半分。牌桌区需求 342，玩家区需求 ≈ 24(标题)+124(角色)+136(手牌) = 284。
        总可用 619 → 牌桌 340 / 玩家 279，玩家区手牌再压 10px 即可。 */
 @media(max-height:820px){
- .tabletop-layout{grid-template-rows:minmax(0,1fr) minmax(272px,auto)}
+ .tabletop-layout{grid-template-rows:auto minmax(0,1fr) minmax(272px,auto)}
  .player-mat{padding:7px 9px 4px}
  .player-mat .hand-card,.player-mat .hand-card .card-face,.player-mat .hand-card .card-face img{height:110px}
  .player-mat .hand-card .card-face{flex:0 0 110px}
@@ -917,7 +919,7 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
 /* 32. 修正方向：玩家区给固定高度（其内容本就定高），牌桌区吃掉剩余。
        牌桌区内容可变（遭遇牌数量不定），才需要弹性。 */
 @media(max-height:820px){
- .tabletop-layout{grid-template-rows:minmax(0,1fr) 286px}
+ .tabletop-layout{grid-template-rows:auto minmax(0,1fr) 286px}
 }
 
 /* 33. 矮屏高度回收：玩家区 286→268（手牌 128→118，角色行 min 88→82）
@@ -925,7 +927,7 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
        268px 装不下（需 334px）。这里把玩家区回调到 300，让出的 32px 给右栏；
        手牌高度不再为省 18px 而砍到 100px。 */
 @media(max-height:820px){
- .tabletop-layout{grid-template-rows:minmax(0,1fr) 336px}
+ .tabletop-layout{grid-template-rows:auto minmax(0,1fr) 336px}
  .player-mat>.hand-zone{flex:0 0 126px}
  .player-mat>.hand-zone .table-card-row{height:126px}
  .player-mat .hand-card,.player-mat .hand-card .card-face,.player-mat .hand-card .card-face img{height:108px}
@@ -1311,12 +1313,7 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
 .questing-panel.compact .compact-chips{margin:4px 0}
 .questing-panel.compact .quest-commit-list{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0}
 .questing-panel.compact .quest-commit-list label{font-size:13px;display:flex;gap:4px;align-items:center}
-/* ── 18. 行动窗口模式小按钮 + 紧凑面板（v0.15.48） ───────────────────
-   空壳面板删除后，模式切换缩成操作条标题行的一枚 chip；有可选项时
-   taskPanel 才渲染紧凑面板（无长说明，只有选项行与让过/恢复按钮）。 */
-.operation-title .mode-chip{font-size:11px;padding:3px 9px;min-height:22px;
- background:#1d2d38;border:1px solid #4a5e6c;color:#c3d0da;flex:0 0 auto}
-.operation-title .mode-chip:hover{border-color:#c8ab6b;color:#e8dcc0}
+/* ── 18. 行动窗口紧凑面板（v0.15.48；v0.15.51 删除 mode-chip） ────── */
 .window-panel.compact>.panel-title{margin-bottom:4px}
 .window-panel.compact>.panel-title h2{font-size:13px;margin:0}
 .window-panel.compact>.panel-title button{font-size:11px;padding:3px 9px;min-height:22px}
@@ -9849,19 +9846,16 @@ const WindowUI=(()=>{
   const eligible=W.eligible(s);
   return `<section class="panel window-panel compact"><div class="panel-title"><h2>行动窗口 · 智能推进</h2>${b('切换为详细模式','mode','data-mode="detailed"')}</div>${opts.map(o=>`<div class="window-option"><span>${esc(s.players[o.player].name)} · ${esc(o.name)}${o.muted?'（本阶段不再提醒）':''}</span> ${o.kind==='objective'?`<button data-action="claim" data-uid="${o.uid}" ${eligible?'':'disabled'}>领取目标</button>`:`<button data-action="planning" data-plan="${o.kind}" data-player="${o.player}" data-uid="${o.uid}" ${eligible?'':'disabled'}>选择${o.kind==='play'?'事件':'能力'}</button>`} ${b('本阶段不再提醒','mute',`data-kind="${o.kind}" data-player="${o.player}" data-uid="${o.uid}"`,o.muted||!eligible)}</div>`).join('')}<div class="actions">${b('全队继续到下一决策点','next','',!eligible)}${b('恢复本阶段能力提醒','restore','',!(s.windowPrefs?.muted||[]).length)}</div></section>`;
  }
- /* 操作条标题行的模式小按钮：没有面板时它是唯一的切换入口。
-    开局（setupPending/翻牌）阶段也显示——测试与玩家在此阶段就可切换偏好。 */
- function modeChip(s){if(!s||s.status!=='playing')return '';
-  const smart=W.settings(s).mode==='smart';
-  return `<button class="mode-chip" data-action="windowFlow" data-window="mode" data-mode="${smart?'detailed':'smart'}" title="智能推进：空行动窗口自动让过、普通行动集中提醒；详细模式：每个窗口逐一确认">${smart?'行动窗口 · 智能推进':'行动窗口 · 详细模式'}</button>`;}
+ /* v0.15.51：modeChip 删除——玩家不需要在标题行看到「行动窗口 · 智能推进」，
+    模式切换仅在面板真实出现时提供。 */
  function handle(el){const k=el.dataset.window;mutate(()=>{if(k==='mode')W.setMode(state,el.dataset.mode);if(k==='mute')W.mute(state,el.dataset.kind,+el.dataset.player,+el.dataset.uid);if(k==='restore')W.restore(state);if(k==='next')W.next(state);});}
- return {panel,modeChip,handle};
+ return {panel,handle};
 })();
 
 </script><script src="phase-log.js"></script><script>
 /* Tabletop view: UI drafts never pay, exhaust, reveal, or bypass phase validation. */
 /* 界面版本徽标唯一来源：须与 CHANGELOG.md 最新条目标题一致（planning-dom-tests 有校验）。 */
-const APP_VERSION='v0.15.50';
+const APP_VERSION='v0.15.51';
 const DesktopUI=(()=>{
  const E=ScenarioEngine,R=E.planning,Q=E.questing,C=E.combat,esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  let combatDraft={key:'',target:null,ids:[]},draftState=null;
@@ -10031,7 +10025,7 @@ const DesktopUI=(()=>{
   /* 玩家状态条：BGA 式汇总每位玩家的威胁／资源／伤害，点按即切换查看（复用 view 动作）。 */
  const tabStats=o=>{const res=o.heroStates?o.heroStates.reduce((n,h)=>n+h.resources,0):0,dmg=o.heroStates?o.heroStates.reduce((n,h)=>n+(h.damage||0),0):0;
   return `<span class="tab-stats">威胁 <b>${o.threat}</b> · 资源 <b>${res}</b> · 伤害 <b>${dmg}</b></span>${s.first===o.id?'<span class="first-mark">起始</span>':''}${o.eliminated?'<span class="elim-mark">淘汰</span>':''}`;};
- return `<div class="desktop-table"><div class="expedition-title"><div><span class="eyebrow">MIDDLE-EARTH EXPEDITION · ${APP_VERSION}</span><h1>${esc(s.session&&s.session.name||sc.name)}</h1></div><span>${s.session&&s.session.name?esc(sc.name)+' · ':''}第 ${s.round} 回合 · ${s.players.length} 人同机${s.session&&s.session.difficulty?' · '+({easy:'简单',normal:'标准',nightmare:'噩梦'}[s.session.difficulty]||''):''}</span><div class="player-tabs" role="group" aria-label="查看玩家">${s.players.map(o=>`<button data-action="desktop" data-desktop="view" data-player="${o.id}" class="${o.id===p.id?'active':''}" aria-pressed="${o.id===p.id}"><b class="tab-name">${esc(o.name)}</b>${tabStats(o)}</button>`).join('')}</div>${b('重新选择剧本','reset')}</div><div class="tabletop-layout"><div class="tabletop-main"><div class="operation-dock" role="region" aria-label="当前操作"><div class="operation-title"><span class="operation-indicator"></span><strong>${esc(prompt(s,m))}</strong><div class="operation-chips">${status(s)?.chips||''}</div><span class="small">第 ${s.phase+1}/7 阶段 · ${E.phases[s.phase]}</span>${next(s)}${WindowUI.modeChip(s)}</div><p class="small phase-hint">${esc(phaseHint())}</p><div class="operation-content">${scorePanel(s)}${s.pending.length?pending():''}${phasePanel(s,p.id,m)}</div></div><div class="public-table"><div class="quest-location-row"><section class="table-zone quest-zone"><div class="zone-heading"><h2>当前探险 · ${esc(q.stage)}</h2><strong>${q.points?s.progress+' / '+q.points+' 进度':'特殊胜利条件'}</strong></div><div class="quest-display"><div class="quest-art-wrap">${ImageLibrary.art('enc-'+q.id,'',s.setupPending?'A':'B')}${q.points?`<div class="card-tokens quest-tokens" aria-hidden="true">${tk('progress',s.progress)}</div>`:''}</div><div><h3>${esc(q.name)}</h3><p>${esc(s.setupPending?q.front:q.back)}</p><span class="small muted">${esc(E.gate(s)||'满足条件后由规则自动推进')}</span></div></div>${q.points?`<div class="quest-progress" role="progressbar" aria-label="探险进度" aria-valuemin="0" aria-valuemax="${q.points}" aria-valuenow="${s.progress}"><div class="quest-progress-fill" style="width:${Math.min(100,Math.round(s.progress/q.points*100))}%"></div><span class="quest-progress-label">${s.progress} / ${q.points}</span></div>`:''}</section>${row('当前地点',s.active?encounter(s,s.active,'active',m):'','active-zone')}</div>${row('探查区 <span class="threat-total">总威胁 '+E.threat(s)+'</span>',s.staging.map(c=>encounter(s,c,'staging',m)).join(''))}${s.objectives.length?row('剧本目标',s.objectives.map(c=>encounter(s,c,'objective',m)).join('')):''}${others}</div><section class="player-mat"><div class="zone-heading"><h2>${esc(p.name)} · ${esc(p.registeredDeck?.name||'玩家区域')}</h2><span class="own-piles">威胁 ${p.threat}${s.first===p.id?' · 起始玩家':''} · <span class="pile-chip">牌库 <b>${p.playerDeck.length}</b></span> · <span class="pile-chip">弃牌 <b>${p.playerDiscard.length}</b></span></span></div>${row('英雄与盟友 <span class="small muted">盟友区 · '+p.allies.length+'</span>',playerChars(s,p).map(c=>character(s,c,m)).join(''),'own-characters')}${p.attachments.length?row('附属',p.attachments.map(c=>{const meta=R.data(s,c),host=R.find(s,c.target),legal=R.abilitySpec(s,p.id,c.uid).legal;return `<article class="table-card"><button class="card-face" data-action="planning" data-plan="ability" data-player="${p.id}" data-uid="${c.uid}" ${legal?'':'disabled'}>${art(c.code)}</button><div class="table-card-caption"><b>${esc(meta.nameZh)}</b><span>附于 ${esc(host?.meta.nameZh||host?.meta.name||'目标已离场')}</span></div>${inspect(c.code)}</article>`;}).join('')):''}${p.engaged.length?row('交战区',p.engaged.map(c=>encounter(s,c,'engaged',m)).join('')):''}${row('手牌 · '+p.hand.length+' <span class="small muted">点击可用卡牌；查看按钮放大牌文</span>',hand,'hand-zone')}<p class="small muted">同机模式可切换查看每位玩家手牌；不提供联网私密手牌。</p><div class="mat-phase">${PlayerUI.openingPanel(s)}${setupPanel(s)}${s.phase===1?PlanningUI.panel(s,p.id):s.phase===2?QuestUI.panel(s,p.id):s.phase===3?TravelUI.panel(s,p.id):s.phase===4?EncounterUI.panel(s,p.id):s.phase===5?CombatUI.panel(s,p.id):s.phase===6?RefreshUI.panel(s,p.id):''}${phaseDoor(s)}</div></section></div><aside class="tabletop-rail">${PhaseLog.rail(s,railOpen())}<section class="table-log" aria-label="远征日志">${PhaseLog.panel(s,logMarks(),logScope(),railOpen(),false)}</section></aside></div></div>`;
+ return `<div class="desktop-table"><div class="expedition-title"><div><span class="eyebrow">MIDDLE-EARTH EXPEDITION · ${APP_VERSION}</span><h1>${esc(s.session&&s.session.name||sc.name)}</h1></div><span>${s.session&&s.session.name?esc(sc.name)+' · ':''}第 ${s.round} 回合 · ${s.players.length} 人同机${s.session&&s.session.difficulty?' · '+({easy:'简单',normal:'标准',nightmare:'噩梦'}[s.session.difficulty]||''):''}</span><div class="player-tabs" role="group" aria-label="查看玩家">${s.players.map(o=>`<button data-action="desktop" data-desktop="view" data-player="${o.id}" class="${o.id===p.id?'active':''}" aria-pressed="${o.id===p.id}"><b class="tab-name">${esc(o.name)}</b>${tabStats(o)}</button>`).join('')}</div>${b('重新选择剧本','reset')}</div><div class="tabletop-layout"><div class="tabletop-main"><div class="operation-dock" role="region" aria-label="当前操作"><div class="operation-title"><span class="operation-indicator"></span><strong>${esc(prompt(s,m))}</strong><div class="operation-chips">${status(s)?.chips||''}</div><span class="small">第 ${s.phase+1}/7 阶段 · ${E.phases[s.phase]}</span>${next(s)}</div><p class="small phase-hint">${esc(phaseHint())}</p><div class="operation-content">${scorePanel(s)}${s.pending.length?pending():''}${phasePanel(s,p.id,m)}</div></div><div class="public-table"><div class="quest-location-row"><section class="table-zone quest-zone"><div class="zone-heading"><h2>当前探险 · ${esc(q.stage)}</h2><strong>${q.points?s.progress+' / '+q.points+' 进度':'特殊胜利条件'}</strong></div><div class="quest-display"><div class="quest-art-wrap">${ImageLibrary.art('enc-'+q.id,'',s.setupPending?'A':'B')}${q.points?`<div class="card-tokens quest-tokens" aria-hidden="true">${tk('progress',s.progress)}</div>`:''}</div><div><h3>${esc(q.name)}</h3><p>${esc(s.setupPending?q.front:q.back)}</p><span class="small muted">${esc(E.gate(s)||'满足条件后由规则自动推进')}</span></div></div>${q.points?`<div class="quest-progress" role="progressbar" aria-label="探险进度" aria-valuemin="0" aria-valuemax="${q.points}" aria-valuenow="${s.progress}"><div class="quest-progress-fill" style="width:${Math.min(100,Math.round(s.progress/q.points*100))}%"></div><span class="quest-progress-label">${s.progress} / ${q.points}</span></div>`:''}</section>${row('当前地点',s.active?encounter(s,s.active,'active',m):'','active-zone')}</div>${row('探查区 <span class="threat-total">总威胁 '+E.threat(s)+'</span>',s.staging.map(c=>encounter(s,c,'staging',m)).join(''))}${s.objectives.length?row('剧本目标',s.objectives.map(c=>encounter(s,c,'objective',m)).join('')):''}${others}</div><section class="player-mat"><div class="zone-heading"><h2>${esc(p.name)} · ${esc(p.registeredDeck?.name||'玩家区域')}</h2><span class="own-piles">威胁 ${p.threat}${s.first===p.id?' · 起始玩家':''} · <span class="pile-chip">牌库 <b>${p.playerDeck.length}</b></span> · <span class="pile-chip">弃牌 <b>${p.playerDiscard.length}</b></span></span></div>${row('英雄与盟友 <span class="small muted">盟友区 · '+p.allies.length+'</span>',playerChars(s,p).map(c=>character(s,c,m)).join(''),'own-characters')}${p.attachments.length?row('附属',p.attachments.map(c=>{const meta=R.data(s,c),host=R.find(s,c.target),legal=R.abilitySpec(s,p.id,c.uid).legal;return `<article class="table-card"><button class="card-face" data-action="planning" data-plan="ability" data-player="${p.id}" data-uid="${c.uid}" ${legal?'':'disabled'}>${art(c.code)}</button><div class="table-card-caption"><b>${esc(meta.nameZh)}</b><span>附于 ${esc(host?.meta.nameZh||host?.meta.name||'目标已离场')}</span></div>${inspect(c.code)}</article>`;}).join('')):''}${p.engaged.length?row('交战区',p.engaged.map(c=>encounter(s,c,'engaged',m)).join('')):''}${row('手牌 · '+p.hand.length+' <span class="small muted">点击可用卡牌；查看按钮放大牌文</span>',hand,'hand-zone')}<p class="small muted">同机模式可切换查看每位玩家手牌；不提供联网私密手牌。</p><div class="mat-phase">${PlayerUI.openingPanel(s)}${setupPanel(s)}${s.phase===1?PlanningUI.panel(s,p.id):s.phase===2?QuestUI.panel(s,p.id):s.phase===3?TravelUI.panel(s,p.id):s.phase===4?EncounterUI.panel(s,p.id):s.phase===5?CombatUI.panel(s,p.id):s.phase===6?RefreshUI.panel(s,p.id):''}${phaseDoor(s)}</div></section></div><aside class="tabletop-rail">${PhaseLog.rail(s,railOpen())}<section class="table-log" aria-label="远征日志">${PhaseLog.panel(s,logMarks(),logScope(),railOpen(),false)}</section></aside></div></div>`;
  }
  function handle(el){const k=el.dataset.desktop,uid=+el.dataset.uid,pid=+el.dataset.player,m=mode(state,handView),d=draft(state,m);
   if(k==='view'){handView=pid;render();return;}if(k==='reset'){if(confirm('结束当前桌面并重新选择剧本？建议先导出存档。'))mutate(()=>state=null);return;}

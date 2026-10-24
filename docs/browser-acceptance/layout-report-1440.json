@@ -1,6 +1,6 @@
 {
  "width": 1440,
- "at": "2026-10-24T14:36:12.273Z",
+ "at": "2026-10-24T14:50:33.375Z",
  "cardWidths": [
   100,
   62,
@@ -13,24 +13,29 @@
    "detail": "14/14 | 1028.6/1028.6"
   },
   {
-   "name": "右列：操作栏与牌堆栏同宽同起点",
+   "name": "操作栏是顶部通栏",
    "ok": true,
-   "detail": "1051.6/1051.6 | 374.4/374.4"
+   "detail": "dock x=14 w=1412 board w=1028.6"
   },
   {
    "name": "左列在右列之左且不重叠",
    "ok": true,
-   "detail": "board right=1042.6 dock left=1051.6"
+   "detail": "board right=1042.6 rail left=1051.6"
   },
   {
-   "name": "公共桌面与操作栏顶部对齐",
+   "name": "操作栏与公共桌面同起点",
    "ok": true,
-   "detail": "139.3 / 139.3"
+   "detail": "14 / 14"
   },
   {
-   "name": "玩家区与牌堆栏顶部对齐",
+   "name": "右栏顶部与公共桌面对齐",
    "ok": true,
-   "detail": "560 / 560"
+   "detail": "221.3 / 221.3"
+  },
+  {
+   "name": "右栏占满右列全高（rail 底 = 玩家区底）",
+   "ok": true,
+   "detail": "rail bottom=940.0 mat bottom=940.0"
   },
   {
    "name": "公共桌面在玩家区之上",
@@ -50,7 +55,7 @@
   {
    "name": "竖轴占满右栏内容高度",
    "ok": true,
-   "detail": "rail=358 box=380"
+   "detail": "rail=697 box=719"
   },
   {
    "name": "卡牌宽度按分区统一（公共牌/玩家牌/对手牌各一档）",

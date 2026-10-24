@@ -51,9 +51,9 @@ const WIDTH = arg('width', 1440);
     const box = s => { const e = document.querySelector(s); if (!e) return null; const b = e.getBoundingClientRect(); return { x: Math.round(b.x), y: Math.round(b.y + window.scrollY), w: Math.round(b.width) }; };
     return { dock: box('.operation-dock'), board: box('.public-table'), mat: box('.player-mat'), rail: box('.tabletop-rail'), log: box('.table-log'), rail2: box('.phase-rail-v')  /* v0.15.44：横排阶段胶囊已移除，改指右栏竖轴 */ };
   });
-  /* v0.15.41 单屏布局：操作栏改到右列，与公共桌面并排而不是上下叠放。 */
-  add('公共桌面与操作栏并排（左桌右栏）', marks.board && marks.dock
-    && marks.board.x === marks.mat.x && marks.dock.x > marks.board.x, `board x=${marks.board?.x} dock x=${marks.dock?.x}`);
+  /* v0.15.51：操作栏改为顶部通栏，右栏（阶段+日志）占满右侧全高。 */
+  add('操作栏为顶部通栏、右栏居右', marks.board && marks.dock
+    && marks.dock.x === marks.board.x && marks.dock.w > marks.board.w && marks.rail && marks.rail.x > marks.board.x, `dock x=${marks.dock?.x} w=${marks.dock?.w} board w=${marks.board?.w} rail x=${marks.rail?.x}`);
   add('底部玩家区位于公共桌面之下', marks.mat && marks.mat.y > marks.board.y, `${marks.board?.y} → ${marks.mat?.y}`);
   add('右侧牌堆与日志同栏且靠右', marks.rail && marks.rail.x > marks.board.x && marks.rail2 && marks.log, `rail x=${marks.rail?.x} board x=${marks.board?.x}`);
   add('玩家区与公共桌面同宽同起点', marks.mat.w === marks.board.w && marks.mat.x === marks.board.x, `${marks.mat.w}/${marks.board.w}`);

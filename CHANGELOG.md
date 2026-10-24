@@ -1,4 +1,12 @@
+# v0.15.51 · 删除「行动窗口」chip；阶段+日志占满右侧全高（2026-10-24）
+
+- **删除「行动窗口 · 智能推进」**：操作条标题行的那枚模式切换 chip 整个删掉（`WindowUI.modeChip` 函数、desktop-ui 的调用、`.mode-chip` CSS 一并移除）；有可选项时的紧凑面板保留但不再算「页面」。planning-dom-tests 对应断言同步删除（模式默认 smart 仍断言，切换走引擎层验证）。
+- **右栏通高**：单屏网格从 `"table dock"/"mat rail"` 两行改为三行 `"dock dock"/"table rail"/"mat rail"`——操作条（已无框）移到顶部通栏，右栏（阶段竖轴 + 日志框体）横跨第 2、3 行，占据页面右侧全部高度。§14/17/24/31/32/33 五处两值行高覆盖全部补上首位 `auto`，否则 dock 行会被当成 1fr 压扁。
+- **验收断言更新**：check-layout「右列操作栏」四项改为新语义（操作栏顶部通栏 / 右栏顶与桌面齐、底与玩家区齐 / 左右不重叠）；check-taskbar 首项同步。当前 16/16 与 23/23。
+- 验收：引擎套件全绿；check-layout 16/16、check-taskbar 23/23、check-onescreen 五区可见、check-contrast 0 低对比、check-score 19/19、check-card-hover 22/22、check-setup-reveal 13/13、check-deck-share 16/16、check-history OK。
+
 # v0.15.50 · 操作条去框 + 阶段与日志合并为同一框体（2026-10-24）
+
 
 - **操作区空框删除**：右侧第 6 节（操作条）此前虽无内容仍印一个带底色描边的框，用户截图质问「这个框体去不掉吗」。`.operation-dock` 改为透明容器（`background:transparent;border:0;box-shadow:none;border-radius:0`），`.operation-title`/`.phase-hint` 同步去底——操作条只剩文字与控件，不再是一个「框」。
 - **阶段竖轴与日志合并成一个框体**：v0.15.49 的抽屉方案回滚。`.tabletop-rail` 恢复为一个完整框体（深底 + 描边 + 圆角 + 内边距），内部改两列网格（`128px 竖轴 | 1fr 日志`）：阶段竖轴居左通高，远征日志居右以竖分隔线隔开，日志行内「回退」撤销入口保留。`logDrawer()`、顶栏「远征日志」按钮与 app.js 的 `logToggle`/`APP_LOG_OPEN` 一并删除。

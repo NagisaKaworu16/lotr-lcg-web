@@ -74,13 +74,13 @@ const near = (a, b, tol = 1) => Math.abs(a - b) <= tol;
   const [dock, board, mat] = geo.panels;
   /* v0.15.41 单屏布局（左桌右栏）：
        - board 与 mat 同列同宽同起点，上下堆叠；
-       - dock 与 rail 同列同宽同起点，上下堆叠；
-       - 整页不产生纵向滚动，八项关键区全部落在视口内。 */
+       - v0.15.51：dock 去框后移到顶部通栏，rail（阶段+日志）横跨两行占满右侧。 */
   add('左列：公共桌面与玩家区同宽同起点', near(board.x, mat.x) && near(board.w, mat.w), `${board.x}/${mat.x} | ${board.w}/${mat.w}`);
-  add('右列：操作栏与牌堆栏同宽同起点', near(dock.x, geo.rail.x) && near(dock.w, geo.rail.w), `${dock.x}/${geo.rail.x} | ${dock.w}/${geo.rail.w}`);
-  add('左列在右列之左且不重叠', board.x + board.w <= dock.x + 1, `board right=${(board.x + board.w).toFixed(1)} dock left=${dock.x}`);
-  add('公共桌面与操作栏顶部对齐', near(board.y, dock.y, 2), `${board.y} / ${dock.y}`);
-  add('玩家区与牌堆栏顶部对齐', near(mat.y, geo.rail.y, 2), `${mat.y} / ${geo.rail.y}`);
+  add('操作栏是顶部通栏', near(dock.x, board.x) && dock.w > board.w + 100, `dock x=${dock.x} w=${dock.w} board w=${board.w}`);
+  add('左列在右列之左且不重叠', board.x + board.w <= geo.rail.x + 1, `board right=${(board.x + board.w).toFixed(1)} rail left=${geo.rail.x}`);
+  add('操作栏与公共桌面同起点', near(dock.x, board.x, 2), `${dock.x} / ${board.x}`);
+  add('右栏顶部与公共桌面对齐', near(board.y, geo.rail.y, 2), `${board.y} / ${geo.rail.y}`);
+  add('右栏占满右列全高（rail 底 = 玩家区底）', Math.abs((geo.rail.y + geo.rail.h) - (mat.y + mat.h)) <= 3, `rail bottom=${(geo.rail.y + geo.rail.h).toFixed(1)} mat bottom=${(mat.y + mat.h).toFixed(1)}`);
   add('公共桌面在玩家区之上', board.y + board.h <= mat.y + 1, `${(board.y + board.h).toFixed(1)} → ${mat.y}`);
   /* v0.15.50：操作条去框化（透明无圆角），圆角检查只针对仍有边框的面板。 */
   add('面板圆角统一 10px', [board, mat].every(p => p.radius === '10px') && dock.radius === '0px', geo.panels.map(p => `${p.sel}:${p.radius}`).join(' | '));

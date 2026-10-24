@@ -541,8 +541,10 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
 .tabletop-layout{
  display:grid;height:100%;min-height:0;gap:9px;
  grid-template-columns:minmax(0,1fr) clamp(320px,26vw,400px);
- grid-template-rows:minmax(0,1fr) minmax(0,.92fr);
- grid-template-areas:"table dock" "mat rail"}
+ /* v0.15.51：操作条去框后移到顶部通栏；右栏（阶段+日志）横跨两行，
+    占据页面右侧全部高度。 */
+ grid-template-rows:auto minmax(0,1fr) minmax(0,.92fr);
+ grid-template-areas:"dock dock" "table rail" "mat rail"}
 .tabletop-main{display:contents}
 .tabletop-main>.public-table{grid-area:table}
 .tabletop-main>.operation-dock{grid-area:dock}
@@ -713,7 +715,7 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
 /* 14. 行高按内容需求分配：玩家区需要「角色行 + 手牌行」两段，
        牌桌区只需一张牌面加探险条。用 auto 让内容定高、minmax 兜底溢出。 */
 .tabletop-layout{
- grid-template-rows:minmax(0,1fr) minmax(232px,auto);
+ grid-template-rows:auto minmax(0,1fr) minmax(232px,auto);
  align-items:stretch}
 .player-mat{max-height:100%}
 .public-table{max-height:100%}
@@ -748,7 +750,7 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
 
 /* 17. 分区高度再平衡：牌桌区需要容纳 探险条(128) + 探查区(132) + 其他玩家(120+)
        合计约 390；玩家区角色行 + 手牌 156 约需 380。先给牌桌区下限，余额给玩家区。 */
-.tabletop-layout{grid-template-rows:minmax(390px,1.05fr) minmax(0,1fr)}
+.tabletop-layout{grid-template-rows:auto minmax(390px,1.05fr) minmax(0,1fr)}
 .player-mat>.hand-zone{flex:0 0 152px}
 .public-table>.other-player{flex:0 0 auto;min-height:0}
 .public-table>.other-player .table-card-row{max-height:120px;overflow:auto}
@@ -821,8 +823,8 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
          玩家区 = 角色行 150 + 手牌行 140 + 标题 24 ≈ 314
        两者相加 682 < 751，余量给牌桌区的探查区（遭遇牌最多的地方）。 */
 .tabletop-layout{
- grid-template-rows:minmax(0,1fr) minmax(300px,auto);
- grid-template-rows:minmax(0,1fr) clamp(300px,40vh,380px)}
+ grid-template-rows:auto minmax(0,1fr) clamp(300px,40vh,380px)}
+/* v0.15.50 遗留的两行声明被上一行取代 */
 /* 牌桌区内部按「剩余给探查区」分配，其他玩家区拿固定 104 */
 .public-table{display:flex;flex-direction:column}
 .public-table>.table-zone{flex:1 1 auto;min-height:0}
@@ -903,7 +905,7 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
        而不是对半分。牌桌区需求 342，玩家区需求 ≈ 24(标题)+124(角色)+136(手牌) = 284。
        总可用 619 → 牌桌 340 / 玩家 279，玩家区手牌再压 10px 即可。 */
 @media(max-height:820px){
- .tabletop-layout{grid-template-rows:minmax(0,1fr) minmax(272px,auto)}
+ .tabletop-layout{grid-template-rows:auto minmax(0,1fr) minmax(272px,auto)}
  .player-mat{padding:7px 9px 4px}
  .player-mat .hand-card,.player-mat .hand-card .card-face,.player-mat .hand-card .card-face img{height:110px}
  .player-mat .hand-card .card-face{flex:0 0 110px}
@@ -915,7 +917,7 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
 /* 32. 修正方向：玩家区给固定高度（其内容本就定高），牌桌区吃掉剩余。
        牌桌区内容可变（遭遇牌数量不定），才需要弹性。 */
 @media(max-height:820px){
- .tabletop-layout{grid-template-rows:minmax(0,1fr) 286px}
+ .tabletop-layout{grid-template-rows:auto minmax(0,1fr) 286px}
 }
 
 /* 33. 矮屏高度回收：玩家区 286→268（手牌 128→118，角色行 min 88→82）
@@ -923,7 +925,7 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
        268px 装不下（需 334px）。这里把玩家区回调到 300，让出的 32px 给右栏；
        手牌高度不再为省 18px 而砍到 100px。 */
 @media(max-height:820px){
- .tabletop-layout{grid-template-rows:minmax(0,1fr) 336px}
+ .tabletop-layout{grid-template-rows:auto minmax(0,1fr) 336px}
  .player-mat>.hand-zone{flex:0 0 126px}
  .player-mat>.hand-zone .table-card-row{height:126px}
  .player-mat .hand-card,.player-mat .hand-card .card-face,.player-mat .hand-card .card-face img{height:108px}
@@ -1309,12 +1311,7 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
 .questing-panel.compact .compact-chips{margin:4px 0}
 .questing-panel.compact .quest-commit-list{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0}
 .questing-panel.compact .quest-commit-list label{font-size:13px;display:flex;gap:4px;align-items:center}
-/* ── 18. 行动窗口模式小按钮 + 紧凑面板（v0.15.48） ───────────────────
-   空壳面板删除后，模式切换缩成操作条标题行的一枚 chip；有可选项时
-   taskPanel 才渲染紧凑面板（无长说明，只有选项行与让过/恢复按钮）。 */
-.operation-title .mode-chip{font-size:11px;padding:3px 9px;min-height:22px;
- background:#1d2d38;border:1px solid #4a5e6c;color:#c3d0da;flex:0 0 auto}
-.operation-title .mode-chip:hover{border-color:#c8ab6b;color:#e8dcc0}
+/* ── 18. 行动窗口紧凑面板（v0.15.48；v0.15.51 删除 mode-chip） ────── */
 .window-panel.compact>.panel-title{margin-bottom:4px}
 .window-panel.compact>.panel-title h2{font-size:13px;margin:0}
 .window-panel.compact>.panel-title button{font-size:11px;padding:3px 9px;min-height:22px}
