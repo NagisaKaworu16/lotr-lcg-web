@@ -1,6 +1,9 @@
 const EncounterUI=(()=>{
  const E=ScenarioEngine,T=E.encountering,R=E.planning,Q=E.questing,esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const b=(label,kind,args='',disabled=false)=>`<button data-action="encounterFlow" data-encounter="${kind}" ${args} ${disabled?'disabled':''}>${esc(label)}</button>`;
+ const NAME=['资源','计划','探险','旅行','遭遇','战斗','刷新'];
+ /* 面板底部唯一出口：有必需操作时点它=列还差什么，全部完成时点它=引擎自检并推进。
+    撤销统一走顶栏「撤销一步」，面板里不再放第二份重复控件。 */
  function panel(s,pid){if(s.phase!==4||!s.encountering)return '';const x=s.encountering,ps=s.players.filter(p=>!p.eliminated),actor=ps.some(p=>p.id===pid)?pid:ps[0]?.id,sp=R.choiceSpec(s);let body='';
   if(x.completed)return '<section class="panel deck-valid"><h2>阶段5 · 遭遇阶段验收完成</h2><p>交战敌人及角色状态已保留。点击下方「进入第六阶段 · 战斗」继续；不会重复交战检定。</p></section>';
   if(sp)body+=`<div class="notice">${esc(sp.message)} <button data-action="planning" data-plan="choice" data-id="${sp.task.id}">处理强制效果／卡牌响应</button></div>`;
@@ -11,7 +14,7 @@ const EncounterUI=(()=>{
    if(ScenarioEngine.windows.settings(s).mode==='detailed')body+=`<div class="actions">${ps.map(p=>b(p.name+(x.finalPasses.includes(p.id)?'：取消放弃行动':'：放弃本窗口行动'),x.finalPasses.includes(p.id)?'unpass':'pass',`data-player="${p.id}"`,!!x.actionLocked)).join('')}${b(x.step==='beforeChecks'?'开始交战检定':'结算遭遇阶段结束',x.step==='beforeChecks'?'checks':'finish','',!!x.plannedActions?.length||!!x.actionLocked||!ps.every(p=>x.finalPasses.includes(p.id)))}</div>`;
    if(x.plannedActions?.length||x.actionError)body+=`<div class="notice"><h3>暂定行动 · 交流缓冲区</h3>${x.actionError?`<p>${esc(x.actionError)}</p>`:''}${(x.plannedActions||[]).map(a=>{const c=a.kind==='play'?s.players[a.player].hand.find(c=>c.uid===a.uid):R.find(s,a.uid)?.state;return `<p>${esc(s.players[a.player].name)} · ${esc(c?R.data(s,{...c,owner:a.player}).nameZh:'#'+a.uid)} ${b('撤销暂定行动','cancelAction',`data-id="${a.id}" data-player="${a.player}"`,!!x.actionLocked)}</p>`;}).join('')}<div class="actions">${ps.map(p=>b(p.name+(x.actionApprovals?.includes(p.id)?'：取消二次确认':'：二次确认行动'),x.actionApprovals?.includes(p.id)?'unapproveActions':'approveActions',`data-player="${p.id}"`,!!x.actionLocked||!x.plannedActions?.length)).join('')}</div></div>`;}
   const titles={optional:'暂定主动交战与全队确认',executing:'执行交战与强制效果',beforeChecks:'交战检定前行动窗口',checks:'交战检定',afterChecks:'检定后行动与阶段结束'};
-  return `<section class="panel questing-panel"><h2>阶段5 · ${titles[x.step]||'遭遇'}</h2>${body}<div class="actions">${b('回退一步（整桌）','back','',!history.length)}</div></section>`;
+  return `<section class="panel questing-panel"><h2>阶段5 · ${titles[x.step]||'遭遇'}</h2>${body}</section>`;
  }
  async function handle(el){const k=el.dataset.encounter,pid=+el.dataset.player,uid=+el.dataset.uid,id=+el.dataset.id;if(k==='back'){if(history.length){state=history.pop();save();render();}return;}mutate(()=>{if(k==='propose')T.propose(state,pid,uid);if(k==='skip')T.propose(state,pid,null);if(k==='cancel')T.cancel(state,pid);if(k==='approve')T.approve(state,pid);if(k==='unapprove')T.unapprove(state,pid);if(k==='tie')T.tie(state,id,uid);if(k==='checks')T.beginChecks(state);if(k==='finish')T.finish(state);if(k==='pass')Q.pass(state,pid);if(k==='unpass')Q.unpass(state,pid);if(k==='cancelAction')Q.cancelAction(state,pid,id);if(k==='approveActions')Q.approveActions(state,pid);if(k==='unapproveActions')Q.withdrawActionApproval(state,pid);});}
  return {panel,handle};

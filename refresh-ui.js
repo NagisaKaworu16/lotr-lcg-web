@@ -1,6 +1,9 @@
 const RefreshUI=(()=>{
  const E=ScenarioEngine,T=E.refreshing,R=E.planning,Q=E.questing,esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const b=(label,kind,args='',disabled=false)=>`<button data-action="refreshFlow" data-refresh="${kind}" ${args} ${disabled?'disabled':''}>${esc(label)}</button>`;
+ const NAME=['资源','计划','探险','旅行','遭遇','战斗','刷新'];
+ /* 面板底部唯一出口：有必需操作时点它=列还差什么，全部完成时点它=引擎自检并推进。
+    撤销统一走顶栏「撤销一步」，面板里不再放第二份重复控件。 */
  function panel(s,pid){if(s.phase!==6||!s.refreshing)return '';const x=s.refreshing,ps=s.players.filter(p=>!p.eliminated),actor=ps.some(p=>p.id===pid)?pid:ps[0]?.id,sp=R.choiceSpec(s),task=T.spec(s);let body='';
  if(x.completed)return '<section class="panel deck-valid"><h2>阶段7 · 刷新完成</h2><p>本回合结束效果已结算。点击下方按钮进入下一回合资源阶段。</p></section>';
  if(x.step==='ready')body+=`<p>全员确认后：重置卡牌、每人威胁+${s.active?.id===114?2:1}、起始玩家顺时针轮换。蛛网每张需由附着英雄支付2资源；默认不支付，保持横置。伤害与剩余资源保留。</p>${ps.map(p=>`<div class="actions"><b>${esc(p.name)}</b> ${T.webs(s,p.id).map(c=>esc(c.meta.nameZh)+'：'+c.cost+'资源，'+((x.payPlans[p.id]||[]).includes(c.uid)?'暂定支付':'不支付')).join('；')}${b('选择／更改蛛网费用','web',`data-player="${p.id}"`)}${b(x.approvals.includes(p.id)?'取消二次确认':'二次确认刷新',x.approvals.includes(p.id)?'unapprove':'approve',`data-player="${p.id}"`)}</div>`).join('')}`;
@@ -9,7 +12,7 @@ const RefreshUI=(()=>{
   if(x.step==='action'&&!sp&&!task){if(ScenarioEngine.windows.settings(s).mode==='detailed')body+=`<p>玩家行动窗口：手牌事件与主动能力先加入暂定清单，全员二次确认后执行。已翻开的暗影不会因改方案而收回。</p><label>操作玩家 <select id="planning-actor">${ps.map(p=>`<option value="${p.id}" ${p.id===actor?'selected':''}>${esc(p.name)}</option>`).join('')}</select></label><div class="actions">${R.abilities(s,actor).map(a=>`<button data-action="planning" data-plan="ability" data-player="${actor}" data-uid="${a.uid}" ${a.legal?'':'disabled'} title="${esc(a.reason)}">${esc(a.name)}</button>`).join('')}</div>`;
    if(ScenarioEngine.windows.settings(s).mode==='detailed')body+=`<div class="actions">${ps.map(p=>b(p.name+(x.finalPasses.includes(p.id)?'：取消放弃行动':'：放弃本窗口行动'),x.finalPasses.includes(p.id)?'unpass':'pass',`data-player="${p.id}"`,!!x.actionLocked)).join('')}${b('结算刷新与回合结束','move','',!!x.plannedActions?.length||!!x.actionLocked||!ps.every(p=>x.finalPasses.includes(p.id)))}</div>`;
    if(x.plannedActions?.length||x.actionError)body+=`<div class="notice"><h3>暂定行动 · 交流缓冲区</h3>${x.actionError?`<p>${esc(x.actionError)}</p>`:''}${(x.plannedActions||[]).map(a=>{const c=a.kind==='play'?s.players[a.player].hand.find(c=>c.uid===a.uid):R.find(s,a.uid)?.state;return `<p>${esc(s.players[a.player].name)} · ${esc(c?R.data(s,{...c,owner:a.player}).nameZh:'#'+a.uid)} ${b('撤销暂定行动','cancelAction',`data-id="${a.id}" data-player="${a.player}"`,!!x.actionLocked)}</p>`;}).join('')}<div class="actions">${ps.map(p=>b(p.name+(x.actionApprovals?.includes(p.id)?'：取消二次确认':'：二次确认行动'),x.actionApprovals?.includes(p.id)?'unapproveActions':'approveActions',`data-player="${p.id}"`,!!x.actionLocked||!x.plannedActions?.length)).join('')}</div></div>`;}
- return `<section class="panel questing-panel"><h2>阶段7 · ${x.step==='ready'?'刷新确认':x.step==='action'?'刷新行动窗口':'回合结束效果'}</h2>${body}<div class="actions">${b('回退一步（整桌）','back','',!history.length)}</div></section>`;
+ return `<section class="panel questing-panel"><h2>阶段7 · ${x.step==='ready'?'刷新确认':x.step==='action'?'刷新行动窗口':'回合结束效果'}</h2>${body}</section>`;
  }
  async function handle(el){const k=el.dataset.refresh,pid=+el.dataset.player,id=+el.dataset.id;
  if(k==='back'){if(history.length){state=history.pop();save();render();}return;}

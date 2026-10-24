@@ -605,7 +605,7 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
 .player-mat{padding:9px 10px 6px;gap:5px;border-top-width:2px}
 .player-mat>.zone-heading{flex:0 0 auto;margin-bottom:0}
 .player-mat>.zone-heading h2{font-size:13.5px}
-.player-mat>.own-characters{flex:1 1 auto;min-height:0;overflow:auto;padding-top:7px}
+.player-mat>.own-characters{flex:1 1 auto;min-height:64px;overflow:auto;padding-top:7px}
 .player-mat>.table-zone+.table-zone{padding-top:5px}
 .player-mat>p.small.muted{display:none}
 .player-mat .table-card-row{gap:7px}
@@ -617,7 +617,7 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
 .player-mat>.hand-zone>.zone-heading h2{font-size:12.5px}
 .player-mat>.hand-zone>.zone-heading .small{font-size:11px}
 .player-mat>.hand-zone .table-card-row{
- flex:0 0 auto;padding-top:12px;padding-bottom:4px;
+ flex:0 0 auto;padding-top:12px;padding-bottom:4px;min-height:104px;
  flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;align-items:flex-end;scrollbar-width:thin}
 .player-mat>.hand-zone .table-card-row::-webkit-scrollbar{height:5px}
 .player-mat .hand-card{width:86px;flex:0 0 86px;background:#fffdf6}
@@ -1123,7 +1123,7 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
    不靠滚动也能一眼看到全轴——参考图的价值就在于「整条竖轴同时可见」。 */
 .rail-win{
  position:relative;display:grid;grid-template-columns:3px auto minmax(0,1fr);
- align-items:center;gap:2px;min-height:13px;padding:0 2px 0 0;
+ align-items:center;gap:3px;min-height:15px;padding:0 2px 0 0;
  border-bottom:1px solid rgba(255,255,255,.05)}
 .rail-win:last-child{border-bottom:0}
 /* 触发竖线：金=规则触发 / 绿=行动窗口 / 红=强制结算，贴在编号块左缘 */
@@ -1132,10 +1132,10 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
 .rail-win .rail-win-line[data-timing="action"]{background:#6ea86b}
 .rail-win .rail-win-line[data-timing="forced"]{background:#c9544a}
 .rail-win .rail-win-no{
- font-size:9.5px;line-height:1;font-weight:700;font-variant-numeric:tabular-nums;
+ font-size:11px;line-height:1;font-weight:700;font-variant-numeric:tabular-nums;
  color:#c2c8cf;padding-left:3px;white-space:nowrap}
 .rail-win .rail-win-label{
- font-size:9px;line-height:1;color:#8e969f;
+ font-size:10.5px;line-height:1;color:#a4acb5;
  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 /* 当前窗口：整条提亮，编号与说明都变白 */
 .rail-win.hit{background:color-mix(in srgb,var(--pc) 46%,#3a3f46)}
@@ -1208,3 +1208,69 @@ body:has(.desktop-table) .player-tabs button{min-height:40px;padding:4px 10px;ga
 @media(max-width:760px){
  .tabletop-rail .table-log{max-height:46vh}
 }
+
+/* 「结束阶段」闸门：放在角色卡区域下方，直接反映引擎的阶段完成判定。
+   ready 态用与主按钮同色的描边，让「可以走了」在不看文字时也能一眼认出。 */
+.phase-door{
+ margin-top:6px;padding:6px 9px;border-radius:7px;
+ background:#1b2f3c;border:1px solid #3d5361;display:grid;gap:4px}
+.phase-door.ready{border-color:#c8ab6b;background:#223642;box-shadow:inset 0 0 0 1px #c8ab6b33}
+.phase-door .door-head{display:flex;align-items:center;gap:8px;min-width:0}
+.phase-door .door-head b{font-size:12.5px;color:#e8dcc0;letter-spacing:.3px;flex:0 0 auto}
+.phase-door .door-state{font-size:11px;color:#93a5b1;min-width:0;overflow:hidden;
+ text-overflow:ellipsis;white-space:nowrap}
+.phase-door.ready .door-state{color:#e4c88c}
+.phase-door .door-list{list-style:none;margin:0;padding:0;display:flex;gap:4px 10px;
+ flex-wrap:nowrap;overflow:hidden}
+.phase-door .door-list li{display:flex;align-items:baseline;gap:4px;
+ font-size:11px;color:#8f9fab;line-height:1.4;min-width:0;white-space:nowrap}
+.phase-door .door-list li.done{color:#a8c6a4}
+.phase-door .door-list li.wait{color:#c4b391}
+.phase-door .door-tick{width:11px;text-align:center;font-size:11px;line-height:1.4;flex:0 0 auto}
+.phase-door .door-list li.done .door-tick{color:#7fbf7a}
+.phase-door .door-go{flex:0 0 auto;margin-left:auto;padding:3px 11px;min-height:26px;font-size:12px}
+.phase-door .door-go:disabled{opacity:.55}
+@media(max-width:760px){
+ .phase-door .door-list{flex-wrap:wrap;overflow:visible}
+ .phase-door .door-list li{white-space:normal}
+}
+
+/* 「结束阶段」落在角色区下方后，底部居中的 toast 会正好压住它：改为右下角浮层，
+   保证主按钮永远可点、提示也看得见。 */
+#toast{left:auto;right:20px;bottom:auto;top:20px;transform:none;max-width:min(420px,90vw);
+ font-size:13px;line-height:1.6;padding:10px 16px;box-shadow:0 8px 24px #0006}
+
+/* ── 16. 面板底部唯一出口（结束阶段） ─────────────────────────────────
+   阶段面板原来每条都挂一枚「回退一步（整桌）」+ 一句长说明，与顶栏
+   「撤销一步」重复，在 320px 宽的操作条里把标题挤到换行。现在面板底部
+   只留这一个按钮：未完成时点它列出还差几项，完成时点它就是引擎自检推进。 */
+.panel-door{
+ display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+ margin-top:10px;padding-top:9px;border-top:1px dashed #cfd5c6}
+.panel-door button{font-size:13px;padding:5px 12px;min-height:30px}
+.panel-door .small{margin:0;min-width:0;overflow-wrap:anywhere}
+.panel-door.ready{border-top-style:solid;border-top-color:#9db38d}
+.panel-door.ready button{background:#365842;border-color:#365842;color:#fff}
+
+/* ── 17. 阶段面板搬家到角色卡下方 ─────────────────────────────────────
+   操作条（sticky 那一条）只留「此刻在等玩家做什么」，完整面板+清单+
+   结束阶段按钮统一下移到角色卡区，避免同一份控件在两边各印一遍。 */
+.mat-phase{margin-top:6px;padding-top:6px;border-top:1px solid #455762;
+ /* v0.15.46：角色卡区只有 360px（1366×768 下 336px），面板不许把「结束阶段」顶出视口。
+    上限 96px（约 2 行面板内容）；min-height 保证按钮那一行不被 flex 压扁——
+    压扁后 .player-mat 的 overflow:hidden 会把按钮下半截直接裁掉。 */
+ flex:0 0 auto;max-height:96px;overflow:auto;scrollbar-width:thin;
+ min-height:76px;display:flex;flex-direction:column;gap:2px}
+.mat-phase>.panel{flex:0 1 auto;min-height:0;overflow:auto;
+ border:0;background:transparent;padding:0;margin:0}
+.mat-phase>.panel>h2,.mat-phase .panel-title h2{font-size:13px;color:#e6dcc2;margin:0 0 3px}
+.mat-phase p{font-size:12px;color:#cfdadf;margin:3px 0;line-height:1.45}
+.mat-phase .small.muted{color:#a9b8c2}
+.mat-phase .actions{margin-top:4px;display:flex;flex-wrap:wrap;gap:6px}
+.mat-phase .notice{background:#2b3d33;border-left-color:#c6ac74;color:#dfe8dc;padding:4px 8px;font-size:11.5px}
+.mat-phase .badge{background:#1d2d38;border-color:#4a5e6c;color:#cfdadf}
+/* 操作条里的紧凑面板：只有输入，没有解释性长文 */
+.questing-panel.compact>.panel-title{margin-bottom:6px}
+.questing-panel.compact .compact-chips{margin:4px 0}
+.questing-panel.compact .quest-commit-list{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0}
+.questing-panel.compact .quest-commit-list label{font-size:13px;display:flex;gap:4px;align-items:center}

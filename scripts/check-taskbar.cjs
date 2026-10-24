@@ -29,7 +29,9 @@ const WIDTH = arg('width', 1440);
   const checks = [];
   const add = (name, ok, detail = '') => checks.push({ name, ok: !!ok, detail: String(detail) });
 
-  const clickBtn = async t => { const el = page.locator('.operation-content button:not([disabled])', { hasText: t }).first(); if (!await el.count()) return false; await el.click(); await page.waitForTimeout(260); return true; };
+  /* v0.15.46：完整阶段面板已从操作条搬到角色卡下方的 .mat-phase，两处都要找。 */
+  const PANEL = '.operation-content, .mat-phase';
+  const clickBtn = async t => { const el = page.locator(PANEL + ' button:not([disabled])', { hasText: t }).first(); if (!await el.count()) return false; await el.click(); await page.waitForTimeout(260); return true; };
   const clickNext = async () => { const el = page.locator('.operation-title button.primary:not([disabled])').first(); if (!await el.count()) return false; await el.click(); await page.waitForTimeout(400); return true; };
   const dockText = () => page.evaluate(() => document.querySelector('.operation-title')?.innerText.replace(/\n/g, ' | ') || '');
   const chips = () => page.evaluate(() => [...document.querySelectorAll('.op-chip')].map(x => x.textContent.trim()));
@@ -71,13 +73,17 @@ const WIDTH = arg('width', 1440);
   await page.waitForTimeout(200);
 
   // walk to the quest commit step
-  await clickNext();
-  for (let i = 0; i < 16; i++) {
-    if (await page.evaluate(() => state.phase === 2 && state.questing?.step === 'commit')) break;
-    if (await clickBtn('结束我的盟友／附属出牌步骤')) continue;
-    if (await clickBtn('继续到下一决策点')) continue;
-    if (await clickBtn('：放弃剩余行动')) continue;
-    if (!await clickNext()) break;
+  /* v0.15.46：阶段收尾改成「角色卡下方唯一的结束阶段按钮」，操作条里的下一阶段按钮已移除。
+     这里改为直接点 .phase-door 的推进按钮（它是引擎 endPhase 的唯一入口）。 */
+  const clickDoor = async () => {
+    const el = page.locator('.phase-door .door-go:not([disabled])').first();
+    if (!await el.count()) return false;
+    await el.click(); await page.waitForTimeout(500); return true;
+  };
+  for (let i = 0; i < 24; i++) {
+    const st = await page.evaluate(() => ({ phase: state.phase, step: state.questing && state.questing.step }));
+    if (st.phase === 2 && st.step === 'commit') break;
+    if (!await clickDoor()) break;
   }
   add('能到达探险投入步骤', await page.evaluate(() => state.phase === 2 && state.questing?.step === 'commit'), await page.evaluate(() => state.phase + '/' + state.questing?.step));
 
@@ -103,13 +109,13 @@ const WIDTH = arg('width', 1440);
   if (await card2.count()) { await card2.click(); await page.waitForTimeout(150); }
   await clickBtn('提交暂定派遣名单');
   await page.waitForTimeout(450);
-  const ready = await page.evaluate(() => ({ locked: !!state.questing.deploymentLocked, committed: state.players.flatMap(p => p.heroStates.filter(h => h.committed).length).reduce((a, b) => a + b, 0), title: document.querySelector('.operation-title').innerText.replace(/\n/g, ' | '), chips: [...document.querySelectorAll('.op-chip')].map(x => x.textContent.trim()), approvals: [...document.querySelectorAll('.operation-content button')].filter(b => /二次确认派遣/.test(b.textContent) && !/取消/.test(b.textContent)).length }));
+  const ready = await page.evaluate(() => ({ locked: !!state.questing.deploymentLocked, committed: state.players.flatMap(p => p.heroStates.filter(h => h.committed).length).reduce((a, b) => a + b, 0), title: document.querySelector('.operation-title').innerText.replace(/\n/g, ' | '), chips: [...document.querySelectorAll('.op-chip')].map(x => x.textContent.trim()), approvals: [...document.querySelectorAll('.operation-content button, .mat-phase button')].filter(b => /二次确认派遣/.test(b.textContent) && !/取消/.test(b.textContent)).length }));
   add('两人都提交后仍不执行，进入二次确认', !ready.locked && ready.committed === 0, `locked=${ready.locked} committed=${ready.committed}`);
   add('操作栏提示二次确认进度', /二次确认/.test(ready.title) && ready.chips.length === 2 && ready.chips.every(c => c.includes('待确认')), ready.title + ' :: ' + ready.chips.join(' | '));
   add('二次确认按钮按玩家逐个提供', ready.approvals === 2, `buttons=${ready.approvals}`);
 
   for (let i = 0; i < 4; i++) {
-    const btn = page.locator('.operation-content button:not([disabled])').filter({ hasText: '二次确认派遣' }).filter({ hasNotText: '取消' }).first();
+    const btn = page.locator('.operation-content button:not([disabled]), .mat-phase button:not([disabled])').filter({ hasText: '二次确认派遣' }).filter({ hasNotText: '取消' }).first();
     if (!await btn.count()) break;
     await btn.click(); await page.waitForTimeout(320);
   }

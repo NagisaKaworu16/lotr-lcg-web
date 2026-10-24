@@ -1,7 +1,7 @@
 {
  "width": 1440,
  "min": 3,
- "at": "2026-10-24T12:19:34.210Z",
+ "at": "2026-10-24T13:19:50.417Z",
  "stages": [
   {
    "stage": "landing",
@@ -20,11 +20,7 @@
    "bad": []
   },
   {
-   "stage": "phase2",
-   "bad": []
-  },
-  {
-   "stage": "phase2",
+   "stage": "phase1",
    "bad": []
   }
  ],

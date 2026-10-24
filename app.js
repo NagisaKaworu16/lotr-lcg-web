@@ -370,6 +370,13 @@ $('#app').onclick=async ev=>{const b=ev.target.closest('[data-action]');if(!b||b
  if(a==='progress'){let n=await choose('卡牌效果：放置进度','<p>用于卡牌效果产生的额外进度；默认先进入当前地点。常规探险请使用“结算本回合探险”。</p><input id="n" type="number" min="0" value="1">',d=>+d.querySelector('#n').value);if(n!==null)mutate(()=>E.addProgress(state,n));return;}
  if(a==='defeat'&&!confirm('确认已手动完成合法的攻击、伤害计算及相关响应，并击败该敌人？'))return;
  if(a==='editPlayer'){const p=state.players[pid];let v=await choose('登记玩家与英雄',`<p class="small">仅登记名称及初始威胁，不导入或自动结算英雄能力。囚犯按英雄位置追踪。</p><p><input id="name" value="${enc(p.name)}" aria-label="玩家名称"></p>${p.heroes.map((h,i)=>`<p><input id="h${i}" value="${enc(h)}" aria-label="英雄${i+1}"></p>`).join('')}<p>威胁 <input id="n" type="number" min="0" max="100" value="${p.threat}"></p>`,d=>({name:d.querySelector('#name').value,heroes:[0,1,2].map(i=>d.querySelector('#h'+i).value),threat:+d.querySelector('#n').value}));if(v)mutate(()=>{if(!v.name||v.heroes.some(h=>!h)||!Number.isInteger(v.threat)||v.threat<0)throw Error('请填写有效名称与威胁。');p.name=v.name;p.heroes=v.heroes;E.adjustThreat(state,p,v.threat-p.threat);});return;}
+ /* 智能推进：一次点击把本阶段结清并进入下一阶段。引擎只在「没有必须由玩家决定的事」时才往前走，
+     走不动就把一句人话提示带回来（形如「等待玩家2 提交派遣名单」），不吞掉任何需要玩家做的选择。 */
+ /* v0.15.46：endPhase 是现在唯一的阶段推进入口。以前只有 handlers.next 会调
+    enableDiscussion，走「结束阶段」进探险时 discussion 没有置位，submitDeployment
+    就把第二位玩家的提交当成「全员已确认」直接锁定执行，二次确认整段被跳过。
+    在这里统一补上，两条推进路径行为一致。 */
+ if(a==='endPhase'){mutate(()=>{const r=E.endPhase(state),said=r.steps.filter(Boolean);if(state.phase===2&&state.questing)E.questing.enableDiscussion(state);toast(said.length?said.join(' · '):'本阶段还有必须由你处理的事项，见角色卡下方的清单。');});if(state&&state.status==='playing'){const p=E.planning.active(state);if(p!==null&&p!==undefined)handView=p;}return;}
  const handlers={next:()=>{E.nextPhase(state);if(state.phase===2&&state.questing)E.questing.enableDiscussion(state);const p=E.planning.active(state);if(p!==null&&p!==undefined)handView=p;},stage:()=>E.stage(state),advance:()=>E.advance(state),questResult:()=>E.resolveQuest(state,+$('#willpower').value),checks:()=>E.encounterChecks(state),shadows:()=>E.shadows(state),shadow:()=>E.revealShadows(state,uid),defeat:()=>E.defeat(state,uid),returnEnemy:()=>E.returnEnemy(state,uid),returnObjective:()=>E.returnObjective(state,uid),rescue:()=>E.rescue(state,id),resolve:()=>E.resolve(state,id,$('#choice-'+id)?.value),threat:()=>{E.adjustThreat(state,state.players[pid],Number(b.dataset.n));},discardCondition:()=>{let i=state.conditions.findIndex(c=>c.uid===uid);if(i>=0)state.discard.push(...state.conditions.splice(i,1));}};
  if(handlers[a])mutate(handlers[a]);
 };

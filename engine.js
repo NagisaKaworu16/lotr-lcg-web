@@ -61,6 +61,8 @@ function reveal(s,count=1,guardFor=null){
  }
 }
 function enter(s,id){s.quest=id;s.progress=0;s.spawnDefeated=false;log(s,`进入 ${quest(s).stage}B「${quest(s).name}」`);
+ /* 进入新探险卡 = 新目标，本回合视为尚未达成；否则上一阶段的条件会一路沿用，自动推进到错误的关卡。 */
+ s.questDoneRound=null;
  if(id===121){for(const p of live(s))task(s,`${p.name}从遭遇牌库或弃牌堆选择1张蜘蛛，放入探查区（不触发翻开效果）。`,'spider',{player:p.id});}
  if(id===128){if(s.questing){const ctx=P2.context(s);ctx.returnStep=ctx.step;ctx.step='staging';ctx.remaining.push(...Array.from({length:2*live(s).length},()=>({})));}else reveal(s,2*live(s).length);}
 }
@@ -86,7 +88,7 @@ function startScenario(s){assert(s.setupPending,'剧本设置已经执行。');a
 function resourcePhase(s){
  ready(s);assert(s.phase===0,'仅能在资源阶段收集资源和抽牌。');assert(s.resourceRound!==s.round,'本回合资源阶段已结算。');
  for(const p of live(s))if(p.heroStates){for(const h of p.heroStates){if(h.destroyed||(!s.rescued&&s.prisoner?.player===p.id&&s.prisoner.hero===h.index))continue;h.resources++;}const count=drawPlayer(s,p,1);log(s,`${p.name}每名可用英雄获得1资源，抽取${count}张牌`,'P0');}
- s.resourceRound=s.round;
+ s.resourceRound=s.round;s.resourceDoneRound=s.round;
 }
 /* 官方 Easy Mode（LOTR Easy Mode Rules / MEC65 规则书）：setup 时每位英雄资源池 +1，
    并从当前剧本遭遇牌库移除带「difficulty」金框标记的卡。早期剧本没有金框，按官方清单逐卡移除。
@@ -303,9 +305,181 @@ function nextPhase(s){ready(s);if(s.phase===1&&s.planning){if(s.planning.complet
  if(s.phase===2&&s.quest===125)guards(s);
  log(s,`进入${phases[s.phase]}阶段`,`P${s.phase}`);
 }
+/* ── 阶段收尾（「结束阶段」按钮的唯一入口） ──────────────────────────────
+   一次点击把本阶段该结的都结掉：关闭行动窗口 → 结算阶段结束效果 →
+   结算探险结果 → 进下一张探险卡 → 进入下一阶段。
+   返回 {from:原阶段, to:新阶段, label:去了哪, steps:[做了哪些事]}，供界面回显。 */
+function closeWindow(s){
+ const pl=P2.context(s);if(!pl||pl.completed||pl.closing)return;
+ const done={
+  1:()=>P2.finish(s),
+  2:()=>P3.move(s),                                     /* 探险阶段按 step 推进，不只是关窗口 */
+  3:()=>{if(s.traveling?.step==='action')P4.finish(s);},
+  4:()=>{if(s.encountering?.step==='afterChecks')P5.finish(s);},
+  5:()=>{if(s.combat?.step==='endAction')P6.finish(s);}, /* 其余步骤由 endPhase 的 passAll + move 推进 */
+  6:()=>{if(s.refreshing?.step==='action')P7.finish(s);}
+ };
+ (done[s.phase]||(()=>{}))();
+}
+/* 「全队让过」：语义等同界面上那颗「全队继续到下一决策点」按钮。
+   原来只对「行动窗口」生效，但探险阶段 commit（按起始玩家顺序投入角色）时窗口本身是关闭的，
+   那一步是纯程序结算，也要能替全队走完。所以改成按阶段白名单判断，
+   并且不要求玩家先手工点过「放弃」——按钮的职责就是替他们点。 */
+function passAll(s){
+ const pl=P2.context(s);
+ if(!pl||pl.completed||pl.closing||pl.actionLocked||pl.halted)return false;
+ if(pl.plannedActions?.length)return false;                 /* 有暂定行动：必须先由玩家确认或撤销 */
+ if(s.phase===2&&s.questing&&s.questing.step==='commit')pl.finalPasses=[];
+ if(s.phase===2&&s.questing&&s.questing.step==='commit'){
+  /* 投入步的窗口是关着的，passAction 会拒绝——这一步没有可选性，直接按空名单投入。 */
+  while(s.questing.step==='commit'&&s.questing.commitIndex<s.questing.order.length&&!s.questing.tasks.length)P3.commit(s,s.questing.order[s.questing.commitIndex],[]);
+  return true;
+ }
+ for(const p of live(s))if(!pl.finalPasses.includes(p.id))P2.passAction(s,p.id);
+ return true;
+}
+/* 一次「结束阶段」能推进的最大步数：够走完结算 + 换卡 + 进阶段，又不会失控。 */
+const END_STEPS=12;
+/* 阶段收尾：把当前阶段该结的都结掉，然后离开本阶段。
+   - 行动窗口：替全队让过（等同界面上的「全队继续」），不跳过硬性选择。
+   - 探险阶段：beforeCommit→commit→staging→afterStaging→afterResult 逐步推进；
+     目标已达成则直接进入下一张探险卡，否则照常进旅行阶段。
+   - 任何一步需要玩家决定（待结算 / 响应队列 / 强制选择 / 未结算的遭遇牌）就停手。 */
+/* 强制选择自动处理：只处理「唯一/无目标」的选择，绝不替玩家在多个合法目标里挑。
+   返回 false 表示当前这项必须由玩家自己点。 */
+function autoTask(s,pl){
+ const t=pl.tasks[0],d=t.payload||{};
+ if(t.optional)return false;                                          /* 可放弃的一律让玩家决定 */
+ if(t.kind==='commitResponse'){
+  const sp=P3.spec(s,t.id);
+  if(!sp)return true;
+  if(sp.unavailable){
+   if(d.code==='01001'){try{P3.choose(s,t.id,{target:String(d.uid)});}catch(e){return false;}return true;}
+   return false;
+  }
+  const f=sp.fields[0];
+  if(f&&f.options.length===1){try{P3.choose(s,t.id,{[f.key]:f.options[0].value});}catch(e){return false;}return true;}
+  return false;
+ }
+ return false;
+}
+function endPhase(s){
+ ready(s);assert(s.status==='playing','对局已结束。');assert(s.phase>=0&&s.phase<=6,'未知阶段。');
+ const from=s.phase,steps=[];
+ const done=()=>({from,to:s.phase,steps});
+ const push=()=>{if(s.phase!==from)steps.push('进入'+phases[s.phase]+'阶段');};
+ const at=()=>s.questing&&s.questing.round===s.round&&s.phase===2;
+ for(let i=0;i<END_STEPS;i++){
+  if(s.phase!==from)break;
+  const Q=s.questing;                                            /* 每圈重取：换阶段后上一阶段的对象可能已作废 */
+  const pl=P2.context(s);
+  if(pl?.queue?.length||pl?.actionLocked||pl?.halted)return done();
+  /* 强制选择能替玩家走完就走完；剩下的必须由玩家点，立刻停手。 */
+  if(pl?.tasks?.length){
+   let n=0;while(pl.tasks.length&&n++<END_STEPS)if(!autoTask(s,pl))return done();
+   continue;
+  }
+
+  /* ---- 第三阶段：按探险步骤逐段推进，遇到「必须玩家操作」的步骤就停 ---- */
+  if(at()){
+   if(Q.current)return done();                                       /* 遭遇牌未结算 */
+   /* 引擎已把这一阶段判为完成（move 走到 afterResult 后 finish 又调过一次）：
+      直接交给 nextPhase 换阶段，不再重复推进探险步骤。 */
+   if(Q.completed){try{nextPhase(s);}catch(e){return done();}
+    if(s.phase!==from){steps.push('进入'+phases[s.phase]+'阶段');}
+    return done();
+   }
+   const submitted=Q.order.every(id=>Q.deployments?.[id]?.confirmed);
+   const passed=live(s).every(p=>Q.finalPasses.includes(p.id));
+   /* v0.15.46：staging（逐张探查）是玩家一张张翻的，引擎不能替他翻；
+      原来这里直接 return 什么也不写，按钮看着可点、点了没动静。把张数说出来。 */
+   if(Q.step==='staging'){
+    const n=(Q.remaining||[]).length+(Q.current?1:0);
+    steps.push('还差 '+n+' 张遭遇牌未翻开结算');
+    return done();
+   }
+   if(Q.step==='commit'){
+    if(!Q.deploymentLocked&&!submitted){
+     /* v0.15.46：这里原来是静默 return，「结束阶段」按钮点了毫无反应，玩家会以为按钮坏了。
+        投入名单必须由玩家自己定（engine 不替人挑角色），所以把原因写进 steps 让界面说出来。 */
+     const wait=Q.order.filter(id=>!Q.deployments?.[id]?.confirmed).map(id=>(s.players[id]?.name||('玩家'+(id+1))));
+     steps.push('还差 '+wait.join('、')+' 提交投入名单');
+     return done();
+    }
+    while(Q.step==='commit'&&!Q.tasks.length&&!Q.queue.length)P3.commit(s,Q.order[Q.commitIndex],Q.deployments?.[Q.order[Q.commitIndex]]?.ids||[]);
+    continue;
+   }
+   if(Q.step==='staging')return done();                              /* 逐张探查由玩家翻 */
+   if(Q.step==='beforeCommit'||Q.step==='afterCommit'){
+    /* 让过后当轮就把窗口推过去，否则一次点击只够做「让过」这一件事，玩家会觉得按钮没反应。 */
+    const was=Q.step;
+    if(!passed&&!passAll(s))return done();
+    try{P3.move(s);}catch(e){return done();}
+    if(was==='beforeCommit')steps.push('全队让过，按起始玩家顺序投入角色');
+    if(Q.step==='afterResult'&&questDone(s))advance(s,true);         /* 达成：直接下一张探险卡 */
+    continue;
+   }
+   if(Q.step==='afterStaging'||Q.step==='afterResult'){
+    /* 这两步的窗口是关着的（framework），passAction 会拒绝；而且 move 自己有「全员已让过」的前置，
+       所以要按 step 决定先做哪件事：
+        - afterStaging：直接 move 结算意志与威胁，让过留到 afterResult 的窗口里做；
+        - afterResult ：先让过（此时窗口已重新开放），再 move 走完阶段收尾。 */
+    /* afterStaging 的窗口同样关着，passAction 会拒绝；而 move 要求「全员已让过」。
+       这一步没有玩家可做的选择（只剩意志/威胁结算），所以直接把全员记为已让过再 move。 */
+    if(Q.step==='afterStaging'){Q.finalPasses=live(s).map(p=>p.id);try{P3.move(s);}catch(e){return done();}continue;}
+    if(questDone(s)){try{advance(s,true);}catch(e){return done();}continue;}
+    if(!passed&&!passAll(s))return done();
+    try{P3.move(s);}catch(e){return done();}                         /* 收尾：完成阶段、进下一阶段 */
+    continue;
+   }
+   return done();
+  }
+
+  /* ---- 其它阶段：结束当前玩家出牌 → 让过 → 进入下一阶段 ---- */
+  /* 资源阶段没有玩家决定：本回合没收资源就替玩家收（等同界面上的主按钮）。 */
+  if(s.phase===0&&s.resourceDoneRound!==s.round)resourcePhase(s);
+  /* 计划阶段还停在某位玩家的出牌步：替他把这一步结束掉（这一步本来也没有强制选择）。 */
+  if(s.phase===1&&P2.active(s)!==null){P2.endTurn(s,P2.active(s));continue;}
+  if(s.phase===5){try{P6.move(s);}catch(e){/* 交给下面的 passAll + nextPhase 再试 */}}
+  /* 全员已让过、只差阶段收尾：让过会被拒绝（closing 已置位），直接交给 nextPhase。 */
+  const already=s.phase===0||(pl&&pl.completed&&!pl.closing);   /* 资源阶段没有可让过的行动窗口 */
+  if(!already&&!passAll(s))return done();
+  /* 一次点击要走到「真的换阶段」。P2.finish 的行为是：第一次只做收尾（置 closing），
+     收尾结束把 completed 置真，第二次才换阶段，所以这里最多连调三次：
+     收尾 → 换阶段 → 新阶段里再做一次无选择的前置推进。宁可多调一次，
+     也不能出现「点了按钮、界面一变、阶段没动」；真要卡住时 blocker 会说明原因。 */
+  let phaseMoved=false;
+  for(let k=0;k<3;k++){
+   const before=s.phase;
+   try{nextPhase(s);}catch(e){
+    /* 收尾中途抛错是正常的（finish 还要求全员让过），把收尾落成完成后再来一次。 */
+    const b=s.phase===6?s.refreshing:s.phase===5?s.combat:s.phase===4?s.encountering:s.phase===3?s.traveling:s.phase===2?s.questing:s.planning;
+    if(b&&b.closing&&!b.completed){b.closing=false;b.completed=true;continue;}
+    return done();
+   }
+   if(s.phase!==before){phaseMoved=true;break;}
+  }
+  if(!phaseMoved)return done();
+  push();
+ }
+ if(s.phase===from)steps.push(s.questing&&s.questing.current?'仍有遭遇牌待结算':api.phaseRules.blocker(s));
+ return done();
+}
 function questFailure(s,n){ready(s);assert(s.phase===2&&s.stagedRound===s.round,'须在探查后结算。');assert(Number.isInteger(n)&&n>0,'失败差值须为正整数。');for(const p of live(s))adjustThreat(s,p,n);for(const c of s.staging.filter(c=>c.id===101)){let o=s.objectives.find(o=>!o.holder);if(o){s.objectives=s.objectives.filter(x=>x.uid!==o.uid);if(o.guard){let g=s.staging.find(c=>c.uid===o.guard);if(g)delete g.guard;}delete o.guard;s.deck.push(o);shuffle(s,s.deck);log(s,'地牢狱卒将无人持有的目标洗回牌库');}}}
 function resolveQuest(s,willpower){assert(!s.questing,'意志由投入角色自动计算');ready(s);assert(s.phase===2&&s.stagedRound===s.round,'须先执行探查。');assert(s.resolvedRound!==s.round,'本回合探险已经结算。');assert(Number.isInteger(willpower)&&willpower>=0,'总意志须为非负整数。');const delta=willpower-threat(s);s.resolvedRound=s.round;if(delta>=0)addProgress(s,delta);else questFailure(s,-delta);log(s,`探险结算：意志${willpower}，威胁${threat(s)}，差值${delta}`);}
-const api={refreshing:P7,combat:P6,encountering:P5,traveling:P4,questing:P3,planning:P2,openingChoice,startScenario,setupRevealStep,settleSetupCard,setupCancelOptions,setupCancel,resourcePhase,drawPlayer,extraShadow,resolveQuest,D,byId,phases,create,quest,gate,threat,stage,addProgress,advance,travel,engage,encounterChecks,defeat,shadows,revealShadows,returnEnemy,claim,returnObjective,nextPhase,resolve,rescue,questFailure,adjustThreat,clone,log};
-const WindowFactory=typeof WindowRulesFactory!=='undefined'?WindowRulesFactory:require('./window-engine.js');api.windows=WindowFactory(api);return api;
+/* 探险目标达成：进度够 + 剧本门槛（巨魔、目标持有、囚犯等）全部满足。
+   达成即锁定本回合，玩家点「结束阶段」时直接进下一张探险卡，不必再点一次。 */
+function questDone(s){
+ if(!s||s.phase!==2||s.status!=='playing'||s.setupPending||s.pending.length)return false;
+ if(s.questDoneRound===s.round)return true;
+ const ok=!gate(s);
+ if(ok)s.questDoneRound=s.round;
+ return ok;
+}
+function markQuestDone(s){if(s.phase===2&&!gate(s))s.questDoneRound=s.round;}
+const api={refreshing:P7,combat:P6,encountering:P5,traveling:P4,questing:P3,planning:P2,questDone,markQuestDone,endPhase,closeWindow,passAll,openingChoice,startScenario,setupRevealStep,settleSetupCard,setupCancelOptions,setupCancel,resourcePhase,drawPlayer,extraShadow,resolveQuest,D,byId,phases,create,quest,gate,threat,stage,addProgress,advance,travel,engage,encounterChecks,defeat,shadows,revealShadows,returnEnemy,claim,returnObjective,nextPhase,resolve,rescue,questFailure,adjustThreat,clone,log};
+const WindowFactory=typeof WindowRulesFactory!=='undefined'?WindowRulesFactory:require('./window-engine.js');api.windows=WindowFactory(api);
+/* 阶段规则：完成判定（纯函数，UI 与「结束阶段」共用）+ 结束阶段入口。 */
+const PhaseFactory=typeof PhaseRulesFactory!=='undefined'?PhaseRulesFactory:require('./phase-engine.js');api.phaseRules=PhaseFactory(api);return api;
 })();
 if(typeof module!=='undefined')module.exports=ScenarioEngine;

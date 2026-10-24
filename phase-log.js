@@ -126,15 +126,15 @@ const PhaseLog=(()=>{
      <span class="rail-win-label">${esc(w.label)}</span>
     </li>`;
    }).join('');
-   /* 全部阶段默认展开：竖轴通高 360px，20 条窗口 × 15px = 300px 刚好排得下，
-      与参考图「整条竖轴一次看全」的形态一致（早期版本塞在 125px 的日志面板里
-      只能折叠，点阶段块可临时收起某个阶段）。 */
-   const future=i>cur&&extra.has(i);
-   const cls=['rail-grp',st,future?'future':''].filter(Boolean).join(' ');
+   /* 全部阶段一律展开：竖轴通高 360px，20 条窗口 × 15px = 300px 刚好排得下，
+      与参考图「整条竖轴一次看全」的形态一致。早期版本对未来阶段渲染一个只写数字的
+      折叠块（rail-fold），既没有信息量又挤掉一行窗口，现已去掉。 */
+   const cls=['rail-grp',st].filter(Boolean).join(' ');
+   void extra;
    return `<div class="${cls}" role="listitem" style="--pc:${p.color}">
-    <button type="button" class="rail-head" data-action="railPhase" data-phase="${i}" aria-expanded="${!future}" title="${esc(p.name)}阶段：${grp.windows.length} 个窗口">
+    <button type="button" class="rail-head" data-action="railPhase" data-phase="${i}" aria-expanded="true" title="${esc(p.name)}阶段：${grp.windows.length} 个窗口">
      <span>${esc(p.name)}阶段</span></button>
-    ${future?`<div class="rail-fold"><span>${grp.windows.length}</span></div>`:`<ol class="rail-wins">${rows}</ol>`}
+    <ol class="rail-wins">${rows}</ol>
    </div>`;
   }).join('')}</div>`;
  }
@@ -180,15 +180,11 @@ const PhaseLog=(()=>{
     <div class="log-round-head"><span>回合 ${g.round||'—'}</span></div>
     <ol class="log-list">${g.items.map(e=>entry(e,e.index,total,marks)).join('')}</ol>
    </div>`).join(''):`<p class="log-empty">${mode==='round'?'本回合还没有记录；推进阶段或执行操作后会出现在这里。':'尚无可显示的记录。'}</p>`;
-  /* 本回合模式下明确告知还有多少旧记录，并给一键切换（不写游戏状态） */
-  const more=mode==='round'&&hidden>0?`<button type="button" class="log-more small" data-action="logScope" data-scope="all">更早 ${hidden} 条 · 查看全部回合</button>`:'';
+  /* 右栏只保留「竖轴 + 日志」两列：范围切换与「更早 N 条」这类控件会让面板多出一行，
+     且本作日志本来就是按回合分组的，多一行控件只是噪音，故不再渲染。 */
   return `<section class="phase-log" aria-label="阶段与行动日志" data-scope="${mode}">
-   <div class="log-bar">
-    <div class="log-scope" role="group" aria-label="日志范围">${SCOPES.map(o=>`<button type="button" class="log-scope-btn${o.key===mode?' active':''}" data-action="logScope" data-scope="${o.key}" aria-pressed="${o.key===mode}">${o.label}</button>`).join('')}</div>
-    <span class="log-count small">${mode==='round'?`本回合 ${total} 条`:`共 ${total} 条`}</span>
-   </div>
+   <div class="log-bar"><span class="log-count small">${mode==='round'?`本回合 ${total} 条`:`共 ${total} 条`}${hidden>0?` · 另 ${hidden} 条更早` :''}</span></div>
    <div class="log-body${withRail?'':' solo'}">${withRail?rail(s,openSet):''}<div class="log-stream">${body}</div></div>
-   ${more}
   </section>`;
  }
  return {panel,parse,undoFor,PHASE_COLOR,SCOPES,normalizeScope,roundSpan,WINDOWS,stepKey,rail};

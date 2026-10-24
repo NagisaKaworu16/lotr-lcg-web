@@ -1,3 +1,14 @@
+# v0.15.46 · 阶段智能推进：一键结束阶段 + 面板搬到角色卡下方（2026-10-24）
+
+- **阶段面板去掉重复出口**：探险 / 旅行 / 遭遇 / 战斗 / 刷新五个面板里那排「回退一步（整桌）」按钮与长段说明全部删除。撤销统一走顶栏「撤销一步」与日志行内回退，面板底部只留一个「结束阶段」出口。
+- **面板搬到角色卡下方**：320px 宽的 sticky 操作条装不下完整阶段面板（标题被挤到换行）。完整面板 + 必需操作清单 + 结束阶段按钮现在落在角色卡区的 `.mat-phase`；操作条只保留「此刻必须做的输入」——探险阶段的投入选择器、已翻开的遭遇牌。`taskPanel()` 带 try/catch，面板异常时返回空串，不再拖垮整张桌面渲染。
+- **`endPhase` 一次点击走完「收尾 → 换阶段」**：计划/探险/旅行/遭遇/战斗/刷新阶段的收尾是两段式（先 `closing` 收尾、置 `completed`，第二次调 `nextPhase` 才换阶段）。`endPhase` 现在最多连调 3 次 `nextPhase`，收尾抛错但已落成 `completed` 时 `continue` 继续推进，因此从计划阶段点一次即可直达探险阶段（`{from:1,to:2,steps:['进入探险阶段']}`）。
+- **`quest-ui.js` 修正**：底部调用误写成 `door(s,Q)`（`Q` 不在作用域），渲染即抛 `ReferenceError`，表现为结束阶段后界面「跳回原阶段」。
+- **「结束阶段」不再静默失败**（三处）：探险阶段「投入名单未提交」和「遭遇牌未翻开」两个分支原来直接 `return`，按钮看着可点、点了毫无反应。现在把原因写进 `steps`（`还差 玩家1、玩家2 提交投入名单` / `还差 N 张遭遇牌未翻开结算`），由 toast 说出来；投入名单未齐时按钮直接禁用并在旁边点名等谁——引擎不会替玩家挑角色。
+- **修复二次确认被整体跳过**：`q.discussion` 只由旧的 `next` 处理器置位，阶段推进改走 `endPhase` 后它永远是 `undefined`，`submitDeployment` 于是把第二位玩家的提交当成「全员已确认」直接锁定执行。现在 `endPhase` 进入探险阶段时统一调用 `enableDiscussion`，两条推进路径行为一致。
+- **「结束阶段」卡片压缩到两行**：原来「标题 + 清单 + 按钮 + 长说明」竖排 151px 高，角色卡区只有 336–380px，手牌一撑就把按钮顶出视口（被 `.player-mat` 的 `overflow:hidden` 裁掉半截）。改成第一行 标题/未完成项/按钮、第二行 清单（溢出省略 + tooltip 全文），高度降到 62px；`.mat-phase` 给 `min-height:76px` 保证按钮不被压扁，面板自身 `max-height:96px` 可滚。
+- 验收：14 个套件全绿（tests 25 / planning 90 / quest 45 / travel 24 / engagement 26 / combat 58 / refresh 19 / window 21 / player 19 / opening 16 / score 10 / setup-reveal 9 / phase 8 / planning-dom 70）；check-taskbar 23/23、check-layout 16/16、check-onescreen 五区可见、check-contrast 0 低对比、check-score 19/19、check-card-hover 22/22、check-setup-reveal 13/13、check-deck-share 16/16、check-history 无脚本错误。
+
 # v0.15.45 · 右栏去框：只留阶段窗口竖轴与日志流（2026-10-24）
 
 - **移除牌堆栏**：`遭遇牌堆 / 弃牌 / 胜利点` 计数框与「查看弃牌与胜利区」折叠整块删除。牌库/弃牌数量在玩家区标题行仍有（每人自己的），胜利点在终局计分面板完整可查。

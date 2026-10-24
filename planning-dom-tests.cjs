@@ -10,7 +10,7 @@ function environment(){const dialogs=[],base=new Map;const attr=(s,k)=>new RegEx
  for(const id of ['app','toast','undo','export','import','tableTab','catalogTab','playersTab','imagesTab','helpTab']){let e=new El;e.id=id;base.set(id,e);}
  const document={querySelector:s=>base.get(s.slice(1))||base.get('app').querySelector(s),querySelectorAll:()=>[],createElement:t=>new El(t),body:{append(){}}};
  const ctx=vm.createContext({module:undefined,document,localStorage:{getItem:()=>null,setItem(){},removeItem(){}},setTimeout:()=>1,clearTimeout(){},console,Blob,URL,confirm:()=>true});
- for(const f of ['data.js','starter-decks.js','player-cards.js','ringsdb-snapshot.js','planning-engine.js','quest-engine.js','travel-engine.js','encounter-engine.js','combat-engine.js','refresh-engine.js','window-engine.js','engine.js','score-engine.js','player-ui.js','image-index.js','encounter-image-index.js','chinese-core-images.js','image-ui.js','planning-ui.js','quest-ui.js','travel-ui.js','encounter-ui.js','combat-ui.js','refresh-ui.js','window-ui.js','phase-log.js','desktop-ui.js','product-catalog.js','app.js'])vm.runInContext(fs.readFileSync(__dirname+'/'+f,'utf8'),ctx,{filename:f});
+ for(const f of ['data.js','starter-decks.js','player-cards.js','ringsdb-snapshot.js','planning-engine.js','quest-engine.js','travel-engine.js','encounter-engine.js','combat-engine.js','refresh-engine.js','window-engine.js','phase-engine.js','engine.js','score-engine.js','player-ui.js','image-index.js','encounter-image-index.js','chinese-core-images.js','image-ui.js','planning-ui.js','quest-ui.js','travel-ui.js','encounter-ui.js','combat-ui.js','refresh-ui.js','window-ui.js','phase-log.js','desktop-ui.js','product-catalog.js','app.js'])vm.runInContext(fs.readFileSync(__dirname+'/'+f,'utf8'),ctx,{filename:f});
  const run=s=>vm.runInContext(s,ctx);const click=d=>run(`$('#app').onclick({target:{closest:()=>({dataset:${JSON.stringify(d)}})}})`);
  return {ctx,run,click,dialogs,base};
 }
@@ -437,38 +437,29 @@ test('clicking a log undo button restores the state before that operation',async
  const snap=e.run('JSON.stringify(state)');await e.click({action:'undoLog',seq:'9999'});
  assert.equal(e.run('JSON.stringify(state)'),snap);});
 /* ── 日志显示范围（默认本回合，可切全部） ─────────────────────────── */
-test('log scope defaults to the current round and can switch to all rounds',async()=>{const e=environment();await opening(e);
+test('log panel keeps only the stream: no scope switch, no "more" button',async()=>{const e=environment();await opening(e);
  /* 造旧回合记录：日志 newest-first，旧回合必须排在现有记录之后（push），
     否则会被后续本回合记录挤到队首之外，roundSpan 数不到本回合条目。 */
  e.run(`state.log.push('回合1 · §P0§开局前记录');
         state.log.push('回合2 · §P1§计划 · 玩家2抽取1张牌');`);
- e.run('render()');   /* 直接改日志不走 mutate，需要手动重绘 */
- const view=()=>e.base.get('app').innerHTML;
- /* 默认 = 本回合 */
- const html=view();
- assert(html.includes('data-scope="round"'),'默认范围应是本回合');
- assert(html.includes('log-scope-btn active" data-action="logScope" data-scope="round"'),'「本回合」应为选中态');
- assert(html.includes('更早 '),'存在更早记录时应给出查看全部的入口');
- assert(!html.includes('回合 2'),'本回合视图不应渲染旧回合分组');
- /* 切到全部后旧回合出现 */
- await e.click({action:'logScope',scope:'all'});
- const all=view();
- assert(all.includes('data-scope="all"'));
- assert(all.includes('回合 2')&&all.includes('回合 1'),'全部视图应包含所有回合');
- /* 切回本回合 */
- await e.click({action:'logScope',scope:'round'});
- assert(view().includes('data-scope="round"'));
- /* 非法范围被忽略，不改视图状态 */
- const snap=e.base.get('app').innerHTML;await e.click({action:'logScope',scope:'bogus'});
- assert.equal(e.base.get('app').innerHTML,snap);});
+ e.run('render()');
+ const html=e.base.get('app').innerHTML;
+ assert(html.includes('data-scope="round"'),'默认范围仍是本回合');
+ /* 右栏只留「竖轴 + 日志」两列：范围切换按钮与「更早 N 条」入口都不再渲染。 */
+ assert(!html.includes('log-scope-btn'),'不应再渲染范围切换按钮');
+ assert(!html.includes('data-action="logScope"'),'不应再派发 logScope 动作');
+ assert(!html.includes('log-more'),'不应再有「更早 N 条」按钮');
+ /* 旧记录的条数仍以纯文字告知，不需要按钮也能看懂还有多少。 */
+ assert(/另 \d+ 条更早/.test(html),'应以文字说明还有多少更早记录');
+ assert(!html.includes('回合 2'),'本回合视图不应渲染旧回合分组');});
 
-test('log scope switching is view-only: no game state, history or log mutation',async()=>{const e=environment();await opening(e);
- const snap=e.run('JSON.stringify(state)'),hist=e.run('history.length'),marks=e.run('APP_LOG_MARKS().logMarks.length');
- await e.click({action:'logScope',scope:'all'});
- await e.click({action:'logScope',scope:'round'});
- assert.equal(e.run('JSON.stringify(state)'),snap,'切换范围不应改游戏状态');
- assert.equal(e.run('history.length'),hist,'切换范围不应写入撤销历史');
- assert.equal(e.run('APP_LOG_MARKS().logMarks.length'),marks,'切换范围不应新增日志标记');});
+test('log count line reports the remaining older records as plain text',()=>{const e=environment();
+ /* 直接喂面板：本回合 2 条 + 更早 2 条，计数行须如实报出两者，且不依赖任何按钮。 */
+ const html=e.run(`PhaseLog.panel({phase:0,round:2,log:['回合2 · §P0§a','回合2 · §P0§b','回合1 · §P0§c','回合1 · §P0§d']},null,'round')`);
+ const m=/本回合 (\d+) 条 · 另 (\d+) 条更早/.exec(html);
+ assert(m,'应显示「本回合 N 条 · 另 M 条更早」');
+ assert.equal(Number(m[1]),2,'本回合条数须与实际一致');
+ assert.equal(Number(m[2]),2,'更早记录数须与实际一致');});
 
 test('log rounds are ordered newest first even when entries interleave',()=>{const e=environment();
  e.run(`const s={phase:0,round:1,log:['回合2 · a','回合3 · b','回合2 · c','回合1 · d']};`);
@@ -503,20 +494,56 @@ test('phase rail lists every phase window and lights exactly the current one',()
  /* 触发线语义：金/绿/红三类，缺一类都说明时机标注丢了 */
  for(const t of ['trigger','action','forced'])assert(all.includes(`data-timing="${t}"`),`缺少 ${t} 类触发线`);});
 
-test('rail shows all phases by default and collapses only the ones the user folds',()=>{
+test('rail shows all seven phases and every window at once',()=>{
  const e=environment();
- /* 默认全展开：竖轴通高 360px，20×15px 刚好排满，与参考图的形态一致 */
+ /* 竖轴通高 360px，20×15px 刚好排满，与参考图的形态一致：一次看全，不折叠。 */
  const r=e.run('PhaseLog.rail({phase:0})');
- assert.equal((r.match(/rail-grp future/g)||[]).length,0,'默认不应折叠任何阶段');
- assert.equal((r.match(/rail-fold/g)||[]).length,0,'默认不显示计数条');
+ assert.equal((r.match(/rail-fold/g)||[]).length,0,'不应再有只写数字的折叠块');
  assert.equal((r.match(/rail-win-no/g)||[]).length,20,'20 条窗口须一次看全');
- /* 用户点一下收起某阶段：换成计数条，其余不动 */
- const folded=e.run('PhaseLog.rail({phase:0},new Set([5]))');
- assert.equal((folded.match(/rail-grp future/g)||[]).length,1,'只收起被点的那一个阶段');
- assert.equal((folded.match(/rail-fold/g)||[]).length,1,'收起阶段显示窗口计数');
- assert(!folded.includes('6.4'),'收起的战斗阶段不再列出窗口');
- assert(folded.includes('6.4')===false&&folded.includes('>4<'),'计数条显示该阶段窗口数');
- /* aria-expanded 反映真实展开状态 */
- assert(/data-action="railPhase" data-phase="0" aria-expanded="true"/.test(r),'展开阶段 aria-expanded 须为 true');
- assert(/data-action="railPhase" data-phase="6" aria-expanded="true"/.test(r),'默认全展开时 aria-expanded 全为 true');
- assert(/data-action="railPhase" data-phase="5" aria-expanded="false"/.test(folded),'收起后 aria-expanded 须为 false');});
+ assert.equal((r.match(/rail-grp/g)||[]).length,7,'7 个阶段全部列出');
+ /* 传 openSet 也只是历史参数，行为不变（不折叠） */
+ const withSet=e.run('PhaseLog.rail({phase:0},new Set([5]))');
+ assert.equal((withSet.match(/rail-fold/g)||[]).length,0,'openSet 不再引起折叠');
+ assert.equal((withSet.match(/rail-win-no/g)||[]).length,20,'窗口仍全部列出');
+ /* 全部展开：每个阶段头的 aria-expanded 都是 true */
+ for(let i=0;i<7;i++)assert(r.includes(`data-action="railPhase" data-phase="${i}" aria-expanded="true"`),`阶段${i} aria-expanded 须为 true`);});
+
+test('phase door sits under the character area and reports the real checklist',async()=>{
+ const e=environment();await opening(e);
+ const html=e.base.get('app').innerHTML;
+ assert(html.includes('data-action="endPhase"'),'角色卡区域下方应有结束阶段按钮');
+ assert(html.includes('phase-door'),'结束阶段应挂在 phase-door 区块里');
+ assert(/door-list/.test(html),'应列出本阶段必需操作清单');
+ /* 计划阶段刚开始：清单里应有每位玩家的「结束出牌」与「放弃剩余行动」 */
+ assert(html.includes('结束出牌'),'计划阶段清单须含结束出牌');
+ assert(html.includes('放弃剩余行动'),'计划阶段清单须含放弃剩余行动');
+});
+
+test('clicking the phase door ends every player turn then advances the phase',async()=>{
+ const e=environment();await opening(e);
+ assert.equal(e.run('state.phase'),1);
+ /* 2 人局：点一次只结束当前玩家出牌，点第二次才进探险阶段（与引擎一致） */
+ await e.click({action:'endPhase'});
+ await e.click({action:'endPhase'});
+ await e.click({action:'endPhase'});
+ assert(e.run('state.phase')>=2,'连续点击后应离开计划阶段');
+ assert(e.run('JSON.stringify(state.planning.finalPasses)').includes('0'),'计划阶段的让过必须真正写进状态');
+});
+
+test('phase door never advances past an unresolved encounter card',async()=>{
+ const e=environment();await opening(e);
+ /* 直接构造「探险阶段 · 探查中已翻开一张未结算的牌」 */
+ e.run(`{while(state.phase<2)E.endPhase(state);
+         for(const p of state.players)E.questing.pass(state,p.id);
+         E.questing.move(state);
+         for(const pid of state.questing.order)E.questing.submitDeployment(state,pid,[E.questing.eligible(state,pid)[0].uid]);
+         let g=0;while(state.questing.tasks.length&&g++<20){const sp=E.questing.spec(state,state.questing.tasks[0].id);E.questing.choose(state,sp.task.id,{skip:true});}
+         E.endPhase(state);E.questing.drawNext(state);
+         render();}`);
+ assert.equal(e.run('state.phase'),2);
+ assert(e.run('!!state.questing.current'),'应有一张未结算的遭遇牌');
+ const step=e.run('state.questing.step');
+ await e.click({action:'endPhase'});
+ assert.equal(e.run('state.questing.step'),step,'未结算遭遇牌时不得推进探险步骤');
+ assert(e.run('state.questing.current'),'未结算的遭遇牌必须还在');
+});
