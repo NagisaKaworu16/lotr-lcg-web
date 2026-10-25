@@ -11,6 +11,7 @@
   - `≤740px`：行 21px、字号 11px；色块内边距 `3px 0`、字号 11px。
   - **关键**：原以为压 `.rail-win` 的 `min-height` 就够了，实测行高仍是 31px——原因有三层：`.rail-wins` 继承的 `line-height:30.6px` 在撑 `min-height`（补 `line-height:normal`）；色块 `padding:10px 0` 把 head 顶到 93px，而 `.rail-grp` 是单行 grid，head 有多高整段就多高（改压内边距与字号）。三处一起改，内容高才真正降到 552px 以内。
 - **竖轴尾部**：1920×1080 下竖轴 912px 而内容只有 682px，尾部空出 230px，看起来像「断了一截」。改成用一层 120px 的渐隐收尾（`background-image:linear-gradient`）把「墙」收住。**刻意没有**让 7 个阶段 flex-grow 平分剩余空间——试过，会把每个阶段内部撕出十几像素空白，行与行不再连续，比断尾更难看。
+- **手机档回归（验收时发现并修掉）**：`max-width:1360px` 那档阈值只覆盖到 8 张，390 宽手机容器只有 322px（按 `(322+46)/(92+7-46)` 只装得下 3 张），7 张平铺成 588px，被 `overflow-x` 拖成需要横向滚动的手牌——而旧版扇叠恰好 322px 不溢出，**这是本次改动引入的退化**。补 `max-width:600px` 一档：`< 4` 张平铺、`≥ 4` 张扇叠。修后手机端与旧版逐像素一致（`margin-left:-46px`、`step 39px`、`scrollWidth 322 = clientWidth 322`）。
 - **实测**：`railNeed`（竖轴是否需要滚动）在 1280×720 / 1366×768 / 1440×800 / 1440×900 / 1920×1080 **五档全部 false**；日志 `logNeed` 同样全部 false；`docOver` 全为 0（整页不出现纵向滚动条）。
 - **回归**：check-window-skip 8/8、check-auto-phase PASS、check-onescreen / check-taskbar / check-affordable / check-history / check-layout / check-contrast 全 PASS；tests.cjs 25/25；31 个内联脚本块 `node --check` 全通过。
 - **验收截图**：`docs/browser-acceptance/v01561-1366x768.png`、`v01561-1440x900.png`、`v01561-1920x1080.png`，及右栏特写 `v01561-rail-*.png`。

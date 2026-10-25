@@ -1468,6 +1468,14 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
 @media(max-width:1360px){
  .player-mat .hand-zone:not(:has(.hand-card:nth-child(9))) .hand-card+.hand-card{margin-left:0}
 }
+/* 手机档（v0.15.61 补）：390 宽下容器只有 322px，按 `(322+46)/(92+7-46)` 算只装得下 3 张。
+   不补这一档时 7 张会平铺成 588px，撑破 322px 的容器、被 overflow-x 拖成需要横向滚动的手牌
+   （实测旧版扇叠恰好 322px 不溢出，是本次改动引入的退化）。
+   阈值取 4 张：3 张平铺 290px 仍留余量，4 张起回到扇叠，与旧版行为一致。 */
+@media(max-width:600px){
+ .player-mat .hand-zone:not(:has(.hand-card:nth-child(4))) .hand-card+.hand-card{margin-left:0}
+ .player-mat .hand-zone:has(.hand-card:nth-child(4)) .hand-card+.hand-card{margin-left:-46px}
+}
 
 /* ── 窄屏顶栏（v0.15.49，须在单屏布局之后以覆盖其 nowrap）────────────
    390px 移动档：藏「威胁/资源」统计，顶栏允许换行，避免横向溢出。 */
