@@ -41,18 +41,29 @@ const PhaseRulesFactory=(E)=>{
   }
   if(s.phase===2&&c){
    const order=c.order||[];
-   if(c.step==='commit'&&!c.deploymentLocked){
-    for(const id of order)add('deploy:'+id,(s.players[id]?.name||('玩家'+(id+1)))+' 提交派遣名单',!!c.deployments?.[id]?.confirmed,'待提交',()=>!!c.deployments?.[id]?.confirmed);
-    for(const id of order)add('dconfirm:'+id,(s.players[id]?.name||('玩家'+(id+1)))+' 二次确认派遣',(c.deploymentApprovals||[]).includes(id),'待确认',()=>(c.deploymentApprovals||[]).includes(id));
-   }
-   if(c.step==='commit')add('commit','按起始玩家顺序投入角色',c.commitIndex>=order.length,'待投入',()=>c.commitIndex>=order.length);
-   add('reveal','完成逐张探查',!c.current&&!(c.remaining||[]).length,'剩余 '+((c.remaining||[]).length+(c.current?1:0))+' 张',()=>!c.current&&!(c.remaining||[]).length);
+   /* v0.15.62：step 一旦走出 'commit'（'afterCommit'→'staging'→…→'completed'），
+      「提交名单／二次确认／按顺序投入」在语义上必然已经完成——引擎是走通了那一段
+      才会推进 step。以前这三项圈在 if(c.step==='commit') 里，于是收尾后重新取
+      checks() 得到的是「一条都没记下」的快照：名单早已 confirmed、step 已是
+      'completed'，结束阶段按钮却仍禁用，悬停还写「等 玩家1、玩家2 提交投入名单」。
+      改为按 step 位置判定，和下面 result 项同一套写法。 */
+   const afterCommit=(c.step!=='commit'&&c.step!=='beforeCommit')||!!c.deploymentLocked;
+   for(const id of order)add('deploy:'+id,(s.players[id]?.name||('玩家'+(id+1)))+' 提交派遣名单',afterCommit||!!c.deployments?.[id]?.confirmed,'待提交',()=>afterCommit||!!c.deployments?.[id]?.confirmed);
+   for(const id of order)add('dconfirm:'+id,(s.players[id]?.name||('玩家'+(id+1)))+' 二次确认派遣',afterCommit||(c.deploymentApprovals||[]).includes(id),'待确认',()=>afterCommit||(c.deploymentApprovals||[]).includes(id));
+   add('commit','按起始玩家顺序投入角色',afterCommit||c.commitIndex>=order.length,'待投入',()=>afterCommit||c.commitIndex>=order.length);
+   /* 逐张探查只有 'staging' 这一段是活的：走出 staging 后 current/remaining 天然为空。 */
+   const notStaging=c.step!=='staging';
+   add('reveal','完成逐张探查',notStaging||(!c.current&&!(c.remaining||[]).length),'剩余 '+((c.remaining||[]).length+(c.current?1:0))+' 张',()=>notStaging||(!c.current&&!(c.remaining||[]).length));
    /* v0.15.57：阶段收尾完成后 step 会变成 'completed'（planning-engine complete()），
       原判据只认 'afterResult'，于是「探险结果」在事后复查里永远是未完成，
       autoAdvance 据此认为阶段没做完、拒绝推进，界面又只剩一句「验收完成」。
       已完成本身就是「结果已结算」的证据，一并认可。 */
    add('result','结算探险结果',['afterResult','completed'].includes(c.step),c.step==='afterStaging'?'待结算':'未开始',()=>['afterResult','completed'].includes(c.step));
-   add('pass','全队放弃本窗口行动',live(s).every(p=>(c.finalPasses||[]).includes(p.id)),'待确认',()=>live(s).every(p=>(c.finalPasses||[]).includes(p.id)));
+   /* 放弃窗口行动同理：这个窗口只存在于 'afterCommit'/'afterStaging'/'afterResult'
+      这几个 step 上；一旦进入 'staging' 或 'completed'，旧判据永远等不到全员
+      finalPasses，阶段即使走完也判未完成，结束阶段按钮就一直是灰的。 */
+   const windowStep=['afterCommit','afterStaging','afterResult'].includes(c.step);
+   add('pass','全队放弃本窗口行动',!windowStep||live(s).every(p=>(c.finalPasses||[]).includes(p.id)),'待确认',()=>!windowStep||live(s).every(p=>(c.finalPasses||[]).includes(p.id)));
   }
   if(s.phase===3&&c){
    /* v0.15.57：同 result 一项的毛病——阶段收尾后 step 变 'completed'，

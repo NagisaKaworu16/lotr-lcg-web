@@ -1,3 +1,23 @@
+# v0.15.62 · 阶段面板搬进决策弹窗：底栏清空、操作条收起、只在轮到你时弹（2026-10-25）
+
+- **起因**：底部 `.mat-phase`、顶部操作条、刚加的弹窗，三处渲染的是同一份阶段内容，玩家得决定该看哪儿；而「结束阶段」按钮已经在角色区右上角，底部那块纯属重复。
+- **判据线（沿用 ArkhamHorror 逆向结论）**：规则书写 `must`（强制结算、自动抽牌加资源）→ 引擎算完只留日志，**绝不弹窗**；写 `may` / `choose` / `up to`（选目标、选响应、选防御者、定投入名单）→ 必须问人，才弹。
+- **弹窗机制**：新增 `DecisionUI`（`index.html` 约 10260 行），独立闭包，自己取依赖（`esc`、`DesktopUI.setupPendingReveal`、`ScenarioEngine`），**不靠外层闭包**——早期版本直接写 `setupPendingReveal()`，一移出 `DesktopUI` 闭包就在 `render()` 里抛 `not defined`，而 `mutate()` 的 catch 会吞掉异常并回滚整个状态，症状是「按钮点了没反应」。
+- **刻意不用 `dialog.showModal()`**：`PlanningUI.form()` 内部已占用一个 `<dialog>`，两层 `showModal` 叠加时后开的会抢焦点、关掉时把前一层的 backdrop 一起带走。决策弹窗改为普通定位层 + 自管焦点（内层 `<dialog>` 由浏览器放进 top layer，永远高于任何 `z-index`）。
+- **遮罩非阻塞**（`pointer-events:none`）：弹窗不是「挡住你做别的事」，而是「把当前该你决定的事摆到眼前」——探险投入要回牌桌点角色卡、打牌要按住手牌看牌文，全屏拦截会让这些动作做不了。只给 `.decide-box` 本身 `pointer-events:auto`。
+- **位置按实测自适应**（`place()`）：双列布局贴右上、让开所有可点元素（`.hand-card/.character-card/.encounter-card/.own-characters/.hand-zone` 的右缘与下缘）；单列布局落到牌桌下方空白。**必须量两帧**：只量一次会在图片解码／手牌扇叠计算完成前读到旧位置，实测 1100 宽下因此把弹窗压在了整块手牌上。**不用写死宽度判断单列**：改判 `rail.top >= mat.bottom - 8`——1100~1280 这一段是「双列但很窄」，光看视口宽会误判。
+- **下方留 120px 就放下面**（不是 200px）：1100×800 实测 `roomBelow=156`，按 200 判会落进「覆盖」分支、整块手牌被盖。宁可弹窗矮一点要滚动，也不去盖手牌。
+- **收起与角标**：不需要决策时自动收起，右上角留 `.decide-badge`（「待决定 N」）；点角标重开并重新定位（收起期间可能换过分辨率或转过屏）；`resize` 时也重算一次。
+- **操作条空时收起**：`.operation-dock:not(:has(.operation-content:not(:empty)))` 把 padding 归零，实测 `dock` 从 **130px 降到 64–78px**；阶段长说明折进 `<details class="phase-hint-wrap">`，默认收起。
+- **六阶段面板全部迁入**：计划／探险／旅行／遭遇／战斗／刷新。其中三处原本只在 detailed 模式渲染、智能模式是空壳，一并补上智能模式出口——`TravelUI.panel` 的放弃/结算组、`EncounterUI` 的放弃行动与开始检定、`CombatUI` 的防御出口。
+- **修掉的真 bug 一（探险投入名单挡门）**：`phaseRules.checks` 把「提交派遣名单／二次确认／按顺序投入」圈在 `if(c.step==='commit')` 里，step 一旦走出 commit（`afterCommit`→`staging`→…→`completed`），收尾后重新取 `checks()` 得到的是「一条都没记下」的快照：名单早已 `confirmed`、step 已是 `completed`，结束阶段按钮却仍禁用，悬停还写「等 玩家1、玩家2 提交投入名单」。改为**按 step 位置判定**（`afterCommit = step!=='commit' && step!=='beforeCommit' || deploymentLocked`），与 `result` 项同一套写法。同类问题一并修：`reveal`（走出 `staging` 后认作完成）、`pass`（只在 `afterCommit/afterStaging/afterResult` 三个窗口才算必需）。
+- **修掉的真 bug 二（遭遇阶段弹窗空壳）**：`EncounterUI.panel` 里两个分支都只认 `beforeChecks`/`afterChecks`，而 `checks` 是引擎逐人掷骰的中间步——若本轮所有玩家都已无候选敌人，`resume()` 不再往前推，两个分支都进不去，弹窗只剩标题、**一个可点控件都没有**。补 `checks` 步的兜底出口「继续结算交战检定 →」（新增动作 `continueChecks` → `T.resume`）。
+- **修掉的真 bug 三（防御选择被轻量分支抢走）**：`DecisionUI.pending()` 把 `defense` 也归进 `select` 轻量分支，标题写「选择要处理到的角色」，正文只有提交/清空两个按钮，战斗面板里的「敌人当前攻击 3」「暂定防御合计」全被挤掉——玩家看不到自己在防几点攻击。改为 `defense` 交给 `CombatUI.panel` 承载完整面板；`selectTitle` 补上 `defense` 专属文案并带玩家名（「玩家1 · 选择防御者（不选＝无人防御）」）。
+- **两处副本同步**：`desktop-ui.js` 才是浏览器实际执行的 `phaseDoor`，`index.html` 里那份是内联副本；`phase-engine.js` 的 `PhaseRulesFactory` 与 `index.html` 内联版同理。本次三处同改，避免日后漂移。
+- **实测（引擎 API 逐阶段驱动，2 人局）**：计划→探险→旅行→遭遇→战斗→刷新**七阶段全程走通**，每阶段弹窗 `ctrls` 分别为 2/5/3/4/14/16/2，**零空壳**；`dock` 全程 64–78px；零 JS 错误。
+- **回归**：tests 25/25、phase 8/8、quest 45/45、travel 24/24、combat 58/58、refresh 19/19、opening 16/16、setup-reveal 9/9、engagement 26/26（合计 **230 项全过**）。`planning-dom-tests` **60 pass / 10 fail，基线为 53 pass / 17 fail**（stash 后对比确认），本次改动净修好多 7 项，未引入新失败；`window-tests` 22/22。
+- **9 档分辨率验收**：1920/1600/1440/1366/1280/1100/900/768/390 共 54 项断言全 PASS（`mat-phase` 为空、弹窗不压可点元素、手牌无横溢、无整页横滚、操作条≤140、无 JS 错误）。
+
 # v0.15.61 · 让玩家区和右栏不再互相挤：手牌少就平铺、阶段轴一次看全（2026-10-25）
 
 - **问题一（手牌只露一条边）**：手牌一律扇叠——92px 卡宽、`-46px` 间距 + 7px gap，每张只露出约 53px。v0.15.58 刚让「付不起的牌变灰」，可 53px 连费用都读不全，那个提示等于白做。

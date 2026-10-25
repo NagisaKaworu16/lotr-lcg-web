@@ -1453,6 +1453,75 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
 .window-panel.compact>.window-blocked>summary{color:#5c675a}
 .window-panel.compact>.window-blocked>summary:hover{color:#24392f}
 
+/* ── 18c. 决策弹窗（v0.15.62）─────────────────────────────────────────
+   底部那块常驻阶段面板已删：它和角色区右上角的「结束阶段」重复，还白占一行高度。
+   需要玩家拍板的事改成「轮到你决定时才出现」，不在时缩成桌面右上角一枚「待决定」角标。
+
+   层级要点：弹窗层 z-index 40，而 <dialog>（PlanningUI.form 的选目标/付资源）由浏览器放在
+   top layer，永远高于任何 z-index——所以内层不需要特殊处理，也不会被这里盖住。
+   pointer-events 只在有内容时开启，收起状态下不挡牌桌点击。 */
+.decide-layer{
+ /* 位置由 JS 实测后写进 --decide-left / --decide-w（见 DecisionUI.place）。
+    原因：牌桌的「可点区」在哪一列随视口变——1440 宽时玩家区右缘 1017、日志轴从 1026 起，
+    弹窗贴右正好落在只读的日志上；缩到 1100 宽时两列都变窄，同一位置就会压住手牌与「结束阶段」。
+    写死任何一组数值都只对某几个分辨率成立，所以改成「先量再放」。 */
+ position:fixed;inset:0;z-index:40;display:flex;align-items:flex-start;justify-content:flex-end;
+ padding:88px 18px 16px;overflow:auto;
+ /* 遮罩不拦截点击（pointer-events:none），只有弹窗本体收事件。
+    理由：这个弹窗不是「挡住你做别的事」，而是「把当前该你决定的事摆到眼前」——
+    探险投入要回牌桌点角色卡、打牌要按住手牌看牌文，全屏拦截会让这些动作做不了。
+    视觉上仍然压暗背景（径向渐变），视线自然会落到中间的框上。 */
+ pointer-events:none;
+ background:radial-gradient(ellipse at 50% 26%,#14291c00 0%,#14291c14 45%,#14291c3d 100%)}
+.decide-layer>.decide-box{pointer-events:auto}
+.decide-box{
+ width:var(--decide-w,560px);max-height:calc(100vh - 110px);display:flex;flex-direction:column;
+ background:#fffdf6;border:1px solid #c9b98a;border-radius:12px;
+ box-shadow:0 24px 60px #14291c59;outline:none}
+.decide-box:focus-visible{box-shadow:0 24px 60px #14291c59,0 0 0 3px #c0a35a}
+.decide-head{
+ display:flex;align-items:center;gap:12px;padding:13px 16px;
+ border-bottom:1px solid #e2e5d9;background:#f4f1e4;border-radius:12px 12px 0 0}
+.decide-head h2{font-size:17px;margin:0;flex:1 1 auto;min-width:0}
+.decide-x{padding:4px 10px;font-size:12.5px;flex:0 0 auto;color:#5f6a58}
+.decide-body{padding:14px 16px 18px;overflow:auto;min-height:0}
+.decide-body .panel{border:0;background:transparent;padding:0;margin:0}
+.decide-body .panel-title{margin-bottom:10px}
+/* 弹窗框头已经写了阶段名，面板自己那条「阶段2 · 计划阶段」再写一遍就是重复。
+   但面板标题里有时还带了状态值（如「投入意志 3 ／ 探查区威胁 2」），不能整条删——
+   只把重复的阶段名那截藏掉，保留下来的 <strong> 仍在原位。 */
+.decide-body .panel-title h2{display:none}
+.decide-body .panel-title{justify-content:flex-start}
+.decide-body>p:first-child{margin-top:0}
+.decide-list{list-style:none;margin:10px 0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.decide-list li{padding:3px 9px;border:1px solid #d8dcd0;border-radius:5px;font-size:13px;background:#f2f1e7;color:#7c8674}
+.decide-list li.ok{border-color:#a8c2a1;background:#eef4e9;color:#40603a}
+/* 收起后的角标：贴牌桌右上角，避开顶栏导航与阶段轴。 */
+.decide-badge{
+ position:fixed;top:50px;right:18px;z-index:30;
+ display:inline-flex;align-items:center;gap:6px;padding:7px 12px;
+ background:#365842;color:#fff8e6;border:1px solid #c4a265;border-radius:999px;
+ font-size:13px;box-shadow:0 6px 18px #14291c3d;cursor:pointer}
+.decide-badge:hover{background:#2c4a37;border-color:#e3c88c}
+.decide-badge b{background:#c4a265;color:#23392c;border-radius:999px;padding:0 6px;font-size:12px;line-height:17px}
+
+/* 顶部操作条：内容为空时整条收成一行摘要。
+   .operation-content 本身已有 :empty{display:none}，这里再把标题行的内边距收窄、
+   隐藏提示语，省下的高度还给牌桌与手牌。有内容（剧本事项、选择面板）时自动恢复原样。 */
+.operation-dock:not(:has(.operation-content:not(:empty))){
+ padding:0}
+.operation-dock:not(:has(.operation-content:not(:empty))) .operation-title{padding:7px 14px}
+.operation-dock:not(:has(.operation-content:not(:empty))) .operation-title strong{font-size:14.5px}
+.operation-dock:not(:has(.operation-content:not(:empty))) .phase-hint{display:none}
+/* 长说明默认折起来。它每个阶段都是同一段 60~80 字的方法论，
+   常驻只是把牌桌往下推一行；要查的时候点一下就看得到。 */
+.phase-hint-wrap{margin:0;padding:0 16px 6px;font-size:12px;color:#768174}
+.phase-hint-wrap>summary{cursor:pointer;list-style:none;padding:2px 0;opacity:.75}
+.phase-hint-wrap>summary::-webkit-details-marker{display:none}
+.phase-hint-wrap>summary:hover{opacity:1;color:#365842}
+.phase-hint-wrap[open]>summary{color:#365842;opacity:1}
+.phase-hint-wrap .phase-hint{margin:2px 0 4px;padding:0}
+
 /* ── 19. 手牌：张数少就平铺，多了才扇叠（v0.15.61）────────────────────
    原来一律扇叠（92px 宽、-46px 间距 + 7px gap），每张只露出约 53px，
    等于只看得见卡图最左那条边。v0.15.58 好不容易让「付不起的牌变灰」，
@@ -6496,18 +6565,31 @@ const PhaseRulesFactory=(E)=>{
   }
   if(s.phase===2&&c){
    const order=c.order||[];
-   if(c.step==='commit'&&!c.deploymentLocked){
-    for(const id of order)add('deploy:'+id,(s.players[id]?.name||('玩家'+(id+1)))+' 提交派遣名单',!!c.deployments?.[id]?.confirmed,'待提交',()=>!!c.deployments?.[id]?.confirmed);
-    for(const id of order)add('dconfirm:'+id,(s.players[id]?.name||('玩家'+(id+1)))+' 二次确认派遣',(c.deploymentApprovals||[]).includes(id),'待确认',()=>(c.deploymentApprovals||[]).includes(id));
-   }
-   if(c.step==='commit')add('commit','按起始玩家顺序投入角色',c.commitIndex>=order.length,'待投入',()=>c.commitIndex>=order.length);
-   add('reveal','完成逐张探查',!c.current&&!(c.remaining||[]).length,'剩余 '+((c.remaining||[]).length+(c.current?1:0))+' 张',()=>!c.current&&!(c.remaining||[]).length);
+   /* v0.15.62：step 一旦走出 'commit'（'afterCommit'→'staging'→…→'completed'），
+      「提交名单／二次确认／按顺序投入」这三项在语义上必然已经完成——引擎是走通了
+      那一段才会推进 step。以前把它们圈在 if(c.step==='commit') 里，于是 run()
+      在 step 变化后立刻结账收尾，而 phaseDoor 的 title 又在阶段末重新取 checks()，
+      拿到的是「一条都没记下」的快照：名单早已 confirmed、step 已经是 'completed'，
+      结束阶段按钮却仍被禁用，悬停还写着「等 玩家1、玩家2 提交投入名单」。
+      改为按 step 位置判定，与下面 result 项同一套写法。 */
+   const afterCommit=c.step!=='commit'&&c.step!=='beforeCommit'||!!c.deploymentLocked;
+   for(const id of order)add('deploy:'+id,(s.players[id]?.name||('玩家'+(id+1)))+' 提交派遣名单',afterCommit||!!c.deployments?.[id]?.confirmed,'待提交',()=>afterCommit||!!c.deployments?.[id]?.confirmed);
+   for(const id of order)add('dconfirm:'+id,(s.players[id]?.name||('玩家'+(id+1)))+' 二次确认派遣',afterCommit||(c.deploymentApprovals||[]).includes(id),'待确认',()=>afterCommit||(c.deploymentApprovals||[]).includes(id));
+   add('commit','按起始玩家顺序投入角色',afterCommit||c.commitIndex>=order.length,'待投入',()=>afterCommit||c.commitIndex>=order.length);
+   /* 同理：'staging' 之后 current/remaining 天然为空，不必再靠 step 之外的状态兜。
+      逐张探查只有「正在探查」这一段是活的，收尾后一律认可。 */
+   const notStaging=c.step!=='staging';
+   add('reveal','完成逐张探查',notStaging||(!c.current&&!(c.remaining||[]).length),'剩余 '+((c.remaining||[]).length+(c.current?1:0))+' 张',()=>notStaging||(!c.current&&!(c.remaining||[]).length));
    /* v0.15.57：阶段收尾完成后 step 会变成 'completed'（planning-engine complete()），
       原判据只认 'afterResult'，于是「探险结果」在事后复查里永远是未完成，
       autoAdvance 据此认为阶段没做完、拒绝推进，界面又只剩一句「验收完成」。
       已完成本身就是「结果已结算」的证据，一并认可。 */
    add('result','结算探险结果',['afterResult','completed'].includes(c.step),c.step==='afterStaging'?'待结算':'未开始',()=>['afterResult','completed'].includes(c.step));
-   add('pass','全队放弃本窗口行动',live(s).every(p=>(c.finalPasses||[]).includes(p.id)),'待确认',()=>live(s).every(p=>(c.finalPasses||[]).includes(p.id)));
+   /* 放弃窗口行动同理：窗口只在 'afterCommit'/'afterStaging'/'afterResult' 这几个
+      「窗口」step 上存在，一旦进入 'staging' 或 'completed'，旧判据就永远等不到
+      全员 finalPasses，于是阶段即使走完也判未完成。 */
+   const windowStep=['afterCommit','afterStaging','afterResult'].includes(c.step);
+   add('pass','全队放弃本窗口行动',!windowStep||live(s).every(p=>(c.finalPasses||[]).includes(p.id)),'待确认',()=>!windowStep||live(s).every(p=>(c.finalPasses||[]).includes(p.id)));
   }
   if(s.phase===3&&c){
    /* v0.15.57：同 result 一项的毛病——阶段收尾后 step 变 'completed'，
@@ -9993,7 +10075,9 @@ const QuestUI=(()=>{
  function revealCard(s){const c=s.questing&&s.questing.current&&s.questing.current.card;if(!c)return '';
   return `<section class="panel questing-panel compact"><div class="panel-title"><h2>翻开的遭遇</h2><strong>${c.surge?'涌现':'无涌现'}</strong></div><p><b>${esc(c.name)}</b></p><p class="small muted">${esc(c.rule)}</p><div class="actions">${R.cancelOptions(s).map(o=>button(o.label,'cancel',`data-value="${o.value}"`)).join('')}${button('结算此牌的关键词与效果','reveal')}</div></section>`;
  }
- return {panel,handle,bind,setDraft,draftFor,picker,revealCard};
+ /* 决策弹窗的标题直接用这里的中文步骤名，免得两处各写一份文案、改一处漏一处。 */
+ function stepName(step){return steps[step]||'';}
+ return {panel,handle,bind,setDraft,draftFor,picker,revealCard,stepName};
 })();
 
 </script><script>
@@ -10011,7 +10095,10 @@ const TravelUI=(()=>{
    if(x.proposal){const c=s.staging.find(c=>c.uid===x.proposal.uid);body+=`<div class="notice"><b>暂定选择：${c?esc(c.name):'不旅行'}</b><p>${c?esc(c.rule):'保留原有当前地点。'} 费用尚未支付，可取消或更改。</p><div class="actions">${b('取消／修改旅行选择','cancel')}${x.order.filter(id=>!s.players[id].eliminated).map(id=>b(s.players[id].name+(x.approvals.includes(id)?'：取消二次确认':'：二次确认旅行'),x.approvals.includes(id)?'unapprove':'approve',`data-player="${id}"`)).join('')}</div></div>`;}}
   if(x.step==='staging'&&!sp&&!ch){if(x.current){const c=x.current.card;body+=`<div class="quest-reveal">${ImageLibrary.encounterArt(c.id)}<h3>${esc(c.name)}</h3><p>${esc(c.rule)}</p><p>旅行费用翻牌：按原版规则，本阶段不触发厄运／涌现关键词。</p><div class="actions">${Q.cancelOptions(s).map(o=>b(o.label,'cancelReveal',`data-value="${o.value}"`)).join('')}${b('结算旅行费用翻牌','reveal')}</div></div>`;}else body+=b(x.remaining.length?'翻开旅行费用遭遇牌':'完成费用翻牌，继续旅行','draw');}
   if(x.step==='action'&&!ch&&!sp){if(ScenarioEngine.windows.settings(s).mode==='detailed')body+=`<p>旅行步骤结束。只有此时开放普通玩家行动；探险专用事件不可使用。事件与主动能力沿用暂定清单和全员二次确认。</p><label>操作玩家 <select id="planning-actor">${x.order.filter(id=>!s.players[id].eliminated).map(id=>`<option value="${id}" ${id===actor?'selected':''}>${esc(s.players[id].name)}</option>`).join('')}</select></label><div class="actions">${R.abilities(s,actor).map(a=>`<button data-action="planning" data-plan="ability" data-player="${actor}" data-uid="${a.uid}" title="${esc(a.reason)}" ${a.legal?'':'disabled'}>${esc(a.name)}</button>`).join('')}</div>`;
-   if(ScenarioEngine.windows.settings(s).mode==='detailed')body+=`<div class="actions">${x.order.filter(id=>!s.players[id].eliminated).map(id=>b(s.players[id].name+(x.finalPasses.includes(id)?'：取消放弃行动':'：放弃本窗口行动'),x.finalPasses.includes(id)?'unpass':'pass',`data-player="${id}"`,!!x.actionLocked)).join('')}${b('结算旅行阶段结束','finish','',!!x.plannedActions?.length||!!x.actionLocked||!s.players.filter(p=>!p.eliminated).every(p=>x.finalPasses.includes(p.id)))}</div>`;
+   /* v0.15.62：这一组出口原来只在详细模式渲染，智能模式全靠操作条里的 picker 兜——
+      弹窗接管阶段面板之后，智能模式下这里就成了「只有一句说明、没有按钮」的空壳。
+      两个模式都给同一组出口，详细模式额外多渲染上面的能力清单。 */
+   body+=`<div class="actions">${x.order.filter(id=>!s.players[id].eliminated).map(id=>b(s.players[id].name+(x.finalPasses.includes(id)?'：取消放弃行动':'：放弃本窗口行动'),x.finalPasses.includes(id)?'unpass':'pass',`data-player="${id}"`,!!x.actionLocked)).join('')}${b('结算旅行阶段结束','finish','',!!x.plannedActions?.length||!!x.actionLocked||!s.players.filter(p=>!p.eliminated).every(p=>x.finalPasses.includes(p.id)))}</div>`;
    if(x.plannedActions?.length||x.actionError)body+=`<div class="notice"><h3>暂定行动 · 交流缓冲区</h3>${x.actionError?`<p>${esc(x.actionError)}</p>`:''}${(x.plannedActions||[]).map(a=>{const src=a.kind==='play'?s.players[a.player].hand.find(c=>c.uid===a.uid):R.find(s,a.uid)?.state;return `<p>${esc(s.players[a.player].name)} · ${esc(src?R.data(s,{...src,owner:a.player}).nameZh:'#'+a.uid)} ${b('撤销暂定行动','cancelAction',`data-id="${a.id}" data-player="${a.player}"`,!!x.actionLocked)}</p>`;}).join('')}<div class="actions">${x.order.filter(id=>!s.players[id].eliminated).map(id=>b(s.players[id].name+(x.actionApprovals?.includes(id)?'：取消二次确认':'：二次确认行动'),x.actionApprovals?.includes(id)?'unapproveActions':'approveActions',`data-player="${id}"`,!!x.actionLocked||!x.plannedActions?.length)).join('')}</div></div>`;}
   return `<section class="panel questing-panel"><h2>阶段4 · ${x.step==='choice'?'旅行选择与全队确认':x.step==='staging'?'支付旅行费用':x.step==='action'?'旅行后行动窗口':'旅行效果与响应'}</h2>${body}</section>`;
  }
@@ -10048,13 +10135,18 @@ const EncounterUI=(()=>{
    else{const allPassed=ps.every(p=>x.finalPasses.includes(p.id));
     body+=`<p class="small muted">${x.step==='beforeChecks'?'可先调整威胁或使用合法事件；全队放弃本窗口行动后开始交战检定。':'交战检定已完成；全队放弃本窗口行动后结束遭遇阶段。'}</p><div class="actions">${ps.map(p=>b(p.name+(x.finalPasses.includes(p.id)?'：取消放弃':'：放弃行动'),x.finalPasses.includes(p.id)?'unpass':'pass',`data-player="${p.id}"`,!!x.actionLocked)).join('')}</div><div class="actions">${b(x.step==='beforeChecks'?'开始交战检定 →':'结束遭遇阶段 →',x.step==='beforeChecks'?'checks':'finish','',!!x.plannedActions?.length||!!x.actionLocked||!allPassed)}</div>`;}
    if(x.plannedActions?.length||x.actionError)body+=`<div class="notice"><h3>暂定行动 · 交流缓冲区</h3>${x.actionError?`<p>${esc(x.actionError)}</p>`:''}${(x.plannedActions||[]).map(a=>{const c=a.kind==='play'?s.players[a.player].hand.find(c=>c.uid===a.uid):R.find(s,a.uid)?.state;return `<p>${esc(s.players[a.player].name)} · ${esc(c?R.data(s,{...c,owner:a.player}).nameZh:'#'+a.uid)} ${b('撤销暂定行动','cancelAction',`data-id="${a.id}" data-player="${a.player}"`,!!x.actionLocked)}</p>`;}).join('')}<div class="actions">${ps.map(p=>b(p.name+(x.actionApprovals?.includes(p.id)?'：取消二次确认':'：二次确认行动'),x.actionApprovals?.includes(p.id)?'unapproveActions':'approveActions',`data-player="${p.id}"`,!!x.actionLocked||!x.plannedActions?.length)).join('')}</div></div>`;}
+  /* v0.15.62：'checks' 是引擎逐人掷骰的中间步。正常会瞬间过去，但如果本轮
+     所有玩家都已无候选敌人（或都已横置/被消灭），resume() 就不再往前推，
+     面板里两个分支都进不去（都只认 beforeChecks/afterChecks），弹窗只剩标题、
+     一个可点控件都没有 —— 这就是「决策弹窗是空壳」的现场。 */
+  if(x.step==='checks'&&!task){body+=`<p class="small muted">正在逐人结算交战检定${x.tasks.length?'（有 '+x.tasks.length+' 项强制选择待处理）':'；本轮已无玩家需要交战'}。</p><div class="actions">${b('继续结算交战检定 →','continueChecks','',!!x.actionLocked)}</div>`;}
   const titles={optional:'暂定主动交战与全队确认',executing:'执行交战与强制效果',beforeChecks:'交战检定前行动窗口',checks:'交战检定',afterChecks:'检定后行动与阶段结束'};
   return `<section class="panel questing-panel"><h2>阶段5 · ${titles[x.step]||'遭遇'}</h2>${body}</section>`;
  }
  async function handle(el){const k=el.dataset.encounter,pid=+el.dataset.player,uid=+el.dataset.uid,id=+el.dataset.id;if(k==='back'){if(history.length){state=history.pop();save();render();}return;}
   /* v0.15.56：智能模式的「全部确认」——一次性替所有未确认玩家二次确认，省去逐个点。 */
   if(k==='approveAll'){mutate(()=>{const x=state.encountering;for(const p of state.players.filter(p=>!p.eliminated))if(!(x.approvals||[]).includes(p.id))T.approve(state,p.id);});return;}
-  mutate(()=>{if(k==='propose')T.propose(state,pid,uid);if(k==='skip')T.propose(state,pid,null);if(k==='cancel')T.cancel(state,pid);if(k==='approve')T.approve(state,pid);if(k==='unapprove')T.unapprove(state,pid);if(k==='tie')T.tie(state,id,uid);if(k==='checks')T.beginChecks(state);if(k==='finish')T.finish(state);if(k==='pass')Q.pass(state,pid);if(k==='unpass')Q.unpass(state,pid);if(k==='cancelAction')Q.cancelAction(state,pid,id);if(k==='approveActions')Q.approveActions(state,pid);if(k==='unapproveActions')Q.withdrawActionApproval(state,pid);});}
+  mutate(()=>{if(k==='propose')T.propose(state,pid,uid);if(k==='skip')T.propose(state,pid,null);if(k==='cancel')T.cancel(state,pid);if(k==='approve')T.approve(state,pid);if(k==='unapprove')T.unapprove(state,pid);if(k==='tie')T.tie(state,id,uid);if(k==='checks')T.beginChecks(state);if(k==='continueChecks')T.resume(state);if(k==='finish')T.finish(state);if(k==='pass')Q.pass(state,pid);if(k==='unpass')Q.unpass(state,pid);if(k==='cancelAction')Q.cancelAction(state,pid,id);if(k==='approveActions')Q.approveActions(state,pid);if(k==='unapproveActions')Q.withdrawActionApproval(state,pid);});}
  return {panel,handle};
 })();
 
@@ -10138,7 +10230,7 @@ const WindowUI=(()=>{
      点了没反应，只能怀疑程序出错。这里把它们列出来，并且只说明、不给按钮。 */
   const all=W.options(s),opts=all.list||[],blocked=all.blocked||[],eligible=W.eligible(s);
   if(!opts.length&&!blocked.length&&!eligible)return '';
-  const rows=opts.length?opts.map(o=>`<div class="window-option"><span>${esc(s.players[o.player].name)} · ${esc(o.name)}${o.muted?'（本阶段不再提醒）':''}</span> ${o.kind==='objective'?`<button data-action="claim" data-uid="${o.uid}" ${eligible?'':'disabled'}>领取目标</button>`:`<button data-action="planning" data-plan="${o.kind}" data-player="${o.player}" data-uid="${o.uid}" ${eligible?'':'disabled'}>选择${o.kind==='play'?'事件':'能力'}</button>`} ${b('本次跳过','mute',`data-kind="${o.kind}" data-player="${o.player}" data-uid="${o.uid}"`,o.muted)}</div>`).join('')
+  const rows=opts.length?opts.map(o=>`<div class="window-option"><span>${esc(s.players[o.player].name)} · ${esc(o.name)}${o.muted?'（本次已跳过）':''}</span> ${o.kind==='objective'?`<button data-action="claim" data-uid="${o.uid}" ${eligible?'':'disabled'}>领取目标</button>`:`<button data-action="planning" data-plan="${o.kind}" data-player="${o.player}" data-uid="${o.uid}" ${eligible?'':'disabled'}>选择${o.kind==='play'?'事件':'能力'}</button>`} ${b('本次跳过','mute',`data-kind="${o.kind}" data-player="${o.player}" data-uid="${o.uid}"`,o.muted)}</div>`).join('')
    :'<p class="small muted">本窗口没有需要提醒的行动，可以让过继续。</p>';
   const why=blocked.length?`<details class="window-blocked"><summary>${blocked.length} 张在场但不能用（点开看原因）</summary>${blocked.map(x=>`<div class="window-option blocked"><span>${esc(s.players[x.player].name)} · ${esc(x.name)}</span><em>${esc(x.reason)}</em></div>`).join('')}</details>`:'';
   return `<section class="panel window-panel compact"><div class="panel-title"><h2>行动窗口 · 智能推进</h2>${b('切换为详细模式','mode','data-mode="detailed"')}</div>${rows}${why}<div class="actions">${b('全队继续到下一决策点','next','',!eligible)}${b('恢复全部跳过记录','restore','',!(s.windowPrefs?.muted||[]).length)}</div></section>`;
@@ -10150,7 +10242,247 @@ const WindowUI=(()=>{
 </script><script src="phase-log.js"></script><script>
 /* Tabletop view: UI drafts never pay, exhaust, reveal, or bypass phase validation. */
 /* 界面版本徽标唯一来源：须与 CHANGELOG.md 最新条目标题一致（planning-dom-tests 有校验）。 */
-const APP_VERSION='v0.15.61';
+const APP_VERSION='v0.15.62';
+/* ── 决策弹窗（v0.15.62）──────────────────────────────────────────────
+   底部长住的那块阶段面板已经去掉（和角色区右上角的「结束阶段」重复，还白占一行高度）。
+   需要玩家拍板的事不再常驻显示，改成「轮到你决定时才弹出来」。
+
+   判据沿用 ArkhamHorror 的那条线，不是凭感觉分的：
+     · 规则书写 must（强制结算、自动抽牌加资源）→ 引擎算完，只在日志留一句，绝不弹窗；
+     · 规则书写 may / choose / up to（选目标、选响应、选防御者、定投入名单）→ 必须问人，才弹。
+   所以 decide() 只认「引擎自己下不了结论的那些点」，其余一律返回 null，界面上什么也不出现。
+
+   为什么不用 dialog.showModal()：PlanningUI.form() 内层已经占了一个 <dialog>，
+   两层 showModal 叠在一起时，后开的会抢焦点、关掉时把前一层的 backdrop 也带走。
+   这里改成普通定位层 + 自己管焦点，内层 dialog 才能正常浮在它上面（z-index 见 CSS）。 */
+const DecisionUI=(()=>{
+ /* 本模块独立于 DesktopUI 的闭包，所以依赖在这里自取，不靠外层作用域。
+    早期版本直接写 esc()/setupPendingReveal()，一移出闭包就在 render() 里炸「not defined」——
+    render() 的异常会被 mutate() 的 catch 吞掉并回滚整个状态，症状是「按钮点了没反应」。 */
+ const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const setupOpen=s=>DesktopUI.setupPendingReveal(s);
+ /* 测量必须在排版之后做（连续两帧），但 requestAnimationFrame 不是处处都有——
+    Node 的 DOM 测试环境里就没有，直接调用会让 render() 抛 ReferenceError，
+    而 render() 的异常会被 mutate() 吞掉并回滚，症状是「点了按钮没反应」。
+    没有 rAF 时退化成同步调用：布局测量在测试里反正用不到，但绝不能因此中断渲染。 */
+ const nextFrame=fn=>(typeof requestAnimationFrame==='function')?requestAnimationFrame(fn):(fn(),0);
+
+ /* 当前是否真的需要玩家决定。返回 null 表示「没有要问的」，调用方据此决定弹不弹。 */
+ function pending(s,pid){
+  if(!s||s.status!=='playing'||s.setupPending||setupOpen(s))return null;
+  /* 开局弃牌与设置揭示属于设置流程，仍留在牌桌上，不进弹窗。 */
+  const m=DesktopUI.mode(s,pid);
+  /* v0.15.62：defense 也是「点角色」的选择，但它和战斗面板说的是同一件事
+     （这一名敌人由谁来防、暂定名单、二次确认都在一起）。以前它落进 select 分支，
+     弹窗标题写「选择要处理到的角色」，正文只有提交/清空两个按钮，而战斗面板里
+     的敌人攻击值、暂定防御合计全被挤掉——玩家看不到自己在防几点攻击。
+     现在 defense 交给下面的 CombatUI.panel，用完整面板承载；只有纯「选目标」
+     的 attack 和纯「选投入角色」的 quest 走这个轻量 select 分支。 */
+  if(m&&m.kind!=='quest'&&m.kind!=='attack'&&m.kind!=='defense')return {kind:'select',title:selectTitle(m,s),body:DesktopUI.selection(s,m)};
+  /* 阶段面板整块归弹窗：里面每一条都是「引擎没法替人下结论」的东西
+     （放弃/取消放弃、开始投入、逐张翻牌、二次确认）。以前它同时渲染在操作条与底部，
+     三处同一份内容，玩家得决定该看哪儿。 */
+  const pnl=phasePanel(s,pid,m);
+  if(pnl)return {kind:'phase'+(pnl.kind||''),title:pnl.title,body:pnl.html+windowTail(s)};
+  /* 行动窗口（智能模式下可用的能力与「本次跳过」）在没有专属阶段面板时单独出现。
+     v0.15.62 把阶段面板整体搬进弹窗后，这块原来由 DesktopUI.taskPanel 渲染，
+     而 taskPanel 从此不再被调用——智能模式下玩家会看不到任何可用能力，
+     也没法跳过某个窗口。这里兜一层：引擎说有事可做，就给它一个独立的「可做的事」。 */
+  /* 只在智能模式下兜这一层：详细模式的各阶段面板自带完整控制，
+     再拼一份会出现两个「放弃本窗口行动」之类的重复按钮。 */
+  const win=windowTail(s);
+  if(win)return {kind:'window',title:'可做的事',body:win};
+  return null;
+ }
+ /* 智能模式下的行动窗口：可用的能力、以及每张的「本次跳过」。
+    详细模式的阶段面板自带这些控制，重复拼接会出现两个「放弃本窗口行动」。 */
+ function windowTail(s){
+  try{
+   if(ScenarioEngine.windows.settings(s).mode==='detailed')return '';
+   return WindowUI.panel(s)||'';
+  }catch(e2){ return ''; }
+ }
+ /* 弹窗框头是玩家唯一能一眼扫到的定位信息，所以标题必须说清「这是谁的哪一步」。
+    defense 原来和 quest 共用「选择要处理到的角色」，玩家看到这句根本不知道
+    自己是在防御还是在投入——两种动作点选的角色卡、后果完全不同。 */
+ function selectTitle(m,s){const who=s&&s.players&&s.players[m.player]?s.players[m.player].name+' · ':'';
+  if(m.kind==='attack')return who+'选择攻击目标';
+  if(m.kind==='defense')return who+'选择防御者（不选＝无人防御）';
+  if(m.kind==='quest')return who+'选择要投入的角色';
+  return who+'选择要处理到的角色';}
+ /* 每个阶段挑「这块面板该不该给玩家看」。
+   判据只有一条：这一步引擎自己能不能走完？
+     · 能（如探险已结算完、只差一句「点结束阶段」）→ 不给面板，操作条只留摘要；
+     · 不能（等谁放弃行动、等人选旅行点、等人提交名单）→ 给面板，弹窗里问。
+   返回 {title,html,kind} 或缺省。 */
+ function phasePanel(s,pid,m){
+  const q=s.questing,t=s.traveling,e=s.encountering,c=s.combat,r=s.refreshing;
+  if(s.phase===1){
+   if(!s.planning||s.planning.completed)return null;
+   const R=ScenarioEngine.planning;
+   /* 计划阶段「轮到我出牌」是常驻状态而非突发事件：面板给，但不打断，只留角标。 */
+   if(!R.choiceSpec(s)&&!s.players.some(p=>!p.eliminated&&p.hand.length&&!s.planning.finalPasses.includes(p.id)))return null;
+   return {title:'计划阶段 · 出牌与响应',html:PlanningUI.panel(s,pid),kind:''};
+  }
+  if(s.phase===2){
+   if(!q)return null;
+   if(q.completed)return null;
+   /* 智能模式下 QuestUI.panel 只给状态不给按钮（那组按钮历来由 picker 提供，
+     以前渲染在操作条里）。现在操作条只剩摘要，所以这里必须把 picker 的内容接上，
+     否则「投入前行动窗口」会变成一个只有「已投入：无人」、没有任何可点控件的空面板。 */
+   const detail=ScenarioEngine.windows.settings(s).mode==='detailed';
+   let html=detail?QuestUI.panel(s,pid):'';
+   if(!detail){
+    /* picker 是「控制 + 状态」的完整一块（自带意志／威胁行），但它只管到「提交名单」为止。
+       全员提交之后的「二次确认派遣」在 QuestUI.panel 的 discussion 分支里，picker 从来不渲染——
+       以前靠操作条之外的地方兜，现在只有弹窗，必须把它接上，否则名单齐了就再也点不动。 */
+    /* 名单全部提交后的讨论期，picker 只剩一颗「取消确认，修改派遣」，而 panel 里有
+       同样的这颗 + 两人的「二次确认派遣」。两份拼起来会看到两个一模一样的按钮，
+       所以这一个阶段只取 panel，不拼 picker。 */
+    const allIn=(q.order||[]).length>0&&q.order.every(id=>{const d=q.deployments&&q.deployments[id];return d&&d.confirmed;});
+    if(q.deploymentLocked||allIn){
+     /* 锁定后 picker 一律返回空（它只管「还没投」的那一段），控制全在 panel 里：
+        投入响应「选择并结算」、逐张探查。所以锁定期和讨论期都取 panel。 */
+     html=QuestUI.panel(s,pid)||'';
+    }else{
+     html=(QuestUI.picker(s,pid)||'')||(q.step==='staging'&&q.current?(QuestUI.revealCard(s)||''):'');
+    }
+    /* 这里不能再提前 return null：下面还有「名单锁定期只读状态卡」要兜。
+       之前把 return 写在这个 if 里，锁定后 html 恒为空，弹窗和角标一起消失。 */
+   }
+   /* 名单锁定、正在按顺序横置与结算投入响应——这一段玩家没有选择可做，
+      但也不能让弹窗彻底消失：刚点完「二次确认」就什么都不见了，人会以为卡住。
+      给一张只读状态卡，说明引擎正在做什么、还差谁。 */
+   if(!html&&!q.completed){
+    const done=Object.keys(q.deployments||{}).filter(id=>q.deployments[id]?.confirmed).length,total=(q.order||[]).length;
+    html=`<p class="small muted">引擎正在按起始玩家顺序横置已投入的角色并结算投入响应。这一步没有需要你决定的事，稍候即可。</p>
+     <ul class="decide-list">${(q.order||[]).map(id=>`<li class="${q.deployments?.[id]?.confirmed?'ok':''}">${q.deployments?.[id]?.confirmed?'✓':'·'} ${esc(s.players[id]?.name||('玩家'+(id+1)))}</li>`).join('')}</ul>
+     <p class="small">已确认 ${done}/${total} 人。</p>`;
+   }
+   if(!html)return null;
+   return {title:'探险阶段 · '+(QuestUI.stepName(q.step)||'进行中'),html,kind:''};
+  }
+  if(s.phase===3){
+   if(!t||t.completed)return null;
+   return {title:'旅行阶段',html:TravelUI.panel(s,pid),kind:''};
+  }
+  if(s.phase===4){
+   if(!e||e.completed)return null;
+   return {title:'遭遇阶段',html:EncounterUI.panel(s,pid),kind:''};
+  }
+  if(s.phase===5){
+   if(!c||c.completed)return null;
+   return {title:'战斗阶段',html:CombatUI.panel(s,pid),kind:''};
+  }
+  if(s.phase===6){
+   if(!r||r.completed)return null;
+   return {title:'刷新阶段',html:RefreshUI.panel(s,pid),kind:''};
+  }
+  return null;
+ }
+ /* 放置弹窗：量一遍牌桌上真正可点的元素（手牌、角色卡、探查区卡牌、结束阶段），
+    挑一个不压住它们的位置。窄屏放不下时退成底部抽屉（那时牌桌已是单列，上下滚动本来就要做）。 */
+ function place(){
+  const lay=document.querySelector('.decide-layer'),box=document.querySelector('.decide-box');
+  if(!lay||!box)return;
+  const vw=document.documentElement.clientWidth,vh=document.documentElement.clientHeight;
+  /* 用实测判断「是不是单列」，不用写死的宽度阈值：
+     单列时日志轴会掉到玩家区下方（rail.top 明显大于 mat.top），双列时两者顶对齐。
+     1100~1280 这一段断点是「双列但很窄」，光看宽度会误判成双列，实测才不会。 */
+  const mat=document.querySelector('.player-mat'),rail=document.querySelector('.tabletop-rail');
+  const stacked=!mat||!rail||rail.getBoundingClientRect().top>=mat.getBoundingClientRect().bottom-8;
+
+  /* 可点元素的右缘与下缘：弹窗必须让开这两条线。 */
+  const boxes=[...document.querySelectorAll('.hand-card,.character-card,.encounter-card,.own-characters,.hand-zone')]
+   .map(e=>e.getBoundingClientRect()).filter(r=>r.width&&r.height);
+  const rightMost=boxes.reduce((m,r)=>Math.max(m,r.right),0);
+  const bottomMost=boxes.reduce((m,r)=>Math.max(m,r.bottom),0);
+  const gap=14;
+
+  if(!stacked){
+   /* 双列：往右列留白里塞。宽度＝屏幕右缘到可点区右缘。 */
+   const avail=vw-rightMost-gap*2;
+   if(avail>=300){
+    const w=Math.min(560,Math.max(300,avail));
+    box.style.setProperty('--decide-w',w+'px');
+    lay.style.justifyContent='flex-end';lay.style.alignItems='flex-start';
+    /* 优先贴日志轴左缘（挡住只读列代价最小），但绝不越过可点区右缘。 */
+    const railLeft=rail?rail.getBoundingClientRect().left:vw;
+    lay.style.paddingLeft=Math.max(rightMost+gap,railLeft-w-gap)+'px';
+    lay.style.paddingRight=gap+'px';
+    box.style.maxHeight='calc(100vh - 110px)';
+    return;
+   }
+  }
+  /* 单列 / 右侧没空间：留到牌桌下方的空白里。
+     这里不用「贴屏幕底」，而是贴「可点区下缘 + 间距」——手牌下方通常还有一段空白，
+     弹窗正好落在那儿；真没空白时再退回贴底。 */
+  const roomBelow=vh-bottomMost-gap*2;
+  lay.style.justifyContent='center';lay.style.alignItems='flex-start';
+  box.style.setProperty('--decide-w','100%');
+  lay.style.paddingLeft=gap+'px';lay.style.paddingRight=gap+'px';
+  /* v0.15.62：bottomMost 可能大于 vh——窄屏（1100/900）下手牌整块比视口还高，
+     此时 roomBelow 是负数，原来直接落进下面的 else 分支「贴视口底」，
+     结果弹窗盖住手牌下半截。而这恰恰是最糟的选择：这时候玩家正需要滚下去看手牌。
+     正确做法是让弹窗跟着文档流排到可点区**下方**，整页往下滚就能看到，
+     它既不遮挡、也不被 maxHeight 压成一条缝。
+     gap*2 是给上下留的呼吸位，别把弹窗顶在卡片边缘上。 */
+  const belowDoc=bottomMost+gap;
+  if(roomBelow<120&&belowDoc>vh-40){
+   lay.style.paddingTop=Math.round(belowDoc)+'px';lay.style.paddingBottom=gap+'px';
+   box.style.maxHeight='none';
+   return;
+  }
+  /* 只要下方还留得下一段（>=120px，够显示两行正文），就放在下方——
+     宁可让弹窗矮一点要滚动，也不要去盖手牌：投名单、出牌都得点牌桌上的东西。
+     以前这里用 200px 做门槛，1100×800 实测只有 156px 就被判成「放不下」，
+     于是整块手牌被弹窗盖住，正是这一条踩过的坑。 */
+  if(roomBelow>=120){
+   lay.style.paddingTop=Math.round(bottomMost+gap)+'px';lay.style.paddingBottom=gap+'px';
+   box.style.maxHeight=Math.round(roomBelow)+'px';
+  }else{
+   /* 下方真的只剩几十像素：只能覆盖屏幕下半截，牌桌上半部分仍可见可点。 */
+   lay.style.alignItems='flex-end';lay.style.paddingTop='12px';lay.style.paddingBottom='12px';
+   box.style.maxHeight='min(38vh,'+Math.round(vh*0.38)+'px)';
+  }
+ }
+
+ /* 弹窗开合状态记在模块里，不进 state：它纯粹是视图态，不该污染存档与撤销栈。 */
+ let openKind=null,lastKey='';
+ function key(s,p){const d=pending(s,p.id===undefined?handView:p.id);return d?d.kind+'|'+d.title:'';}
+ function html(s,pid){
+  const d=pending(s,pid);if(!d)return '';
+  const isOpen=openKind===d.kind;
+  /* 关掉之后不消失，缩成右上角一枚角标，随时能叫回来。 */
+  if(!isOpen)return `<button type="button" class="decide-badge" data-action="decide" data-decide="open" title="还有待你决定的事，点开处理">待决定 <b>1</b></button>`;
+  /* 量两次：第一次在下一帧（DOM 已排版），第二次再等一帧。
+     只量一次会在图片解码/手牌扇叠计算完成前读到旧位置——实测 1100 宽下就因此
+     把弹窗放在了整块手牌上面。第二次量到的才是最终布局。 */
+  nextFrame(()=>{place();nextFrame(place);});
+  return `<div class="decide-layer" data-decide-layer="1"><section class="decide-box" role="dialog" aria-label="${esc(d.title)}" tabindex="-1" data-stop="1">
+   <div class="decide-head"><h2>${esc(d.title)}</h2><button type="button" class="decide-x" data-action="decide" data-decide="close" aria-label="收起">收起，稍后处理</button></div>
+   <div class="decide-body">${d.body}</div>
+  </section></div>`;
+ }
+ function handle(kind){
+  /* 角标点开时也要重新定位：收起期间可能换过分辨率或转过屏。 */
+  if(kind==='open'){openKind=key(state,handView).split('|')[0]||'phase';render();nextFrame(()=>{const b=document.querySelector('.decide-box');if(b)b.focus();place();});return false;}
+  if(kind==='close'){openKind=null;render();return false;}
+  return true;
+ }
+ /* 需要决定、且玩家没主动收起时，才自动展开——这是「轮到你决定时才弹」的落点。
+   已经收起过就不反复弹出打断人，只留角标。 */
+ function sync(s,pid){
+  const k=key(s,pid);
+  if(!k){openKind=null;lastKey='';return;}
+  if(k!==lastKey){lastKey=k;openKind=k.split('|')[0];}
+ }
+ function reset(){openKind=null;lastKey='';}
+ /* 转屏／改窗口时重算一次，否则弹窗还停在旧分辨率的坐标上。 */
+ if(typeof window!=='undefined')window.addEventListener('resize',()=>{try{place();}catch(e){}});
+ function isOpen(){return openKind!==null;}
+ return {pending,html,handle,sync,reset,isOpen};
+})();
 const DesktopUI=(()=>{
  const E=ScenarioEngine,R=E.planning,Q=E.questing,C=E.combat,esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  let combatDraft={key:'',target:null,ids:[]},draftState=null;
@@ -10283,19 +10615,13 @@ const DesktopUI=(()=>{
   }catch(e){return '';}
   return '';
  }
- function phasePanel(s,pid,m){if(m?.kind==='quest'){const q=s.questing;return `<section class="panel"><h2>阶段3 · 角色投入</h2><p>从桌面点选重置角色；全员确认前可更改。</p>${selection(s,m)}<div class="actions">${s.players.filter(p=>!p.eliminated).map(p=>q.deployments?.[p.id]?.confirmed?`<span class="badge">${esc(p.name)}：已提交（可更改）</span>${b('取消'+p.name+'的提交','withdraw',`data-player="${p.id}"`)}`:`<span class="badge">${esc(p.name)}：未提交</span>`).join('')}</div></section>`;}
-  /* 操作条只放「本阶段正在等玩家做的那件事」。角色卡下方常驻完整面板与「结束阶段」按钮，
-     这里再整份复制一遍，就会出现右边被挤爆、玩家要点两次同一件事的重复窗口。 */
-  return (m&&m.kind!=='quest'?selection(s,m):'')+taskPanel(s,pid);
- }
-/* 「结束阶段」：v0.15.59 起简化成一颗按钮，放进底部「队伍与手牌」模块的标题行。
-   原来的四段竖排（标题/清单/按钮/说明）占掉玩家区一整块；清单全文改为按钮
-   tooltip（title），未完成项数量写在按钮旁的 door-state（隐藏 span，供
-   check-auto-phase 的卡死签名读取）。checklist 与引擎判定仍共用 phaseRules.checks()。 */
+/* 角色区右上角的「结束阶段」：唯一常驻的推进按钮。
+   它同时也是本阶段的验收口——点不动时把「还差什么」写进 title，玩家不用去别处找原因。 */
  function phaseDoor(s){
   if(!s||s.status!=='playing'||s.setupPending||setupPendingReveal(s))return '';
   const R2=typeof E.phaseRules!=='undefined'?E.phaseRules:null;if(!R2)return '';
-  const list=R2.checks(s)||[],left=list.filter(x=>!x.check()),ready=!left.length&&!s.pending.length;
+  const list=(R2.checks(s)||[]).filter(x=>!(s.questing&&s.questing.completed&&/^(deploy|dconfirm|commit|reveal|pass):?/.test(x.key)));
+  const left=list.filter(x=>!x.check()),ready=!left.length&&!s.pending.length;
   const full=list.map(x=>(x.check()?'✓ ':'· ')+x.label).join('\n');
   /* 探险阶段的投入名单是「必须玩家定」的选择：引擎不会替人挑角色，
      所以按钮要禁用并直接点名等谁，不能让玩家点了没反应。 */
@@ -10303,10 +10629,16 @@ const DesktopUI=(()=>{
    ?(q.order||[]).filter(id=>!q.deployments?.[id]?.confirmed).map(id=>s.players[id]?.name||('玩家'+(id+1))):[];
   const blocked=waiting.length>0;
   const tail=s.pending.length?'有剧本事项待结算':blocked?'等 '+waiting.join('、')+' 提交投入名单':left.length?'还差 '+left.length+' 项':'必需操作已全部完成';
-  return `<span class="phase-door${ready?' ready':''}" aria-label="结束阶段"><span class="door-state" hidden>${esc(tail)}</span><button class="primary door-go" data-action="endPhase" ${s.pending.length||blocked?'disabled':''} title="${esc((s.pending.length?'先结算剧本事项\n':blocked?'等 '+waiting.join('、')+' 提交投入名单\n':left.length?'还差 '+left.length+' 项必需操作\n':'可以结束\n')+(full||'本阶段没有必需操作'))}">${esc(ready&&!blocked?'结束阶段 → '+phaseAfterName(s):'结束阶段')}</button></span>`;
+  const tipFull=full?(list.some(x=>!x.check())?full:list.map(x=>'✓ '+x.label).join('\n')):'';
+  return `<span class="phase-door${ready?' ready':''}" aria-label="结束阶段"><span class="door-state" hidden>${esc(tail)}</span><button class="primary door-go" data-action="endPhase" ${s.pending.length||blocked?'disabled':''} title="${esc((s.pending.length?'先结算剧本事项\n':blocked?'等 '+waiting.join('、')+' 提交投入名单\n':left.length?'还差 '+left.length+' 项必需操作\n':'可以结束\n')+(tipFull||'本阶段没有必需操作'))}">${esc(ready&&!blocked?'结束阶段 → '+phaseAfterName(s):'结束阶段')}</button></span>`;
  }
  function phaseAfterName(s){if(s.phase>=6)return '下一回合';return phasesName[s.phase+1];}
  const phasesName=['资源','计划','探险','旅行','遭遇','战斗','刷新'];
+ /* v0.15.62：操作条只剩两样东西——剧本强制事项，和一行「现在该做什么」。
+      阶段面板、投入名单、翻牌控件全部搬进了决策弹窗（DecisionUI）。
+      以前这三处（底部 mat-phase、操作条、弹窗）是同一份内容渲染三遍，
+      玩家要在三个地方看同一件事、点同一个按钮。 */
+ function phasePanel(s,pid){return s.pending.length?pending():'';}
  function tableHTML(s,pid){
   currentState=s;if(!s.players.every(p=>p.heroStates))return legacyTable();const p=s.players[pid]||s.players[0],m=mode(s,p.id),q=E.quest(s),sc=LOTR_DATA.scenarios.find(c=>c.id===s.scenario);
   if(!m)draft(s,null);
@@ -10322,7 +10654,7 @@ const DesktopUI=(()=>{
   /* 玩家状态条：BGA 式汇总每位玩家的威胁／资源／伤害，点按即切换查看（复用 view 动作）。 */
  const tabStats=o=>{const res=o.heroStates?o.heroStates.reduce((n,h)=>n+h.resources,0):0,dmg=o.heroStates?o.heroStates.reduce((n,h)=>n+(h.damage||0),0):0;
   return `<span class="tab-stats">威胁 <b>${o.threat}</b> · 资源 <b>${res}</b> · 伤害 <b>${dmg}</b></span>${s.first===o.id?'<span class="first-mark">起始</span>':''}${o.eliminated?'<span class="elim-mark">淘汰</span>':''}`;};
- return `<div class="desktop-table"><div class="expedition-title"><div><span class="eyebrow">MIDDLE-EARTH EXPEDITION · ${APP_VERSION}</span><h1>${esc(s.session&&s.session.name||sc.name)}</h1></div><span>${s.session&&s.session.name?esc(sc.name)+' · ':''}第 ${s.round} 回合 · ${s.players.length} 人同机${s.session&&s.session.difficulty?' · '+({easy:'简单',normal:'标准',nightmare:'噩梦'}[s.session.difficulty]||''):''}</span><div class="player-tabs" role="group" aria-label="查看玩家">${s.players.map(o=>`<button data-action="desktop" data-desktop="view" data-player="${o.id}" class="${o.id===p.id?'active':''}" aria-pressed="${o.id===p.id}"><b class="tab-name">${esc(o.name)}</b>${tabStats(o)}</button>`).join('')}</div>${b('重新选择剧本','reset')}</div><div class="tabletop-layout"><div class="tabletop-main"><div class="operation-dock" role="region" aria-label="当前操作"><div class="operation-title"><span class="operation-indicator"></span><strong>${esc(prompt(s,m))}</strong><div class="operation-chips">${status(s)?.chips||''}</div><span class="small">第 ${s.phase+1}/7 阶段 · ${E.phases[s.phase]}</span>${next(s)}</div><p class="small phase-hint">${esc(phaseHint())}</p><div class="operation-content">${scorePanel(s)}${s.pending.length?pending():''}${phasePanel(s,p.id,m)}</div></div><div class="public-table"><div class="quest-location-row"><section class="table-zone quest-zone"><div class="zone-heading"><h2>当前探险 · ${esc(q.stage)}</h2><strong>${q.points?s.progress+' / '+q.points+' 进度':'特殊胜利条件'}</strong></div><div class="quest-display"><div class="quest-art-wrap">${ImageLibrary.art('enc-'+q.id,'',s.setupPending?'A':'B')}${q.points?`<div class="card-tokens quest-tokens" aria-hidden="true">${tk('progress',s.progress)}</div>`:''}</div><div><h3>${esc(q.name)}</h3><p>${esc(s.setupPending?q.front:q.back)}</p><span class="small muted">${esc(E.gate(s)||'满足条件后由规则自动推进')}</span></div></div>${q.points?`<div class="quest-progress" role="progressbar" aria-label="探险进度" aria-valuemin="0" aria-valuemax="${q.points}" aria-valuenow="${s.progress}"><div class="quest-progress-fill" style="width:${Math.min(100,Math.round(s.progress/q.points*100))}%"></div><span class="quest-progress-label">${s.progress} / ${q.points}</span></div>`:''}</section>${row('当前地点',s.active?encounter(s,s.active,'active',m):'','active-zone')}</div>${row('探查区 <span class="threat-total">总威胁 '+E.threat(s)+'</span>',s.staging.map(c=>encounter(s,c,'staging',m)).join(''))}${s.objectives.length?row('剧本目标',s.objectives.map(c=>encounter(s,c,'objective',m)).join('')):''}${others}</div><section class="player-mat"><div class="zone-heading"><h2>${esc(p.name)} · ${esc(p.registeredDeck?.name||'玩家区域')}</h2><span class="own-piles">威胁 ${p.threat}${s.first===p.id?' · 起始玩家':''} · <span class="pile-chip">牌库 <b>${p.playerDeck.length}</b></span> · <span class="pile-chip">弃牌 <b>${p.playerDiscard.length}</b></span></span></div>${p.engaged.length?row('交战区',p.engaged.map(c=>encounter(s,c,'engaged',m)).join('')):''}<section class="table-zone bottom-deck" aria-label="队伍与手牌"><div class="zone-heading"><h2>队伍与手牌 <span class="small muted">英雄 ${p.heroStates.length} · 盟友 ${p.allies.length} · 附属 ${p.attachments.length} · 手牌 ${p.hand.length}</span></h2>${phaseDoor(s)}</div><div class="table-card-row own-characters">${playerChars(s,p).map(c=>character(s,c,m)).join('')}${p.attachments.map(c=>{const meta=R.data(s,c),host=R.find(s,c.target),legal=R.abilitySpec(s,p.id,c.uid).legal;return `<article class="table-card"><button class="card-face" data-action="planning" data-plan="ability" data-player="${p.id}" data-uid="${c.uid}" ${legal?'':'disabled'}>${art(c.code)}</button><div class="table-card-caption"><b>${esc(meta.nameZh)}</b><span>附于 ${esc(host?.meta.nameZh||host?.meta.name||'目标已离场')}</span></div>${inspect(c.code)}</article>`;}).join('')}</div><div class="table-card-row hand-zone">${hand}</div></section><div class="mat-phase">${PlayerUI.openingPanel(s)}${setupPanel(s)}${s.phase===1?PlanningUI.panel(s,p.id):s.phase===2?QuestUI.panel(s,p.id):s.phase===3?TravelUI.panel(s,p.id):s.phase===4?EncounterUI.panel(s,p.id):s.phase===5?CombatUI.panel(s,p.id):s.phase===6?RefreshUI.panel(s,p.id):''}</div></section></div><aside class="tabletop-rail">${PhaseLog.rail(s,railOpen())}<section class="table-log" aria-label="远征日志">${PhaseLog.panel(s,logMarks(),logScope(),railOpen(),false)}</section></aside></div></div>`;
+ return `<div class="desktop-table"><div class="expedition-title"><div><span class="eyebrow">MIDDLE-EARTH EXPEDITION · ${APP_VERSION}</span><h1>${esc(s.session&&s.session.name||sc.name)}</h1></div><span>${s.session&&s.session.name?esc(sc.name)+' · ':''}第 ${s.round} 回合 · ${s.players.length} 人同机${s.session&&s.session.difficulty?' · '+({easy:'简单',normal:'标准',nightmare:'噩梦'}[s.session.difficulty]||''):''}</span><div class="player-tabs" role="group" aria-label="查看玩家">${s.players.map(o=>`<button data-action="desktop" data-desktop="view" data-player="${o.id}" class="${o.id===p.id?'active':''}" aria-pressed="${o.id===p.id}"><b class="tab-name">${esc(o.name)}</b>${tabStats(o)}</button>`).join('')}</div>${b('重新选择剧本','reset')}</div><div class="tabletop-layout"><div class="tabletop-main"><div class="operation-dock" role="region" aria-label="当前操作"><div class="operation-title"><span class="operation-indicator"></span><strong>${esc(prompt(s,m))}</strong><div class="operation-chips">${status(s)?.chips||''}</div><span class="small">第 ${s.phase+1}/7 阶段 · ${E.phases[s.phase]}</span>${next(s)}</div><details class="phase-hint-wrap"><summary>本阶段说明</summary><p class="small phase-hint">${esc(phaseHint())}</p></details><div class="operation-content">${scorePanel(s)}${phasePanel(s,p.id,m)}</div></div><div class="public-table"><div class="quest-location-row"><section class="table-zone quest-zone"><div class="zone-heading"><h2>当前探险 · ${esc(q.stage)}</h2><strong>${q.points?s.progress+' / '+q.points+' 进度':'特殊胜利条件'}</strong></div><div class="quest-display"><div class="quest-art-wrap">${ImageLibrary.art('enc-'+q.id,'',s.setupPending?'A':'B')}${q.points?`<div class="card-tokens quest-tokens" aria-hidden="true">${tk('progress',s.progress)}</div>`:''}</div><div><h3>${esc(q.name)}</h3><p>${esc(s.setupPending?q.front:q.back)}</p><span class="small muted">${esc(E.gate(s)||'满足条件后由规则自动推进')}</span></div></div>${q.points?`<div class="quest-progress" role="progressbar" aria-label="探险进度" aria-valuemin="0" aria-valuemax="${q.points}" aria-valuenow="${s.progress}"><div class="quest-progress-fill" style="width:${Math.min(100,Math.round(s.progress/q.points*100))}%"></div><span class="quest-progress-label">${s.progress} / ${q.points}</span></div>`:''}</section>${row('当前地点',s.active?encounter(s,s.active,'active',m):'','active-zone')}</div>${row('探查区 <span class="threat-total">总威胁 '+E.threat(s)+'</span>',s.staging.map(c=>encounter(s,c,'staging',m)).join(''))}${s.objectives.length?row('剧本目标',s.objectives.map(c=>encounter(s,c,'objective',m)).join('')):''}${others}</div><section class="player-mat"><div class="zone-heading"><h2>${esc(p.name)} · ${esc(p.registeredDeck?.name||'玩家区域')}</h2><span class="own-piles">威胁 ${p.threat}${s.first===p.id?' · 起始玩家':''} · <span class="pile-chip">牌库 <b>${p.playerDeck.length}</b></span> · <span class="pile-chip">弃牌 <b>${p.playerDiscard.length}</b></span></span></div>${p.engaged.length?row('交战区',p.engaged.map(c=>encounter(s,c,'engaged',m)).join('')):''}<section class="table-zone bottom-deck" aria-label="队伍与手牌"><div class="zone-heading"><h2>队伍与手牌 <span class="small muted">英雄 ${p.heroStates.length} · 盟友 ${p.allies.length} · 附属 ${p.attachments.length} · 手牌 ${p.hand.length}</span></h2>${phaseDoor(s)}</div><div class="table-card-row own-characters">${playerChars(s,p).map(c=>character(s,c,m)).join('')}${p.attachments.map(c=>{const meta=R.data(s,c),host=R.find(s,c.target),legal=R.abilitySpec(s,p.id,c.uid).legal;return `<article class="table-card"><button class="card-face" data-action="planning" data-plan="ability" data-player="${p.id}" data-uid="${c.uid}" ${legal?'':'disabled'}>${art(c.code)}</button><div class="table-card-caption"><b>${esc(meta.nameZh)}</b><span>附于 ${esc(host?.meta.nameZh||host?.meta.name||'目标已离场')}</span></div>${inspect(c.code)}</article>`;}).join('')}</div>${PlanningUI.board(p)}<div class="table-card-row hand-zone">${hand}</div></section><div class="mat-phase">${PlayerUI.openingPanel(s)}${setupPanel(s)}</div></section></div><aside class="tabletop-rail">${PhaseLog.rail(s,railOpen())}<section class="table-log" aria-label="远征日志">${PhaseLog.panel(s,logMarks(),logScope(),railOpen(),false)}</section></aside></div>${DecisionUI.html(s,p.id)}</div>`;
  }
  function handle(el){const k=el.dataset.desktop,uid=+el.dataset.uid,pid=+el.dataset.player,m=mode(state,handView),d=draft(state,m);
   if(k==='view'){handView=pid;render();return;}if(k==='reset'){if(confirm('结束当前桌面并重新选择剧本？建议先导出存档。'))mutate(()=>state=null);return;}
@@ -10887,10 +11219,14 @@ async function handleChooser(b){const a=b.dataset.action,c=deckChooser;if(!c)ret
  if(a==='chooserImportUrl'){const input=document.querySelector('#chooser-url'),raw=String(input&&input.value||'').trim(),m=raw.match(/(?:decklist|deck)\/(?:view\/)?(\d+)/i)||raw.match(/^(\d+)$/);if(!m){toast('无法识别牌组编号；示例 https://ringsdb.com/decklist/view/12345');return;}const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),15000);try{const res=await fetch('https://ringsdb.com/api/public/decklist/'+m[1],{signal:ctrl.signal,headers:{Accept:'application/json'}});if(!res.ok)throw Error('RingsDB 返回 HTTP '+res.status);const saved=PlayerUI.saveDeck(PlayerCards.fromRingsdb(await res.json()));c.picks[c.player]=saved.id;const next=c.picks.findIndex(x=>!x);if(next>=0)c.player=next;render();toast('已导入并选给玩家'+(c.player+1)+'：'+saved.name);}catch(e){toast(e.name==='AbortError'?'RingsDB 请求超时（15秒）；国内网络通常无法访问':'导入失败：'+e.message);}finally{clearTimeout(timer);}return;}
  if(a==='chooserConfirm'){for(let i=0;i<c.players;i++)setupDraft.decks[i]=c.picks[i];const id=c.scenario;deckChooser=null;beginScenario(id);return;}
 }
-function render(){captureSetup();document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));const navBtn=$('#'+({table:'tableTab',decks:'decksTab',catalog:'catalogTab',help:'helpTab'}[tab]));if(navBtn)navBtn.classList.add('active');$('#app').innerHTML=tab==='table'?(deckChooser?chooserPage():table()):tab==='decks'?(PlayerUI.isBuilding()?PlayerUI.builder():PlayerUI.decksPage()):tab==='catalog'?catalog():help();$('#undo').disabled=!history.length;$('#export').disabled=!state;if(tab==='table'&&state&&$('#hand-player'))$('#hand-player').onchange=ev=>{handView=Number(ev.target.value);render();};if(tab==='table'&&state&&$('#planning-actor'))$('#planning-actor').onchange=ev=>{handView=Number(ev.target.value);render();};if(tab==='table'&&state)QuestUI.bind();if(tab==='table'&&!state)bindSetup();if(tab==='decks'){PlayerUI.bindDecks();PlayerUI.bind();}ImageLibrary.bindErrors(document.querySelector('#app'));if(tab==='catalog'){filterCatalog();const si=$('#search');if(si)si.oninput=filterCatalog;const pf=$('#podFilter');if(pf)pf.onchange=()=>{podFilter=pf.value||'';render();};}trackView();}
+function render(){captureSetup();document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));const navBtn=$('#'+({table:'tableTab',decks:'decksTab',catalog:'catalogTab',help:'helpTab'}[tab]));if(navBtn)navBtn.classList.add('active');/* 弹窗状态跟着引擎走：每次重绘前先问一次「现在有没有要玩家决定的」。
+     有且是新出现的就自动展开；已经收起过的不再反复弹，只留角标。 */
+ if(tab==='table'&&state&&!deckChooser)DecisionUI.sync(state,handView);else DecisionUI.reset();
+ $('#app').innerHTML=tab==='table'?(deckChooser?chooserPage():table()):tab==='decks'?(PlayerUI.isBuilding()?PlayerUI.builder():PlayerUI.decksPage()):tab==='catalog'?catalog():help();$('#undo').disabled=!history.length;$('#export').disabled=!state;if(tab==='table'&&state&&$('#hand-player'))$('#hand-player').onchange=ev=>{handView=Number(ev.target.value);render();};if(tab==='table'&&state&&$('#planning-actor'))$('#planning-actor').onchange=ev=>{handView=Number(ev.target.value);render();};if(tab==='table'&&state)QuestUI.bind();if(tab==='table'&&!state)bindSetup();if(tab==='decks'){PlayerUI.bindDecks();PlayerUI.bind();}ImageLibrary.bindErrors(document.querySelector('#app'));if(tab==='catalog'){filterCatalog();const si=$('#search');if(si)si.oninput=filterCatalog;const pf=$('#podFilter');if(pf)pf.onchange=()=>{podFilter=pf.value||'';render();};}trackView();}
 async function choose(title,body,read){return new Promise(resolve=>{let d=document.createElement('dialog');d.innerHTML=`<h2>${enc(title)}</h2><div>${body}</div><div class="actions"><button class="primary" id="ok">确认</button><button id="cancel">取消</button></div>`;document.body.append(d);d.showModal();d.querySelector('#ok').onclick=()=>{let v=read(d);d.close();d.remove();resolve(v);};d.querySelector('#cancel').onclick=()=>{d.close();d.remove();resolve(null);};d.oncancel=()=>{d.remove();resolve(null);};});}
 function playerOptions(){return state.players.filter(p=>!p.eliminated).map(p=>`<option value="${p.id}">${enc(p.name)}</option>`).join('');}
 $('#app').onclick=async ev=>{const b=ev.target.closest('[data-action]');if(!b||b.disabled)return;const a=b.dataset.action,uid=Number(b.dataset.uid),id=Number(b.dataset.id),pid=Number(b.dataset.player);
+ if(a==='decide'){DecisionUI.handle(b.dataset.decide);return;}
  if(a==='desktop'){DesktopUI.handle(b);return;}
  if(a==='logScope'){const v=b.dataset.scope;if(!['round','all'].includes(v))return;logScope=v;render();return;}
  if(a==='logToggle'){logOpen=!logOpen;render();return;}

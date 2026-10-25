@@ -20,12 +20,18 @@ const EncounterUI=(()=>{
    else{const allPassed=ps.every(p=>x.finalPasses.includes(p.id));
     body+=`<p class="small muted">${x.step==='beforeChecks'?'可先调整威胁或使用合法事件；全队放弃本窗口行动后开始交战检定。':'交战检定已完成；全队放弃本窗口行动后结束遭遇阶段。'}</p><div class="actions">${ps.map(p=>b(p.name+(x.finalPasses.includes(p.id)?'：取消放弃':'：放弃行动'),x.finalPasses.includes(p.id)?'unpass':'pass',`data-player="${p.id}"`,!!x.actionLocked)).join('')}</div><div class="actions">${b(x.step==='beforeChecks'?'开始交战检定 →':'结束遭遇阶段 →',x.step==='beforeChecks'?'checks':'finish','',!!x.plannedActions?.length||!!x.actionLocked||!allPassed)}</div>`;}
    if(x.plannedActions?.length||x.actionError)body+=`<div class="notice"><h3>暂定行动 · 交流缓冲区</h3>${x.actionError?`<p>${esc(x.actionError)}</p>`:''}${(x.plannedActions||[]).map(a=>{const c=a.kind==='play'?s.players[a.player].hand.find(c=>c.uid===a.uid):R.find(s,a.uid)?.state;return `<p>${esc(s.players[a.player].name)} · ${esc(c?R.data(s,{...c,owner:a.player}).nameZh:'#'+a.uid)} ${b('撤销暂定行动','cancelAction',`data-id="${a.id}" data-player="${a.player}"`,!!x.actionLocked)}</p>`;}).join('')}<div class="actions">${ps.map(p=>b(p.name+(x.actionApprovals?.includes(p.id)?'：取消二次确认':'：二次确认行动'),x.actionApprovals?.includes(p.id)?'unapproveActions':'approveActions',`data-player="${p.id}"`,!!x.actionLocked||!x.plannedActions?.length)).join('')}</div></div>`;}
+  /* v0.15.62：'checks' 是引擎逐人掷骰的中间步。正常会瞬间过去，但如果本轮
+     所有玩家都已无候选敌人（或都已横置/被消灭），resume() 就不再往前推，
+     面板里两个分支都进不去（都只认 beforeChecks/afterChecks），弹窗只剩标题、
+     一个可点控件都没有 —— 这就是「决策弹窗是空壳」的现场。
+     给它一条明说的出口：继续结算（引擎自己会走到 afterChecks）。 */
+  if(x.step==='checks'&&!task){body+=`<p class="small muted">正在逐人结算交战检定${x.tasks.length?'（有 '+x.tasks.length+' 项强制选择待处理）':'；本轮已无玩家需要交战'}。</p><div class="actions">${b('继续结算交战检定 →','continueChecks','',!!x.actionLocked)}</div>`;}
   const titles={optional:'暂定主动交战与全队确认',executing:'执行交战与强制效果',beforeChecks:'交战检定前行动窗口',checks:'交战检定',afterChecks:'检定后行动与阶段结束'};
   return `<section class="panel questing-panel"><h2>阶段5 · ${titles[x.step]||'遭遇'}</h2>${body}</section>`;
  }
  async function handle(el){const k=el.dataset.encounter,pid=+el.dataset.player,uid=+el.dataset.uid,id=+el.dataset.id;if(k==='back'){if(history.length){state=history.pop();save();render();}return;}
   /* v0.15.56：智能模式的「全部确认」——一次性替所有未确认玩家二次确认，省去逐个点。 */
   if(k==='approveAll'){mutate(()=>{const x=state.encountering;for(const p of state.players.filter(p=>!p.eliminated))if(!(x.approvals||[]).includes(p.id))T.approve(state,p.id);});return;}
-  mutate(()=>{if(k==='propose')T.propose(state,pid,uid);if(k==='skip')T.propose(state,pid,null);if(k==='cancel')T.cancel(state,pid);if(k==='approve')T.approve(state,pid);if(k==='unapprove')T.unapprove(state,pid);if(k==='tie')T.tie(state,id,uid);if(k==='checks')T.beginChecks(state);if(k==='finish')T.finish(state);if(k==='pass')Q.pass(state,pid);if(k==='unpass')Q.unpass(state,pid);if(k==='cancelAction')Q.cancelAction(state,pid,id);if(k==='approveActions')Q.approveActions(state,pid);if(k==='unapproveActions')Q.withdrawActionApproval(state,pid);});}
+  mutate(()=>{if(k==='propose')T.propose(state,pid,uid);if(k==='skip')T.propose(state,pid,null);if(k==='cancel')T.cancel(state,pid);if(k==='approve')T.approve(state,pid);if(k==='unapprove')T.unapprove(state,pid);if(k==='tie')T.tie(state,id,uid);if(k==='checks')T.beginChecks(state);if(k==='continueChecks')T.resume(state);if(k==='finish')T.finish(state);if(k==='pass')Q.pass(state,pid);if(k==='unpass')Q.unpass(state,pid);if(k==='cancelAction')Q.cancelAction(state,pid,id);if(k==='approveActions')Q.approveActions(state,pid);if(k==='unapproveActions')Q.withdrawActionApproval(state,pid);});}
  return {panel,handle};
 })();

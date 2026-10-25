@@ -67,5 +67,7 @@ const QuestUI=(()=>{
  function revealCard(s){const c=s.questing&&s.questing.current&&s.questing.current.card;if(!c)return '';
   return `<section class="panel questing-panel compact"><div class="panel-title"><h2>翻开的遭遇</h2><strong>${c.surge?'涌现':'无涌现'}</strong></div><p><b>${esc(c.name)}</b></p><p class="small muted">${esc(c.rule)}</p><div class="actions">${R.cancelOptions(s).map(o=>button(o.label,'cancel',`data-value="${o.value}"`)).join('')}${button('结算此牌的关键词与效果','reveal')}</div></section>`;
  }
- return {panel,handle,bind,setDraft,draftFor,picker,revealCard};
+ /* 决策弹窗的标题直接用这里的中文步骤名，免得两处各写一份文案、改一处漏一处。 */
+ function stepName(step){return steps[step]||'';}
+ return {panel,handle,bind,setDraft,draftFor,picker,revealCard,stepName};
 })();

@@ -8,12 +8,16 @@ const WindowUI=(()=>{
     现在只要窗口可推进就保留那颗按钮，无选项时只渲染按钮行。 */
  function panel(s){if(!s)return '';if(W.settings(s).mode!=='smart')return '';
   if(!(R.window(s).kind==='action'&&(s.phase!==1||R.active(s)===null)))return '';
-  const opts=W.options(s),eligible=W.eligible(s);
-  if(!opts.length&&!eligible)return '';
-  const rows=opts.length?opts.map(o=>`<div class="window-option"><span>${esc(s.players[o.player].name)} · ${esc(o.name)}${o.muted?'（本阶段不再提醒）':''}</span> ${o.kind==='objective'?`<button data-action="claim" data-uid="${o.uid}" ${eligible?'':'disabled'}>领取目标</button>`:`<button data-action="planning" data-plan="${o.kind}" data-player="${o.player}" data-uid="${o.uid}" ${eligible?'':'disabled'}>选择${o.kind==='play'?'事件':'能力'}</button>`} ${b('本阶段不再提醒','mute',`data-kind="${o.kind}" data-player="${o.player}" data-uid="${o.uid}"`,o.muted||!eligible)}</div>`).join('')
+  /* v0.15.60：options() 现在返回 {list, blocked}。blocked 是「这张卡在场、但此刻
+     用不了」及引擎给出的中文理由。以前这些来源被静默丢弃，玩家看到一张能用的卡
+     点了没反应，只能怀疑程序出错。这里把它们列出来，并且只说明、不给按钮。 */
+  const all=W.options(s),opts=all.list||[],blocked=all.blocked||[],eligible=W.eligible(s);
+  if(!opts.length&&!blocked.length&&!eligible)return '';
+  const rows=opts.length?opts.map(o=>`<div class="window-option"><span>${esc(s.players[o.player].name)} · ${esc(o.name)}${o.muted?'（本次已跳过）':''}</span> ${o.kind==='objective'?`<button data-action="claim" data-uid="${o.uid}" ${eligible?'':'disabled'}>领取目标</button>`:`<button data-action="planning" data-plan="${o.kind}" data-player="${o.player}" data-uid="${o.uid}" ${eligible?'':'disabled'}>选择${o.kind==='play'?'事件':'能力'}</button>`} ${b('本次跳过','mute',`data-kind="${o.kind}" data-player="${o.player}" data-uid="${o.uid}"`,o.muted)}</div>`).join('')
    :'<p class="small muted">本窗口没有需要提醒的行动，可以让过继续。</p>';
-  return `<section class="panel window-panel compact"><div class="panel-title"><h2>行动窗口 · 智能推进</h2>${b('切换为详细模式','mode','data-mode="detailed"')}</div>${rows}<div class="actions">${b('全队继续到下一决策点','next','',!eligible)}${b('恢复本阶段能力提醒','restore','',!(s.windowPrefs?.muted||[]).length)}</div></section>`;
+  const why=blocked.length?`<details class="window-blocked"><summary>${blocked.length} 张在场但不能用（点开看原因）</summary>${blocked.map(x=>`<div class="window-option blocked"><span>${esc(s.players[x.player].name)} · ${esc(x.name)}</span><em>${esc(x.reason)}</em></div>`).join('')}</details>`:'';
+  return `<section class="panel window-panel compact"><div class="panel-title"><h2>行动窗口 · 智能推进</h2>${b('切换为详细模式','mode','data-mode="detailed"')}</div>${rows}${why}<div class="actions">${b('全队继续到下一决策点','next','',!eligible)}${b('恢复全部跳过记录','restore','',!(s.windowPrefs?.muted||[]).length)}</div></section>`;
  }
- function handle(el){const k=el.dataset.window;mutate(()=>{if(k==='mode')W.setMode(state,el.dataset.mode);if(k==='mute')W.mute(state,el.dataset.kind,+el.dataset.player,+el.dataset.uid);if(k==='restore')W.restore(state);if(k==='next')W.next(state);});}
+ function handle(el){const k=el.dataset.window;mutate(()=>{if(k==='mode')W.setMode(state,el.dataset.mode);if(k==='mute')W.mute(state,el.dataset.kind,+el.dataset.player,+el.dataset.uid,'once');if(k==='restore')W.restore(state);if(k==='next')W.next(state);});}
  return {panel,handle};
 })();
