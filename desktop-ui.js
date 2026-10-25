@@ -1,6 +1,6 @@
 /* Tabletop view: UI drafts never pay, exhaust, reveal, or bypass phase validation. */
 /* 界面版本徽标唯一来源：须与 CHANGELOG.md 最新条目标题一致（planning-dom-tests 有校验）。 */
-const APP_VERSION='v0.15.56';
+const APP_VERSION='v0.15.57';
 const DesktopUI=(()=>{
  const E=ScenarioEngine,R=E.planning,Q=E.questing,C=E.combat,esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  let combatDraft={key:'',target:null,ids:[]},draftState=null;
@@ -122,7 +122,12 @@ const DesktopUI=(()=>{
      空壳（标题+长说明）已删除，与阶段竖轴不再重复。 */
   try{
    if(s.phase===2){const q=s.questing;
-    if(q&&!q.completed&&q.step==='commit'&&!q.deploymentLocked&&!q.tasks.length)return QuestUI.picker(s,pid)||'';
+    /* v0.15.57：这里原来写死 step==='commit'，把 picker 内部新加的 beforeCommit
+       入口整个挡住——「开始投入角色」因此从未真正渲染过，智能模式到这一步仍然卡死。
+       改成交给 picker 自己判断：它已经不满足条件时返回空串，这里保持原样回落到行动窗口。 */
+    if(q&&!q.completed&&!q.deploymentLocked&&!q.tasks.length){
+     const picked=QuestUI.picker(s,pid)||'';
+     if(picked)return picked;}
     if(q&&q.step==='staging'&&q.current)return QuestUI.revealCard(s)||'';}
    return WindowUI.panel(s)||'';
   }catch(e){return '';}

@@ -6348,13 +6348,21 @@ const PhaseRulesFactory=(E)=>{
    }
    if(c.step==='commit')add('commit','按起始玩家顺序投入角色',c.commitIndex>=order.length,'待投入',()=>c.commitIndex>=order.length);
    add('reveal','完成逐张探查',!c.current&&!(c.remaining||[]).length,'剩余 '+((c.remaining||[]).length+(c.current?1:0))+' 张',()=>!c.current&&!(c.remaining||[]).length);
-   add('result','结算探险结果',c.step==='afterResult',c.step==='afterStaging'?'待结算':'未开始',()=>c.step==='afterResult');
+   /* v0.15.57：阶段收尾完成后 step 会变成 'completed'（planning-engine complete()），
+      原判据只认 'afterResult'，于是「探险结果」在事后复查里永远是未完成，
+      autoAdvance 据此认为阶段没做完、拒绝推进，界面又只剩一句「验收完成」。
+      已完成本身就是「结果已结算」的证据，一并认可。 */
+   add('result','结算探险结果',['afterResult','completed'].includes(c.step),c.step==='afterStaging'?'待结算':'未开始',()=>['afterResult','completed'].includes(c.step));
    add('pass','全队放弃本窗口行动',live(s).every(p=>(c.finalPasses||[]).includes(p.id)),'待确认',()=>live(s).every(p=>(c.finalPasses||[]).includes(p.id)));
   }
   if(s.phase===3&&c){
+   /* v0.15.57：同 result 一项的毛病——阶段收尾后 step 变 'completed'，
+      下面三项的判据都只认 'action'，事后复查一律判未完成，
+      于是 autoAdvance 认为旅行阶段还没走完、拒绝进入遭遇阶段。 */
+   const doneStep=c.step==='completed'||!!c.completed;
    add('choice','完成旅行选择',c.step!=='choice','待选择',()=>c.step!=='choice');
-   add('travel','支付费用并抵达地点',!!c.traveled||(c.step==='action'),'未抵达',()=>!!c.traveled||c.step==='action');
-   add('pass','全队放弃旅行后行动',(c.step==='action')&&live(s).every(p=>(c.finalPasses||[]).includes(p.id)),'待确认',()=>(c.step==='action')&&live(s).every(p=>(c.finalPasses||[]).includes(p.id)));
+   add('travel','支付费用并抵达地点',!!c.traveled||(c.step==='action')||doneStep,'未抵达',()=>!!c.traveled||c.step==='action'||doneStep);
+   add('pass','全队放弃旅行后行动',doneStep||((c.step==='action')&&live(s).every(p=>(c.finalPasses||[]).includes(p.id))),'待确认',()=>doneStep||((c.step==='action')&&live(s).every(p=>(c.finalPasses||[]).includes(p.id))));
   }
   if(s.phase===4&&c){
    add('optional','提交主动交战方案',(c.approvals||[]).length>=live(s).length||c.step!=='optional','待提交',()=>(c.approvals||[]).length>=live(s).length||c.step!=='optional');
@@ -6362,9 +6370,11 @@ const PhaseRulesFactory=(E)=>{
    add('pass','全队放弃检定后行动',c.step!=='afterChecks'||live(s).every(p=>(c.finalPasses||[]).includes(p.id)),'待确认',()=>c.step!=='afterChecks'||live(s).every(p=>(c.finalPasses||[]).includes(p.id)));
   }
   if(s.phase===5&&c){
-   add('enemies','结算所有敌人攻击',(c.enemyIndex||0)>=live(s).length&&c.step!=='enemyChoice','待结算',()=>(c.enemyIndex||0)>=live(s).length&&c.step!=='enemyChoice');
-   add('attacks','完成玩家攻击步骤',['endAction','ending'].includes(c.step),'待攻击',()=>['endAction','ending'].includes(c.step));
-   add('pass','全队放弃攻击后行动',!['playerAction','afterPlayer'].includes(c.step)||live(s).every(p=>(c.finalPasses||[]).includes(p.id)),'待确认',()=>!['playerAction','afterPlayer'].includes(c.step)||live(s).every(p=>(c.finalPasses||[]).includes(p.id)));
+   /* 同上：战斗收尾后 step 变 'completed'，判据要一并认可，否则阶段完成却判未完成。 */
+   const doneStep=c.step==='completed'||!!c.completed;
+   add('enemies','结算所有敌人攻击',doneStep||((c.enemyIndex||0)>=live(s).length&&c.step!=='enemyChoice'),'待结算',()=>doneStep||((c.enemyIndex||0)>=live(s).length&&c.step!=='enemyChoice'));
+   add('attacks','完成玩家攻击步骤',doneStep||['endAction','ending'].includes(c.step),'待攻击',()=>doneStep||['endAction','ending'].includes(c.step));
+   add('pass','全队放弃攻击后行动',doneStep||!['playerAction','afterPlayer'].includes(c.step)||live(s).every(p=>(c.finalPasses||[]).includes(p.id)),'待确认',()=>doneStep||!['playerAction','afterPlayer'].includes(c.step)||live(s).every(p=>(c.finalPasses||[]).includes(p.id)));
   }
   if(s.phase===6&&c){
    add('ready','提交蛛网支付方案',(c.approvals||[]).length>=live(s).length||c.step!=='ready','待确认',()=>(c.approvals||[]).length>=live(s).length||c.step!=='ready');
@@ -6874,6 +6884,32 @@ function endPhase(s){
  if(s.phase===from)steps.push(s.questing&&s.questing.current?'仍有遭遇牌待结算':api.phaseRules.blocker(s));
  return done();
 }
+/* autoAdvance(s)：只要本阶段没有「必须由玩家决定」的事，就替玩家一路走到下一个需要他决定的地方。
+   规则来源是 phaseRules.completed —— 它已经写明「哪些项算必需、哪些算可选」，
+   所以这里不另立一套判断，避免界面说「已完成」而引擎不动。
+
+   刻意不做的事：不替玩家决定放弃出牌、不替玩家放弃攻击、不替玩家收尾有可选响应的窗口。
+   这些步骤的 finish/move 自带前置断言（例如「请让每位玩家确认放弃剩余行动」），
+   断言一抛就当「这里需要玩家」直接停手，因此不会静默跳过玩家的选择。 */
+function autoAdvance(s){
+ if(!s||s.status!=='playing')return 0;
+ if(s.setupPending||(s.setupReveal&&!s.setupReveal.finished))return 0;
+ let moved=0;
+ for(let i=0;i<END_STEPS;i++){
+  if(s.status!=='playing')break;
+  /* 资源阶段没有任何玩家选择：到回合就收资源、抽牌。重复调用幂等（resourcePhase 自己断言过）。 */
+  if(s.phase===0&&s.resourceDoneRound!==s.round&&!s.pending?.length){try{resourcePhase(s);moved++;}catch(e){break;}}
+  /* 有待结算事项、响应队列、强制选择或待翻的遭遇牌：必须玩家处理，停手。 */
+  const c=api.phaseRules.ctx(s);
+  if((s.pending||[]).length||(c&&((c.queue||[]).length||(c.tasks||[]).length||c.current)))break;
+  if(!api.phaseRules.completed(s))break;
+  const before=s.round+':'+s.phase;
+  try{endPhase(s);}catch(e){break;}                     /* 前置断言不满足 = 需要玩家，停手 */
+  if(before===s.round+':'+s.phase)break;                /* 没有任何推进，避免空转 */
+  moved++;
+ }
+ return moved;
+}
 function questFailure(s,n){ready(s);assert(s.phase===2&&s.stagedRound===s.round,'须在探查后结算。');assert(Number.isInteger(n)&&n>0,'失败差值须为正整数。');for(const p of live(s))adjustThreat(s,p,n);for(const c of s.staging.filter(c=>c.id===101)){let o=s.objectives.find(o=>!o.holder);if(o){s.objectives=s.objectives.filter(x=>x.uid!==o.uid);if(o.guard){let g=s.staging.find(c=>c.uid===o.guard);if(g)delete g.guard;}delete o.guard;s.deck.push(o);shuffle(s,s.deck);log(s,'地牢狱卒将无人持有的目标洗回牌库');}}}
 function resolveQuest(s,willpower){assert(!s.questing,'意志由投入角色自动计算');ready(s);assert(s.phase===2&&s.stagedRound===s.round,'须先执行探查。');assert(s.resolvedRound!==s.round,'本回合探险已经结算。');assert(Number.isInteger(willpower)&&willpower>=0,'总意志须为非负整数。');const delta=willpower-threat(s);s.resolvedRound=s.round;if(delta>=0)addProgress(s,delta);else questFailure(s,-delta);log(s,`探险结算：意志${willpower}，威胁${threat(s)}，差值${delta}`);}
 /* 探险目标达成：进度够 + 剧本门槛（巨魔、目标持有、囚犯等）全部满足。
@@ -6886,7 +6922,7 @@ function questDone(s){
  return ok;
 }
 function markQuestDone(s){if(s.phase===2&&!gate(s))s.questDoneRound=s.round;}
-const api={refreshing:P7,combat:P6,encountering:P5,traveling:P4,questing:P3,planning:P2,questDone,markQuestDone,endPhase,closeWindow,passAll,openingChoice,startScenario,setupRevealStep,settleSetupCard,setupCancelOptions,setupCancel,resourcePhase,drawPlayer,extraShadow,resolveQuest,D,byId,phases,create,quest,gate,threat,stage,addProgress,advance,travel,engage,encounterChecks,defeat,shadows,revealShadows,returnEnemy,claim,returnObjective,nextPhase,resolve,rescue,questFailure,adjustThreat,clone,log};
+const api={refreshing:P7,combat:P6,encountering:P5,traveling:P4,questing:P3,planning:P2,questDone,markQuestDone,endPhase,autoAdvance,closeWindow,passAll,openingChoice,startScenario,setupRevealStep,settleSetupCard,setupCancelOptions,setupCancel,resourcePhase,drawPlayer,extraShadow,resolveQuest,D,byId,phases,create,quest,gate,threat,stage,addProgress,advance,travel,engage,encounterChecks,defeat,shadows,revealShadows,returnEnemy,claim,returnObjective,nextPhase,resolve,rescue,questFailure,adjustThreat,clone,log};
 const WindowFactory=typeof WindowRulesFactory!=='undefined'?WindowRulesFactory:require('./window-engine.js');api.windows=WindowFactory(api);
 /* 阶段规则：完成判定（纯函数，UI 与「结束阶段」共用）+ 结束阶段入口。 */
 const PhaseFactory=typeof PhaseRulesFactory!=='undefined'?PhaseRulesFactory:require('./phase-engine.js');api.phaseRules=PhaseFactory(api);return api;
@@ -9705,7 +9741,7 @@ const PlanningUI=(()=>{
  }
  function panel(s,pid){if(s.phase!==1||!s.planning)return '';const pl=s.planning;if(pl.completed)return `<section class="panel deck-valid"><h2>阶段2 · 计划阶段验收完成</h2><p>所有玩家已结束出牌并放弃剩余行动；阶段结束效果和临时修正已结算。盟友、附属、资源和横置状态保留。可以点击“进入探险阶段”继续。</p></section>`;
   const actor=s.players[pid]&&!s.players[pid].eliminated?pid:pl.order[0],current=R.active(s),ch=R.choiceSpec(s),as=R.abilities(s,actor);
-  return `<section class="panel planning-panel"><div class="panel-title"><h2>阶段2 · 计划阶段</h2><span class="badge">${pl.closing?'阶段结束结算中':current!==null?'当前出牌：'+esc(s.players[current].name):'所有玩家已结束盟友／附属出牌'}</span></div><div class="planning-order">${pl.order.map((id,i)=>`<span class="badge ${id===current?'on':''}">${esc(s.players[id].name)} ${i<pl.index?'已结束':id===current?'正在出牌':'等待'}</span>`).join('')}</div><p class="small muted">盟友和附属按起始玩家顺序打出；合法的通用行动可由其他玩家使用。费用和修正由程序计算，所有响应必须明确选择或放弃。</p>${pl.halted?`<p class="notice">${esc(pl.halted)}</p>`:''}${ch?`<div class="notice"><b>${esc(ch.message)}</b><div>${button(ch.task.optional?'选择响应／放弃':'处理强制选择','choice',`data-id="${ch.task.id}"`)}</div></div>`:''}<div class="actions">${current===null&&ScenarioEngine.windows.settings(s).mode==='smart'?'':current!==null?button('结束我的盟友／附属出牌步骤','endTurn',`data-player="${current}"`,!!ch||pl.closing):pl.order.map(id=>button(s.players[id].name+(pl.finalPasses.includes(id)?' 已放弃剩余行动':'：放弃剩余行动'),'pass',`data-player="${id}"`,pl.finalPasses.includes(id)||!!ch||pl.closing)).join('')}</div>${current===null&&ScenarioEngine.windows.settings(s).mode==='smart'?'':`<div class="planning-actions"><label class="small">使用行动的玩家 <select id="planning-actor">${s.players.filter(p=>!p.eliminated).map(p=>`<option value="${p.id}" ${p.id===actor?'selected':''}>${esc(p.name)}</option>`).join('')}</select></label><div class="actions">${as.map(a=>`<span title="${esc(a.reason)}">${button(a.name,'ability',`data-player="${actor}" data-uid="${a.uid}"`,!a.legal)}</span>`).join('')||'<span class="small muted">当前没有在场的主动能力。</span>'}</div></div>`}<p class="small muted">${esc(R.window(s).label)}。通用事件位于手牌区；响应只在对应即时窗口处理。</p></section>`;
+  return `<section class="panel planning-panel"><div class="panel-title"><h2>阶段2 · 计划阶段</h2><span class="badge">${pl.closing?'阶段结束结算中':current!==null?'当前出牌：'+esc(s.players[current].name):'所有玩家已结束盟友／附属出牌'}</span></div><div class="planning-order">${pl.order.map((id,i)=>`<span class="badge ${id===current?'on':''}">${esc(s.players[id].name)} ${i<pl.index?'已结束':id===current?'正在出牌':'等待'}</span>`).join('')}</div><p class="small muted">盟友和附属按起始玩家顺序打出；合法的通用行动可由其他玩家使用。费用和修正由程序计算，所有响应必须明确选择或放弃。</p>${pl.halted?`<p class="notice">${esc(pl.halted)}</p>`:''}${ch?`<div class="notice"><b>${esc(ch.message)}</b><div>${button(ch.task.optional?'选择响应／放弃':'处理强制选择','choice',`data-id="${ch.task.id}"`)}</div></div>`:''}<div class="actions">${current!==null?button('结束我的盟友／附属出牌步骤','endTurn',`data-player="${current}"`,!!ch||pl.closing):pl.order.map(id=>button(s.players[id].name+(pl.finalPasses.includes(id)?' 已放弃剩余行动':'：放弃剩余行动'),'pass',`data-player="${id}"`,pl.finalPasses.includes(id)||!!ch||pl.closing)).join('')}</div><div class="planning-actions"><label class="small">使用行动的玩家 <select id="planning-actor">${s.players.filter(p=>!p.eliminated).map(p=>`<option value="${p.id}" ${p.id===actor?'selected':''}>${esc(p.name)}</option>`).join('')}</select></label><div class="actions">${as.map(a=>`<span title="${esc(a.reason)}">${button(a.name,'ability',`data-player="${actor}" data-uid="${a.uid}"`,!a.legal)}</span>`).join('')||'<span class="small muted">当前没有在场的主动能力。</span>'}</div><p class="small muted">${esc(R.window(s).label)}。通用事件位于手牌区；响应只在对应即时窗口处理。</p></div></section>`;
  }
  function canFinish(s){const p=s.planning;return !!p&&(p.completed||!p.completed&&!p.queue.length&&R.active(s)===null&&s.players.filter(p=>!p.eliminated).every(x=>p.finalPasses.includes(x.id))&&!p.halted);}
  function title(kind){return kind==='play'?'选择目标与支付资源':kind==='ability'?'使用卡牌能力':'处理响应／强制效果';}
@@ -9956,7 +9992,7 @@ const WindowUI=(()=>{
 </script><script src="phase-log.js"></script><script>
 /* Tabletop view: UI drafts never pay, exhaust, reveal, or bypass phase validation. */
 /* 界面版本徽标唯一来源：须与 CHANGELOG.md 最新条目标题一致（planning-dom-tests 有校验）。 */
-const APP_VERSION='v0.15.56';
+const APP_VERSION='v0.15.57';
 const DesktopUI=(()=>{
  const E=ScenarioEngine,R=E.planning,Q=E.questing,C=E.combat,esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  let combatDraft={key:'',target:null,ids:[]},draftState=null;
@@ -10078,7 +10114,12 @@ const DesktopUI=(()=>{
      空壳（标题+长说明）已删除，与阶段竖轴不再重复。 */
   try{
    if(s.phase===2){const q=s.questing;
-    if(q&&!q.completed&&q.step==='commit'&&!q.deploymentLocked&&!q.tasks.length)return QuestUI.picker(s,pid)||'';
+    /* v0.15.57：这里原来写死 step==='commit'，把 picker 内部新加的 beforeCommit
+       入口整个挡住——「开始投入角色」因此从未真正渲染过，智能模式到这一步仍然卡死。
+       改成交给 picker 自己判断：它已经不满足条件时返回空串，这里保持原样回落到行动窗口。 */
+    if(q&&!q.completed&&!q.deploymentLocked&&!q.tasks.length){
+     const picked=QuestUI.picker(s,pid)||'';
+     if(picked)return picked;}
     if(q&&q.step==='staging'&&q.current)return QuestUI.revealCard(s)||'';}
    return WindowUI.panel(s)||'';
   }catch(e){return '';}
@@ -10388,7 +10429,11 @@ const enc=escape;
 try{let s=localStorage.getItem('lotr-core-v02');if(s){let v=JSON.parse(s);if(v.version===1){state=v;if(state.phase===2&&state.questing)E.questing.enableDiscussion(state);}}}catch{}
 function save(){try{if(state)localStorage.setItem('lotr-core-v02',JSON.stringify(state));else localStorage.removeItem('lotr-core-v02');}catch{toast('浏览器未允许本地保存，可使用导出存档。');}}
 function toast(t){$('#toast').textContent=t;$('#toast').style.display='block';clearTimeout(toast.timer);toast.timer=setTimeout(()=>$('#toast').style.display='none',5000);}
-function mutate(fn){let before=state?E.clone(state):null,logsBefore=before?before.log.length:0;try{fn();if(state)E.windows.run(state);const seq=historyBase+history.length;history.push(before);logMarks.push({seq,before:logsBefore,after:state?state.log.length:0});if(history.length>80){history.shift();logMarks.shift();historyBase++;}save();render();}catch(e){state=before;toast(e.message);}}
+/* v0.15.57：状态一变就把「本阶段已经没有玩家决定要做」的阶段连着走完，
+   直到下一个必须由玩家决定的地方（提交名单、选择防御者、要不要打牌……）。
+   以前这些收尾挂在「结束阶段」按钮上，等于让玩家替引擎判断阶段做完了没有。 */
+function autoAdvance(){if(!state)return 0;try{return E.autoAdvance(state);}catch(e){return 0;}}
+function mutate(fn){let before=state?E.clone(state):null,logsBefore=before?before.log.length:0;try{fn();if(state){E.windows.run(state);autoAdvance();E.windows.run(state);}const seq=historyBase+history.length;history.push(before);logMarks.push({seq,before:logsBefore,after:state?state.log.length:0});if(history.length>80){history.shift();logMarks.shift();historyBase++;}save();render();}catch(e){state=before;toast(e.message);}}
 function btn(text,action,args='',cls='',disabled=false){return `<button class="${cls}" data-action="${action}" ${args} ${disabled?'disabled':''}>${text}</button>`;}
 function empty(t='此区域暂无卡牌'){return `<div class="empty">${t}</div>`;}
 const types={Enemy:'敌人',Location:'地点',Treachery:'诡计',Objective:'目标'};
@@ -10748,7 +10793,7 @@ const catalogBadge=document.querySelector('#catalogTab span');if(catalogBadge)ca
 $('#undo').onclick=()=>{if(history.length){state=history.pop();save();render();}};
 $('#export').onclick=()=>{if(!state)return;let blob=new Blob([JSON.stringify({format:'lotr-scenario-save',version:1,state},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`lotr-${state.scenario}-round-${state.round}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
 $('#import').onchange=async ev=>{const f=ev.target.files[0];if(!f)return;try{if(f.size>5000000)throw Error('存档过大。');const v=JSON.parse(await f.text());if(v.format!=='lotr-scenario-save'||v.version!==1||!v.state||!D.scenarios.some(s=>s.id===v.state.scenario)||!D.quests.some(q=>q.id===v.state.quest)||!Array.isArray(v.state.players)||v.state.players.length<1||v.state.players.length>4||!Array.isArray(v.state.deck)||!Array.isArray(v.state.pending))throw Error('不是此版本的有效存档。');if(state&&!confirm('导入将覆盖当前桌面；可撤销恢复。'))return;mutate(()=>{state=v.state;if(state.phase===2&&state.questing)E.questing.enableDiscussion(state);});tab='table';render();toast('存档已导入。');}catch(e){toast('导入失败：'+e.message);}finally{ev.target.value='';}};
-if(state){const restored=E.clone(state);try{E.windows.run(state);save();}catch(e){state=restored;toast('自动推进已暂停：'+e.message);}}
+if(state){const restored=E.clone(state);try{E.windows.run(state);autoAdvance();E.windows.run(state);save();}catch(e){state=restored;toast('自动推进已暂停：'+e.message);}}
 /* 视图历史：tab + 新游戏步骤 + 选牌状态组成签名，只有签名变化才入栈，
    这样浏览器与顶栏的 ← → 都能在「列表 / 设置 / 选牌 / 各页签」之间前进后退。 */
 const HAS_VIEW_HISTORY=typeof window!=='undefined'&&window.history&&typeof window.history.pushState==='function';

@@ -465,6 +465,32 @@ function endPhase(s){
  if(s.phase===from)steps.push(s.questing&&s.questing.current?'仍有遭遇牌待结算':api.phaseRules.blocker(s));
  return done();
 }
+/* autoAdvance(s)：只要本阶段没有「必须由玩家决定」的事，就替玩家一路走到下一个需要他决定的地方。
+   规则来源是 phaseRules.completed —— 它已经写明「哪些项算必需、哪些算可选」，
+   所以这里不另立一套判断，避免界面说「已完成」而引擎不动。
+
+   刻意不做的事：不替玩家决定放弃出牌、不替玩家放弃攻击、不替玩家收尾有可选响应的窗口。
+   这些步骤的 finish/move 自带前置断言（例如「请让每位玩家确认放弃剩余行动」），
+   断言一抛就当「这里需要玩家」直接停手，因此不会静默跳过玩家的选择。 */
+function autoAdvance(s){
+ if(!s||s.status!=='playing')return 0;
+ if(s.setupPending||(s.setupReveal&&!s.setupReveal.finished))return 0;
+ let moved=0;
+ for(let i=0;i<END_STEPS;i++){
+  if(s.status!=='playing')break;
+  /* 资源阶段没有任何玩家选择：到回合就收资源、抽牌。重复调用幂等（resourcePhase 自己断言过）。 */
+  if(s.phase===0&&s.resourceDoneRound!==s.round&&!s.pending?.length){try{resourcePhase(s);moved++;}catch(e){break;}}
+  /* 有待结算事项、响应队列、强制选择或待翻的遭遇牌：必须玩家处理，停手。 */
+  const c=api.phaseRules.ctx(s);
+  if((s.pending||[]).length||(c&&((c.queue||[]).length||(c.tasks||[]).length||c.current)))break;
+  if(!api.phaseRules.completed(s))break;
+  const before=s.round+':'+s.phase;
+  try{endPhase(s);}catch(e){break;}                     /* 前置断言不满足 = 需要玩家，停手 */
+  if(before===s.round+':'+s.phase)break;                /* 没有任何推进，避免空转 */
+  moved++;
+ }
+ return moved;
+}
 function questFailure(s,n){ready(s);assert(s.phase===2&&s.stagedRound===s.round,'须在探查后结算。');assert(Number.isInteger(n)&&n>0,'失败差值须为正整数。');for(const p of live(s))adjustThreat(s,p,n);for(const c of s.staging.filter(c=>c.id===101)){let o=s.objectives.find(o=>!o.holder);if(o){s.objectives=s.objectives.filter(x=>x.uid!==o.uid);if(o.guard){let g=s.staging.find(c=>c.uid===o.guard);if(g)delete g.guard;}delete o.guard;s.deck.push(o);shuffle(s,s.deck);log(s,'地牢狱卒将无人持有的目标洗回牌库');}}}
 function resolveQuest(s,willpower){assert(!s.questing,'意志由投入角色自动计算');ready(s);assert(s.phase===2&&s.stagedRound===s.round,'须先执行探查。');assert(s.resolvedRound!==s.round,'本回合探险已经结算。');assert(Number.isInteger(willpower)&&willpower>=0,'总意志须为非负整数。');const delta=willpower-threat(s);s.resolvedRound=s.round;if(delta>=0)addProgress(s,delta);else questFailure(s,-delta);log(s,`探险结算：意志${willpower}，威胁${threat(s)}，差值${delta}`);}
 /* 探险目标达成：进度够 + 剧本门槛（巨魔、目标持有、囚犯等）全部满足。
@@ -477,7 +503,7 @@ function questDone(s){
  return ok;
 }
 function markQuestDone(s){if(s.phase===2&&!gate(s))s.questDoneRound=s.round;}
-const api={refreshing:P7,combat:P6,encountering:P5,traveling:P4,questing:P3,planning:P2,questDone,markQuestDone,endPhase,closeWindow,passAll,openingChoice,startScenario,setupRevealStep,settleSetupCard,setupCancelOptions,setupCancel,resourcePhase,drawPlayer,extraShadow,resolveQuest,D,byId,phases,create,quest,gate,threat,stage,addProgress,advance,travel,engage,encounterChecks,defeat,shadows,revealShadows,returnEnemy,claim,returnObjective,nextPhase,resolve,rescue,questFailure,adjustThreat,clone,log};
+const api={refreshing:P7,combat:P6,encountering:P5,traveling:P4,questing:P3,planning:P2,questDone,markQuestDone,endPhase,autoAdvance,closeWindow,passAll,openingChoice,startScenario,setupRevealStep,settleSetupCard,setupCancelOptions,setupCancel,resourcePhase,drawPlayer,extraShadow,resolveQuest,D,byId,phases,create,quest,gate,threat,stage,addProgress,advance,travel,engage,encounterChecks,defeat,shadows,revealShadows,returnEnemy,claim,returnObjective,nextPhase,resolve,rescue,questFailure,adjustThreat,clone,log};
 const WindowFactory=typeof WindowRulesFactory!=='undefined'?WindowRulesFactory:require('./window-engine.js');api.windows=WindowFactory(api);
 /* 阶段规则：完成判定（纯函数，UI 与「结束阶段」共用）+ 结束阶段入口。 */
 const PhaseFactory=typeof PhaseRulesFactory!=='undefined'?PhaseRulesFactory:require('./phase-engine.js');api.phaseRules=PhaseFactory(api);return api;

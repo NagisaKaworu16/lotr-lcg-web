@@ -49,7 +49,7 @@ const {chromium}=require('playwright-core'),path=require('path'),ROOT=path.join(
   const enemyBtns=()=>{if(state.phase!==5||!state.combat)return null;
    const pid=ScenarioEngine.combat.activeEnemyPlayer(state);
    return [...document.querySelectorAll('button[data-combat="enemy"]')].find(x=>!x.disabled&&+x.dataset.player===pid);};
-  let b=[...document.querySelectorAll('button')].find(x=>!x.disabled&&x.offsetParent&&/^(选择并结算|处理强制选择|处理卡牌响应)$/.test(x.textContent.trim()));
+  let b=[...document.querySelectorAll('button')].find(x=>!x.disabled&&x.offsetParent&&/^(选择并结算|处理强制选择|处理卡牌响应|处理强制效果／卡牌响应)$/.test(x.textContent.trim()));
   if(b){clk(b);return 'spec'}
   b=q('button[data-quest="commit"]');if(b&&!b.disabled){clk(b);return 'commit'}
   b=[...document.querySelectorAll('button[data-quest="approveDeployment"]')].find(x=>!x.disabled);
@@ -182,7 +182,13 @@ const {chromium}=require('playwright-core'),path=require('path'),ROOT=path.join(
  console.log('end:',JSON.stringify(end));
  console.log('stuck:',JSON.stringify(stuck),'done:',done);
  console.log('errors:',JSON.stringify(errs.slice(0,3)));
- const pass=!stuck&&!errs.length&&done;
+ /* v0.15.57：自动推进的回归断言。以前这条链靠一路点「结束阶段」挪动，
+    引擎自己并不判断「本阶段已经没事可做了」。现在要求引擎至少自己走过 3 个回合，
+    否则说明又退回「每步都要玩家点一下」的老样子。 */
+ const rounds=Math.max(0,...[...phases].map(k=>+k.split(':')[0]));
+ const autoOk=rounds>=3;
+ console.log('rounds reached:',rounds,'auto-advance ok:',autoOk);
+ const pass=!stuck&&!errs.length&&done&&autoOk;
  console.log(pass?'PASS':'FAIL');
  await b.close();process.exit(pass?0:1);
 })().catch(e=>{console.error('FAILED',e.message);process.exit(2)});

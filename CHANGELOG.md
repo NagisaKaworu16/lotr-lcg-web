@@ -1,3 +1,17 @@
+# v0.15.57 · 阶段该自动就自动：引擎自己判断「本阶段没事可做了」（2026-10-25）
+
+- **问题**：`endPhase()` 里明明写着 `if(s.phase===0&&s.resourceDoneRound!==s.round)resourcePhase(s)`，也就是「资源阶段没有玩家决定，到回合就替玩家收」，但这句挂在「结束阶段」按钮的回调后面，没有任何代码主动调用它。结果：收集资源 + 抽牌这种零决策步骤也要玩家点一下按钮，阶段推进变成了「玩家替引擎判断做完了没有」。
+- **修法**：新增 `ScenarioEngine.autoAdvance(s)`，接到 `mutate()` 里（`windows.run` 前后各跑一次），只要本阶段没有「必须由玩家决定」的事就连续走完，直到碰上需要玩家决定的地方才停手。判断口径直接复用 `phaseRules.completed()` / `checks()`，不另立一套，避免界面说「已完成」而引擎不动。
+- **自动边界**（按产品判断刻意收窄）：只自动「无决策」阶段——资源阶段收资源抽牌、阶段必需操作全部打勾后的换阶段。**不**替玩家放弃出牌、**不**替玩家放弃攻击、**不**替玩家收尾有可选响应的窗口。这些步骤的 `finish`/`move` 自带前置断言（例如「请让每位玩家确认放弃剩余行动」），断言一抛就当「这里需要玩家」停手，因此不会静默跳过任何玩家选择。不留开关，固定行为。
+- **顺带修掉的五个真实缺陷**（都在自动推进的路上暴露，全部会导致卡死）：
+  - **阶段 2 智能模式下「放弃剩余行动」整块消失**（`planning-ui.js`）：`current===null && mode==='smart'` 时整排按钮和主动能力区都不渲染，两位玩家结束出牌后阶段 2 只剩一颗「结束阶段」。而 `phaseRules` 把「放弃剩余行动」算作必需项——必需项永远打不了勾，只能靠结束阶段绕过去。现在智能模式一样渲染，这两件事本来就该由玩家点。
+  - **`beforeCommit` 的「开始投入角色」从未真正渲染**（`desktop-ui.js`）：调用点写死 `step==='commit'`，把上一版加在 `picker()` 里的 `beforeCommit` 分支整个挡住了。改为交给 `picker` 自己判断。
+  - **`result` 判据不认 `completed`**（`phase-engine.js`）：探险阶段收尾后 `step` 变 `'completed'`，判据只认 `'afterResult'`，事后复查一律未完成，`autoAdvance` 据此拒绝换阶段，界面只剩一句「验收完成」。
+  - **阶段 4 的 `travel`/`pass` 同一毛病**：只认 `step==='action'`，收尾后（`completed`）判未完成，旅行阶段走完却进不了遭遇阶段。
+  - **阶段 5 的 `enemies`/`attacks` 同理**：只认 `endAction`/`ending`，战斗收尾后被判未完成。三处统一改为「`step==='completed'` 或 `context.completed` 也算完成」。
+- **回归**：`check-auto-phase.cjs` 新增断言「引擎须自己走过 ≥3 个回合」，否则判失败——防止退回「每步都要玩家点一下」。实测连续 3 次 PASS，分别自动走到第 4~5 回合，中途只点玩家必须决定的项（提交名单、选择防御者、处理卡牌响应）。补上「处理强制效果／卡牌响应」按钮的识别（原来只认另外三种文案，遇到交战检定的强制效果就停住）。
+- 验收：check-auto-phase PASS（rounds 4~5，auto-advance ok）、check-layout **17/17**、check-taskbar 23/23、check-quest-panel 7/7、check-score 19/19、check-onescreen 五区可见、check-contrast 0 低对比、check-attachment 5/5、check-card-hover 22/22、check-setup-reveal 13/13、verify-local-art `ok:true`。截图 `docs/browser-acceptance/v0.15.57-auto-resource.png`：建局后直接落在第 2 阶段，三名英雄各 +1 资源、手牌 7 张，玩家未点任何按钮。
+
 # v0.15.56 · 导航瘦身 + 修复探险/遭遇/战斗/刷新在智能模式下无法推进（2026-10-25）
 
 - **删除顶部「全部卡图」入口**：与「卡牌」导航完全重复。`shell.html` 去掉 `#imagesTab`，`app.js` 同步移除 `images` 路由映射、`ImageLibrary.html()` 分支与点击绑定。

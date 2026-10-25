@@ -32,7 +32,11 @@ const enc=escape;
 try{let s=localStorage.getItem('lotr-core-v02');if(s){let v=JSON.parse(s);if(v.version===1){state=v;if(state.phase===2&&state.questing)E.questing.enableDiscussion(state);}}}catch{}
 function save(){try{if(state)localStorage.setItem('lotr-core-v02',JSON.stringify(state));else localStorage.removeItem('lotr-core-v02');}catch{toast('浏览器未允许本地保存，可使用导出存档。');}}
 function toast(t){$('#toast').textContent=t;$('#toast').style.display='block';clearTimeout(toast.timer);toast.timer=setTimeout(()=>$('#toast').style.display='none',5000);}
-function mutate(fn){let before=state?E.clone(state):null,logsBefore=before?before.log.length:0;try{fn();if(state)E.windows.run(state);const seq=historyBase+history.length;history.push(before);logMarks.push({seq,before:logsBefore,after:state?state.log.length:0});if(history.length>80){history.shift();logMarks.shift();historyBase++;}save();render();}catch(e){state=before;toast(e.message);}}
+/* v0.15.57：状态一变就把「本阶段已经没有玩家决定要做」的阶段连着走完，
+   直到下一个必须由玩家决定的地方（提交名单、选择防御者、要不要打牌……）。
+   以前这些收尾挂在「结束阶段」按钮上，等于让玩家替引擎判断阶段做完了没有。 */
+function autoAdvance(){if(!state)return 0;try{return E.autoAdvance(state);}catch(e){return 0;}}
+function mutate(fn){let before=state?E.clone(state):null,logsBefore=before?before.log.length:0;try{fn();if(state){E.windows.run(state);autoAdvance();E.windows.run(state);}const seq=historyBase+history.length;history.push(before);logMarks.push({seq,before:logsBefore,after:state?state.log.length:0});if(history.length>80){history.shift();logMarks.shift();historyBase++;}save();render();}catch(e){state=before;toast(e.message);}}
 function btn(text,action,args='',cls='',disabled=false){return `<button class="${cls}" data-action="${action}" ${args} ${disabled?'disabled':''}>${text}</button>`;}
 function empty(t='此区域暂无卡牌'){return `<div class="empty">${t}</div>`;}
 const types={Enemy:'敌人',Location:'地点',Treachery:'诡计',Objective:'目标'};
@@ -392,7 +396,7 @@ const catalogBadge=document.querySelector('#catalogTab span');if(catalogBadge)ca
 $('#undo').onclick=()=>{if(history.length){state=history.pop();save();render();}};
 $('#export').onclick=()=>{if(!state)return;let blob=new Blob([JSON.stringify({format:'lotr-scenario-save',version:1,state},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`lotr-${state.scenario}-round-${state.round}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
 $('#import').onchange=async ev=>{const f=ev.target.files[0];if(!f)return;try{if(f.size>5000000)throw Error('存档过大。');const v=JSON.parse(await f.text());if(v.format!=='lotr-scenario-save'||v.version!==1||!v.state||!D.scenarios.some(s=>s.id===v.state.scenario)||!D.quests.some(q=>q.id===v.state.quest)||!Array.isArray(v.state.players)||v.state.players.length<1||v.state.players.length>4||!Array.isArray(v.state.deck)||!Array.isArray(v.state.pending))throw Error('不是此版本的有效存档。');if(state&&!confirm('导入将覆盖当前桌面；可撤销恢复。'))return;mutate(()=>{state=v.state;if(state.phase===2&&state.questing)E.questing.enableDiscussion(state);});tab='table';render();toast('存档已导入。');}catch(e){toast('导入失败：'+e.message);}finally{ev.target.value='';}};
-if(state){const restored=E.clone(state);try{E.windows.run(state);save();}catch(e){state=restored;toast('自动推进已暂停：'+e.message);}}
+if(state){const restored=E.clone(state);try{E.windows.run(state);autoAdvance();E.windows.run(state);save();}catch(e){state=restored;toast('自动推进已暂停：'+e.message);}}
 /* 视图历史：tab + 新游戏步骤 + 选牌状态组成签名，只有签名变化才入栈，
    这样浏览器与顶栏的 ← → 都能在「列表 / 设置 / 选牌 / 各页签」之间前进后退。 */
 const HAS_VIEW_HISTORY=typeof window!=='undefined'&&window.history&&typeof window.history.pushState==='function';

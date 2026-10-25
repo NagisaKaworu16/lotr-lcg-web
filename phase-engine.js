@@ -47,13 +47,21 @@ const PhaseRulesFactory=(E)=>{
    }
    if(c.step==='commit')add('commit','按起始玩家顺序投入角色',c.commitIndex>=order.length,'待投入',()=>c.commitIndex>=order.length);
    add('reveal','完成逐张探查',!c.current&&!(c.remaining||[]).length,'剩余 '+((c.remaining||[]).length+(c.current?1:0))+' 张',()=>!c.current&&!(c.remaining||[]).length);
-   add('result','结算探险结果',c.step==='afterResult',c.step==='afterStaging'?'待结算':'未开始',()=>c.step==='afterResult');
+   /* v0.15.57：阶段收尾完成后 step 会变成 'completed'（planning-engine complete()），
+      原判据只认 'afterResult'，于是「探险结果」在事后复查里永远是未完成，
+      autoAdvance 据此认为阶段没做完、拒绝推进，界面又只剩一句「验收完成」。
+      已完成本身就是「结果已结算」的证据，一并认可。 */
+   add('result','结算探险结果',['afterResult','completed'].includes(c.step),c.step==='afterStaging'?'待结算':'未开始',()=>['afterResult','completed'].includes(c.step));
    add('pass','全队放弃本窗口行动',live(s).every(p=>(c.finalPasses||[]).includes(p.id)),'待确认',()=>live(s).every(p=>(c.finalPasses||[]).includes(p.id)));
   }
   if(s.phase===3&&c){
+   /* v0.15.57：同 result 一项的毛病——阶段收尾后 step 变 'completed'，
+      下面三项的判据都只认 'action'，事后复查一律判未完成，
+      于是 autoAdvance 认为旅行阶段还没走完、拒绝进入遭遇阶段。 */
+   const doneStep=c.step==='completed'||!!c.completed;
    add('choice','完成旅行选择',c.step!=='choice','待选择',()=>c.step!=='choice');
-   add('travel','支付费用并抵达地点',!!c.traveled||(c.step==='action'),'未抵达',()=>!!c.traveled||c.step==='action');
-   add('pass','全队放弃旅行后行动',(c.step==='action')&&live(s).every(p=>(c.finalPasses||[]).includes(p.id)),'待确认',()=>(c.step==='action')&&live(s).every(p=>(c.finalPasses||[]).includes(p.id)));
+   add('travel','支付费用并抵达地点',!!c.traveled||(c.step==='action')||doneStep,'未抵达',()=>!!c.traveled||c.step==='action'||doneStep);
+   add('pass','全队放弃旅行后行动',doneStep||((c.step==='action')&&live(s).every(p=>(c.finalPasses||[]).includes(p.id))),'待确认',()=>doneStep||((c.step==='action')&&live(s).every(p=>(c.finalPasses||[]).includes(p.id))));
   }
   if(s.phase===4&&c){
    add('optional','提交主动交战方案',(c.approvals||[]).length>=live(s).length||c.step!=='optional','待提交',()=>(c.approvals||[]).length>=live(s).length||c.step!=='optional');
@@ -61,9 +69,11 @@ const PhaseRulesFactory=(E)=>{
    add('pass','全队放弃检定后行动',c.step!=='afterChecks'||live(s).every(p=>(c.finalPasses||[]).includes(p.id)),'待确认',()=>c.step!=='afterChecks'||live(s).every(p=>(c.finalPasses||[]).includes(p.id)));
   }
   if(s.phase===5&&c){
-   add('enemies','结算所有敌人攻击',(c.enemyIndex||0)>=live(s).length&&c.step!=='enemyChoice','待结算',()=>(c.enemyIndex||0)>=live(s).length&&c.step!=='enemyChoice');
-   add('attacks','完成玩家攻击步骤',['endAction','ending'].includes(c.step),'待攻击',()=>['endAction','ending'].includes(c.step));
-   add('pass','全队放弃攻击后行动',!['playerAction','afterPlayer'].includes(c.step)||live(s).every(p=>(c.finalPasses||[]).includes(p.id)),'待确认',()=>!['playerAction','afterPlayer'].includes(c.step)||live(s).every(p=>(c.finalPasses||[]).includes(p.id)));
+   /* 同上：战斗收尾后 step 变 'completed'，判据要一并认可，否则阶段完成却判未完成。 */
+   const doneStep=c.step==='completed'||!!c.completed;
+   add('enemies','结算所有敌人攻击',doneStep||((c.enemyIndex||0)>=live(s).length&&c.step!=='enemyChoice'),'待结算',()=>doneStep||((c.enemyIndex||0)>=live(s).length&&c.step!=='enemyChoice'));
+   add('attacks','完成玩家攻击步骤',doneStep||['endAction','ending'].includes(c.step),'待攻击',()=>doneStep||['endAction','ending'].includes(c.step));
+   add('pass','全队放弃攻击后行动',doneStep||!['playerAction','afterPlayer'].includes(c.step)||live(s).every(p=>(c.finalPasses||[]).includes(p.id)),'待确认',()=>doneStep||!['playerAction','afterPlayer'].includes(c.step)||live(s).every(p=>(c.finalPasses||[]).includes(p.id)));
   }
   if(s.phase===6&&c){
    add('ready','提交蛛网支付方案',(c.approvals||[]).length>=live(s).length||c.step!=='ready','待确认',()=>(c.approvals||[]).length>=live(s).length||c.step!=='ready');
