@@ -2,9 +2,9 @@
   "remoteRequests": [],
   "pages": [
     {
-      "name": "library-main-p1",
-      "total": 36,
-      "loaded": 36,
+      "name": "catalog-art",
+      "total": 128,
+      "loaded": 128,
       "failed": [],
       "sample": [
         {
@@ -25,55 +25,32 @@
       ]
     },
     {
-      "name": "library-main-p2",
-      "total": 36,
-      "loaded": 36,
+      "name": "catalog-encounter",
+      "total": 128,
+      "loaded": 128,
       "failed": [],
       "sample": [
         {
-          "src": "assets/cards-zh-core/01037.jpg",
+          "src": "assets/cards-zh-core/01001.jpg",
           "w": 750,
           "h": 1050
         },
         {
-          "src": "assets/cards-zh-core/01038.jpg",
+          "src": "assets/cards-zh-core/01002.jpg",
           "w": 750,
           "h": 1050
         },
         {
-          "src": "assets/cards-zh-core/01039.jpg",
+          "src": "assets/cards-zh-core/01003.jpg",
           "w": 750,
           "h": 1050
-        }
-      ]
-    },
-    {
-      "name": "library-encounter",
-      "total": 36,
-      "loaded": 36,
-      "failed": [],
-      "sample": [
-        {
-          "src": "assets/cards-encounter/king-spider.webp",
-          "w": 424,
-          "h": 600
-        },
-        {
-          "src": "assets/cards-encounter/hummerhorns.webp",
-          "w": 424,
-          "h": 600
-        },
-        {
-          "src": "assets/cards-encounter/ungoliant-s-spawn.webp",
-          "w": 424,
-          "h": 600
         }
       ]
     },
     {
       "name": "table-quest-art",
-      "total": 15,
-      "loaded": 15,
+      "total": 54,
+      "loaded": 54,
       "failed": [],
       "sample": [
         {
@@ -82,12 +59,12 @@
           "h": 426
         },
         {
-          "src": "assets/cards-encounter/forest-spider.webp",
-          "w": 424,
-          "h": 600
+          "src": "assets/tokens/progress.png",
+          "w": 146,
+          "h": 146
         },
         {
-          "src": "assets/cards-encounter/old-forest-road.webp",
+          "src": "assets/cards-encounter/forest-spider.webp",
           "w": 424,
           "h": 600
         }

@@ -37,20 +37,20 @@ const executablePath = process.env.CHROME_PATH || ['/usr/bin/chromium', '/usr/bi
 
   const report = { remoteRequests: remote, pages: [] };
 
-  // 1. Art library, player cards page 1-2
-  await page.locator('#imagesTab').click();
+  // 1. Art view of the card index (the old「全部卡图」tab was removed in v0.15.56
+  //    because it duplicated「卡牌」; the art view is the same gallery.)
+  await page.locator('#catalogTab').click();
+  await page.waitForTimeout(500);
+  await page.locator('[data-action="catView"][data-value="art"]').click();
   await page.waitForTimeout(1600);
-  report.pages.push({ name: 'library-main-p1', ...(await stat('#image-results')) });
-  await page.screenshot({ path: path.join(outDir, '09-library-local-art-1440.png') });
-  await page.locator('#image-next').click();
-  await page.waitForTimeout(1400);
-  report.pages.push({ name: 'library-main-p2', ...(await stat('#image-results')) });
+  report.pages.push({ name: 'catalog-art', ...(await stat('#catalogResults')) });
+  await page.screenshot({ path: path.join(outDir, '09-catalog-art-1440.png') });
 
-  // 2. Encounter faces
-  await page.selectOption('#image-type', 'encounter');
-  await page.waitForTimeout(1500);
-  report.pages.push({ name: 'library-encounter', ...(await stat('#image-results')) });
-  await page.screenshot({ path: path.join(outDir, '10-library-encounter-art-1440.png') });
+  // 2. Encounter faces via the series panel
+  await page.locator('#catalogTab').click();
+  await page.waitForTimeout(500);
+  report.pages.push({ name: 'catalog-encounter', ...(await stat('#catalogResults')) });
+  await page.screenshot({ path: path.join(outDir, '10-catalog-encounter-art-1440.png') });
 
   // 3. In-game table: quest card + encounter card art
   await page.locator('#tableTab').click();

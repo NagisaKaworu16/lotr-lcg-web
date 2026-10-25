@@ -256,8 +256,19 @@ header{gap:18px}
 @media(max-width:1240px){.header-actions{border-left:0;padding-left:0}}
 
 /* v0.15.16 nav starts with 首页; the ring mark lives inside that button, brand text is gone. */
-.nav-home{display:inline-flex;align-items:center;gap:7px}
-.nav-home .brand-mark{width:19px;height:19px;flex:none;display:block;filter:drop-shadow(0 1px 1px #0000004d)}
+/* v0.15.56：顶部菜单栏瘦身——字号 13.5→12.5/x-height 收紧、内边距与间距压缩，
+   让桌面多出约 16px 给牌桌与角色卡。 */
+header{padding:6px 16px;gap:14px;min-height:0;line-height:1.25}
+nav{gap:2px}
+nav button{font-size:12.5px;padding:3px 8px;min-height:0}
+nav span{font-size:11px}
+.history-nav button{padding:2px 7px;font-size:12.5px;min-width:26px;line-height:1.2}
+.header-actions button,.header-actions .button{font-size:12.5px;padding:3px 9px;min-height:0}
+/* 牌桌页的 header 规则更具体（body:has(...)），必须同等写一遍才不会被抢回 10px/22px。 */
+body:has(.desktop-table) header{padding:6px 16px;gap:14px;line-height:1.25}
+body:has(.desktop-table) .history-nav button{padding:2px 7px;font-size:12.5px;min-width:26px;line-height:1.2}
+.nav-home{display:inline-flex;align-items:center;gap:6px}
+.nav-home .brand-mark{width:16px;height:16px;flex:none;display:block;filter:drop-shadow(0 1px 1px #0000004d)}
 .nav-home:hover .brand-mark{filter:drop-shadow(0 0 6px #f6e3ad8c)}
 .nav-home.active .brand-mark{filter:drop-shadow(0 0 5px #f6e3ad66)}
 body:has(.desktop-table) .nav-home .brand-mark{width:17px;height:17px}
@@ -553,6 +564,10 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
 .tabletop-main{display:contents}
 .tabletop-main>.public-table{grid-area:table}
 .tabletop-main>.operation-dock{grid-area:dock}
+/* v0.15.56：操作条在第一行 auto 高度里，内容一变长就挤掉公共牌桌（实测探险阶段
+   操作条 295px、牌桌只剩 120px）。单屏里给它一个硬上限，超出在框内滚动，
+   牌桌与玩家区的预算就稳定了。 */
+.operation-dock>.operation-content{max-height:clamp(88px,12vh,120px)}
 .player-mat{grid-area:mat}
 .tabletop-rail{grid-area:rail}
 
@@ -835,8 +850,10 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
        两者相加 682 < 751，余量给牌桌区的探查区（遭遇牌最多的地方）。 */
 .tabletop-layout{
  /* v0.15.55：顶部压缩后把省出的高度给玩家区——角色卡要完整可见（需 ≥120px
-    的角色行），牌桌区保底不变。 */
- grid-template-rows:auto minmax(0,1fr) clamp(320px,44vh,428px)}
+    的角色行），牌桌区保底不变。
+    v0.15.56：阶段3 投入面板（玩家切换 + 角色勾选 + 提交）需要约 150px，
+    header 由 68→38px 省出的量直接加到这里，牌桌保底不变。 */
+ grid-template-rows:auto minmax(0,1fr) clamp(340px,48vh,470px)}
 /* 牌桌区内部按「剩余给探查区」分配，其他玩家区拿固定 104 */
 .public-table{display:flex;flex-direction:column}
 .public-table>.table-zone{flex:1 1 auto;min-height:0}
@@ -1282,6 +1299,33 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
     v0.15.47：开局阶段（手牌确认）没有结束阶段按钮，内容必须完整可见，故解除三项限制。 */
  flex:0 0 auto;max-height:96px;overflow:auto;scrollbar-width:thin;
  min-height:76px;display:flex;flex-direction:column;gap:2px}
+/* v0.15.56：阶段3 投入面板要放「玩家切换 + 角色勾选 + 提交」，96px 只够露出两行，
+   按钮全被压在滚动区底部看不见。给面板本身撑到 150px，内部滚动，
+   同时压缩无关说明行，让「提交暂定派遣名单」稳定可见。 */
+
+/* v0.15.56：阶段3 的投入面板（玩家切换 + 角色勾选 + 提交）需要 ~140px。
+   面板自身限高并在内部滚动，绝不允许把结束阶段按钮顶出视口。 */
+.mat-phase:has(>.questing-panel){max-height:150px;min-height:140px}
+.mat-phase:has(>.questing-panel)>.questing-panel{flex:1 1 auto;min-height:96px;overflow:auto;padding:2px 0 3px}
+.mat-phase:has(>.questing-panel)>.phase-door{flex:0 0 auto}
+.player-mat:has(.mat-phase:has(.questing-panel))>.own-characters{flex:0 0 auto;max-height:150px;min-height:0}
+.mat-phase>.questing-panel>p,.mat-phase>.questing-panel>p.small{display:none}
+.mat-phase>.questing-panel .mat-only{display:none}
+.mat-phase>.questing-panel>.notice>p{display:none}
+.mat-phase .mat-commit{display:flex;flex-direction:column;gap:3px}
+/* 标题行与「投入意志/威胁」在操作条和竖轴里已有，面板里不必再占一行。 */
+.mat-phase:has(>.questing-panel) .panel-title{display:none}
+.mat-phase .mat-commit .quest-commit-list{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:3px;margin:0;font-size:11px;line-height:1.3}
+.mat-phase .mat-commit .quest-commit-list label{display:inline-flex;align-items:center;gap:3px;white-space:nowrap;background:#f1efe2;border:1px solid #d8dcd0;border-radius:4px;padding:1px 5px}
+.mat-phase .mat-commit .quest-commit-list input{width:11px;height:11px;margin:0}
+.mat-phase>.questing-panel>.panel-title{margin:0 0 2px}
+.mat-phase>.questing-panel .actions{margin-top:3px;gap:5px}
+.mat-phase>.questing-panel .compact-chips{flex-wrap:nowrap;overflow-x:auto;align-items:center}
+.mat-phase>.questing-panel .compact-chips select{font-size:11px;padding:0 2px;max-width:96px}
+.mat-phase>.questing-panel .actions button{padding:3px 8px;font-size:12px;min-height:0}
+.mat-phase>.questing-panel .quest-commit-list{display:flex;flex-wrap:wrap;gap:2px 10px;font-size:11.5px;max-height:40px;overflow:auto}
+.mat-phase>.questing-panel label.small{font-size:11px;display:flex;align-items:center;gap:4px}
+.mat-phase>.questing-panel label.small select{font-size:11.5px;padding:1px 4px}
 .mat-phase:has(>.opening-panel){max-height:none;overflow:visible;min-height:0}
 /* 开局阶段把英雄区与手牌的高度让给「起始手牌」面板：此时桌面上还没有可查看的角色，
    而确认手牌是唯一要事。手牌区只留一条可横向滚动的窄带，面板完整露出。
@@ -1295,8 +1339,8 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
 .player-mat:has(.mat-phase>.opening-panel) .hand-card .card-face img{height:100%;object-fit:cover}
 .mat-phase>.panel{flex:0 1 auto;min-height:0;overflow:auto;
  border:0;background:transparent;padding:0;margin:0}
-.mat-phase>.panel>h2,.mat-phase .panel-title h2{font-size:13px;color:#e6dcc2;margin:0 0 3px}
-.mat-phase p{font-size:12px;color:#cfdadf;margin:3px 0;line-height:1.45}
+.mat-phase>.panel>h2,.mat-phase .panel-title h2{font-size:13px;color:#2c4438;margin:0 0 3px}
+.mat-phase p{font-size:12px;color:#54635a;margin:3px 0;line-height:1.45}
 /* v0.15.47：开局步骤（opening-panel）从右栏搬到角色卡下方。它本身是浅色纸感底，
    直接放进来会在深色卡区里突兀、且浅色文字不可读，所以按卡区的深底重绘一遍。
    开局面板没有「结束阶段」按钮，不受 96px 上限约束——那里要放得下每位玩家一行。 */
@@ -1314,10 +1358,12 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
 .mat-phase>.opening-panel .opening-choices button{font-size:11.5px;padding:3px 9px;min-height:24px}
 .mat-phase>.opening-panel .actions{margin-top:0}
 .mat-phase>.opening-panel .actions button{font-size:12px;min-height:28px}
-.mat-phase .small.muted{color:#a9b8c2}
+.mat-phase .small.muted{color:#6d7a70}
 .mat-phase .actions{margin-top:4px;display:flex;flex-wrap:wrap;gap:6px}
-.mat-phase .notice{background:#2b3d33;border-left-color:#c6ac74;color:#dfe8dc;padding:4px 8px;font-size:11.5px}
-.mat-phase .badge{background:#1d2d38;border-color:#4a5e6c;color:#cfdadf}
+.mat-phase .quest-commit-list label{color:#3f5047}
+.mat-phase label{color:#3f5047}
+.mat-phase .notice{background:#f4eddc;border-left-color:#c6ac74;color:#6b5a35;padding:4px 8px;font-size:11.5px}
+.mat-phase .badge{background:#f1efe2;border-color:#d8dcd0;color:#3f5047}
 /* 操作条里的紧凑面板：只有输入，没有解释性长文 */
 .questing-panel.compact>.panel-title{margin-bottom:6px}
 .questing-panel.compact .compact-chips{margin:4px 0}

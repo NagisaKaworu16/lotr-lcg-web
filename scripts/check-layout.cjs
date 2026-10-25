@@ -78,6 +78,9 @@ const near = (a, b, tol = 1) => Math.abs(a - b) <= tol;
   add('左列：公共桌面与玩家区同宽同起点', near(board.x, mat.x) && near(board.w, mat.w), `${board.x}/${mat.x} | ${board.w}/${mat.w}`);
   add('操作栏是顶部通栏', near(dock.x, board.x) && dock.w > board.w + 100, `dock x=${dock.x} w=${dock.w} board w=${board.w}`);
   add('左列在右列之左且不重叠', board.x + board.w <= geo.rail.x + 1, `board right=${(board.x + board.w).toFixed(1)} rail left=${geo.rail.x}`);
+  /* v0.15.56：操作条在第一行 auto 里，内容一变长就挤掉公共牌桌（曾压到 120px）。
+     给它一个绝对上限，牌桌至少留 200px。 */
+  add('操作条不挤压公共牌桌（dock ≤ 200px 且牌桌 ≥ 200px）', dock.h <= 200 && board.h >= 200, `dock=${dock.h} board=${board.h}`);
   add('操作栏与公共桌面同起点', near(dock.x, board.x, 2), `${dock.x} / ${board.x}`);
   add('右栏顶部与公共桌面对齐', near(board.y, geo.rail.y, 2), `${board.y} / ${geo.rail.y}`);
   add('右栏占满右列全高（rail 底 = 玩家区底）', Math.abs((geo.rail.y + geo.rail.h) - (mat.y + mat.h)) <= 3, `rail bottom=${(geo.rail.y + geo.rail.h).toFixed(1)} mat bottom=${(mat.y + mat.h).toFixed(1)}`);
