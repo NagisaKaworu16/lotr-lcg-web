@@ -107,7 +107,10 @@ body:has(.desktop-table) main{padding:16px 22px 32px}
 .operation-content .card-art{max-width:var(--card-w)}
 .rail-step{border-radius:6px}
 .deck-counts div{border-radius:6px}
-@media(min-width:1700px){:root{--card-w:140px}.table-card{width:var(--card-w);flex-basis:var(--card-w)}.peer-cards .table-card{width:var(--card-w);flex-basis:var(--card-w)}.tabletop-layout{grid-template-columns:minmax(0,1fr) 274px}}
+@media(min-width:1700px){:root{--card-w:140px}.table-card{width:var(--card-w);flex-basis:var(--card-w)}.peer-cards .table-card{width:var(--card-w);flex-basis:var(--card-w)}.tabletop-layout{grid-template-columns:minmax(0,1fr) 274px}
+/* v0.15.61：右栏原来在 1700+ 被压到 274px，比 1440 的 374px 还窄——
+   大屏上日志反而更难读。改为随视口增长，上限 460px。 */
+.tabletop-layout{grid-template-columns:minmax(0,1fr) clamp(374px,22vw,460px)}}
 @media(max-width:1100px){:root{--card-w:118px}.table-card{width:var(--card-w);flex-basis:var(--card-w)}.peer-cards .table-card{width:var(--card-w);flex-basis:var(--card-w)}}
 
 /* v0.14.5 operation dock as the single task bar: task label, confirmation
@@ -560,7 +563,10 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
 /* ── 3. 四区网格 ─────────────────────────────────────────────────── */
 .tabletop-layout{
  display:grid;height:100%;min-height:0;gap:9px;
- grid-template-columns:minmax(0,1fr) clamp(320px,26vw,400px);
+ /* v0.15.61：右栏下限 320→400。实测 1440 下右栏 374px，其中阶段轴占 190px，
+   日志只剩 152px（文字实测 109px 宽）——一句话折成两行才放得下。
+   阶段轴本身 190px 够用（窗口编号 + 名称），多出来的宽度应该给日志。 */
+ grid-template-columns:minmax(0,1fr) clamp(400px,27vw,470px);
  /* v0.15.51：操作条去框后移到顶部通栏；右栏（阶段+日志）横跨两行，
     占据页面右侧全部高度。 */
  grid-template-rows:auto minmax(0,1fr) minmax(0,.92fr);
@@ -584,7 +590,10 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
  grid-template-rows:minmax(0,1fr);
  background:#23323e;border:1px solid #475b6b;border-radius:8px;padding:10px}
 .tabletop-rail>.phase-rail-v{
- grid-column:1;grid-row:1;min-height:0;height:100%;overflow:auto}
+ grid-column:1;grid-row:1;min-height:0;height:100%;overflow:auto;
+ /* v0.15.61：显式声明为纵向 flex，让 .rail-grp 的 flex-grow 有作用对象。
+     不写这条时它是 block，flex-grow 被完全忽略，竖轴只到内容高（1920 下尾部空 230px）。 */
+ display:flex;flex-direction:column}
 .tabletop-rail>.table-log{grid-column:2;grid-row:1;min-height:0;min-width:0;
  border-left:1px solid #3d5361;padding-left:10px}
 /* v0.15.45：牌堆栏与说明框移除，右栏只剩竖轴 + 日志两列，日志直接占第二列 */
@@ -1123,7 +1132,10 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
 /* 竖轴本体：连续的一条，阶段块首尾相接，中间不留缝 */
 .phase-log .phase-rail-v{
  display:flex;flex-direction:column;min-height:0;overflow:auto;
- scrollbar-width:none;border-radius:3px;background:#2b2f35}
+ scrollbar-width:none;border-radius:3px;background:#2b2f35;
+ /* 竖轴比内容高时（1920×1080 会空出约 230px），尾部用一层极淡的渐隐把「墙」收住，
+    避免看起来像被硬切断。纯装饰，不占布局、不接事件。 */
+ background-image:linear-gradient(to bottom,transparent calc(100% - 120px),rgba(0,0,0,.22))}
 .phase-log .phase-rail-v::-webkit-scrollbar{display:none}
 .rail-grp{display:grid;grid-template-columns:22px minmax(0,1fr);min-height:0;flex:0 0 auto}
 /* 手动收起的阶段：压成 15px 单行，只留窗口计数 */
@@ -1185,6 +1197,38 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
 .rail-win.hit .rail-win-label{color:rgba(255,255,255,.9)}
 .rail-grp.past .rail-win .rail-win-no{color:#8a9198}
 .rail-grp.past .rail-win .rail-win-label{color:#6c747c}
+/* v0.15.61 短屏压缩：head 的 10px 上下内边距是 93px 高的元凶之一（竖排文字本身只有约 73px），
+   短屏收掉内边距与字号，整条竖轴才能跟着 win 行高一并降下来。 */
+@media(max-height:880px){
+ .rail-grp>.rail-head>span{padding:6px 0;font-size:12.5px;letter-spacing:3px}
+}
+@media(max-height:800px){
+ .rail-grp>.rail-head>span{padding:4px 0;font-size:12px;letter-spacing:2.5px}
+}
+@media(max-height:740px){
+ .rail-grp>.rail-head>span{padding:3px 0;font-size:11px;letter-spacing:2px}
+}
+/* v0.15.61：短屏自适应压缩行高。
+   20 条窗口 × 31px + 阶段头 = 682px 的内容高，只有 900px 以上的视口放得下；
+   1280×720 / 1366×768 / 1440×800 这些常见笔记本屏差 30~130px，只能滚动看——
+   而竖轴的价值就在「一眼看到当前在第几个窗口、后面还有什么」，滚动即失效。
+   这里按视口高度分档收行高：只压垂直留白与行高，不动字号，编号与窗口名照样读得清。
+   900px 以上维持 31px 原高度（分档用 max-height，不写 min-height，保证不反向覆盖大屏）。 */
+@media(max-height:880px){
+ .rail-wins{line-height:normal}
+ .rail-win{min-height:26px;line-height:25px;padding-right:6px}
+ .rail-win .rail-win-no{font-size:13px}
+ .rail-win .rail-win-label{font-size:12.5px}
+}
+@media(max-height:800px){
+ .rail-win{min-height:23px;line-height:22px}
+ .rail-win .rail-win-no{font-size:12px}
+ .rail-win .rail-win-label{font-size:12px}
+}
+@media(max-height:740px){
+ .rail-win{min-height:21px;line-height:20px}
+ .rail-win .rail-win-no,.rail-win .rail-win-label{font-size:11px}
+}
 /* 范围切换条：本回合 / 全部，以及当前条数。只用小号文字与细边，不抢阶段色带的视觉层级。 */
 .phase-log .log-bar{display:flex;align-items:center;gap:6px;min-width:0}
 .phase-log .log-scope{display:inline-flex;border:1px solid #d6dacd;border-radius:5px;overflow:hidden;background:#fdfcf5}
@@ -1408,6 +1452,22 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
 .window-panel.compact>.window-blocked{color:#6d7a70}
 .window-panel.compact>.window-blocked>summary{color:#5c675a}
 .window-panel.compact>.window-blocked>summary:hover{color:#24392f}
+
+/* ── 19. 手牌：张数少就平铺，多了才扇叠（v0.15.61）────────────────────
+   原来一律扇叠（92px 宽、-46px 间距 + 7px gap），每张只露出约 53px，
+   等于只看得见卡图最左那条边。v0.15.58 好不容易让「付不起的牌变灰」，
+   可露出 53px 连费用都读不全，那个提示等于白做。
+   实测 1440 宽下玩家区手牌容器 989px，92px 卡 + 7px gap 平铺可容 10 张
+   （10×92+9×7=983）。取 9 张作为阈值留一格余量；到 10 张才扇叠。
+   用 :has() 数张数——:has(.hand-card:nth-child(10)) 命中即说明有 10 张以上。
+   这一段必须放在所有 .hand-card+.hand-card 扇叠定义之后才能覆盖它们。 */
+.player-mat .hand-zone:not(:has(.hand-card:nth-child(10))) .hand-card+.hand-card{margin-left:0}
+/* 开局弃牌态（.opening-panel）本来就是窄卡密排，不受上面这条影响——
+   它的规则在 1339 行，选择器带 :has(.mat-phase>.opening-panel)，优先级更高。 */
+/* 窄屏：容器实测 870px（1280 视口）只容得下 8 张，阈值下调一档避免溢出。 */
+@media(max-width:1360px){
+ .player-mat .hand-zone:not(:has(.hand-card:nth-child(9))) .hand-card+.hand-card{margin-left:0}
+}
 
 /* ── 窄屏顶栏（v0.15.49，须在单屏布局之后以覆盖其 nowrap）────────────
    390px 移动档：藏「威胁/资源」统计，顶栏允许换行，避免横向溢出。 */
@@ -10082,7 +10142,7 @@ const WindowUI=(()=>{
 </script><script src="phase-log.js"></script><script>
 /* Tabletop view: UI drafts never pay, exhaust, reveal, or bypass phase validation. */
 /* 界面版本徽标唯一来源：须与 CHANGELOG.md 最新条目标题一致（planning-dom-tests 有校验）。 */
-const APP_VERSION='v0.15.60';
+const APP_VERSION='v0.15.61';
 const DesktopUI=(()=>{
  const E=ScenarioEngine,R=E.planning,Q=E.questing,C=E.combat,esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  let combatDraft={key:'',target:null,ids:[]},draftState=null;

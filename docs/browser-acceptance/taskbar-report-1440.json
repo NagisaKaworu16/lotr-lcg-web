@@ -1,12 +1,12 @@
 {
  "width": 1440,
- "at": "2026-10-25T13:32:51.221Z",
+ "at": "2026-10-25T13:47:28.984Z",
  "ok": true,
  "checks": [
   {
    "name": "操作栏为顶部通栏、右栏居右",
    "ok": true,
-   "detail": "dock x=14 w=1412 board w=1029 rail x=1052"
+   "detail": "dock x=14 w=1412 board w=1003 rail x=1026"
   },
   {
    "name": "底部玩家区位于公共桌面之下",
@@ -16,12 +16,12 @@
   {
    "name": "右侧牌堆与日志同栏且靠右",
    "ok": true,
-   "detail": "rail x=1052 board x=14"
+   "detail": "rail x=1026 board x=14"
   },
   {
    "name": "玩家区与公共桌面同宽同起点",
    "ok": true,
-   "detail": "1029/1029"
+   "detail": "1003/1003"
   },
   {
    "name": "对局页面不产生纵向滚动",

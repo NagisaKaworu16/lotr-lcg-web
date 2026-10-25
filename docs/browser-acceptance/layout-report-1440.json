@@ -1,6 +1,6 @@
 {
  "width": 1440,
- "at": "2026-10-25T13:33:04.186Z",
+ "at": "2026-10-25T13:47:41.842Z",
  "cardWidths": [
   84,
   96,
@@ -10,17 +10,17 @@
   {
    "name": "左列：公共桌面与玩家区同宽同起点",
    "ok": true,
-   "detail": "14/14 | 1028.6/1028.6"
+   "detail": "14/14 | 1003/1003"
   },
   {
    "name": "操作栏是顶部通栏",
    "ok": true,
-   "detail": "dock x=14 w=1412 board w=1028.6"
+   "detail": "dock x=14 w=1412 board w=1003"
   },
   {
    "name": "左列在右列之左且不重叠",
    "ok": true,
-   "detail": "board right=1042.6 rail left=1051.6"
+   "detail": "board right=1017.0 rail left=1026"
   },
   {
    "name": "操作条不挤压公共牌桌（dock ≤ 200px 且牌桌 ≥ 200px）",
@@ -75,7 +75,7 @@
   {
    "name": "手牌重叠间距统一",
    "ok": true,
-   "detail": "53"
+   "detail": "99"
   },
   {
    "name": "无横向溢出",
