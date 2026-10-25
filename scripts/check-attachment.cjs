@@ -28,7 +28,7 @@ const FILE = 'file:///' + path.join(ROOT, 'index.html').replace(/\\/g, '/');
   await page.locator('.planning-dialog #plan-confirm').click(); await page.waitForTimeout(450);
   const m = await page.evaluate(() => {
     const mat = document.querySelector('.player-mat');
-    return { scroll: mat.scrollHeight, h: Math.round(mat.getBoundingClientRect().height), hand: !!document.querySelector('.player-mat>.hand-zone'), handCards: document.querySelectorAll('.player-mat>.hand-zone .card-face').length, door: !!document.querySelector('.phase-door .door-go'), atts: state.players[0].attachments.length };
+    return { scroll: mat.scrollHeight, h: Math.round(mat.getBoundingClientRect().height), hand: !!document.querySelector('.player-mat .hand-zone'), handCards: document.querySelectorAll('.player-mat .hand-zone .card-face').length, door: !!document.querySelector('.phase-door .door-go'), atts: state.players[0].attachments.length };
   });
   const checks = [
     ['附属已入场', m.atts === 1, 'atts=' + m.atts],

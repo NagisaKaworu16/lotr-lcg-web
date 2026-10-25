@@ -1,3 +1,12 @@
+# v0.15.59 · 底部合并成「队伍与手牌」，结束阶段只剩一颗按钮（2026-10-25）
+
+- **合并**：玩家区原来的「英雄与盟友」「手牌」两个分区（外加打出的附属）并成底部一个模块 `.bottom-deck`——标题行写清数量（英雄 a · 盟友 b · 附属 c · 手牌 d），角色行在上、手牌行在下，交战区仍在模块上方独立成行。
+- **结束阶段简化**：`phaseDoor()` 从「标题 + 必需操作清单 + 按钮 + 状态行」四段竖排缩成一颗按钮，收进合并模块的标题行右侧。必需操作清单全文挪进按钮 tooltip（title），未完成项数量保留在隐藏的 `.door-state` 里——`check-auto-phase` 的卡死签名还读它。`check-taskbar`、`check-auto-phase` 依赖的 `.phase-door .door-go` 选择器原样保留，脚本零改动。
+- **卡图完整显示**：手牌行高改为由 CSS 变量推导（`--hc:118px` + 26px 行距），并留 4px 余量防选中描边被 `overflow-y:hidden` 裁掉；角色行 96px 宽按 424:600 原始比例显示，实测卡图底缘全部落在行盒内（144/144）。角色区与手牌行各自横向滚动、互不挤压。
+- **布局同步**：`style.css` 里十几处 `.player-mat>.own-characters` / `>.hand-zone` 直属选择器全部改为适配新嵌套（合并模块内两行）；开局弃牌态手牌窄带（62px）、探险投入名单态角色行限高 150px 的特殊行为保留。`check-layout` 的卡宽取样与 `check-attachment` 的手牌探测选择器同步更新。
+- **回归**：check-layout 17/17、check-onescreen 单屏可见（hand ✓）、check-taskbar 23/23、check-auto-phase 自动走到第 4 回合 PASS、check-attachment 5/5、check-score 19/19、check-quest-panel 7/7、check-setup-reveal 13/13、check-affordable 10/10、check-card-hover 22/22。
+- **验收截图**：`docs/browser-acceptance/v0.15.59-bottom-deck.png`。
+
 # v0.15.58 · 付不起的牌就该是灰的：置灰判据不再依赖「此刻轮不轮得到你」（2026-10-25）
 
 - **问题**：资源用光后手牌依然全亮。`desktop-ui.js` 靠 `!sp.legal && /资源不足/.test(sp.reason)` 判断要不要加 `.unaffordable`，可 `playSpec()` 的断言是有顺序的——先查时机（`free()` 里的「请先处理剧本待结算事项」「当前不是玩家行动窗口」）、先查阶段（「盟友和附属仅可在计划阶段正常打出」）、先查身份（「仅当前计划玩家可以从手牌打出盟友或附属」），最后才轮到 `payment()` 抛「匹配领域的资源不足」。所以换玩家、进探险阶段、或行动窗口没打开时，`reason` 里根本不会出现「资源不足」四个字，CSS 类加不上，一手牌全是亮的，点下去才发现付不起。

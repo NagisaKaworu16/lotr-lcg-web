@@ -64,7 +64,7 @@ const near = (a, b, tol = 1) => Math.abs(a - b) <= tol;
       overflowX: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
       overflowY: document.documentElement.scrollHeight > innerHeight + 1,
       cardWidthsByZone: { pub: [...new Set(all('.public-table>.table-zone .table-card').map(c => +c.getBoundingClientRect().width.toFixed(1)))],
-                          mat: [...new Set(all('.player-mat>.own-characters .table-card').map(c => +c.getBoundingClientRect().width.toFixed(1)))],
+                          mat: [...new Set(all('.player-mat .own-characters .table-card').map(c => +c.getBoundingClientRect().width.toFixed(1)))],
                           peer: [...new Set(all('.other-player .table-card').map(c => +c.getBoundingClientRect().width.toFixed(1)))] } };
   });
 
