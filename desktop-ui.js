@@ -1,6 +1,6 @@
 /* Tabletop view: UI drafts never pay, exhaust, reveal, or bypass phase validation. */
 /* 界面版本徽标唯一来源：须与 CHANGELOG.md 最新条目标题一致（planning-dom-tests 有校验）。 */
-const APP_VERSION='v0.15.57';
+const APP_VERSION='v0.15.58';
 const DesktopUI=(()=>{
  const E=ScenarioEngine,R=E.planning,Q=E.questing,C=E.combat,esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  let combatDraft={key:'',target:null,ids:[]},draftState=null;
@@ -168,10 +168,13 @@ const DesktopUI=(()=>{
   if(!m)draft(s,null);
   const others=s.players.filter(x=>x.id!==p.id).map(o=>`<section class="other-player"><div class="zone-heading"><h3>${esc(o.name)}${s.first===o.id?' · 起始玩家':''}</h3><span>威胁 ${o.threat}${o.eliminated?' · 已淘汰':''}</span>${b('查看手牌与完整区域','view',`data-player="${o.id}"`)}</div><div class="table-card-row peer-cards">${playerChars(s,o).map(c=>character(s,c,m)).join('')}${o.engaged.map(c=>encounter(s,c,'engaged',m)).join('')}</div></section>`).join('');
   const hand=p.hand.map(c=>{const meta=R.data(s,{...c,owner:p.id}),sp=R.playSpec(s,p.id,c.uid);
-   /* 费用检测：时机/目标合法但匹配领域的资源不足 → 灰化禁用，仍保留悬停放大与查看（探针挂在 article 上，绕过 disabled button 不派发 hover 的限制）。 */
-   const unaff=!sp.legal&&/资源不足/.test(sp.reason||'');
+   /* 置灰判据用 playSpec 的 affordable：只要手上付不起就灰掉，不管此刻轮不轮得到你出牌。
+      以前靠正则匹配 reason 里的「资源不足」，可那时 playSpec 往往先被时机断言拦掉
+      （「仅当前计划玩家可以…」「当前不是计划或探险阶段」），于是一手牌全亮着，点下去才发现没钱。 */
+   const unaff=sp.affordable===false;
+   const reason=unaff?`资源不足：还差 ${sp.short} 点`:(sp.legal?'点击选择目标与费用':sp.reason);
    const probe=unaff?(()=>{const rec=ImageLibrary.by[c.code],url=rec?ImageLibrary.safeUrl(rec.faces?.B||rec.imageUrl):null;return url?` data-hover-src="${esc(url)}" data-hover-shape="tall"`:'';})():'';
-   return `<article class="table-card hand-card ${sp.legal?'selectable':''}${unaff?' unaffordable':''}"${probe}><button class="card-face" data-action="planning" data-plan="play" data-player="${p.id}" data-uid="${c.uid}" ${sp.legal?'':'disabled'} aria-label="使用${esc(meta.nameZh)}">${art(c.code)}</button><div class="table-card-caption"><b>${esc(meta.nameZh)}</b><span>费用 ${meta.cost??'—'} · ${esc(meta.sphereName||meta.sphere)}</span></div>${inspect(c.code)}<span class="card-legality">${esc(sp.legal?'点击选择目标与费用':sp.reason)}</span></article>`;}).join('');
+   return `<article class="table-card hand-card ${sp.legal?'selectable':''}${unaff?' unaffordable':''}"${probe}><button class="card-face" data-action="planning" data-plan="play" data-player="${p.id}" data-uid="${c.uid}" ${sp.legal?'':'disabled'} aria-label="使用${esc(meta.nameZh)}">${art(c.code)}</button><div class="table-card-caption"><b>${esc(meta.nameZh)}</b><span>费用 ${meta.cost??'—'} · ${esc(meta.sphereName||meta.sphere)}</span></div>${inspect(c.code)}<span class="card-legality">${esc(reason)}</span></article>`;}).join('');
   /* 玩家状态条：BGA 式汇总每位玩家的威胁／资源／伤害，点按即切换查看（复用 view 动作）。 */
  const tabStats=o=>{const res=o.heroStates?o.heroStates.reduce((n,h)=>n+h.resources,0):0,dmg=o.heroStates?o.heroStates.reduce((n,h)=>n+(h.damage||0),0):0;
   return `<span class="tab-stats">威胁 <b>${o.threat}</b> · 资源 <b>${res}</b> · 伤害 <b>${dmg}</b></span>${s.first===o.id?'<span class="first-mark">起始</span>':''}${o.eliminated?'<span class="elim-mark">淘汰</span>':''}`;};

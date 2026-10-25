@@ -111,11 +111,33 @@ const PlanningRulesFactory=(H)=>{
    default:throw Error(['01034'].includes(code)?'此牌是战斗行动，计划阶段不能使用': ['01065','01066'].includes(code)?'此牌是探险行动，计划阶段不能使用':'当前没有该响应牌所要求的触发窗口');
   }return f;
  }
- function playSpec(s,pid,uid,params={}){let r={legal:false,fields:[],reason:''};try{const pl=free(s),{p,x,m}=sourceHand(s,pid,uid);r.meta=m;r.instance=x;if(m.type!=='event'){need(s.phase===1,'盟友和附属仅可在计划阶段正常打出');need(active(s)===pid,'仅当前计划玩家可以从手牌打出盟友或附属');need(unique(s,m),'场上已有同名独特牌');if(m.type==='ally'&&[123,124].includes(s.quest))need(s.alliesPlayed?.round!==s.round||s.alliesPlayed.count<1,'此剧本前两阶段全队每回合最多打出1名盟友');if(m.type==='attachment')r.fields=[fieldsForTargets(s,'target','附着目标',attachmentTargets(s,m))];}
-   else {r.timing=requireEventWindow(s,m.code);r.fields=actionFields(s,pid,m.code,params);}
+ /* shortfall(s,pid,sphere,cost,three)：手上资源够不够打出这张牌，不够时返回还差多少。
+     只回答「钱够不够」这一个问题，不碰时机、目标、独特性——那些由 playSpec 自己的断言负责。
+     界面用它把「资源不足」的牌置灰，哪怕此刻还轮不到你出牌（别人的计划回合、探险阶段的行动窗口），
+     否则玩家会看到一手亮着的牌，点下去才发现付不起。 */
+ function shortfall(s,pid,sphere,cost,three){
+  if(!Number.isInteger(cost)||cost<0)return 0;
+  const ps=pools(s,pid,sphere);
+  if(sphere!=='neutral'&&!ps.some(p=>p.eligible))return cost||1;   /* 领域对不上，等于一分钱也付不了 */
+  let left=cost;
+  for(const p of ps.filter(p=>p.eligible)){const n=three?Math.min(left,p.resources,1):Math.min(left,p.resources);left-=n;}
+  return Math.max(0,left);
+ }
+ /* costOf(s,pid,m,params,fields)：这张牌这一手到底要付多少（01051 按弃牌堆里那张的费用、01067 按选的 X）。 */
+ function costOf(s,m,params,fields){let cost=m.cost;
+  if(m.code==='01051'){const f=(fields||[])[0],value=params.target??params.ally??f?.options[0]?.value;const c=alive(s).flatMap(p=>p.playerDiscard).find(c=>same(c.uid,value));cost=c?data(s,c).cost:null;}
+  if(m.code==='01067')cost=num(params.x??(fields||[]).find(f=>f.key==='x')?.options[0]?.value);
+  return cost;
+ }
+ function playSpec(s,pid,uid,params={}){let r={legal:false,fields:[],reason:'',affordable:true};try{const pl=free(s),{p,x,m}=sourceHand(s,pid,uid);r.meta=m;r.instance=x;
+   /* 先算这张牌得付多少、手上差多少：即便后面因为时机/目标判不合法，界面也能把「其实是没钱」说清楚。 */
+   if(m.type!=='event'&&m.type==='attachment')r.fields=[fieldsForTargets(s,'target','附着目标',attachmentTargets(s,m))];
+   r.cost=costOf(s,m,params,r.fields);r.short=shortfall(s,pid,m.sphere,r.cost,m.code==='01036');r.affordable=r.short===0;
+   if(m.type!=='event'){need(s.phase===1,'盟友和附属仅可在计划阶段正常打出');need(active(s)===pid,'仅当前计划玩家可以从手牌打出盟友或附属');need(unique(s,m),'场上已有同名独特牌');if(m.type==='ally'&&[123,124].includes(s.quest))need(s.alliesPlayed?.round!==s.round||s.alliesPlayed.count<1,'此剧本前两阶段全队每回合最多打出1名盟友');}
+   else {r.timing=requireEventWindow(s,m.code);r.fields=actionFields(s,pid,m.code,params);r.cost=costOf(s,m,params,r.fields);r.short=shortfall(s,pid,m.sphere,r.cost,m.code==='01036');r.affordable=r.short===0;}
    need(r.fields.every(f=>f.options.length),'没有符合此牌条件的合法目标');
-   let cost=m.cost;if(m.code==='01051'){const f=r.fields[0],value=params.ally??f.options[0]?.value;const c=alive(s).flatMap(p=>p.playerDiscard).find(c=>same(c.uid,value));cost=c?data(s,c).cost:null;}if(m.code==='01067')cost=num(params.x??r.fields.find(f=>f.key==='x').options[0]?.value);
-   r.payment=payment(s,pid,m.sphere,cost,undefined,m.code==='01036');r.cost=cost;r.legal=true;
+   if(!r.affordable)need(false,'资源不足：还差 '+r.short+' 点'+({leadership:'领导',lore:'学识',spirit:'精神',tactics:'战术'}[m.sphere]||'匹配领域')+'资源');
+   r.payment=payment(s,pid,m.sphere,r.cost,undefined,m.code==='01036');r.legal=true;
   }catch(e){r.reason=e.message;}return r;}
  function checkedPlay(s,pid,uid,params){const r=playSpec(s,pid,uid,params);need(r.legal,r.reason);chosen(r.fields,params);r.payment=payment(s,pid,r.meta.sphere,r.cost,params.payment,r.meta.code==='01036');return r;}
  function removeFrom(a,uid){const i=a.findIndex(c=>same(c.uid,uid));need(i>=0,'牌张已经离开原区域');return a.splice(i,1)[0];}
@@ -273,6 +295,6 @@ const PlanningRulesFactory=(H)=>{
  function applyEnd(s,e){s.delayedEffects=s.delayedEffects.filter(x=>x.id!==e.id);if(find(s,e.uid)?.kind==='ally')leaveAlly(s,e.uid,e.kind==='beorn'?'playerDeck':'hand');}
  function complete(s){s.phaseModifiers=(s.phaseModifiers||[]).filter(m=>m.round!==s.round||m.phase!==s.phase);s.phasePermissions=(s.phasePermissions||[]).filter(m=>m.round!==s.round||m.phase!==s.phase);if(s.phase===6){context(s).closing=false;context(s).step='roundEnd';log(s,'阶段结束效果已完成，开始回合结束效果');return;}context(s).completed=true;context(s).closing=false;if([3,4,5].includes(s.phase)){context(s).step='completed';context(s).encounterModifiers=[];context(s).ignoredThreat=[];s.phaseThreat=0;}if(s.phase===2){context(s).step='completed';context(s).encounterModifiers=[];context(s).ignoredThreat=[];for(const c of chars(s))c.state.committed=false;s.phaseThreat=0;for(const c of s.staging)delete c.bonus;}log(s,'本阶段结束效果结算完成');}
  function finish(s){const pl=plan(s);need(!pl.halted,pl.halted);need(!pl.queue.length,'请先结算响应');if(!pl.closing){if(s.phase===6)need(pl.step==='action','刷新框架尚未完成');else if(s.phase===5)need(['endAction','ending'].includes(pl.step),'战斗尚未结束');else if(s.phase===4)need(pl.step==='afterChecks','交战检定尚未结束');else if(s.phase===3)need(pl.step==='action','旅行尚未结算');else if(s.phase===2)need(pl.step==='afterResult','探险尚未结算');else need(active(s)===null,'请先由每位玩家结束计划出牌步骤');need(alive(s).every(p=>pl.finalPasses.includes(p.id)),'请让每位玩家确认放弃剩余行动');pl.closing=true;pl.endEffects=(s.delayedEffects||[]).filter(e=>e.round===s.round&&e.phase===s.phase);}pump(s);return pl.completed;}
- return {destroyCharacter,discardAttachment,leaveAlly,engageEnemy,icons,checkedPlay,damageCharacter,damageEnemy,locationProgress,modifier,changeThreat,queue,pump,spend,draw,putAlly,context,eventTiming,window,start,active,playSpec,play,abilitySpec,activate,abilities,choiceSpec,resolveChoice,endTurn,passAction,finish,chars,attaches,enemies,locations,stats,find,data,payment,restrictedOn};
+ return {destroyCharacter,discardAttachment,leaveAlly,engageEnemy,icons,checkedPlay,damageCharacter,damageEnemy,locationProgress,modifier,changeThreat,queue,pump,spend,draw,putAlly,context,eventTiming,window,start,active,playSpec,play,abilitySpec,activate,abilities,choiceSpec,resolveChoice,endTurn,passAction,finish,chars,attaches,enemies,locations,stats,find,data,payment,restrictedOn,shortfall};
 };
 if(typeof module!=='undefined')module.exports=PlanningRulesFactory;
