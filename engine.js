@@ -87,8 +87,11 @@ function openingChoice(s,pid,mulligan=false){
 function startScenario(s){assert(s.setupPending,'剧本设置已经执行。');assert(s.players.every(p=>p.openingConfirmed),'所有玩家须先保留或调度起始手牌。');assert(!s.setupReveal,'起始手牌已确认，剧本设置已开始；请继续翻开开局遭遇牌。');s.setupDone=true;s.setupPending=false;applyScenarioSetup(s);log(s,'起始手牌已确认，剧本设置已执行；准备第1回合资源阶段','P0');}
 function resourcePhase(s){
  ready(s);assert(s.phase===0,'仅能在资源阶段收集资源和抽牌。');assert(s.resourceRound!==s.round,'本回合资源阶段已结算。');
- for(const p of live(s))if(p.heroStates){for(const h of p.heroStates){if(h.destroyed||(!s.rescued&&s.prisoner?.player===p.id&&s.prisoner.hero===h.index))continue;h.resources++;}const count=drawPlayer(s,p,1);log(s,`${p.name}每名可用英雄获得1资源，抽取${count}张牌`,'P0');}
+ const drawn=[];
+ for(const p of live(s))if(p.heroStates){for(const h of p.heroStates){if(h.destroyed||(!s.rescued&&s.prisoner?.player===p.id&&s.prisoner.hero===h.index))continue;h.resources++;}const count=drawPlayer(s,p,1);log(s,`${p.name}每名可用英雄获得1资源，抽取${count}张牌`,'P0');if(count)drawn.push(...p.hand.slice(-count).map(c=>({uid:c.uid,by:p.name})));}
  s.resourceRound=s.round;s.resourceDoneRound=s.round;
+ /* v0.15.68：记录资源阶段抽到的牌，界面用弹窗短暂展示（自动关闭，可手动关闭）。 */
+ if(drawn.length)s.resourceDraw={id:++s.serial,round:s.round,cards:drawn};
 }
 /* 官方 Easy Mode（LOTR Easy Mode Rules / MEC65 规则书）：setup 时每位英雄资源池 +1，
    并从当前剧本遭遇牌库移除带「difficulty」金框标记的卡。早期剧本没有金框，按官方清单逐卡移除。
