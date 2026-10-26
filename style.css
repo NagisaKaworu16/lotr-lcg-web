@@ -650,8 +650,13 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
 .player-mat>.zone-heading h2{font-size:13.5px}
 .player-mat>.table-zone+.table-zone{padding-top:5px}
 .player-mat .table-card-row{gap:7px}
+/* v0.15.64 追加：交战区/探查区敌人多时会把 bottom-deck 挤到只剩几十像素，
+   手牌整行掉到视口外（1920×1080 实测第2回合手牌 top=1203>1080）。
+   反转优先级：上方公共区压缩并滚动，bottom-deck 按内容自然占高，
+   保证角色行+手牌行始终可见。 */
+.player-mat>.table-zone:not(.bottom-deck){flex:1 1 auto;min-height:0;overflow:auto}
 .player-mat .bottom-deck{
- flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:4px;
+ flex:0 0 auto;min-height:0;display:flex;flex-direction:column;gap:4px;
  border:1px solid #dfe3d6;border-radius:8px;background:#f7f5ea;padding:5px 8px 6px;overflow:hidden}
 .player-mat .bottom-deck>.zone-heading{flex:0 0 auto;min-height:0;margin-bottom:0}
 .player-mat .bottom-deck>.zone-heading h2{font-size:12.5px}

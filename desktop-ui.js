@@ -1,6 +1,6 @@
 /* Tabletop view: UI drafts never pay, exhaust, reveal, or bypass phase validation. */
 /* 界面版本徽标唯一来源：须与 CHANGELOG.md 最新条目标题一致（planning-dom-tests 有校验）。 */
-const APP_VERSION='v0.15.64';
+const APP_VERSION='v0.15.65';
 /* ── 决策弹窗（v0.15.62）──────────────────────────────────────────────
    底部长住的那块阶段面板已经去掉（和角色区右上角的「结束阶段」重复，还白占一行高度）。
    需要玩家拍板的事不再常驻显示，改成「轮到你决定时才弹出来」。
