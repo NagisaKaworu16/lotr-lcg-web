@@ -6116,7 +6116,7 @@ const QuestRulesFactory=(H,R)=>{
  const field=(key,label,items)=>({key,label,options:items.map(opt)});
  const task=(s,kind,actor,payload={},optional=false)=>q(s).tasks.push({id:++s.serial,kind,actor,payload,optional});
  function check(s){need([2,3,4,5,6].includes(s.phase)&&q(s)?.round===s.round&&!q(s).completed&&s.status==='playing','当前没有进行中的探险阶段');need(!s.pending.length,'请先处理剧本事项');need(!q(s).queue.length,'请先处理卡牌响应');}
- function start(s){need(s.phase===2,'只能在第三阶段初始化探险');need(s.questing?.round!==s.round,'本回合探险阶段已经初始化，不能重复开始');need(s.players.every(p=>p.heroStates),'旧存档没有实际角色，请新开预组牌测试');const order=alive(s).map(p=>p.id).sort((a,b)=>(a-s.first+s.players.length)%s.players.length-(b-s.first+s.players.length)%s.players.length);s.questing={round:s.round,step:'beforeCommit',order,index:order.length,commitIndex:0,finalPasses:[],queue:[],tasks:[],remaining:[],closing:false,completed:false,revealed:0,encounterModifiers:[]};for(const c of chars(s))c.state.committed=false;log(s,'开始，投入前行动窗口开放');if(s.quest===125)for(const p of alive(s)){const x=p.playerDeck.shift();if(x)p.engaged.push({id:0,uid:x.uid,name:'兽人守卫',type:'Enemy',attack:1,defense:1,health:1,threat:0,synthetic:true,playerCard:x});}}
+ function start(s){need(s.phase===2,'只能在第三阶段初始化探险');need(s.questing?.round!==s.round,'本回合探险阶段已经初始化，不能重复开始');need(s.players.every(p=>p.heroStates),'旧存档没有实际角色，请新开预组牌测试');const order=alive(s).map(p=>p.id).sort((a,b)=>(a-s.first+s.players.length)%s.players.length-(b-s.first+s.players.length)%s.players.length);s.questing={round:s.round,step:'beforeCommit',order,index:order.length,commitIndex:0,finalPasses:[],queue:[],tasks:[],remaining:[],closing:false,completed:false,revealed:0,encounterModifiers:[],discussion:true};for(const c of chars(s))c.state.committed=false;log(s,'开始，投入前行动窗口开放');if(s.quest===125)for(const p of alive(s)){const x=p.playerDeck.shift();if(x)p.engaged.push({id:0,uid:x.uid,name:'兽人守卫',type:'Enemy',attack:1,defense:1,health:1,threat:0,synthetic:true,playerCard:x});}}
  function pass(s,pid){check(s);need(!q(s).tasks.length,'请先处理探险选择');R.passAction(s,pid);}
  function allPassed(s){return alive(s).every(p=>q(s).finalPasses.includes(p.id));}
  function move(s){need(s.phase===2,'请使用旅行阶段流程');check(s);const x=q(s);need(!planned(s).length&&!x.actionLocked,'请先撤销或二次确认并执行暂定行动');need(!x.tasks.length&&!x.current,'请先结算当前遭遇或响应');need(allPassed(s),'每位玩家须确认放弃本窗口行动');if(x.step!=='afterResult')x.finalPasses=[];
@@ -10242,7 +10242,7 @@ const WindowUI=(()=>{
 </script><script src="phase-log.js"></script><script>
 /* Tabletop view: UI drafts never pay, exhaust, reveal, or bypass phase validation. */
 /* 界面版本徽标唯一来源：须与 CHANGELOG.md 最新条目标题一致（planning-dom-tests 有校验）。 */
-const APP_VERSION='v0.15.62';
+const APP_VERSION='v0.15.63';
 /* ── 决策弹窗（v0.15.62）──────────────────────────────────────────────
    底部长住的那块阶段面板已经去掉（和角色区右上角的「结束阶段」重复，还白占一行高度）。
    需要玩家拍板的事不再常驻显示，改成「轮到你决定时才弹出来」。
@@ -10278,7 +10278,9 @@ const DecisionUI=(()=>{
      的敌人攻击值、暂定防御合计全被挤掉——玩家看不到自己在防几点攻击。
      现在 defense 交给下面的 CombatUI.panel，用完整面板承载；只有纯「选目标」
      的 attack 和纯「选投入角色」的 quest 走这个轻量 select 分支。 */
-  if(m&&m.kind!=='quest'&&m.kind!=='attack'&&m.kind!=='defense')return {kind:'select',title:selectTitle(m,s),body:DesktopUI.selection(s,m)};
+  /* v0.15.62 修正：attack 草稿面板（基础伤害预估 + 提交按钮）必须有渲染路径，
+     否则玩家在牌桌上点完目标与攻击者后看不到预览也无法提交。attack 回到本分支。 */
+  if(m&&m.kind!=='quest'&&m.kind!=='defense')return {kind:'select',title:selectTitle(m,s),body:DesktopUI.selection(s,m)};
   /* 阶段面板整块归弹窗：里面每一条都是「引擎没法替人下结论」的东西
      （放弃/取消放弃、开始投入、逐张翻牌、二次确认）。以前它同时渲染在操作条与底部，
      三处同一份内容，玩家得决定该看哪儿。 */

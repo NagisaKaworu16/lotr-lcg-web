@@ -1,3 +1,17 @@
+# v0.15.63 · planning-dom-tests 清零 + 桌面攻击草稿面板回归修复（2026-10-25）
+
+- **目标**：把 `planning-dom-tests.cjs` 从 62 pass / 8 fail 清到 **70 pass / 0 fail**；顺带把受二次确认引擎语义影响的 quest/phase/planning 三套引擎测试一并对齐。全部 16 套共 **453 项全过**。
+- **修掉的真 bug（桌面攻击草稿面板失联）**：`DecisionUI.pending()` 的 select 轻量分支写成了 `m.kind!=='quest'&&m.kind!=='attack'`——attack 草稿面板（含「暂定基础攻击 / 目标防御 / **基础伤害预估**」预览与「提交暂定攻击名单」按钮）从此没有任何渲染路径：玩家在牌桌上点完目标与攻击者，界面既无预览也无提交钮。证据就在同文件：`selectTitle` 里专门留着 attack 的「选择攻击目标」文案。修法：attack 回到 select 分支（`desktop-ui.js` 与 `index.html` 内联副本同改；index 副本中 defense 仍留给 `CombatUI.panel` 承载完整防御面板）。
+- **引擎语义落地（`discussion:true` 进 `QuestRulesFactory.start`）**：v0.15.62 重构后自动推进路径（`passAction`→`autoAdvance`）会绕过 `handlers.next` 的 `enableDiscussion`，导致部分路径下 `state.questing.discussion` 为 undefined、二次确认按钮不出现。修在引擎 `start()` 初始化（`quest-engine.js` + `index.html` 内联副本同改），不再依赖 UI 路径。
+- **测试对齐（非产品弱化）**：
+  - 提交派遣名单（`submitDeployment`）现在只置 `confirmed`，**横置与投入发生在全员 `approveDeployment` 之后的正式 commit**——`quest-tests` 33/34/35、`phase-tests` 3/4/5、`planning-dom-tests` 9/36/70 按新流程补「全员二次确认」步。
+  - 探险窗口打事件必须「暂定 + 全员二次确认」：`quest-tests` 新增 `playQ` 助手（`queueAction` + 全员 `approveActions`），替换 4 处直接 `R.play`。
+  - 自动推进语义：阶段完成即推进（旅行/遭遇验收屏是过渡帧；刷新结束自动进入新回合计划阶段、资源与抽牌已结算；遭遇完成即初始化战斗并发暗影）。`planning-dom-tests` 的 combatScreen 助手把敌人与暗影牌的注入挪到遭遇最后一次 pass 之前，否则战斗已开局、暗影发不到后补的敌人。
+  - 提交状态文案改为操作条 chip「玩家1 · 已提交」；提交后视角自动切到未提交玩家。
+  - `planning-tests` 一项 v0.15.58 起的旧失败：reason 已改为直说资源缺口，断言改为「不可打出 + 匹配领域|资源不足」。
+- **清理**：移除上次会话遗留的悬空 cherry-pick 状态（两个 v0.15.30/31 旧提交内容早已在库）。
+- **回归**：tests 25、phase 8、planning 90、planning-dom 70、quest 45、travel 24、combat 58、refresh 19、opening 16、setup-reveal 9、engagement 26、player 19、score 10、deck-share 7、window 22、pack-data 4、encounter-explanation 5——**453 项全过，零失败**。
+
 # v0.15.62 · 阶段面板搬进决策弹窗：底栏清空、操作条收起、只在轮到你时弹（2026-10-25）
 
 - **起因**：底部 `.mat-phase`、顶部操作条、刚加的弹窗，三处渲染的是同一份阶段内容，玩家得决定该看哪儿；而「结束阶段」按钮已经在角色区右上角，底部那块纯属重复。

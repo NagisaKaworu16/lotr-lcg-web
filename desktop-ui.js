@@ -1,6 +1,6 @@
 /* Tabletop view: UI drafts never pay, exhaust, reveal, or bypass phase validation. */
 /* 界面版本徽标唯一来源：须与 CHANGELOG.md 最新条目标题一致（planning-dom-tests 有校验）。 */
-const APP_VERSION='v0.15.61';
+const APP_VERSION='v0.15.63';
 /* ── 决策弹窗（v0.15.62）──────────────────────────────────────────────
    底部长住的那块阶段面板已经去掉（和角色区右上角的「结束阶段」重复，还白占一行高度）。
    需要玩家拍板的事不再常驻显示，改成「轮到你决定时才弹出来」。
@@ -30,7 +30,11 @@ const DecisionUI=(()=>{
   if(!s||s.status!=='playing'||s.setupPending||setupOpen(s))return null;
   /* 开局弃牌与设置揭示属于设置流程，仍留在牌桌上，不进弹窗。 */
   const m=DesktopUI.mode(s,pid);
-  if(m&&m.kind!=='quest'&&m.kind!=='attack')return {kind:'select',title:selectTitle(m),body:DesktopUI.selection(s,m)};
+  /* quest 草稿的控制台由 QuestUI.picker 提供（阶段面板已接）；
+     defense/attack 的草稿面板（含「基础伤害预估」与提交按钮）在这里进弹窗。
+     v0.15.62 重构时误把 attack 也排除了，玩家在牌桌上点完目标与攻击者后
+     看不到任何预览与提交按钮——selectTitle 里留着「选择攻击目标」就是证据。 */
+  if(m&&m.kind!=='quest')return {kind:'select',title:selectTitle(m),body:DesktopUI.selection(s,m)};
   /* 阶段面板整块归弹窗：里面每一条都是「引擎没法替人下结论」的东西
      （放弃/取消放弃、开始投入、逐张翻牌、二次确认）。以前它同时渲染在操作条与底部，
      三处同一份内容，玩家得决定该看哪儿。 */

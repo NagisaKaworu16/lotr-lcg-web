@@ -50,6 +50,8 @@ test('探险阶段：投入名单未交齐时不算完成，交齐后由程序�
  assert.equal(ok(s),false);
  assert.match(E.phaseRules.blocker(s),/提交派遣名单/);
  for(const pid of s.questing.order)Q.submitDeployment(s,pid,[Q.eligible(s,pid)[0].uid]);
+ /* v0.15.62 二次确认流程：全员提交后还需各自二次确认才锁定并投入 */
+ for(const pid of s.questing.order)Q.approveDeployment(s,pid);
  assert.equal(s.questing.deploymentLocked,true);
  drain(s);
  const r=E.endPhase(s);
@@ -62,6 +64,7 @@ test('遭遇牌未结算时绝不越过探查：current 存在即判定未完成
  const s=make(2);toQuest(s);
  for(const p of s.players)Q.pass(s,p.id);Q.move(s);
  for(const pid of s.questing.order)Q.submitDeployment(s,pid,[Q.eligible(s,pid)[0].uid]);
+ for(const pid of s.questing.order)Q.approveDeployment(s,pid); /* v0.15.62 二次确认 */
  drain(s);
  E.endPhase(s);
  assert.equal(s.questing.step,'staging');
@@ -78,6 +81,7 @@ test('探查结算完、允许让过后，探险阶段能推进到旅行阶段',
  const s=make(2);toQuest(s);
  for(const p of s.players)Q.pass(s,p.id);Q.move(s);
  for(const pid of s.questing.order)Q.submitDeployment(s,pid,[Q.eligible(s,pid)[0].uid]);
+ for(const pid of s.questing.order)Q.approveDeployment(s,pid); /* v0.15.62 二次确认 */
  drain(s);
  E.endPhase(s);
  let g=0;
