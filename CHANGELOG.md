@@ -4,6 +4,11 @@
 - **根因**：`bottom-deck`（队伍与手牌区，`overflow:hidden`）里，开局面板出现时英雄区隐藏（v0.15.59 设计），但 `PlanningUI.board` 仍渲染「盟友区·0／附属区·0」两个大空态占位，实测占 **265px**——62px 的手牌窄扇被挤出盒子底部，被 `overflow:hidden` 整体裁掉，页面又不可滚动（`pageH===innerHeight`），于是手牌在 DOM 里存在（6 张 `.hand-card`）却永远看不见。
 - **修法**：开局面板出现时整个隐藏 `.player-permanents`（`display:none`）。开局阶段盟友/附属必为 0，数量信息已在 zone-heading（「盟友 0 · 附属 0」）里，空态占位毫无信息量还挤占关键空间。与 v0.15.47「开局隐藏英雄区」同一套 `:has(.mat-phase>.opening-panel)` 判据。
 - **实测**：修复后 6 张手牌窄卡扇在「队伍与手牌」区完整可见（y=523，视口 900 内），开局面板与「保留手牌／整手调度一次」按钮无遮挡；planning-dom 70/70、tests 25/25 回归通过。
+- **追加（同日二次修复，用户实测反馈）**：
+  1. **底部深色开局面板整个移除**——`PlayerUI.openingPanel`（起始手牌确认）与 `DesktopUI.setupPanel`（剧本设置揭示）都迁进决策弹窗（`DecisionUI.pending()` 新增 `opening`/`setup` 两个 kind），模板删除 `<div class="mat-phase">` 容器及其全部 `:has(.mat-phase>.opening-panel)` 死规则。弃牌期（含全员已确认、尚未点「执行剧本设置」）始终弹开局面板——面板里有唯一的确认按钮，不能弹完就消失；揭示期弹揭示面板。
+  2. **手牌高度/可见性治本**——`PlanningUI.board` 的「盟友区·0／附属区·0」空态不再渲染（实测占 265px，把最后的手牌行挤出 `bottom-deck` 的 `overflow:hidden`）；`bottom-deck` 的 `overflow:hidden→auto`（对齐「各区独立滚动、页面不滚」设计，盟友/附属多时区内滚动，手牌永远可达）。**1440×900 计划阶段实测：7 张手牌全部可见（底缘 863 < 900），1440×577 窄窗开局 6 张手牌+3 英雄+开局面板同屏可见。**
+  3. 弹窗开合链路实测：开局弃牌弹窗 → 保留手牌 → 确认执行 → 计划阶段弹窗，全程无空窗、无遮挡。
+- **回归**：全部 15 套 448 项零失败（tests 25、phase 8、planning 90、planning-dom 70、quest 45、travel 24、combat 58、refresh 19、opening 16、setup-reveal 9、engagement 26、player 19、score 10、deck-share 7、window 22）。
 
 # v0.15.63 · planning-dom-tests 清零 + 桌面攻击草稿面板回归修复（2026-10-25）
 
