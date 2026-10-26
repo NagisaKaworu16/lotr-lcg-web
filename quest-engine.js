@@ -41,7 +41,10 @@ const QuestRulesFactory=(H,R)=>{
   // Validate all earlier submissions before committing any of the table.
   for(const id of x.order)if(x.deployments?.[id]?.confirmed)validateDeployment(s,id,x.deployments[id].ids);
   x.deployments??={};x.deployments[pid]={ids:uids.map(Number),confirmed:true};log(s,s.players[pid].name+'确认派遣名单，等待全员确认');
-  invalidateAgreement(s);if(!x.discussion&&x.order.every(id=>x.deployments[id]?.confirmed)){x.deploymentLocked=true;log(s,'全员已确认，锁定派遣名单并按起始玩家顺序执行投入');resumeDeployment(s);}
+  invalidateAgreement(s);
+  /* v0.15.66：单人模式时确认人=提案人本人，自动完成二次确认。 */
+  if(x.discussion&&s.players.filter(p=>!p.eliminated).length===1&&x.order.length===1)approveDeployment(s,pid);
+  if(!x.discussion&&x.order.every(id=>x.deployments[id]?.confirmed)){x.deploymentLocked=true;log(s,'全员已确认，锁定派遣名单并按起始玩家顺序执行投入');resumeDeployment(s);}
  }
  function withdrawDeployment(s,pid){check(s);const x=q(s);need(x.step==='commit'&&!x.deploymentLocked,'全员已确认，不能再修改派遣名单');need(x.deployments?.[pid]?.confirmed,'该玩家尚未确认');x.deployments[pid].confirmed=false;invalidateAgreement(s);log(s,s.players[pid].name+'取消派遣确认，可修改名单');}
  function resumeDeployment(s){const x=q(s);if(!x?.deploymentLocked||x.step!=='commit'||x.tasks.length||x.queue.length||s.pending.length||s.status!=='playing')return;while(x.step==='commit'&&!x.tasks.length&&!x.queue.length){const pid=x.order[x.commitIndex];commit(s,pid,x.deployments[pid].ids,true);}}

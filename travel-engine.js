@@ -12,7 +12,13 @@ const TravelRulesFactory=(H,R,Q)=>{
   if(c.id===78)need(s.deck.length,'遭遇牌库为空，不能支付翻开1张牌的旅行费用');out.legal=true;
  }catch(e){out.reason=e.message;}return out;}
  function validate(s,uid,params){const sp=spec(s,uid);need(sp.legal,sp.reason);for(const field of sp.fields)need(field.options.some(o=>same(o.value,params[field.key])),'请选择合法的旅行费用：'+field.label);return sp;}
- function propose(s,pid,uid,params={}){check(s);need(pid===s.first,'旅行地点由起始玩家决定');validate(s,uid,params);t(s).proposal={uid:uid===null||uid==='skip'?null:Number(uid),params:JSON.parse(JSON.stringify(params))};t(s).approvals=[];log(s,'暂定'+(uid===null||uid==='skip'?'不旅行':'旅行至所选地点')+'，费用尚未支付');}
+ function propose(s,pid,uid,params={}){check(s);need(pid===s.first,'旅行地点由起始玩家决定');validate(s,uid,params);
+  /* v0.15.66：不旅行是零成本零位移的空操作，直接执行，不再走全员二次确认；
+     单人模式时确认人=决定人本人，同样自动确认。 */
+  t(s).proposal={uid:uid===null||uid==='skip'?null:Number(uid),params:JSON.parse(JSON.stringify(params))};t(s).approvals=[];
+  if(uid===null||uid==='skip'){log(s,'暂定不旅行');execute(s);return;}
+  if(live(s).length===1){log(s,'单人模式自动确认旅行选择');approve(s,pid);return;}
+  log(s,'暂定'+(uid===null||uid==='skip'?'不旅行':'旅行至所选地点')+'，费用尚未支付');}
  function cancel(s,pid){check(s);need(t(s).step==='choice'&&pid===s.first,'只能由起始玩家在执行前修改旅行选择');t(s).proposal=null;t(s).approvals=[];}
  function unapprove(s,pid){check(s);need(t(s).step==='choice'&&t(s).order.includes(pid),'旅行已经执行');t(s).approvals=t(s).approvals.filter(id=>id!==pid);}
  function approve(s,pid){check(s);const x=t(s);need(x.step==='choice'&&x.proposal&&x.order.includes(pid),'请先暂定旅行选择');need(!x.approvals.includes(pid),'已二次确认');validate(s,x.proposal.uid,x.proposal.params);x.approvals.push(pid);if(live(s).every(p=>x.approvals.includes(p.id)))execute(s);}

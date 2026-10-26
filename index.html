@@ -6145,7 +6145,10 @@ const QuestRulesFactory=(H,R)=>{
   // Validate all earlier submissions before committing any of the table.
   for(const id of x.order)if(x.deployments?.[id]?.confirmed)validateDeployment(s,id,x.deployments[id].ids);
   x.deployments??={};x.deployments[pid]={ids:uids.map(Number),confirmed:true};log(s,s.players[pid].name+'确认派遣名单，等待全员确认');
-  invalidateAgreement(s);if(!x.discussion&&x.order.every(id=>x.deployments[id]?.confirmed)){x.deploymentLocked=true;log(s,'全员已确认，锁定派遣名单并按起始玩家顺序执行投入');resumeDeployment(s);}
+  invalidateAgreement(s);
+  /* v0.15.66：单人模式时确认人=提案人本人，自动完成二次确认。 */
+  if(x.discussion&&s.players.filter(p=>!p.eliminated).length===1&&x.order.length===1)approveDeployment(s,pid);
+  if(!x.discussion&&x.order.every(id=>x.deployments[id]?.confirmed)){x.deploymentLocked=true;log(s,'全员已确认，锁定派遣名单并按起始玩家顺序执行投入');resumeDeployment(s);}
  }
  function withdrawDeployment(s,pid){check(s);const x=q(s);need(x.step==='commit'&&!x.deploymentLocked,'全员已确认，不能再修改派遣名单');need(x.deployments?.[pid]?.confirmed,'该玩家尚未确认');x.deployments[pid].confirmed=false;invalidateAgreement(s);log(s,s.players[pid].name+'取消派遣确认，可修改名单');}
  function resumeDeployment(s){const x=q(s);if(!x?.deploymentLocked||x.step!=='commit'||x.tasks.length||x.queue.length||s.pending.length||s.status!=='playing')return;while(x.step==='commit'&&!x.tasks.length&&!x.queue.length){const pid=x.order[x.commitIndex];commit(s,pid,x.deployments[pid].ids,true);}}
@@ -6235,7 +6238,13 @@ const TravelRulesFactory=(H,R,Q)=>{
   if(c.id===78)need(s.deck.length,'遭遇牌库为空，不能支付翻开1张牌的旅行费用');out.legal=true;
  }catch(e){out.reason=e.message;}return out;}
  function validate(s,uid,params){const sp=spec(s,uid);need(sp.legal,sp.reason);for(const field of sp.fields)need(field.options.some(o=>same(o.value,params[field.key])),'请选择合法的旅行费用：'+field.label);return sp;}
- function propose(s,pid,uid,params={}){check(s);need(pid===s.first,'旅行地点由起始玩家决定');validate(s,uid,params);t(s).proposal={uid:uid===null||uid==='skip'?null:Number(uid),params:JSON.parse(JSON.stringify(params))};t(s).approvals=[];log(s,'暂定'+(uid===null||uid==='skip'?'不旅行':'旅行至所选地点')+'，费用尚未支付');}
+ function propose(s,pid,uid,params={}){check(s);need(pid===s.first,'旅行地点由起始玩家决定');validate(s,uid,params);
+  /* v0.15.66：不旅行是零成本零位移的空操作，直接执行，不再走全员二次确认；
+     单人模式时确认人=决定人本人，同样自动确认。 */
+  t(s).proposal={uid:uid===null||uid==='skip'?null:Number(uid),params:JSON.parse(JSON.stringify(params))};t(s).approvals=[];
+  if(uid===null||uid==='skip'){log(s,'暂定不旅行');execute(s);return;}
+  if(live(s).length===1){log(s,'单人模式自动确认旅行选择');approve(s,pid);return;}
+  log(s,'暂定'+(uid===null||uid==='skip'?'不旅行':'旅行至所选地点')+'，费用尚未支付');}
  function cancel(s,pid){check(s);need(t(s).step==='choice'&&pid===s.first,'只能由起始玩家在执行前修改旅行选择');t(s).proposal=null;t(s).approvals=[];}
  function unapprove(s,pid){check(s);need(t(s).step==='choice'&&t(s).order.includes(pid),'旅行已经执行');t(s).approvals=t(s).approvals.filter(id=>id!==pid);}
  function approve(s,pid){check(s);const x=t(s);need(x.step==='choice'&&x.proposal&&x.order.includes(pid),'请先暂定旅行选择');need(!x.approvals.includes(pid),'已二次确认');validate(s,x.proposal.uid,x.proposal.params);x.approvals.push(pid);if(live(s).every(p=>x.approvals.includes(p.id)))execute(s);}
@@ -6282,7 +6291,12 @@ const EncounterRulesFactory=(H,R,Q)=>{
  function check(s){need(s.phase===4&&x(s)?.round===s.round&&!x(s).completed&&s.status==='playing','当前没有进行中的遭遇阶段');need(!s.pending.length&&!x(s).queue.length,'请先处理强制效果或卡牌响应');}
  function start(s){need(s.phase===4&&s.traveling?.completed,'须先完成第四阶段');need(x(s)?.round!==s.round,'本回合遭遇阶段已初始化');const order=live(s).map(p=>p.id).sort((a,b)=>(a-s.first+s.players.length)%s.players.length-(b-s.first+s.players.length)%s.players.length);s.encountering={round:s.round,step:'optional',order:[...order],turnOrder:[...order],index:order.length,optionalIndex:0,checkIndex:0,choices:{},approvals:[],finalPasses:[],queue:[],tasks:[],discussion:true,completed:false,closing:false};log(s,'暂定主动交战或不交战，全员二次确认之前不移动敌人');}
  function validate(s,choices,complete=false){const remaining=s.staging.filter(c=>c.type==='Enemy');for(const pid of x(s).turnOrder){if(s.players[pid].eliminated)continue;const choice=choices[pid];if(!choice){need(!complete,'请先由所有玩家提交暂定交战选择');continue;}if(choice.uid===null)continue;need(s.players[pid].optionalRound!==s.round,'本阶段已主动交战');const at=remaining.findIndex(c=>c.uid===choice.uid);need(at>=0,'敌人不在探查区或被重复选择');const c=remaining[at];need(c.id!==83||remaining.length===1,'仍有其他敌人，不能主动交战哥布林狙击手（按起始玩家顺序判断）');remaining.splice(at,1);}}
- function propose(s,pid,uid){check(s);need(x(s).step==='optional'&&live(s).some(p=>p.id===pid),'当前不能修改交战方案');need(uid===null||Number.isInteger(uid),'无效敌人编号');const choices={...x(s).choices,[pid]:{uid}};validate(s,choices);x(s).choices=choices;x(s).approvals=[];log(s,s.players[pid].name+'已暂定'+(uid===null?'不主动交战':'主动交战')+'，全队确认清除');}
+ function propose(s,pid,uid){check(s);need(x(s).step==='optional'&&live(s).some(p=>p.id===pid),'当前不能修改交战方案');need(uid===null||Number.isInteger(uid),'无效敌人编号');const choices={...x(s).choices,[pid]:{uid}};validate(s,choices);x(s).choices=choices;x(s).approvals=[];
+  /* v0.15.66：全队都选择不主动交战是零结算的空操作，最后一人提交后直接进入执行；
+     单人模式时确认人=提案人本人，同样自动确认。 */
+  const allChosen=live(s).every(p=>x(s).choices[p.id]);
+  if(allChosen&&(live(s).length===1||live(s).every(p=>x(s).choices[p.id].uid===null))){log(s,s.players[pid].name+'已暂定'+(uid===null?'不主动交战':'主动交战')+'；'+(live(s).every(p=>x(s).choices[p.id].uid===null)?'全队均不主动交战，自动推进':'单人模式自动确认'));x(s).step='executing';resume(s);return;}
+  log(s,s.players[pid].name+'已暂定'+(uid===null?'不主动交战':'主动交战')+'，全队确认清除');}
  function cancel(s,pid){check(s);need(x(s).step==='optional'&&x(s).choices[pid],'没有可撤销的方案');delete x(s).choices[pid];x(s).approvals=[];}
  function approve(s,pid){check(s);need(x(s).step==='optional'&&live(s).some(p=>p.id===pid),'当前不能确认');need(!x(s).approvals.includes(pid),'已二次确认');validate(s,x(s).choices,true);x(s).approvals.push(pid);if(live(s).every(p=>x(s).approvals.includes(p.id))){x(s).step='executing';resume(s);}}
  function unapprove(s,pid){check(s);need(x(s).step==='optional'&&x(s).approvals.includes(pid),'当前不能撤回确认');x(s).approvals=x(s).approvals.filter(id=>id!==pid);}
@@ -6328,7 +6342,12 @@ const CombatRulesFactory=(H,R,Q)=>{
  function validate(s,p){const a=x(s);need(!a.tasks.length,'请先处理强制选择');if(p.kind==='enemy'){need(a.step==='enemyChoice'&&p.player===activeEnemyPlayer(s),'尚未轮到此玩家选择敌人');need(pendingEnemies(s,p.player).some(e=>eq(e.uid,p.uid)),'敌人已离场、攻击已完成或被禁止');}
   else if(p.kind==='defense'){need(a.step==='defenseChoice'&&p.player===current(s).player,'当前不能声明防御');need(Array.isArray(p.ids)&&new Set(p.ids.map(String)).size===p.ids.length,'防御名单不能重复');const ds=defenders(s);need(p.ids.every(id=>ds.some(c=>eq(c.uid,id))),'防御者必须重置，且为己方角色或警戒角色');if(p.ids.length>1){need(p.ids.every(id=>R.find(s,id).controller===p.player),'多名防御者必须由受攻击玩家控制');need((s.phasePermissions||[]).some(m=>m.type==='multipleDefenders'&&m.player===p.player&&m.round===s.round&&m.phase===5),'没有共同防御效果时只能声明1名防御者');}}
   else if(p.kind==='attack'){need(a.step==='attackChoice'&&p.player===activePlayer(s),'尚未轮到此玩家攻击');if(p.uid===null)return;need(attackTargets(s,p.player).some(e=>eq(e.uid,p.uid)),'本玩家已经攻击此目标，或没有合法攻击者');need(Array.isArray(p.ids)&&p.ids.length&&new Set(p.ids.map(String)).size===p.ids.length,'请选择不重复的攻击角色');need(p.ids.every(id=>attackers(s,p.player,p.uid).some(c=>eq(c.uid,id))),'攻击角色必须重置，并符合交战／远程限制');need(p.ids.some(id=>R.find(s,id).controller===p.player),'声明玩家必须派出至少1名自己的角色');if(s.staging.some(c=>eq(c.uid,p.uid)))need(p.ids.length===1&&R.find(s,p.ids[0]).meta.code==='01009','杜内希尔攻击探查区时必须独自攻击');}else throw Error('无效战斗方案');}
- function propose(s,player,kind,uid=null,ids=[]){check(s);need(!x(s).actionLocked&&!x(s).plannedActions?.length,'请先完成暂定行动');const p={player,kind,uid,ids:[...ids]};validate(s,p);x(s).proposal=p;x(s).approvals=[];log(s,'已暂定'+({enemy:'敌人攻击顺序',defense:'防御名单',attack:'玩家攻击方案'}[kind])+'；尚未横置或计算伤害');}
+ function propose(s,player,kind,uid=null,ids=[]){check(s);need(!x(s).actionLocked&&!x(s).plannedActions?.length,'请先完成暂定行动');const p={player,kind,uid,ids:[...ids]};validate(s,p);x(s).proposal=p;x(s).approvals=[];
+  /* v0.15.66：本回合不攻击（uid=null）是零费用零横置的空操作，自动执行进下一窗口；
+     单人模式时确认人=提案人本人，同样自动确认。 */
+  if(p.kind==='attack'&&p.uid===null){log(s,s.players[player].name+'本回合不攻击，自动进入下一窗口');x(s).proposal=null;x(s).playerIndex++;window(s,'playerAction');resume(s);return;}
+  if(live(s).length===1&&live(s)[0].id===player){log(s,'单人模式自动确认方案');approve(s,player);return;}
+  log(s,'已暂定'+({enemy:'敌人攻击顺序',defense:'防御名单',attack:'玩家攻击方案'}[kind])+'；尚未横置或计算伤害');}
  function cancel(s){check(s);need(x(s).proposal,'没有可撤销方案');x(s).proposal=null;x(s).approvals=[];}
  function unapprove(s,pid){check(s);need(x(s).proposal&&x(s).approvals.includes(pid),'当前不能取消确认');x(s).approvals=x(s).approvals.filter(id=>id!==pid);}
  function approve(s,pid){check(s);need(live(s).some(p=>p.id===pid)&&!x(s).approvals.includes(pid),'玩家无效或已确认');const p=x(s).proposal;need(p,'请先暂定方案');validate(s,p);x(s).approvals.push(pid);if(!live(s).every(p=>x(s).approvals.includes(p.id)))return;x(s).proposal=null;x(s).approvals=[];
@@ -10105,7 +10124,7 @@ const TravelUI=(()=>{
  function responseForm(){return new Promise(resolve=>{const d=document.createElement('dialog');document.body.append(d);let values={};function close(v){d.close();d.remove();resolve(v);}function refresh(){let sp=T.responseSpec(state,values);for(const f of sp.fields)if(!f.options.some(o=>String(o.value)===String(values[f.key])))values[f.key]=f.options[0]?.value;sp=T.responseSpec(state,values);for(const f of sp.fields)if(!f.options.some(o=>String(o.value)===String(values[f.key])))values[f.key]=f.options[0]?.value;d.innerHTML=`<h2>旅行响应</h2>${sp.fields.map(f=>`<label>${esc(f.label)}<select data-travel-field="${f.key}">${f.options.map(o=>`<option value="${esc(o.value)}" ${String(o.value)===String(values[f.key])?'selected':''}>${esc(o.label)}</option>`).join('')}</select></label>`).join('')}<div class="actions"><button id="travel-confirm">执行响应</button><button id="travel-skip">关闭此响应窗口</button><button id="travel-cancel">返回</button></div>`;d.querySelectorAll('[data-travel-field]').forEach(el=>el.onchange=()=>{values[el.dataset.travelField]=el.value;refresh();});d.querySelector('#travel-confirm').onclick=()=>close(values);d.querySelector('#travel-skip').onclick=()=>close({skip:true});d.querySelector('#travel-cancel').onclick=()=>close(null);}d.oncancel=()=>{d.remove();resolve(null);};refresh();d.showModal();});}
  async function handle(el){const k=el.dataset.travel,pid=+el.dataset.player,id=+el.dataset.id,uid=+el.dataset.uid;
   if(k==='back'){if(history.length){state=history.pop();save();render();}return;}
-  if(k==='propose'||k==='skip'){const target=k==='skip'?null:uid,sp=T.spec(state,target);if(!sp.legal){toast(sp.reason);return;}const params=await choose('暂定旅行选择',`<p>${esc(sp.card?.name||'本次不旅行')}</p>${sp.fields.map(f=>`<label>${esc(f.label)}<select id="travel-${f.key}">${f.options.map(o=>`<option value="${esc(o.value)}">${esc(o.label)}</option>`).join('')}</select></label>`).join('')}<p>二次确认前不支付费用。</p>`,d=>Object.fromEntries(sp.fields.map(f=>[f.key,d.querySelector('#travel-'+f.key).value])));if(params)mutate(()=>T.propose(state,state.first,target,params));return;}
+  if(k==='propose'||k==='skip'){const target=k==='skip'?null:uid,sp=T.spec(state,target);if(!sp.legal){toast(sp.reason);return;}if(target===null){mutate(()=>T.propose(state,state.first,null,{}));return;}const params=await choose('暂定旅行选择',`<p>${esc(sp.card?.name||'本次不旅行')}</p>${sp.fields.map(f=>`<label>${esc(f.label)}<select id="travel-${f.key}">${f.options.map(o=>`<option value="${esc(o.value)}">${esc(o.label)}</option>`).join('')}</select></label>`).join('')}<p>二次确认前不支付费用。</p>`,d=>Object.fromEntries(sp.fields.map(f=>[f.key,d.querySelector('#travel-'+f.key).value])));if(params)mutate(()=>T.propose(state,state.first,target,params));return;}
   if(k==='choice'){const task=state.traveling.tasks[0];if(task?.kind==='travelResponses'){const a=await responseForm();if(a)mutate(()=>T.respond(state,id,a));}else{const sp=Q.spec(state),a=await choose(sp.message,sp.fields.map(f=>`<select id="travel-${f.key}">${f.options.map(o=>`<option value="${esc(o.value)}">${esc(o.label)}</option>`).join('')}</select>`).join(''),d=>Object.fromEntries(sp.fields.map(f=>[f.key,d.querySelector('#travel-'+f.key).value])));if(a)mutate(()=>T.choose(state,id,a));}return;}
   mutate(()=>{if(k==='cancel')T.cancel(state,state.first);if(k==='approve')T.approve(state,pid);if(k==='unapprove')T.unapprove(state,pid);if(k==='draw')T.draw(state);if(k==='reveal')T.reveal(state);if(k==='cancelReveal')Q.cancel(state,el.dataset.value);if(k==='pass')Q.pass(state,pid);if(k==='unpass')Q.unpass(state,pid);if(k==='finish')T.finish(state);if(k==='cancelAction')Q.cancelAction(state,pid,id);if(k==='approveActions')Q.approveActions(state,pid);if(k==='unapproveActions')Q.withdrawActionApproval(state,pid);});
  }
@@ -10242,7 +10261,7 @@ const WindowUI=(()=>{
 </script><script src="phase-log.js"></script><script>
 /* Tabletop view: UI drafts never pay, exhaust, reveal, or bypass phase validation. */
 /* 界面版本徽标唯一来源：须与 CHANGELOG.md 最新条目标题一致（planning-dom-tests 有校验）。 */
-const APP_VERSION='v0.15.65';
+const APP_VERSION='v0.15.66';
 /* ── 决策弹窗（v0.15.62）──────────────────────────────────────────────
    底部长住的那块阶段面板已经去掉（和角色区右上角的「结束阶段」重复，还白占一行高度）。
    需要玩家拍板的事不再常驻显示，改成「轮到你决定时才弹出来」。

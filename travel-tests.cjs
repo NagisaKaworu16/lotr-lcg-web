@@ -1,7 +1,9 @@
 const test=require('node:test'),assert=require('node:assert/strict'),E=require('./engine'),P=require('./player-cards'),S=require('./ringsdb-snapshot'),R=E.planning,Q=E.questing,T=E.traveling;
 function make(spheres=['leadership'],first=0){const cfg=spheres.map(sp=>P.config(P.starter(S,sp),S));const s=E.create('mirkwood',cfg.length,12345,cfg,{deferSetup:true,first,openingTest:true});for(const p of s.players)E.openingChoice(s,p.id);E.startScenario(s);E.nextPhase(s);while(R.active(s)!==null)R.endTurn(s,R.active(s));for(const p of s.players)R.passAction(s,p.id);E.nextPhase(s);E.nextPhase(s);for(const step of [0,1,2,3]){if(step===1){for(const id of s.questing.order)Q.commit(s,id,[]);}if(step===2){s.staging=[];s.questing.remaining=[];s.questing.step='staging';Q.drawNext(s);}for(const p of s.players)Q.pass(s,p.id);Q.move(s);}assert(s.questing.completed);E.nextPhase(s);assert.equal(s.phase,3);return s;}
 function loc(s,id,progress=0){const c={...E.byId[id],uid:++s.serial,progress};s.staging.push(c);return c;}
-function travel(s,c,params={}){T.propose(s,s.first,c?.uid??null,params);for(const p of s.players)if(!p.eliminated)T.approve(s,p.id);}
+function travel(s,c,params={}){T.propose(s,s.first,c?.uid??null,params);
+ /* v0.15.66：不旅行/单人模式已在 propose 内自动执行，仅在仍处于 choice 时补 approve。 */
+ const x=s.traveling;if(x.step!=='choice'||!x.proposal)return;for(const p of s.players)if(!p.eliminated)T.approve(s,p.id);}
 function hand(s,pid,code){const p=s.players[pid];let x=p.hand.find(c=>c.code===code);if(!x){const i=p.playerDeck.findIndex(c=>c.code===code);assert(i>=0);x=p.playerDeck.splice(i,1)[0];p.hand.push(x);}return x;}
 function noMutation(s,fn){const before=JSON.stringify(s);assert.throws(fn);assert.equal(JSON.stringify(s),before);}
 function response(s,params){const sp=T.responseSpec(s);assert(sp);T.respond(s,sp.task.id,params);}
