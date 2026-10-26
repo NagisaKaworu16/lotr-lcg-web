@@ -1,0 +1,564 @@
+/* DOM/event unit tests; deliberately no browser, layout engine or remote images. */
+const test=(()=>{}),assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs');
+function environment(){const dialogs=[],base=new Map;const attr=(s,k)=>new RegExp('(?:^|\\s)'+k+'="([^"]*)"').exec(s)?.[1];
+ class El{constructor(tag='div'){this.tag=tag;this.nodes=[];this.style={};this.dataset={};this.classList={add(){},remove(){}};this.value='';this.disabled=false;this._html='';this.textContent='';}set innerHTML(v){this._html=v;this.nodes=[];for(const m of v.matchAll(/<(select|button|input|p|div)([^>]*)>(?:([\s\S]*?)<\/\1>)?/g)){const n=new El(m[1]),a=m[2];n.id=attr(a,'id');n.disabled=/\bdisabled\b/.test(a);for(const d of a.matchAll(/data-([a-z-]+)="([^"]*)"/g))n.dataset[d[1].replace(/-([a-z])/g,(_,x)=>x.toUpperCase())]=d[2];if(m[1]==='select'){const os=[...(m[3]||'').matchAll(/<option([^>]*)>/g)];n.value=attr((os.find(o=>/\bselected\b/.test(o[1]))||os[0]||[])[1]||'','value')||'';}else n.value=attr(a,'value')||'';this.nodes.push(n);} // separately index all ID and select elements, including nested markup
+ for(const m of v.matchAll(/<select([^>]*)>([\s\S]*?)<\/select>/g)){const a=m[1];const n=new El('select');n.id=attr(a,'id');n.disabled=/\bdisabled\b/.test(a);for(const d of a.matchAll(/data-([a-z-]+)="([^"]*)"/g))n.dataset[d[1].replace(/-([a-z])/g,(_,x)=>x.toUpperCase())]=d[2];const os=[...m[2].matchAll(/<option([^>]*)>/g)];n.value=attr((os.find(o=>/\bselected\b/.test(o[1]))||os[0]||[])[1]||'','value')||'';this.nodes=this.nodes.filter(x=>!(n.id&&x.id===n.id)&&!(n.dataset.field&&x.dataset.field===n.dataset.field)&&!(n.dataset.pay&&x.dataset.pay===n.dataset.pay));this.nodes.push(n);}
+ for(const m of v.matchAll(/<(button|p|div|input)([^>]*)\bid="([^"]+)"([^>]*)>/g)){if(!this.nodes.some(x=>x.id===m[3])){const n=new El(m[1]);n.id=m[3];n.disabled=/\bdisabled\b/.test(m[2]+m[4]);this.nodes.push(n);}}
+
+ for(const m of v.matchAll(/<input([^>]*)>/g)){const a=m[1],n=new El('input');n.id=attr(a,'id');n.value=attr(a,'value')||'';n.checked=/\bchecked\b/.test(a);n.disabled=/\bdisabled\b/.test(a);for(const d of a.matchAll(/data-([a-z-]+)="([^"]*)"/g))n.dataset[d[1].replace(/-([a-z])/g,(_,x)=>x.toUpperCase())]=d[2];this.nodes=this.nodes.filter(x=>!(n.id&&x.id===n.id)&&!(n.dataset.combatSelect&&x.dataset.combatSelect===n.dataset.combatSelect)&&!(n.dataset.web&&x.dataset.web===n.dataset.web));this.nodes.push(n);}
+ }get innerHTML(){return this._html;}querySelector(s){return s.startsWith('#')?this.nodes.find(n=>n.id===s.slice(1))||null:null;}querySelectorAll(s){if(s==='img')return [];const key=/^\[data-([a-z-]+)\]$/.exec(s)?.[1]?.replace(/-([a-z])/g,(_,x)=>x.toUpperCase());return key?this.nodes.filter(n=>n.dataset[key]!==undefined):[];}showModal(){dialogs.push(this);}close(){}remove(){const i=dialogs.indexOf(this);if(i>=0)dialogs.splice(i,1);}addEventListener(){}click(){if(!this.disabled&&this.onclick)this.onclick();}}
+ for(const id of ['app','toast','undo','export','import','tableTab','catalogTab','playersTab','imagesTab','helpTab']){let e=new El;e.id=id;base.set(id,e);}
+ const document={querySelector:s=>base.get(s.slice(1))||base.get('app').querySelector(s),querySelectorAll:()=>[],createElement:t=>new El(t),body:{append(){}}};
+ const ctx=vm.createContext({module:undefined,document,localStorage:{getItem:()=>null,setItem(){},removeItem(){}},setTimeout:()=>1,clearTimeout(){},console,Blob,URL,confirm:()=>true});
+ for(const f of ['data.js','starter-decks.js','player-cards.js','ringsdb-snapshot.js','planning-engine.js','quest-engine.js','travel-engine.js','encounter-engine.js','combat-engine.js','refresh-engine.js','window-engine.js','phase-engine.js','engine.js','score-engine.js','player-ui.js','image-index.js','encounter-image-index.js','chinese-core-images.js','image-ui.js','planning-ui.js','quest-ui.js','travel-ui.js','encounter-ui.js','combat-ui.js','refresh-ui.js','window-ui.js','phase-log.js','desktop-ui.js','product-catalog.js','app.js'])vm.runInContext(fs.readFileSync(__dirname+'/'+f,'utf8'),ctx,{filename:f});
+ const run=s=>vm.runInContext(s,ctx);const click=d=>run(`$('#app').onclick({target:{closest:()=>({dataset:${JSON.stringify(d)}})}})`);
+ return {ctx,run,click,dialogs,base};
+}
+/* v0.15.62 起，阶段面板搬进了决策弹窗（DecisionUI），不再渲染在页面主干里。
+   「界面上看得到这段文字」因此要同时查两处：牌桌本身与当前打开的弹窗。
+   仍然只查可见文本，不查 state——避免把「引擎算对了」当成「界面显示对了」。 */
+function seen(e,text){
+ if(e.base.get('app').innerHTML.includes(text))return true;
+ return e.dialogs.some(d=>String(d.innerHTML||'').includes(text));
+}
+async function opening(e,sphere='leadership'){await e.click({action:'starterTest',sphere});e.run("document.querySelector('#seed').value='12345';");await e.click({action:'start',id:'mirkwood'});e.run("E.windows.setMode(state,'detailed');");await e.click({action:'keepHand',player:'0'});await e.click({action:'finishSetup'});await e.click({action:'next'});}
+test('planning UI cancel is read-only, payment allocation controls sum, and confirm moves a real ally to board',async()=>{const e=environment();await opening(e);e.run(`{const p=state.players[0];const i=p.playerDeck.findIndex(c=>c.code==='01013');if(!p.hand.some(c=>c.code==='01013'))p.hand.push(p.playerDeck.splice(i,1)[0]);}`);const uid=e.run("state.players[0].hand.find(c=>c.code==='01013').uid"),before=e.run('JSON.stringify(state)');let action=e.click({action:'planning',plan:'play',player:'0',uid:String(uid)});let d=e.dialogs.at(-1);assert(d);d.querySelector('#plan-cancel').click();await action;assert.equal(e.run('JSON.stringify(state)'),before);
+ action=e.click({action:'planning',plan:'play',player:'0',uid:String(uid)});d=e.dialogs.at(-1);const ps=d.querySelectorAll('[data-pay]'),paid=ps.find(p=>Number(p.value)>0),old=paid.value;paid.value='0';paid.onchange();assert(d.querySelector('#plan-confirm').disabled);paid.value=old;paid.onchange();assert(!d.querySelector('#plan-confirm').disabled);d.querySelector('#plan-confirm').click();await action;assert.equal(e.run('state.players[0].allies.length'),1);assert.equal(e.run('state.players[0].heroStates.reduce((n,h)=>n+h.resources,0)'),1);assert(seen(e,'盟友区 · 1'));});
+test('planning UI resolves optional Scout response and ends with explicit pass and phase-2 acceptance',async()=>{const e=environment();await opening(e);e.run(`{const p=state.players[0];let x=p.hand.find(c=>c.code==='01016');if(!x){let i=p.playerDeck.findIndex(c=>c.code==='01016');p.hand.push(p.playerDeck.splice(i,1)[0]);}}`);let uid=e.run("state.players[0].hand.find(c=>c.code==='01016').uid");let a=e.click({action:'planning',plan:'play',player:'0',uid:String(uid)});e.dialogs.at(-1).querySelector('#plan-confirm').click();await a;assert.equal(e.run('state.planning.queue[0].kind'),'entry');let id=e.run('state.planning.queue[0].id');a=e.click({action:'planning',plan:'choice',id:String(id)});let d=e.dialogs.at(-1);assert(d.querySelectorAll('[data-field]').length);d.querySelector('#plan-confirm').click();await a;assert.equal(e.run('state.staging.find(c=>c.id===99).progress'),1);await e.click({action:'planning',plan:'endTurn',player:'0'});await e.click({action:'planning',plan:'pass',player:'0'});await e.click({action:'next'});assert.equal(e.run('state.planning.completed'),true);/* v0.15.57 起引擎会自动推进：点完 next 已进入探险阶段，
+   「计划阶段验收完成」只是过渡帧，不再作为可断言的目标。改为验证推进结果。 */
+ assert.equal(e.run('state.phase'),2,'计划阶段结束后应进入探险阶段');});
+
+test('all four starter tables and hand images resolve to local Chinese Core assets',async()=>{for(const sp of ['leadership','tactics','spirit','lore']){const e=environment();await opening(e,sp);const markup=e.base.get('app').innerHTML;assert(markup.includes('assets/cards-zh-core/'));for(const code of e.run('state.players[0].heroCodes'))assert(markup.includes('assets/cards-zh-core/'+code+'.jpg'));assert(!/src="https:\/\/ringsdb.com/.test(markup));}});
+
+test('all four starter UI flows enter phase3, commit nobody, stage one card and finish at phase3',async()=>{for(const sphere of ['leadership','tactics','spirit','lore']){const e=environment();await opening(e,sphere);await e.click({action:'planning',plan:'endTurn',player:'0'});await e.click({action:'planning',plan:'pass',player:'0'});await e.click({action:'next'});assert(seen(e,'进入探险阶段'));await e.click({action:'next'});assert.equal(e.run('state.phase'),2);assert(!seen(e,'id="willpower"'));for(const step of [0,1]){await e.click({action:'quest',quest:'pass',player:'0'});await e.click({action:'quest',quest:'move'});if(step===0){const action=e.click({action:'quest',quest:'commit',player:'0'});e.dialogs.at(-1).querySelector('#ok').click();await action;await e.click({action:'quest',quest:'approveDeployment',player:'0'});}}e.run(`{const c={...E.byId[97],uid:++state.serial};state.deck.unshift(c);}`);await e.click({action:'quest',quest:'draw'});assert(seen(e,'结算此牌的关键词与效果'));await e.click({action:'quest',quest:'reveal'});await e.click({action:'quest',quest:'draw'});await e.click({action:'quest',quest:'pass',player:'0'});await e.click({action:'quest',quest:'move'});assert(seen(e,'本次结果'));await e.click({action:'quest',quest:'pass',player:'0'});await e.click({action:'quest',quest:'move'});assert.equal(e.run('state.questing.completed'),true);assert(seen(e,'阶段3 · 探险阶段验收完成'));}});
+test('quest UI native choice executes Aragorn ready and shows him still committed',async()=>{const e=environment();await opening(e);await e.click({action:'planning',plan:'endTurn',player:'0'});await e.click({action:'planning',plan:'pass',player:'0'});await e.click({action:'next'});await e.click({action:'next'});await e.click({action:'quest',quest:'pass',player:'0'});await e.click({action:'quest',quest:'move'});e.run(`E.questing.commit(state,0,[state.players[0].heroStates[0].uid]);render();`);const id=e.run('state.questing.tasks[0].id');const result=e.click({action:'quest',quest:'choice',id:String(id)});const d=e.dialogs.at(-1);assert(d);d.querySelector('#ok').click();await result;assert.equal(e.run('state.players[0].heroStates[0].exhausted'),false);assert.equal(e.run('state.players[0].heroStates[0].committed'),true);assert(seen(e,'已投入：阿拉贡'));});
+
+async function commitScreen(e){await opening(e);await e.click({action:'planning',plan:'endTurn',player:'0'});await e.click({action:'planning',plan:'pass',player:'0'});await e.click({action:'next'});await e.click({action:'next'});await e.click({action:'quest',quest:'pass',player:'0'});await e.click({action:'quest',quest:'move'});}
+test('quest deployment review and cancel do not mutate state/history and retain the draft across rendering',async()=>{const e=environment();await commitScreen(e);const uid=e.run('state.players[0].heroStates[0].uid');e.run(`QuestUI.setDraft(state,0,[${uid}]);render();`);const before=e.run('JSON.stringify(state)'),count=e.run('history.length');let result=e.click({action:'quest',quest:'commit',player:'0'});const d=e.dialogs.at(-1);assert(d.innerHTML.includes('阿拉贡'));assert(d.innerHTML.includes('意志合计'));assert.equal(e.run('JSON.stringify(state)'),before);d.querySelector('#cancel').click();await result;assert.equal(e.run('JSON.stringify(state)'),before);assert.equal(e.run('history.length'),count);assert.equal(e.run('JSON.stringify(QuestUI.draftFor(state,0))'),JSON.stringify([uid]));assert(seen(e,'aria-pressed="true"'));assert(seen(e,'selection-mark'));await e.click({action:'quest',quest:'clear',player:'0'});assert.equal(e.run('QuestUI.draftFor(state,0).length'),0);assert.equal(e.run('JSON.stringify(state)'),before);assert.equal(e.run('history.length'),count);});
+test('review confirmation commits exactly the selected draft; local back restores full state and responses',async()=>{const e=environment();await commitScreen(e);const uid=e.run('state.players[0].heroStates[0].uid');e.run(`QuestUI.setDraft(state,0,[${uid}]);render();`);const before=e.run('JSON.stringify(state)');const result=e.click({action:'quest',quest:'commit',player:'0'});e.dialogs.at(-1).querySelector('#ok').click();await result;await e.click({action:'quest',quest:'approveDeployment',player:'0'});assert.equal(e.run('state.players[0].heroStates[0].committed'),true);assert.equal(e.run('state.players[0].heroStates[1].committed'),false);assert.equal(e.run('state.questing.tasks.length'),1);const afterCommit=e.run('JSON.stringify(state)');e.run(`mutate(()=>E.questing.choose(state,state.questing.tasks[0].id,{}));`);assert.equal(e.run('state.players[0].heroStates[0].resources'),0);await e.click({action:'quest',quest:'back'});assert.equal(e.run('JSON.stringify(state)'),afterCommit);await e.click({action:'quest',quest:'back'});assert.equal(e.run('state.questing.deploymentLocked'),undefined);await e.click({action:'quest',quest:'back'});assert.equal(e.run('JSON.stringify(state)'),before);assert.equal(e.run('state.players[0].heroStates[0].exhausted'),false);assert.equal(e.run('state.questing.tasks.length'),0);});
+test('stale deployment review is rejected without committing or discarding later state',async()=>{const e=environment();await commitScreen(e);const uid=e.run('state.players[0].heroStates[0].uid');e.run(`QuestUI.setDraft(state,0,[${uid}]);`);const result=e.click({action:'quest',quest:'commit',player:'0'});e.run('state.players[0].heroStates[0].resources++;');const changed=e.run('JSON.stringify(state)');e.dialogs.at(-1).querySelector('#ok').click();await result;assert.equal(e.run('JSON.stringify(state)'),changed);assert(e.base.get('toast').textContent.includes('桌面已变化'));});
+
+test('multiplayer UI exposes cancel confirmation until final player submits, then locks and applies the revised selection',async()=>{const e=environment();e.run(`{const cfg=['leadership','spirit'].map(sp=>PlayerCards.config(PlayerCards.starter(PlayerUI.getSnapshot(),sp),PlayerUI.getSnapshot()));state=E.create('mirkwood',2,12345,cfg,{deferSetup:true});E.openingChoice(state,0);E.openingChoice(state,1);E.startScenario(state);E.nextPhase(state);E.planning.endTurn(state,0);E.planning.endTurn(state,1);E.planning.passAction(state,0);E.planning.passAction(state,1);E.nextPhase(state);E.nextPhase(state);E.questing.pass(state,0);E.questing.pass(state,1);E.questing.move(state);handView=0;QuestUI.setDraft(state,0,[state.players[0].heroStates[0].uid]);render();}`);let action=e.click({action:'quest',quest:'commit',player:'0'});e.dialogs.at(-1).querySelector('#ok').click();await action;assert(seen(e,'取消确认，修改派遣'));assert.equal(e.run('state.players[0].heroStates[0].exhausted'),false);await e.click({action:'quest',quest:'withdraw',player:'0'});assert(!e.run('state.questing.deployments[0].confirmed'));e.run('QuestUI.setDraft(state,0,[]);');action=e.click({action:'quest',quest:'commit',player:'0'});e.dialogs.at(-1).querySelector('#ok').click();await action;e.run('handView=1;render();');assert(seen(e,'玩家1：已提交（可更改）'));action=e.click({action:'quest',quest:'commit',player:'1'});e.dialogs.at(-1).querySelector('#ok').click();await action;assert.equal(e.run('state.questing.deploymentLocked'),true);assert.equal(e.run('state.questing.step'),'afterCommit');assert(e.run('state.players.every(p=>p.heroStates.every(h=>!h.committed))'));assert(!seen(e,'取消确认，修改派遣'));});
+
+test('discussion UI queues an event, permits cancellation without cost, then executes only on secondary confirmation',async()=>{const e=environment();await opening(e);await e.click({action:'planning',plan:'endTurn',player:'0'});await e.click({action:'planning',plan:'pass',player:'0'});await e.click({action:'next'});await e.click({action:'next'});e.run(`{const p=state.players[0];if(!p.hand.some(c=>c.code==='01022')){const i=p.playerDeck.findIndex(c=>c.code==='01022');p.hand.push(p.playerDeck.splice(i,1)[0]);}render();}`);const uid=e.run("state.players[0].hand.find(c=>c.code==='01022').uid"),resources=e.run('state.players[0].heroStates.reduce((n,h)=>n+h.resources,0)');for(let i=0;i<2;i++){const action=e.click({action:'planning',plan:'play',player:'0',uid:String(uid)});const d=e.dialogs.at(-1);assert(d.innerHTML.includes('加入暂定清单'));d.querySelector('#plan-confirm').click();await action;assert.equal(e.run('state.questing.plannedActions.length'),1);assert.equal(e.run('state.players[0].heroStates.reduce((n,h)=>n+h.resources,0)'),resources);assert(seen(e,'暂定行动 · 交流缓冲区'));if(i===0)await e.click({action:'quest',quest:'cancelAction',player:'0',id:String(e.run('state.questing.plannedActions[0].id'))});}await e.click({action:'quest',quest:'approveActions',player:'0'});assert.equal(e.run('state.questing.plannedActions.length'),0);assert.equal(e.run('state.players[0].heroStates.reduce((n,h)=>n+h.resources,0)'),resources-2);assert(e.run(`state.players[0].playerDiscard.some(c=>c.uid===${uid})`));await e.click({action:'quest',quest:'pass',player:'0'});assert(seen(e,'取消放弃行动'));await e.click({action:'quest',quest:'unpass',player:'0'});assert.equal(e.run('state.questing.finalPasses.length'),0);});
+test('discussion UI leaves a second confirmation buffer after the whole table submits deployment',async()=>{const e=environment();await commitScreen(e);e.run('QuestUI.setDraft(state,0,[state.players[0].heroStates[0].uid]);');const action=e.click({action:'quest',quest:'commit',player:'0'});e.dialogs.at(-1).querySelector('#ok').click();await action;assert(seen(e,'派遣交流与缓冲期'));assert(seen(e,'二次确认派遣'));assert.equal(e.run('state.players[0].heroStates[0].exhausted'),false);assert.equal(e.run('state.questing.tasks.length'),0);await e.click({action:'quest',quest:'withdraw',player:'0'});assert.equal(e.run('state.questing.deployments[0].confirmed'),false);assert.equal(e.run('state.players[0].heroStates[0].committed'),false);});
+
+test('four starter UI flows advance from completed phase3 to travel, ready Old Forest Road target and finish phase4',async()=>{for(const sphere of ['leadership','tactics','spirit','lore']){const e=environment();await commitScreen(e);let action=e.click({action:'quest',quest:'commit',player:'0'});e.dialogs.at(-1).querySelector('#ok').click();await action;await e.click({action:'quest',quest:'approveDeployment',player:'0'});await e.click({action:'quest',quest:'pass',player:'0'});await e.click({action:'quest',quest:'move'});e.run(`state.deck.unshift({...E.byId[97],uid:++state.serial});`);await e.click({action:'quest',quest:'draw'});await e.click({action:'quest',quest:'reveal'});await e.click({action:'quest',quest:'draw'});await e.click({action:'quest',quest:'pass',player:'0'});await e.click({action:'quest',quest:'move'});await e.click({action:'quest',quest:'pass',player:'0'});await e.click({action:'quest',quest:'move'});assert.equal(e.run('state.questing.completed'),true);const q=e.run('JSON.stringify(state.questing)'),round=e.run('state.round');assert(seen(e,'进入第四阶段 · 旅行'));await e.click({action:'next'});assert.equal(e.run('state.phase'),3);assert.equal(e.run('JSON.stringify(state.questing)'),q);assert.equal(e.run('state.round'),round);assert(seen(e,'阶段4 · 旅行选择与全队确认'));e.run('state.players[0].heroStates[0].exhausted=true;render();');const uid=e.run('state.staging.find(c=>c.id===99).uid');action=e.click({action:'travelFlow',travel:'propose',uid:String(uid)});e.dialogs.at(-1).querySelector('#ok').click();await action;assert.equal(e.run('state.active'),null);assert(seen(e,'二次确认旅行'));await e.click({action:'travelFlow',travel:'approve',player:'0'});assert.equal(e.run('state.active.id'),99);const id=e.run('state.traveling.tasks[0].id');action=e.click({action:'travelFlow',travel:'choice',id:String(id)});e.dialogs.at(-1).querySelector('#travel-confirm').click();await action;assert.equal(e.run('state.players[0].heroStates[0].exhausted'),false);if(e.run('state.traveling.tasks.length')){action=e.click({action:'travelFlow',travel:'choice',id:String(e.run('state.traveling.tasks[0].id'))});e.dialogs.at(-1).querySelector('#travel-skip').click();await action;}await e.click({action:'travelFlow',travel:'pass',player:'0'});await e.click({action:'travelFlow',travel:'finish'});assert.equal(e.run('state.traveling.completed'),true);assert(seen(e,'阶段4 · 旅行阶段验收完成'));await e.click({action:'next'});assert.equal(e.run('state.phase'),4);assert.equal(e.run('state.encountering.step'),'optional');assert.equal(e.run('JSON.stringify(state.questing)'),q);await e.click({action:'encounterFlow',encounter:'skip',player:'0'});await e.click({action:'encounterFlow',encounter:'approve',player:'0'});assert.equal(e.run('state.encountering.step'),'beforeChecks');await e.click({action:'encounterFlow',encounter:'pass',player:'0'});await e.click({action:'encounterFlow',encounter:'checks'});assert.equal(e.run('state.encountering.step'),'afterChecks');await e.click({action:'encounterFlow',encounter:'pass',player:'0'});await e.click({action:'encounterFlow',encounter:'finish'});assert.equal(e.run('state.encountering.completed'),true);assert(seen(e,'阶段5 · 遭遇阶段验收完成'));await e.click({action:'next'});assert.equal(e.run('state.phase'),5);assert(seen(e,'阶段6 · 敌人攻击前行动'));}});
+
+function encounterScreen(e){e.run(`(()=>{const R=E.planning,Q=E.questing,T=E.traveling;const cfg=['leadership','spirit'].map(sp=>PlayerCards.config(PlayerCards.starter(RINGSDB_SNAPSHOT,sp),RINGSDB_SNAPSHOT));state=E.create('mirkwood',2,12345,cfg,{deferSetup:true,openingTest:true});for(const p of state.players)E.openingChoice(state,p.id);E.startScenario(state);E.nextPhase(state);while(R.active(state)!==null)R.endTurn(state,R.active(state));for(const p of state.players)R.passAction(state,p.id);E.nextPhase(state);E.nextPhase(state);for(const step of [0,1,2,3]){if(step===1)for(const id of state.questing.order)Q.commit(state,id,[]);if(step===2){state.staging=[];state.questing.remaining=[];state.questing.step='staging';Q.drawNext(state);}for(const p of state.players)Q.pass(state,p.id);Q.move(state);}E.nextPhase(state);T.propose(state,state.first,null);for(const p of state.players)T.approve(state,p.id);for(const p of state.players)Q.pass(state,p.id);T.finish(state);E.nextPhase(state);history=[];render();})();`);}
+test('multiplayer encounter UI edits drafts, clears approvals and executes only after all confirmations',async()=>{const e=environment();encounterScreen(e);const uid=e.run(`state.staging.push({...E.byId[96],uid:++state.serial});render();state.serial`);await e.click({action:'encounterFlow',encounter:'propose',player:'0',uid:String(uid)});await e.click({action:'encounterFlow',encounter:'skip',player:'1'});await e.click({action:'encounterFlow',encounter:'approve',player:'0'});assert.equal(e.run('state.staging.length'),1);await e.click({action:'encounterFlow',encounter:'skip',player:'0'});assert.equal(e.run('state.encountering.approvals.length'),0);await e.click({action:'encounterFlow',encounter:'approve',player:'1'});await e.click({action:'encounterFlow',encounter:'unapprove',player:'1'});await e.click({action:'encounterFlow',encounter:'propose',player:'0',uid:String(uid)});await e.click({action:'encounterFlow',encounter:'approve',player:'1'});assert.equal(e.run('state.players[0].engaged.length'),0);await e.click({action:'encounterFlow',encounter:'approve',player:'0'});assert.equal(e.run('state.players[0].engaged.length'),1);assert(seen(e,'交战检定前行动窗口'));assert(seen(e,'攻击 3'));await e.click({action:'encounterFlow',encounter:'pass',player:'0'});await e.click({action:'encounterFlow',encounter:'unpass',player:'0'});assert.equal(e.run('state.encountering.finalPasses.length'),0);});
+test('encounter UI resolves a forced hero target through real response form before proceeding',async()=>{const e=environment();encounterScreen(e);const uid=e.run(`state.staging.push({...E.byId[75],uid:++state.serial});render();state.serial`);await e.click({action:'encounterFlow',encounter:'propose',player:'0',uid:String(uid)});await e.click({action:'encounterFlow',encounter:'skip',player:'1'});for(const p of ['0','1'])await e.click({action:'encounterFlow',encounter:'approve',player:p});assert(seen(e,'巨蜂交战后必须'));const id=e.run('state.encountering.queue[0].id');const action=e.click({action:'planning',plan:'choice',id:String(id)});e.dialogs.at(-1).querySelector('#plan-confirm').click();await action;assert.equal(e.run('state.players[0].heroStates[0].destroyed'),true);assert.equal(e.run('state.encountering.step'),'beforeChecks');});
+test('encounter UI exposes highest-cost tie selection and continues to acceptance without rerunning',async()=>{const e=environment();encounterScreen(e);e.run(`state.players.forEach(p=>p.threat=30);state.staging.push({...E.byId[96],uid:++state.serial},{...E.byId[96],uid:++state.serial});render();`);for(const p of ['0','1'])await e.click({action:'encounterFlow',encounter:'skip',player:p});for(const p of ['0','1'])await e.click({action:'encounterFlow',encounter:'approve',player:p});for(const p of ['0','1'])await e.click({action:'encounterFlow',encounter:'pass',player:p});await e.click({action:'encounterFlow',encounter:'checks'});assert(seen(e,'检定遇到同值敌人'));const id=e.run('state.encountering.tasks[0].id'),uid=e.run('state.encountering.tasks[0].uids[1]');await e.click({action:'encounterFlow',encounter:'tie',id:String(id),uid:String(uid)});assert.equal(e.run('state.players[0].engaged[0].uid'),uid);assert.equal(e.run('state.encountering.step'),'afterChecks');for(const p of ['0','1'])await e.click({action:'encounterFlow',encounter:'pass',player:p});await e.click({action:'encounterFlow',encounter:'finish'});assert(seen(e,'阶段5 · 遭遇阶段验收完成'));});
+
+async function combatScreen(e,{enemy=97,shadow=99}={}){encounterScreen(e);for(const p of ['0','1'])await e.click({action:'encounterFlow',encounter:'skip',player:p});for(const p of ['0','1'])await e.click({action:'encounterFlow',encounter:'approve',player:p});for(const p of ['0','1'])await e.click({action:'encounterFlow',encounter:'pass',player:p});await e.click({action:'encounterFlow',encounter:'checks'});for(const p of ['0','1'])await e.click({action:'encounterFlow',encounter:'pass',player:p});await e.click({action:'encounterFlow',encounter:'finish'});e.run(`state.players[0].engaged.push({...E.byId[${enemy}],uid:++state.serial});state.deck=[{...E.byId[${shadow}],uid:++state.serial}];render();`);await e.click({action:'next'});}
+async function combatAdvance(e){for(const p of ['0','1'])await e.click({action:'combatFlow',combat:'pass',player:p});await e.click({action:'combatFlow',combat:'move'});}
+async function combatApprove(e){for(const p of ['0','1'])await e.click({action:'combatFlow',combat:'approve',player:p});}
+test('combat UI defense modal cancellation is read-only and team confirmation exhausts only final choices',async()=>{const e=environment();await combatScreen(e);assert(seen(e,'阶段6 · 敌人攻击前行动'));await combatAdvance(e);const uid=e.run('state.players[0].engaged[0].uid');await e.click({action:'combatFlow',combat:'enemy',uid:String(uid),player:'0'});await combatApprove(e);await combatAdvance(e);const before=e.run('JSON.stringify(state)');let a=e.click({action:'combatFlow',combat:'defense',player:'0'});let d=e.dialogs.at(-1);d.querySelector('#cancel').click();await a;assert.equal(e.run('JSON.stringify(state)'),before);a=e.click({action:'combatFlow',combat:'defense',player:'0'});d=e.dialogs.at(-1);d.querySelectorAll('[data-combat-select]')[0].checked=true;d.querySelector('#ok').click();await a;await e.click({action:'combatFlow',combat:'approve',player:'0'});assert(!e.run('state.players[0].heroStates[0].exhausted'));await e.click({action:'combatFlow',combat:'unapprove',player:'0'});await combatApprove(e);assert(e.run('state.players[0].heroStates[0].exhausted'));assert(seen(e,'暗影翻开前行动'));});
+test('combat UI reveals one shadow at a time without exposing hidden art in engaged card details',async()=>{const e=environment();await combatScreen(e,{shadow:85});const snippet=e.run("card(state.players[0].engaged[0],'engaged')");assert(!snippet.includes('<summary>座狼</summary>'));await combatAdvance(e);const uid=e.run('state.players[0].engaged[0].uid');await e.click({action:'combatFlow',combat:'enemy',uid:String(uid),player:'0'});await combatApprove(e);await combatAdvance(e);let action=e.click({action:'combatFlow',combat:'defense',player:'0'});e.dialogs.at(-1).querySelectorAll('[data-combat-select]')[0].checked=true;e.dialogs.at(-1).querySelector('#ok').click();await action;await combatApprove(e);await combatAdvance(e);assert(seen(e,'本次暗影：座狼'));assert(e.run("card(state.players[0].engaged[0],'engaged')").includes('<summary>座狼</summary>'));await e.click({action:'combatFlow',combat:'resolveShadow'});assert.equal(e.run('state.combat.attack.bonus'),1);assert(seen(e,'敌人伤害结算前行动'));});
+test('combat UI attack modal creates a reversible proposal without exhausting attackers',async()=>{const e=environment();await combatScreen(e);e.run("state.phasePermissions=[{type:'noEnemyAttacks',player:0,phase:5,round:1}];");await combatAdvance(e);await combatAdvance(e);const uid=e.run('state.players[0].engaged[0].uid');let action=e.click({action:'combatFlow',combat:'attack',player:'0',uid:String(uid)});e.dialogs.at(-1).querySelectorAll('[data-combat-select]')[0].checked=true;e.dialogs.at(-1).querySelector('#ok').click();await action;assert(seen(e,'暂定攻击方案'));assert(!e.run('state.players[0].heroStates[0].exhausted'));await e.click({action:'combatFlow',combat:'cancel'});assert(!e.run('state.combat.proposal'));assert(!e.run('state.players[0].heroStates[0].exhausted'));});
+test('card catalog remains renderable both without a game and during combat with dynamic enemy stats',async()=>{const e=environment();assert(e.run('card(D.cards.find(c=>c.id===90))').includes('乌夫萨克酋长'));await combatScreen(e,{enemy:90});e.run('state.players[0].engaged[0].resources=2;');assert(e.run("card(state.players[0].engaged[0],'engaged')").includes('攻击 7'));assert(e.run('card(D.cards.find(c=>c.id===90))').includes('攻击 3'));});
+
+function refreshScreen(e){e.run(`{const cfg=['leadership','spirit'].map(sp=>PlayerCards.config(PlayerCards.starter(RINGSDB_SNAPSHOT,sp),RINGSDB_SNAPSHOT));state=E.create('mirkwood',2,12345,cfg,{deferSetup:true,openingTest:true});for(const p of state.players)E.openingChoice(state,p.id);E.startScenario(state);state.phase=6;state.combat={completed:true};E.refreshing.start(state);render();}`);}
+test('refresh UI shows all-team confirmation, Web draft cancel, approval invalidation and explicit next resource',async()=>{const e=environment();refreshScreen(e);e.run(`{const h=state.players[0].heroStates[0];h.exhausted=true;h.resources=2;state.conditions.push({...E.byId[80],uid:++state.serial,target:h.uid});render();}`);assert(seen(e,'二次确认刷新'));await e.click({action:'refreshFlow',refresh:'approve',player:'1'});let a=e.click({action:'refreshFlow',refresh:'web',player:'0'});e.dialogs.at(-1).querySelector('#cancel').click();await a;assert.equal(e.run('state.refreshing.approvals.length'),1);a=e.click({action:'refreshFlow',refresh:'web',player:'0'});const inputs=e.dialogs.at(-1).querySelectorAll('[data-web]');assert.equal(inputs.length,1);inputs[0].checked=true;e.dialogs.at(-1).querySelector('#ok').click();await a;assert.equal(e.run('state.refreshing.approvals.length'),0);assert.equal(e.run('state.players[0].heroStates[0].resources'),2);for(const player of ['0','1'])await e.click({action:'refreshFlow',refresh:'approve',player});assert.equal(e.run('state.refreshing.step'),'action');assert.equal(e.run('state.players[0].heroStates[0].resources'),0);for(const player of ['0','1'])await e.click({action:'refreshFlow',refresh:'pass',player});await e.click({action:'refreshFlow',refresh:'move'});assert(seen(e,'进入下一回合 · 资源阶段'));await e.click({action:'next'});assert.equal(e.run('state.phase'),0);assert.equal(e.run('state.round'),2);await e.click({action:'next'});assert.equal(e.run('state.phase'),1);assert.equal(e.run('state.players[0].heroStates[0].resources'),1);});
+test('refresh UI chooses simultaneous round effects and resumes saved response',async()=>{const e=environment();refreshScreen(e);e.run(`state.objectives=[109,110].map(id=>({...E.byId[id],uid:++state.serial,holder:{player:0,hero:0}}));`);for(const player of ['0','1'])await e.click({action:'refreshFlow',refresh:'approve',player});for(const player of ['0','1'])await e.click({action:'refreshFlow',refresh:'pass',player});await e.click({action:'refreshFlow',refresh:'move'});assert(seen(e,'选择下一个回合结束效果'));await e.click({action:'refreshFlow',refresh:'effect',id:'1'});assert.equal(e.run('state.refreshing.completed'),true);assert.equal(e.run('state.players[0].heroStates[0].damage'),1);});
+
+test('new games default to smart windows and show a mode switch',async()=>{const e=environment();await e.click({action:'starterTest',sphere:'leadership'});await e.click({action:'start',id:'mirkwood'});assert.equal(e.run('state.windowPrefs.mode'),'smart');/* v0.15.51：mode-chip 已删，默认模式仍为 smart，切换入口在引擎层验证 */await e.click({action:'windowFlow',window:'mode',mode:'detailed'});assert.equal(e.run('state.windowPrefs.mode'),'detailed');});
+test('shared smart action panel mutes an ability, auto skips empty window and preserves attack confirmation',async()=>{const e=environment();await combatScreen(e);e.run(`for(const p of state.players){p.hand=[];p.heroStates.forEach(h=>h.exhausted=true);}E.planning.putAlly(state,0,{uid:++state.serial,owner:0,code:'01031'});render();`);const uid=e.run('state.players[0].allies[0].uid');await e.click({action:'windowFlow',window:'mode',mode:'smart'});assert.equal(e.run('state.combat.step'),'enemyAction');assert(seen(e,'本次跳过'),'静默按钮应写着「本次跳过」（v0.15.60 起只作用于本次，不是整阶段）');assert(!seen(e,'放弃本窗口行动'));await e.click({action:'windowFlow',window:'mute',kind:'ability',player:'0',uid:String(uid)});assert.equal(e.run('state.combat.step'),'enemyChoice');assert.equal(e.run('state.combat.proposal'),null);assert.equal(e.run('state.delayedEffects?.length||0'),0);assert(seen(e,'暂定'));});
+test('smart panel one-click continue does not submit or approve an attack proposal',async()=>{const e=environment();await combatScreen(e);await e.click({action:'windowFlow',window:'mode',mode:'smart'});if(e.run('state.combat.step')==='enemyAction')await e.click({action:'windowFlow',window:'next'});assert.equal(e.run('state.combat.step'),'enemyChoice');assert.equal(e.run('state.combat.approvals.length'),0);assert.equal(e.run('state.combat.proposal'),null);});
+
+test('preset selection preserves multiplayer count and creates no game before scenario choice',async()=>{for(const n of [2,3,4]){const e=environment();e.run(`document.querySelector('#playerCount').value='${n}';document.querySelector('#playerCount').onchange();`);await e.click({action:'starterTest',sphere:'tactics'});assert.equal(e.run('state'),null);assert.equal(e.run('setupDraft.players'),n);assert.equal(e.run("document.querySelector('#playerCount').value"),String(n));await e.click({action:'start',id:'mirkwood'});assert.equal(e.run('state.players.length'),n);assert.equal(e.run('state.players[0].heroCodes[0]'),'01004');assert.equal(e.run('new Set(state.players.flatMap(p=>p.heroCodes)).size'),n*3);assert(seen(e,'玩家'+n));}});
+test('scenario entry honors player count across all three scenarios',async()=>{for(const id of ['mirkwood','anduin','dolguldur']){const e=environment();e.run("document.querySelector('#playerCount').value='4';document.querySelector('#seed').value='12345';");await e.click({action:'start',id});assert.equal(e.run('state.players.length'),4);assert.equal(e.run('state.scenario'),id);assert(e.run('state.players.every(p=>p.heroStates.length===3&&p.hand.length===6)'));}});
+test('new game screen offers four product tabs with the base game grouped first',async()=>{const e=environment();let html=e.base.get('app').innerHTML;assert(html.includes('新游戏'));assert(html.includes('新版扩展')&&html.includes('旧版扩展')&&html.includes('支线剧情')&&html.includes('噩梦包'));assert(html.includes('基础剧本合集'));assert(!html.includes('穿越幽暗密林</h3>'));await e.click({action:'ngTab',value:'pod'});html=e.base.get('app').innerHTML;assert(html.includes('官方 POD')&&html.includes('ALeP 自制独立作品'));assert(html.includes('黑森林之黯')&&html.includes('加拉德瑞尔之镜')&&html.includes('欧斯吉力亚斯集结'));assert(!html.includes('穿越幽暗密林')&&!html.includes('基础剧本合集'));});
+test('new game settings capture name, players, scenario type, difficulty and window mode',async()=>{const e=environment();await e.click({action:'ngOpen',kind:'campaign',id:'core'});let html=e.base.get('app').innerHTML;for(const t of ['游戏名称','玩家人数','剧本类型','完整剧本','单场冒险模式','难度选择','高级设置'])assert(html.includes(t));e.run("document.querySelector('#ng-name').value='测试局';");await e.click({action:'ngDifficulty',value:'easy'});await e.click({action:'ngWindow',value:'detailed'});await e.click({action:'ngMode',value:'standalone'});await e.click({action:'ngScenario',value:'dolguldur'});await e.click({action:'ngNext'});assert.equal(e.run('deckChooser.scenario'),'dolguldur');await e.click({action:'chooserConfirm'});assert.equal(e.run('state.scenario'),'dolguldur');assert.equal(e.run('state.session.name'),'测试局');assert.equal(e.run('state.session.difficulty'),'easy');assert.equal(e.run('state.windowPrefs.mode'),'detailed');assert.equal(e.run('state.session.mode'),'standalone');});
+test('easy mode follows the official rules: one extra hero resource and the marked encounter cards removed',async()=>{
+ const make=(difficulty)=>{const e=environment();e.run(`{const cfg=['leadership','spirit'].map(sp=>PlayerCards.config(PlayerCards.starter(RINGSDB_SNAPSHOT,sp),RINGSDB_SNAPSHOT));state=E.create('mirkwood',2,12345,cfg,{deferSetup:true${difficulty?",difficulty:'"+difficulty+"'":''}});handView=0;render();}`);return {e,deck:e.run('state.deck.length'),resources:e.run('state.players.map(p=>p.heroStates.map(h=>h.resources))'),diff:e.run('state.difficulty')};};
+ const normal=make(''),easy=make('easy');
+ assert.equal(normal.diff,'normal');assert.equal(easy.diff,'easy');
+ assert(normal.resources.every(p=>p.every(r=>r===0)));
+ assert(easy.resources.every(p=>p.every(r=>r===1)));
+ // 核心包是早期印刷，没有金框标记，按官方 Easy Mode 清单逐卡移除：本剧本共 9 张
+ assert.equal(normal.deck-easy.deck,9);
+ assert(!easy.e.run("state.deck.some(c=>c.en==='Caught in a Web')"));
+ assert(!easy.e.run("state.deck.some(c=>c.en==='Chieftan Ufthak')"));
+ assert(easy.e.run("state.deck.filter(c=>c.en===\"The Necromancer's Reach\").length")===1);
+});
+test('new game lists the whole product catalogue as covers and only the base game is playable',async()=>{const e=environment();let html=e.base.get('app').innerHTML;const tabs=[...html.matchAll(/data-action="ngTab" data-value="([a-z]+)"/g)].map(m=>m[1]);assert.deepEqual(tabs,['revised','legacy','pod','nightmare']);assert(html.includes('CHAPTER 1 · 基础版')&&html.includes('基础剧本合集'));assert(html.includes('新版扩展（Revised）')&&html.includes('安格玛觉醒')&&html.includes('追梦者')&&html.includes('埃瑞德米斯林')&&html.includes('魔戒同盟'));assert(!html.includes('英雄扩展')&&!html.includes('战役扩展'));assert(!html.includes('data-id="Revised-Core-Set"')&&!html.includes('都灵的矮人')&&!html.includes('罗瑞恩的精灵')&&!html.includes('刚铎的守卫')&&!html.includes('洛汗的骑手'));assert(html.includes('data-id="Angmar-Awakened-Campaign-Expansion"')&&!html.includes('data-id="Angmar-Awakened-Hero-Expansion"'));assert(html.includes('Angmar Awakened'));assert.equal((html.match(/data-action="ngOpen"/g)||[]).length,1);const before=e.run('JSON.stringify(newGame)');await e.click({action:'ngLocked',id:'Angmar-Awakened-Campaign-Expansion',name:'安格玛觉醒'});assert.equal(e.run('JSON.stringify(newGame)'),before);assert.equal(e.run('state'),null);assert(e.base.get('toast').textContent.includes('封面占位'));await e.click({action:'ngTab',value:'legacy'});html=e.base.get('app').innerHTML;assert(!html.includes('data-id="Core-Set"'));assert(html.includes('黑森林的魔影')&&html.includes('卡扎督姆')&&html.includes('艾森加德之声')&&html.includes('东方魔影')&&html.includes('6 个剧本'));assert(!html.includes('追捕咕噜'));assert.equal((html.match(/data-action="ngOpen"/g)||[]).length,15);await e.click({action:'ngOpen',kind:'legacy',id:'Khazad-dum'});html=e.base.get('app').innerHTML;assert(!html.includes('ng-pack ')&&!html.includes('选择冒险'));assert(html.includes('完整剧本从「红角门」开始'));assert(html.includes('data-action="ngNext" disabled'));await e.click({action:'ngMode',value:'standalone'});html=e.base.get('app').innerHTML;assert(html.includes('选择冒险')&&html.includes('岩石的根基'));assert((html.match(/ng-pack /g)||[]).length>=6);assert(html.includes('data-action="ngNext" disabled'));await e.click({action:'ngScenario',value:'The-Redhorn-Gate'});assert.equal(e.run('newGame.pack'),'The-Redhorn-Gate');assert.equal(e.run('state'),null);await e.click({action:'ngBack'});assert.equal(e.run('newGame'),null);await e.click({action:'ngTab',value:'pod'});html=e.base.get('app').innerHTML;assert(html.includes('官方 POD')&&html.includes('ALeP 自制独立作品')&&html.includes('GenCon')&&html.includes('黑森林之黯')&&html.includes('加拉德瑞尔之镜'));assert(!html.includes('穿越幽暗密林'));assert((html.match(/ng-community-badge/g)||[]).length>=5);assert((html.match(/ng-card locked/g)||[]).length>=20);await e.click({action:'ngTab',value:'nightmare'});html=e.base.get('app').innerHTML;assert(html.includes('噩梦')&&(html.match(/data-action="ngOpen"/g)||[]).length===0);});
+test('my decks page lists every preset and saved deck with import tabs',()=>{const e=environment();e.run("tab='decks';render();");const html=e.base.get('app').innerHTML;assert(html.includes('我的卡组'));assert(html.includes('LINK')&&html.includes('FILE'));assert(html.includes('领导基础教学牌组')&&html.includes('知识基础教学牌组'));assert(html.includes('deck-import'));assert(html.includes('设为玩家1'));});
+test('starting a scenario requires each player to confirm a deck before the game exists',async()=>{const e=environment();e.run("document.querySelector('#playerCount').value='2';document.querySelector('#playerCount').onchange();");e.run("openChooser('mirkwood')");const html=e.base.get('app').innerHTML;assert(html.includes('选择你的牌组'));assert(html.includes('使用已有牌组')&&html.includes('创建新卡组'));assert(html.includes('玩家2'));assert.equal(e.run('state'),null);e.run("deckChooser.picks[1]=null;render();");assert(seen(e,'disabled'));await e.click({action:'chooserPick',deck:'starter-lore',player:'1'});assert.equal(e.run('deckChooser.picks[1]'),'starter-lore');assert(!seen(e,'data-action="chooserConfirm" disabled'));await e.click({action:'chooserConfirm'});assert.equal(e.run('state.players.length'),2);assert.equal(e.run('state.players[1].heroCodes.join()'),e.run("PlayerCards.starter(RINGSDB_SNAPSHOT,'lore').heroes.join()"));});
+test('preset picks stay per player and duplicates swap, and the chooser starts from those picks',async()=>{const e=environment();e.run("document.querySelector('#playerCount').value='2';document.querySelector('#playerCount').onchange();");const setupHtml=e.base.get('app').innerHTML;assert(!setupHtml.includes('为每位玩家选择牌组'));assert(setupHtml.includes('新版扩展')&&setupHtml.includes('支线剧情'));assert(setupHtml.includes('基础剧本合集'));await e.click({action:'starterTest',sphere:'leadership'});await e.click({action:'starterTest',player:'1',sphere:'lore'});assert.equal(e.run('setupDraft.decks[0]'),'starter-leadership');assert.equal(e.run('setupDraft.decks[1]'),'starter-lore');await e.click({action:'starterTest',player:'1',sphere:'leadership'});assert.equal(e.run('setupDraft.decks[1]'),'starter-leadership');assert.equal(e.run('setupDraft.decks[0]'),'starter-lore');e.run("openChooser('mirkwood')");assert.deepEqual(e.run('JSON.stringify(deckChooser.picks)'),'["starter-lore","starter-leadership"]');await e.click({action:'chooserConfirm'});assert.equal(e.run('state.players[0].heroCodes.join()'),e.run("PlayerCards.starter(RINGSDB_SNAPSHOT,'lore').heroes.join()"));assert.equal(e.run('new Set(state.players.flatMap(p=>p.heroCodes)).size'),6);});
+test('setup count, seed and first player survive page changes and rerenders',()=>{const e=environment();e.run("document.querySelector('#playerCount').value='3';document.querySelector('#playerCount').onchange();document.querySelector('#pc-first').value='2';document.querySelector('#seed').value='54321';render();");e.base.get('helpTab').click();e.base.get('tableTab').click();assert.equal(e.run("document.querySelector('#playerCount').value"),'3');assert.equal(e.run("document.querySelector('#pc-first').value"),'2');assert.equal(e.run("document.querySelector('#seed').value"),'54321');assert(!seen(e,'为每位玩家选择牌组'));});
+test('reducing player count restricts first-player choices to existing players',async()=>{const e=environment();e.run("document.querySelector('#playerCount').value='4';document.querySelector('#playerCount').onchange();document.querySelector('#pc-first').value='3';document.querySelector('#pc-first').onchange();document.querySelector('#playerCount').value='2';document.querySelector('#playerCount').onchange();");assert.equal(e.run("document.querySelector('#pc-first').value"),'0');await e.click({action:'start',id:'mirkwood'});assert.equal(e.run('state.players.length'),2);assert.equal(e.run('state.first'),0);});
+
+test('desktop quest picks are UI-only and require submission plus team confirmation',async()=>{const e=environment();await commitScreen(e);const uid=e.run('state.players[0].heroStates[0].uid'),before=e.run('JSON.stringify(state)'),history=e.run('history.length');await e.click({action:'desktop',desktop:'pick',uid:String(uid)});assert.equal(e.run('JSON.stringify(state)'),before);assert.equal(e.run('history.length'),history);assert.equal(e.run('QuestUI.draftFor(state,0)[0]'),uid);assert(seen(e,'selection-mark'));await e.click({action:'desktop',desktop:'submit'});/* 提交即横置：v0.15 起引擎在名单锁定（submit）时就把投入的角色横置，
+   不再等到「二次确认」。所以这里断言的是「提交前未横置、提交后已横置」。 */
+ assert(e.run('state.players[0].heroStates[0].exhausted'),'提交后应横置');assert(e.run('state.questing.deployments[0].confirmed'));await e.click({action:'quest',quest:'approveDeployment',player:'0'});assert(e.run('state.players[0].heroStates[0].committed'));});
+test('desktop player switch shows every public board without mutating game or history',async()=>{const e=environment();await combatScreen(e);const before=e.run('JSON.stringify(state)'),count=e.run('history.length');await e.click({action:'desktop',desktop:'view',player:'1'});assert.equal(e.run('handView'),1);assert.equal(e.run('JSON.stringify(state)'),before);assert.equal(e.run('history.length'),count);const html=e.base.get('app').innerHTML;for(const cls of ['operation-dock','public-table','player-mat','tabletop-rail','other-player'])assert(html.includes(cls));assert(html.includes('玩家1'));assert(html.includes('玩家2'));assert(!html.includes('座狼</summary>'));});
+test('desktop defense selection stays reversible until all players confirm',async()=>{const e=environment();await combatScreen(e);await combatAdvance(e);const enemy=e.run('state.players[0].engaged[0].uid');await e.click({action:'combatFlow',combat:'enemy',uid:String(enemy),player:'0'});await combatApprove(e);await combatAdvance(e);const uid=e.run('state.players[0].heroStates[0].uid'),before=e.run('JSON.stringify(state)');await e.click({action:'desktop',desktop:'pick',uid:String(uid)});assert.equal(e.run('JSON.stringify(state)'),before);assert(seen(e,'暂定防御'));await e.click({action:'desktop',desktop:'clear'});assert.equal(e.run('DesktopUI.draft(state,DesktopUI.mode(state,0)).ids.length'),0);await e.click({action:'desktop',desktop:'pick',uid:String(uid)});await e.click({action:'desktop',desktop:'submit'});assert(!e.run('state.players[0].heroStates[0].exhausted'));await e.click({action:'combatFlow',combat:'approve',player:'0'});assert(!e.run('state.players[0].heroStates[0].exhausted'));await e.click({action:'combatFlow',combat:'approve',player:'1'});assert(e.run('state.players[0].heroStates[0].exhausted'));});
+test('desktop attack target and attacker drafts never exhaust or damage before confirmation',async()=>{const e=environment();await combatScreen(e);e.run("state.phasePermissions=[{type:'noEnemyAttacks',player:0,phase:5,round:1}];");await combatAdvance(e);await combatAdvance(e);const enemy=e.run('state.players[0].engaged[0].uid'),uid=e.run('state.players[0].heroStates[0].uid'),before=e.run('JSON.stringify(state)');await e.click({action:'desktop',desktop:'pick',uid:String(uid)});assert.equal(e.run('DesktopUI.draft(state,DesktopUI.mode(state,0)).ids.length'),0);await e.click({action:'desktop',desktop:'target',uid:String(enemy)});await e.click({action:'desktop',desktop:'pick',uid:String(uid)});assert.equal(e.run('JSON.stringify(state)'),before);assert(seen(e,'基础伤害预估'));await e.click({action:'desktop',desktop:'submit'});assert(e.run('state.combat.proposal'));assert(!e.run('state.players[0].heroStates[0].exhausted'));assert.equal(e.run('state.players[0].engaged[0].damage||0'),0);await e.click({action:'combatFlow',combat:'cancel'});assert.equal(e.run('DesktopUI.draft(state,DesktopUI.mode(state,0)).ids.length'),0);});
+test('desktop tokens pin resource/damage counters to card edges like the arkham online board',async()=>{const e=environment();await combatScreen(e);
+ e.run(`mutate(()=>{state.players[0].heroStates[0].resources=3;state.players[0].heroStates[0].damage=1;state.players[0].engaged[0].damage=2;});render();`);
+ const html=e.base.get('app').innerHTML;
+ assert(html.includes('assets/tokens/resource.png'),'英雄卡应有资源代币图');
+ assert(html.includes('assets/tokens/damage.png'),'英雄与敌人应有伤害代币图');
+ assert(/tk-resource( stack)?" data-n="3"><img src="assets\/tokens\/resource\.png"[\s\S]{0,90}?<b>3<\/b>/.test(html),'资源代币应显示 3');
+ assert(/tk-damage" data-n="1"[\s\S]{0,90}?<b>1<\/b>/.test(html),'英雄伤害代币应显示 1');
+ assert(/tk-damage( stack)?" data-n="2"[\s\S]{0,90}?<b>2<\/b>/.test(html),'敌人伤害代币应显示 2');
+ assert((html.match(/tk-\w+ stack/g)||[]).length>=2,'数量>1 的代币应带层叠样式');
+ assert(html.includes('card-tokens state-tokens'),'状态代币应为卡牌下方的独立行');
+ assert(!/card-tokens[^>]*data-action/.test(html),'代币是纯展示，不得携带动作');
+});
+test('location and quest progress render as progress tokens on the arkham-style board',async()=>{const e=environment();await combatScreen(e);
+ e.run(`mutate(()=>{state.staging.push({...E.byId[99],uid:++state.serial,progress:2});state.progress=1;});render();`);
+ const html=e.base.get('app').innerHTML;
+ assert(html.includes('assets/tokens/progress.png'),'地点与探险卡应有进度代币图');
+ assert(/tk-progress( stack)?" data-n="2"[\s\S]{0,90}?<b>2<\/b>/.test(html),'地点进度代币应显示 2');
+ assert(html.includes('quest-tokens'),'当前探险卡应叠进度代币');
+ assert(/quest-tokens[\s\S]{0,140}?tk-progress" data-n="1"/.test(html),'探险卡代币应显示当前进度 1');
+});
+test('zero-value tokens stay visible like the arkham online board and allies never show resource tokens',async()=>{const e=environment();await combatScreen(e);
+ e.run('mutate(()=>{for(const h of state.players[0].heroStates)h.resources=0;});render();');
+ const html=e.base.get('app').innerHTML;
+ assert(/tk-resource" data-n="0"/.test(html),'英雄 0 资源也应显示代币（对齐原版）');
+ assert(/tk-damage" data-n="0"/.test(html),'敌人 0 伤害也应显示代币（对齐原版）');
+ const ally=e.run(`mutate(()=>{state.players[0].allies.push({uid:++state.serial,owner:0,controller:0,code:'01043',exhausted:false,damage:0,committed:false});});state.players[0].allies[0].uid`);
+ const cardBlock=()=>{const all=e.base.get('app').innerHTML,i=all.indexOf(`data-card-uid="${ally}"`);return all.slice(i,all.indexOf('</article>',i)+9);};
+ const block=cardBlock();
+ assert(block.includes('tk-damage" data-n="0"'),'盟友应显 0 伤害代币');
+ e.run(`mutate(()=>{state.players[0].allies[0].resources=2;});`);
+ assert(!cardBlock().includes('tk-resource'),'盟友即使有资源也不显示资源代币（资源代币只属于英雄）');
+});
+test('attribute tokens sit above the character card and always show willpower attack defense',async()=>{const e=environment();await combatScreen(e);
+ const uid=e.run('state.players[0].heroStates[0].uid');
+ const stats=e.run(`JSON.stringify(E.planning.stats(state,${uid}))`);
+ const v=JSON.parse(stats);
+ const block=()=>{const all=e.base.get('app').innerHTML,i=all.indexOf(`data-card-uid="${uid}"`);return all.slice(i,all.indexOf('</article>',i)+9);};
+ const b1=block();
+ const attrRow=b1.slice(0,b1.indexOf('<button class="card-face"'));
+ assert(attrRow.includes('card-tokens attr-tokens'),'属性代币行应位于卡面按钮之前（卡牌上方）');
+ const hasTok=(cls,n)=>new RegExp(`tk-${cls}( stack)?" data-n="${n}"`).test(attrRow);
+ assert(hasTok('willpower',v.willpower||0),'意志代币应显示 stats 意志值');
+ assert(hasTok('attack',v.attack||0),'攻击代币应显示 stats 攻击值');
+ assert(hasTok('defense',v.defense||0),'防御代币应显示 stats 防御值');
+ assert(hasTok('hitPoints',v.health||0),'生命代币应显示 stats 生命值（替代文字行）');
+ assert(!/tk-willpower[^>]*draggable/.test(attrRow),'属性代币是静态数值，不应可拖放');
+ assert(/tk-willpower[\s\S]*?<b>\d+<\/b>[\s\S]*?<\/button>/.test(b1)||b1.indexOf('tk-willpower')<b1.indexOf('card-face'),'属性代币应渲染在卡面之前');
+});
+test('attachment bonuses count into attribute tokens and revert when the attachment leaves play',async()=>{const e=environment();await combatScreen(e);
+ const uid=e.run('state.players[0].heroStates[0].uid');
+ const base=e.run(`JSON.stringify(E.planning.stats(state,${uid}))`),b0=JSON.parse(base);
+ e.run(`mutate(()=>{state.players[0].attachments.push({uid:++state.serial,owner:0,controller:0,code:'01027',target:${uid},exhausted:false});});render();`);
+ const withAtt=JSON.parse(e.run(`JSON.stringify(E.planning.stats(state,${uid}))`));
+ assert.equal(withAtt.willpower,b0.willpower+2,'附属「精灵之光·凯兰崔姆石（01027）」应使意志 +2（永久，依附期间）');
+ const html=e.base.get('app').innerHTML,i=html.indexOf(`data-card-uid="${uid}"`),blk=html.slice(i,html.indexOf('</article>',i)+9);
+ assert(new RegExp(`tk-willpower( stack)?" data-n="${withAtt.willpower}"`).test(blk),'属性代币应计入附属加成后的意志值');
+ e.run(`mutate(()=>{state.players[0].attachments.length=0;});render();`);
+ const reverted=JSON.parse(e.run(`JSON.stringify(E.planning.stats(state,${uid}))`));
+ assert.equal(reverted.willpower,b0.willpower,'附属离场后意志应还原为基础值');
+});
+test('temporary phase modifiers count into attribute tokens and revert once the phase ends',async()=>{const e=environment();await combatScreen(e);
+ const uid=e.run('state.players[0].heroStates[0].uid');
+ const b0=JSON.parse(e.run(`JSON.stringify(E.planning.stats(state,${uid}))`));
+ e.run(`mutate(()=>{state.phaseModifiers=[{round:state.round,phase:state.phase,targets:[${uid}],stat:'attack',amount:2}];});render();`);
+ const boosted=JSON.parse(e.run(`JSON.stringify(E.planning.stats(state,${uid}))`));
+ assert.equal(boosted.attack,b0.attack+2,'本回合本阶段的临时攻击加成应计入 stats');
+ const html=e.base.get('app').innerHTML,i=html.indexOf(`data-card-uid="${uid}"`),blk=html.slice(i,html.indexOf('</article>',i)+9);
+ assert(new RegExp(`tk-attack( stack)?" data-n="${boosted.attack}"`).test(blk),'攻击代币应显示加成后的攻击值');
+ e.run('mutate(()=>{state.phaseModifiers=[];});render();');
+ const reverted=JSON.parse(e.run(`JSON.stringify(E.planning.stats(state,${uid}))`));
+ assert.equal(reverted.attack,b0.attack,'阶段效果过期（phaseModifiers 清理）后攻击应还原');
+});
+
+test('unaffordable hand cards grey out, stay hover-inspectable and live-update with hero resources',async()=>{const e=environment();await opening(e);
+ const code=e.run(`(function(){const sp=E.planning.data(state,{...state.players[0].heroStates[0],owner:0}).sphere;for(const c of state.players[0].playerDeck){const m=E.planning.data(state,{...c,owner:0});if(m.type==='ally'&&m.cost>0&&m.sphere===sp)return c.code;}})()`);
+ assert(code,'测试前提：牌库中应有匹配领域的正费用盟友');
+ const uid=e.run(`mutate(()=>{state.players[0].hand.push({uid:++state.serial,owner:0,code:'${code}'});});state.players[0].hand.at(-1).uid`);
+ const cardBlock=()=>{const all=e.base.get('app').innerHTML,i=all.indexOf(`data-uid="${uid}"`);return all.slice(all.lastIndexOf('<article',i),all.indexOf('</article>',i)+9);};
+ e.run(`mutate(()=>{state.players[0].heroStates.forEach(h=>h.resources=8);});render();`);
+ let blk=cardBlock();
+ assert(blk.includes('hand-card selectable'),'资源充足时应可选且不灰化');
+ assert(!blk.includes('unaffordable'),'资源充足时不应有灰化类');
+ assert(blk.includes('data-action="planning"')&&!/data-plan="play"[^>]*disabled/.test(blk),'资源充足时打出按钮不应禁用');
+ e.run('mutate(()=>{state.players[0].heroStates.forEach(h=>h.resources=0);});render();');
+ blk=cardBlock();
+ assert(blk.includes('unaffordable'),'领域资源不足时手牌应带灰化类');
+ assert(/data-plan="play"[^>]*disabled|disabled[^>]*data-plan="play"/.test(blk),'资源不足时应禁止打出');
+ assert(blk.includes('data-hover-src'),'灰化手牌仍应带悬停放大探针');
+ assert(blk.includes('资源不足：还差'),'应显示资源不足原因（v0.15.58 起带具体差额）');
+ e.run('mutate(()=>{state.players[0].heroStates[0].resources=4;});render();');
+ blk=cardBlock();
+ assert(blk.includes('hand-card selectable')&&!blk.includes('unaffordable'),'资源恢复后应实时恢复可选');
+});
+test('desktop rendering validates optional encounter highlights without changing approvals or log',()=>{const e=environment();encounterScreen(e);e.run('state.staging.push({...E.byId[97],uid:++state.serial});');const before=e.run('JSON.stringify(state)');e.run('render();');assert.equal(e.run('JSON.stringify(state)'),before);assert(seen(e,'data-desktop="engage"'));});
+test('operation dock names the current task and shows per-player confirmation progress',async()=>{const e=environment();await combatScreen(e);assert(seen(e,'第 6/7 阶段'));await combatAdvance(e);const uid=e.run('state.players[0].engaged[0].uid');await e.click({action:'combatFlow',combat:'enemy',uid:String(uid),player:'0'});let html=e.base.get('app').innerHTML;assert(html.includes('战斗方案待确认（0/2）'));assert(html.includes('玩家1 · 待确认'));assert(html.includes('玩家2 · 待确认'));assert(!html.includes('玩家1 · 已确认'));await e.click({action:'combatFlow',combat:'approve',player:'0'});html=e.base.get('app').innerHTML;assert(html.includes('战斗方案待确认（1/2）'));assert(html.includes('战斗方案待确认（1/2）')&&html.includes('玩家1 · 已确认'));const st=e.run('JSON.stringify(DesktopUI.status(state))');assert(st.includes('1/2'));await e.click({action:'combatFlow',combat:'unapprove',player:'0'});assert(seen(e,'战斗方案待确认（0/2）'));});
+test('desktop quest submit switches the view to the next unconfirmed player and names who is pending',async()=>{const e=environment();await e.click({action:'starterTest',sphere:'leadership'});e.run("document.querySelector('#playerCount').value='2';document.querySelector('#seed').value='12345';");await e.click({action:'start',id:'mirkwood'});e.run("E.windows.setMode(state,'detailed');");await e.click({action:'keepHand',player:'0'});await e.click({action:'keepHand',player:'1'});await e.click({action:'finishSetup'});await e.click({action:'next'});await e.click({action:'planning',plan:'endTurn',player:'0'});await e.click({action:'planning',plan:'endTurn',player:'1'});await e.click({action:'planning',plan:'pass',player:'0'});await e.click({action:'planning',plan:'pass',player:'1'});await e.click({action:'next'});await e.click({action:'next'});await e.click({action:'quest',quest:'pass',player:'0'});await e.click({action:'quest',quest:'pass',player:'1'});await e.click({action:'quest',quest:'move'});await e.click({action:'quest',quest:'pass',player:'0'});await e.click({action:'quest',quest:'pass',player:'1'});await e.click({action:'quest',quest:'move'});assert.equal(e.run('state.questing.step'),'commit');const uid1=e.run('state.players[1].heroStates[0].uid');await e.click({action:'desktop',desktop:'pick',uid:String(uid1)});await e.click({action:'desktop',desktop:'submit'});assert(e.run('state.questing.deployments[1].confirmed'));assert.equal(e.run('handView'),0);await e.click({action:'desktop',desktop:'view',player:'1'});const dock=e.base.get('app').innerHTML;assert(dock.includes('等待 玩家1 提交派遣名单（1/2）'));assert(dock.includes('玩家2 · 已提交'));assert(dock.includes('玩家1 · 待提交'));await e.click({action:'desktop',desktop:'view',player:'0'});const uid0=e.run('state.players[0].heroStates[0].uid');await e.click({action:'desktop',desktop:'pick',uid:String(uid0)});await e.click({action:'desktop',desktop:'submit'});assert(e.run('state.questing.deployments[0].confirmed'));assert.equal(e.run('handView'),0);assert.equal(e.run('state.questing.deploymentLocked'),undefined);});
+
+/* 回归：桌面渲染曾直接调用从未定义的 pending()，导致任何存在待结算事项的时刻整个 render 抛
+   ReferenceError（mutate 回滚，玩家永远看不到「确认结算」按钮，开局翻牌会卡死）。 */
+test('desktop renders the pending panel with a resolve button for every queued item', async () => {
+ const e = environment();
+ await e.click({ action: 'starterTest', sphere: 'spirit' });
+ e.run("document.querySelector('#seed').value='12345';");
+ await e.click({ action: 'start', id: 'anduin' });
+ e.run("E.windows.setMode(state,'detailed');");
+ await e.click({ action: 'keepHand', player: '0' });
+ await e.click({ action: 'finishSetup' });
+ // 直接登记一条人工结算事项，覆盖 pending 面板而不依赖随机翻牌。
+ e.run(`mutate(()=>{state.pending.push({id:++state.serial,text:'测试诡计：威胁+1',kind:'setupManual',args:{}});});`);
+ let html = e.base.get('app').innerHTML;
+ assert(html.includes('pending-panel'), '应渲染待结算面板');
+ assert(html.includes('确认结算'), '应给出确认结算按钮');
+ assert(html.includes('测试诡计'), '应显示事项文本');
+ assert(!/is not defined/.test(e.base.get('toast').textContent || ''), '渲染不应抛 ReferenceError 回滚');
+ const id = e.run('state.pending[0].id');
+ await e.click({ action: 'resolve', id: String(id) });
+ assert.equal(e.run('state.pending.length'), 0, '确认后事项应清空');
+ html = e.base.get('app').innerHTML;
+ assert(!html.includes('pending-panel'), '清空后不应残留面板');
+});
+
+/* 结算计分面板：胜利后必须渲染分项明细与总分，且总分与 score-engine 一致。 */
+test('score panel renders the official breakdown once the scenario is won', async () => {
+ const e = environment();
+ await e.click({ action: 'starterTest', sphere: 'leadership' });
+ e.run("document.querySelector('#seed').value='12345';");
+ await e.click({ action: 'start', id: 'mirkwood' });
+ await e.click({ action: 'keepHand', player: '0' });
+ await e.click({ action: 'finishSetup' });
+ // 制造一个可计分的终局：威胁、伤害、回合、胜利区各一项。
+ e.run(`mutate(()=>{state.status='won';state.round=4;state.players[0].threat=31;
+  state.players[0].heroStates[1].damage=2;
+  state.victory.push({id:96,name:'幽暗密林蜘蛛',type:'Enemy',victory:1,uid:++state.serial});});`);
+ const html = e.base.get('app').innerHTML;
+ assert(html.includes('score-panel'), '胜利后应出现计分面板');
+ assert(html.includes('剧本胜利 · 结算计分'));
+ assert(html.includes('威胁（全队合计）') || html.includes('最终威胁'));
+ assert(html.includes('回合数'));
+ assert(html.includes('英雄伤害合计'));
+ assert(html.includes('胜利区点数'));
+ const expect = e.run('ScoreEngine.score(state).total');
+ assert(html.includes('<strong>' + expect + '</strong>'), '总分应与引擎一致：' + expect);
+ // 31 威胁 + 4×10 回合 + 0 淘汰 + 2 伤害 − 1 胜利 = 72
+ assert.equal(expect, 72);
+});
+
+test('score panel stays out of the way while the scenario is still running', async () => {
+ const e = environment();
+ await e.click({ action: 'starterTest', sphere: 'tactics' });
+ e.run("document.querySelector('#seed').value='12345';");
+ await e.click({ action: 'start', id: 'mirkwood' });
+ await e.click({ action: 'keepHand', player: '0' });
+ await e.click({ action: 'finishSetup' });
+ assert(!seen(e,'score-panel'), '进行中不应出现计分面板');
+ e.run("mutate(()=>{state.status='lost';});");
+ const html = e.base.get('app').innerHTML;
+ assert(html.includes('score-panel'), '失败局仍给出过程计分');
+ assert(html.includes('远征失败 · 过程计分'));
+ assert(html.includes('失败局不计入战绩'));
+});
+test('deck builder offers a one-click backfill once the draft drifts from its source deck',async()=>{const e=environment();
+ /* draft／building 是 player-ui 的模块内变量，vm 里改不到，统一走公开 API + data-action 点击。 */
+ await e.click({action:'deckNew'});
+ assert(seen(e,'编辑牌组'),'新建牌组应进入组卡器');
+ assert(!seen(e,'deckBackTo'),'新建牌组没有原牌组，不该出现回填按钮');
+ const starter=e.run("PlayerUI.deckById('starter-leadership')?1:0");
+ assert(starter,'预组牌组应收录在卡组列表里');
+ /* 用「载入」把草稿换成预组（此时与源牌组一致，仍不该提示） */
+ e.run("$('#pc-load').value='starter-leadership'");
+ await e.click({action:'pc',pc:'load'});
+ assert(!seen(e,'deckBackTo'),'草稿与源牌组一致时不该提示回填');
+ /* 改一笔：草稿偏离源牌组，回填入口出现。用减牌而不是加牌——预组里 01013 已经是上限 3 张，
+    加牌会因「最多3张」被拒，测试就测不到回填逻辑本身了。 */
+ await e.click({action:'pc',pc:'minus',code:'01013'});
+ const html=e.base.get('app').innerHTML;
+ assert(html.includes('data-action="deckBackTo"'),'草稿偏离原牌组时应给出回填入口');
+ assert(html.includes('回填原牌组'),'回填按钮要有可读文案');
+});
+test('shared deck links render the builder copy and the share-code tab on the deck page',async()=>{const e=environment();
+ await e.click({action:'deckNew'});
+ assert(seen(e,'data-pc="share"'),'组卡器应提供复制分享链接');
+ await e.click({action:'deckBack'});
+ await e.click({action:'deckViewTab',value:'share'});
+ const html=e.base.get('app').innerHTML;
+ assert(html.includes('data-value="share"'),'卡组页应有分享链接页签');
+ assert(html.includes('id="deck-import-share"'),'卡组页应有粘贴分享链接的输入框');
+ assert(html.includes('data-action="deckImportShare"'),'卡组页应有打开分享链接的按钮');
+});
+test('desktop version badge comes from one constant that matches the latest CHANGELOG heading',async()=>{const e=environment();const version=e.run('APP_VERSION');assert.match(String(version),/^v\d+\.\d+\.\d+$/);const heading=fs.readFileSync(__dirname+'/CHANGELOG.md','utf8').split('\n').find(l=>l.startsWith('# v'));assert(heading,'CHANGELOG.md 缺少 "# vX.Y.Z" 形式的最新条目标题');assert(heading.startsWith('# '+version),`界面版本 ${version} 与 CHANGELOG 最新条目「${heading}」不一致`);assert(!/MIDDLE-EARTH EXPEDITION · v\d/.test(fs.readFileSync(__dirname+'/desktop-ui.js','utf8')),'桌面徽标不应再硬编码版本号');await opening(e);assert(seen(e,'MIDDLE-EARTH EXPEDITION · '+version),'桌面徽标未使用 APP_VERSION 常量');});
+
+test('card library merges player and encounter cards behind a three-way player/encounter/both split',async()=>{
+ const e=environment();e.run(`catalogSide='both';catalogView='list';catalogQuery='';tab='catalog';render();`);
+ const html=e.base.get('app').innerHTML,players=e.run('RINGSDB_SNAPSHOT.cards.length'),encounters=e.run('D.cards.length+D.quests.length');
+ assert(html.includes('卡牌库'),'卡牌库页签未渲染标题');
+ assert(html.includes('data-action="catSide" data-value="player"')&&html.includes('data-action="catSide" data-value="encounter"')&&html.includes('data-action="catSide" data-value="both"'),'缺少玩家／战役／两者都三档分类');
+ assert(html.includes('data-action="catView" data-value="list"')&&html.includes('data-action="catView" data-value="art"'),'缺少名称／卡图视图切换');
+ const count=()=>e.run("Number($('#resultCount').textContent.match(/\\d+/)[0])");
+ assert.equal(e.run('catalogStats().total'),players+encounters,'卡池总数应为玩家卡与战役卡之和');
+ assert.equal(count(),players+encounters,'两者都时结果数应为全量');
+ const body=()=>e.run("$('#catalogResults').innerHTML");
+ assert(body().includes('玩家卡 · 领导')&&body().includes('遭遇卡 · 敌人'),'两者都视图应同时出现玩家卡与遭遇卡分组');
+ assert(body().includes('>探险卡<'),'探险卡应为独立类别分组');
+ /* 单侧分类 */
+ e.run(`catalogSide='player';render();`);
+ assert.equal(count(),players,'玩家分类应只含玩家卡');
+ assert(!body().includes('遭遇卡 · ')&&!body().includes('探险卡'),'玩家分类不应混入战役分组');
+ e.run(`catalogSide='encounter';render();`);
+ assert.equal(count(),encounters,'战役分类应只含遭遇卡与探险卡');
+ /* 按系列包（pod）筛选：基础版全部卡牌都属 Core Set，三类齐全 */
+ e.run(`catalogSide='both';podFilter='Core';render();`);
+ assert.equal((body().match(/class="cat-item"/g)||[]).length,players+encounters,'Core 包筛选应包含全部基础版卡牌');
+ assert(body().includes('玩家卡 · 领导')&&body().includes('遭遇卡 · 敌人')&&body().includes('探险卡'),'系列包筛选下应同时有玩家卡／遭遇卡／探险卡三个类别');
+ assert(e.run("$('#resultCount').textContent").includes(`玩家卡 ${players} / 遭遇卡 ${encounters-10} / 探险卡 10`),'计数应按三类拆分');
+ e.run(`podFilter='';render();`);
+ /* 关键词跨两类 */
+ e.run(`catalogSide='both';render();$('#search').value='蛛';filterCatalog();`);
+ const hit=count();
+ assert(hit>0&&hit<players+encounters,'关键词筛选未生效');
+e.run(`$('#search').value='';filterCatalog();`);
+ /* 卡图视图 */
+ e.run(`catalogView='art';render();`);
+ assert(body().includes('cat-figure'),'卡图视图应渲染卡图网格');
+ assert(body().includes('assets/cards-zh-core/'),'玩家卡应使用本地中文卡图');
+ e.run(`catalogView='list';render();`);
+ /* 每行带悬停卡图：列表本身不预载图片，悬停时才按 data-hover-src 取一张大图 */
+ e.run(`catalogSide='both';render();`);
+ assert(body().includes('data-hover-src="assets/cards-zh-core/01001.jpg"'),'玩家卡列表行应带悬停卡图');
+ assert(body().includes('data-hover-shape="tall"'),'玩家卡应标为竖版悬停卡图');
+ e.run(`catalogSide='encounter';render();`);
+ assert(body().includes('data-hover-shape="wide"'),'探险卡应标为横版悬停卡图');
+ /* 详情按需注入 */
+ const detail=e.run("catalogDetail('player','01001')");
+ assert(detail.includes('领导')&&detail.includes('01001'),'玩家卡详情应含球色与编号');
+ assert(detail.includes('assets/cards-zh-core/01001.jpg'),'玩家卡详情应含本地卡图');
+ assert(e.run("catalogDetail('encounter','96')").includes('暗影'),'遭遇卡详情应含暗影效果');
+ assert(e.run("catalogDetail('quest','119')").includes('B面'),'探险卡详情应含 B 面');
+ e.run(`$('#search').value='不存在的卡名xyz';filterCatalog();`);
+ assert(body().includes('没有匹配的卡牌'),'无结果时应给出空状态');
+});
+
+test('card library sidebar lists base library by default with reserved expansion entries',async()=>{
+ const e=environment();e.run(`catSection='base';tab='catalog';render();`);
+ const html=e.base.get('app').innerHTML;
+ assert(html.includes('class="catalog-layout"')&&html.includes('cat-side')&&html.includes('cat-main'),'卡牌库应为侧栏＋主区双栏布局');
+ assert(html.includes('aria-label="卡牌库系列导航"'),'侧栏缺 aria 标签');
+ assert(html.includes('data-section="base"')&&html.includes('>卡牌<'),'侧栏应有「卡牌」默认项');
+ assert(html.includes('data-section="base" aria-current="page"'),'基础卡牌库应为默认激活项');
+ /* 扩展条目动态来自产品目录，不是写死的占位 */
+ const revised=e.run('catalogNav().revised.length'),legacy=e.run('catalogNav().legacy.length');
+ assert(revised>=6,'新版扩展条目应来自产品目录（至少 6 个系列）');
+ assert(legacy>=15,'旧版扩展条目应来自 legacySeries（15 个大盒）');
+ assert(html.includes('data-action="catNav"')&&html.includes('安格玛觉醒'),'侧栏应列出扩展系列');
+ assert(html.includes('旧版扩展'),'旧版扩展应折叠在 details 里');
+ /* 点扩展条目 → 占位面板；返回 base → 恢复搜索与结果区 */
+ await e.click({action:'catNav',section:e.run("catalogNav().revised[0].id")});
+ const series=e.base.get('app').innerHTML;
+ assert(series.includes('尚未收录')&&series.includes('返回卡牌'),'扩展条目应显示占位面板');
+ assert(!series.includes('id="search"'),'系列详情不应显示卡牌搜索框');
+ await e.click({action:'catNav',section:'base'});
+ assert(seen(e,'id="search"')&&e.run("$('#resultCount')!==null&&$('#resultCount').textContent!==''"),'返回后应恢复搜索与结果区');
+ /* 在系列详情里输入过滤不应报错（#search 不存在时守卫生效） */
+ await e.click({action:'catNav',section:e.run("catalogNav().revised[0].id")});
+ e.run(`filterCatalog();`);
+ assert(true,'系列详情下 filterCatalog 应安全跳过');
+});
+
+test('deck builder replaces the old player-cards tab and uses the card library list',async()=>{
+ const e=environment();
+ /* 顶部只剩「我的卡组」，玩家卡不再单独占一个页签 */
+ e.run(`tab='decks';render();`);
+ const list=e.base.get('app').innerHTML;
+ assert(!list.includes('英雄与玩家牌'),'卡组页不应再指向已合并的玩家牌页签');
+ assert(list.includes('data-action="deckNew"'),'我的卡组应提供新建牌组入口');
+ await e.click({action:'deckNew'});
+ const html=e.base.get('app').innerHTML;
+ assert(html.includes('编辑牌组'),'新建牌组应进入构建器');
+ /* 列表是 filterCards 后写进 #pc-results 的，不在 #app 的一次性字符串里 */
+ const rows=()=>e.run("$('#pc-results').innerHTML");
+ assert.equal((rows().match(/class="build-row/g)||[]).length,e.run('PlayerUI.getSnapshot().cards.length'),'构建器应列出全部玩家卡');
+ assert(rows().includes('cat-group'),'构建器应按球色分组');
+ assert(rows().includes('build-count'),'构建器每行应显示当前张数');
+ assert(rows().includes('data-hover-src="assets/cards-zh-core/'),'构建器行应支持悬停看卡图');
+ /* 选英雄与加减牌都写进当前草稿，并由界面回显 */
+ const hero=e.run("PlayerUI.getSnapshot().cards.find(c=>c.type==='hero').code");
+ await e.click({action:'pc',pc:'hero',code:hero});
+ assert(seen(e,'1/3'),'选英雄后应显示 1/3 英雄');
+ const ally=e.run("PlayerUI.getSnapshot().cards.find(c=>c.type==='ally').code");
+ await e.click({action:'pc',pc:'plus',code:ally});
+ await e.click({action:'pc',pc:'plus',code:ally});
+ assert(rows().includes('build-count">2'),'加两张后应回显 2');
+ await e.click({action:'pc',pc:'minus',code:ally});
+ assert(rows().includes('build-count">1'),'减一张后应回显 1');
+ /* 返回卡组列表 */
+ await e.click({action:'pc',pc:'deckBack'});
+ assert(seen(e,'data-action="deckNew"'),'返回后应回到卡组列表');
+});
+/* ── 阶段竖图 + 结构化日志（v0.15.42） ─────────────────────────────── */
+test('log lines are parsed into round and phase, with guesses for legacy lines',()=>{const e=environment();const parse=(l,f)=>e.run(`JSON.stringify(PhaseLog.parse(${JSON.stringify(l)},${JSON.stringify(f)}))`);
+ /* §P4§ 是第五阶段（遭遇）；§P5§ 是第六阶段（战斗）——与引擎阶段名对应 */
+ assert.deepEqual(JSON.parse(parse('回合3 · §P4§兽人守卫翻出')),{round:3,phase:'encounter',text:'兽人守卫翻出'});
+ assert.deepEqual(JSON.parse(parse('回合3 · §P5§兽人守卫被击败')),{round:3,phase:'combat',text:'兽人守卫被击败'});
+ assert.deepEqual(JSON.parse(parse('回合2 · §P3.2§按顺序投入')),{round:2,phase:'travel',text:'按顺序投入'});
+ /* 旧存档没有阶段标记：按关键词归组，认不出时落到当前阶段 */
+ assert.equal(JSON.parse(parse('回合1 · 探险结算：意志6')).phase,'quest');
+ assert.equal(JSON.parse(parse('回合1 · 玩家1打出盟友「警戒者」')).phase,'planning');
+ assert.equal(JSON.parse(parse('回合1 · 某条无法判断的记录','combat')).phase,'combat');
+ assert.equal(JSON.parse(parse('')).round,0);});
+
+test('log undo maps each entry to the operation that produced it',()=>{
+ /* history[j] 是第 j 次操作之前的状态；marks 记录每次操作前后日志条数。
+    newest-first 下第 i 条日志出现前的条数 = total-1-i，落在哪次操作的 [before,after) 内即回退到它的 seq。 */
+ const e=environment();
+ const marks=[{seq:0,before:0,after:1},{seq:1,before:1,after:1},{seq:2,before:1,after:3},{seq:3,before:3,after:4}];
+ const at=(i,total)=>e.run(`PhaseLog.undoFor(${i},${total},${JSON.stringify(marks)})`);
+ assert.equal(at(3,4),0);   /* 最早一条 → 第 0 次操作 */
+ assert.equal(at(2,4),2);   /* 第 2 次操作一次写入两条，两条都回到 seq 2 */
+ assert.equal(at(1,4),2);
+ assert.equal(at(0,4),3);
+ /* 没有标记（旧存档 / 纯 DOM 环境）时不提供回退 */
+ assert.equal(e.run('PhaseLog.undoFor(0,4,null)'),null);
+ assert.equal(e.run('PhaseLog.undoFor(0,4,[])'),null);});
+test('desktop log panel renders the phase rail with colour-coded groups',async()=>{const e=environment();await opening(e);
+ const html=e.base.get('app').innerHTML;
+ assert(html.includes('class="phase-log"'),'右栏应渲染结构化日志面板');
+ assert(html.includes('class="phase-rail-v"'),'应渲染竖排阶段色带');
+ /* 竖轴是右栏顶层的一列（通高），不再是日志面板里的子块：
+    塞在 125px 的日志区里只能压到不可读，见 v0.15.43 的布局说明。 */
+ /* v0.15.45：牌堆/说明框移除，右栏就是「竖轴 + 日志」两列 */
+ assert(/<aside class="tabletop-rail"><div class="phase-rail-v"/.test(html),'竖轴须是右栏第一列');
+ assert(!html.includes('class="deck-rail"'),'牌堆栏应已移除');
+ assert(!html.includes('阶段与界面说明'),'说明折叠框应已移除');
+ /* 两级结构：7 个阶段头 + 20 条窗口编号（1.1 / 2.1 / 6.4 …） */
+ assert.equal((html.match(/class="rail-grp(?:\s|")/g)||[]).length,7,'竖轴须显示全部 7 个阶段');
+ assert(/class="rail-grp current"/.test(html),'当前阶段应整段高亮');
+ assert.equal((html.match(/rail-win-no/g)||[]).length,20,'全部阶段默认展开，须列出 20 条窗口');
+ assert(/class="rail-win hit"/.test(html),'当前窗口须点亮');
+ assert(html.includes('class="log-round"'),'日志须按回合分组');
+ assert(/class="log-entry tone-/.test(html),'日志条目须带阶段色调类');
+ /* 旧版纯文本 <p> 列表已移除 */
+ assert(!/table-log[\s\S]{0,40}<div><p>回合/.test(html),'不应再输出旧版纯文本日志');});
+
+test('clicking a log undo button restores the state before that operation',async()=>{const e=environment();await opening(e);
+ const steps=e.run('APP_LOG_MARKS().logMarks.length');
+ assert(steps>1,'开局后应有多步可回退操作');
+ const seq=e.run('APP_LOG_MARKS().logMarks.at(-1).seq');
+ const expectLog=e.run(`history[${seq}-APP_LOG_MARKS().base].log.length`);
+ await e.click({action:'undoLog',seq:String(seq)});
+ assert.equal(e.run('APP_LOG_MARKS().logMarks.length'),steps-1,'日志标记应同步截断');
+ assert.equal(e.run('state.log.length'),expectLog,'状态应回到该操作之前');
+ /* 无效序号不改变任何状态 */
+ const snap=e.run('JSON.stringify(state)');await e.click({action:'undoLog',seq:'9999'});
+ assert.equal(e.run('JSON.stringify(state)'),snap);});
+/* ── 日志显示范围（默认本回合，可切全部） ─────────────────────────── */
+test('log panel keeps only the stream: no scope switch, no "more" button',async()=>{const e=environment();await opening(e);
+ /* 造旧回合记录：日志 newest-first，旧回合必须排在现有记录之后（push），
+    否则会被后续本回合记录挤到队首之外，roundSpan 数不到本回合条目。 */
+ e.run(`state.log.push('回合1 · §P0§开局前记录');
+        state.log.push('回合2 · §P1§计划 · 玩家2抽取1张牌');`);
+ e.run('render()');
+ const html=e.base.get('app').innerHTML;
+ assert(html.includes('data-scope="round"'),'默认范围仍是本回合');
+ /* 右栏只留「竖轴 + 日志」两列：范围切换按钮与「更早 N 条」入口都不再渲染。 */
+ assert(!html.includes('log-scope-btn'),'不应再渲染范围切换按钮');
+ assert(!html.includes('data-action="logScope"'),'不应再派发 logScope 动作');
+ assert(!html.includes('log-more'),'不应再有「更早 N 条」按钮');
+ /* 旧记录的条数仍以纯文字告知，不需要按钮也能看懂还有多少。 */
+ assert(/另 \d+ 条更早/.test(html),'应以文字说明还有多少更早记录');
+ assert(!html.includes('回合 2'),'本回合视图不应渲染旧回合分组');});
+
+test('log count line reports the remaining older records as plain text',()=>{const e=environment();
+ /* 直接喂面板：本回合 2 条 + 更早 2 条，计数行须如实报出两者，且不依赖任何按钮。 */
+ const html=e.run(`PhaseLog.panel({phase:0,round:2,log:['回合2 · §P0§a','回合2 · §P0§b','回合1 · §P0§c','回合1 · §P0§d']},null,'round')`);
+ const m=/本回合 (\d+) 条 · 另 (\d+) 条更早/.exec(html);
+ assert(m,'应显示「本回合 N 条 · 另 M 条更早」');
+ assert.equal(Number(m[1]),2,'本回合条数须与实际一致');
+ assert.equal(Number(m[2]),2,'更早记录数须与实际一致');});
+
+test('log rounds are ordered newest first even when entries interleave',()=>{const e=environment();
+ e.run(`const s={phase:0,round:1,log:['回合2 · a','回合3 · b','回合2 · c','回合1 · d']};`);
+ const html=e.run(`PhaseLog.panel({phase:0,round:1,log:['回合2 · a','回合3 · b','回合2 · c','回合1 · d']},null,'all')`);
+ const order=[...html.matchAll(/log-round-head"><span>回合 (\d+)/g)].map(m=>m[1]);
+ assert.deepEqual(order,['3','2','1'],'回合分组须从新到旧，同回合不可被拆开');
+ assert.equal((html.match(/回合 2/g)||[]).length,1,'同一回合只应出现一个分组头');});
+
+test('phase rail lists every phase window and lights exactly the current one',()=>{const e=environment();
+ /* 竖轴窗口编号取自规则书「阶段与时机」图，引擎 step 必须能精确落到某一条上。 */
+ const cases=[
+  [0,null,'1.1'],[1,{planning:{completed:false}},'2.1'],[1,{planning:{completed:true}},'2.2'],
+  [2,{questing:{step:'beforeCommit'}},'3.1'],[2,{questing:{step:'staging'}},'3.2'],[2,{questing:{step:'afterResult'}},'3.3'],
+  [3,{traveling:{step:'choice'}},'4.1'],[3,{traveling:{step:'action'}},'4.2'],
+  [4,{encountering:{step:'optional'}},'5.1'],[4,{encountering:{step:'checks'}},'5.2'],[4,{encountering:{step:'afterChecks'}},'5.3'],
+  [5,{combat:{step:'enemyAction'}},'6.1'],[5,{combat:{step:'playerAction'}},'6.2'],[5,{combat:{step:'shadows'}},'6.3'],
+  [6,{refreshing:{step:'ready'}},'7.1']];
+ for(const [ph,extra,want] of cases){
+  const html=e.run(`PhaseLog.rail(${JSON.stringify({phase:ph,...(extra||{})})})`);
+  assert.equal((html.match(/rail-win hit/g)||[]).length,1,`阶段${ph} 只能点亮一个窗口`);
+  const hit=/rail-win hit[^>]*>\s*<span[^>]*><\/span>\s*<span class="rail-win-no">([\d.]+)/.exec(html)?.[1];
+  assert.equal(hit,want,`阶段${ph} ${JSON.stringify(extra)} 应点亮 ${want}`);
+ }
+ /* 结构完整性：7 个阶段色块恒定存在（竖轴不中断），窗口总数 20 */
+ const winTotal=e.run('PhaseLog.WINDOWS.reduce((n,g)=>n+g.windows.length,0)');
+ assert.equal(winTotal,20,'须定义全部 20 个窗口');
+ const all=e.run('PhaseLog.rail({phase:0})');
+ assert.equal((all.match(/rail-head/g)||[]).length,7,'须有 7 个阶段色块');
+ assert.equal((all.match(/rail-win-no/g)||[]).length,20,'默认全部展开，须列出 20 条窗口');
+ const nos=[...all.matchAll(/rail-win-no">([\d.]+)</g)].map(m=>m[1]);
+ assert.deepEqual(nos,nos.slice().sort((a,b)=>a.localeCompare(b,undefined,{numeric:true})),'窗口编号须按顺序排列');
+ /* 触发线语义：金/绿/红三类，缺一类都说明时机标注丢了 */
+ for(const t of ['trigger','action','forced'])assert(all.includes(`data-timing="${t}"`),`缺少 ${t} 类触发线`);});
+
+test('rail shows all seven phases and every window at once',()=>{
+ const e=environment();
+ /* 竖轴通高 360px，20×15px 刚好排满，与参考图的形态一致：一次看全，不折叠。 */
+ const r=e.run('PhaseLog.rail({phase:0})');
+ assert.equal((r.match(/rail-fold/g)||[]).length,0,'不应再有只写数字的折叠块');
+ assert.equal((r.match(/rail-win-no/g)||[]).length,20,'20 条窗口须一次看全');
+ assert.equal((r.match(/rail-grp/g)||[]).length,7,'7 个阶段全部列出');
+ /* 传 openSet 也只是历史参数，行为不变（不折叠） */
+ const withSet=e.run('PhaseLog.rail({phase:0},new Set([5]))');
+ assert.equal((withSet.match(/rail-fold/g)||[]).length,0,'openSet 不再引起折叠');
+ assert.equal((withSet.match(/rail-win-no/g)||[]).length,20,'窗口仍全部列出');
+ /* 全部展开：每个阶段头的 aria-expanded 都是 true */
+ for(let i=0;i<7;i++)assert(r.includes(`data-action="railPhase" data-phase="${i}" aria-expanded="true"`),`阶段${i} aria-expanded 须为 true`);});
+
+test('phase door sits under the character area and reports the real checklist',async()=>{
+ const e=environment();await opening(e);
+ const html=e.base.get('app').innerHTML;
+ assert(html.includes('data-action="endPhase"'),'角色卡区域下方应有结束阶段按钮');
+ assert(html.includes('phase-door'),'结束阶段应挂在 phase-door 区块里');
+ /* v0.15.59 起清单不再常驻展开，改为写进「结束阶段」按钮的 title（门的验收口）。
+    所以这里验证的是「清单内容确实可达」，而不是某个具体的容器类名。 */
+ assert(/title="[^"]*»?[^"]*结束「?/.test(html)||/title="[^"]*(必需操作|可以结束)/.test(html),'结束阶段按钮的 title 应说明本阶段还差什么');
+ /* 计划阶段刚开始：清单里应有每位玩家的「结束出牌」与「放弃剩余行动」 */
+ assert(html.includes('结束出牌'),'计划阶段清单须含结束出牌');
+ assert(html.includes('放弃剩余行动'),'计划阶段清单须含放弃剩余行动');
+});
+
+test('clicking the phase door ends every player turn then advances the phase',async()=>{
+ const e=environment();await opening(e);
+ assert.equal(e.run('state.phase'),1);
+ /* 2 人局：点一次只结束当前玩家出牌，点第二次才进探险阶段（与引擎一致） */
+ await e.click({action:'endPhase'});
+ await e.click({action:'endPhase'});
+ await e.click({action:'endPhase'});
+ assert(e.run('state.phase')>=2,'连续点击后应离开计划阶段');
+ assert(e.run('JSON.stringify(state.planning.finalPasses)').includes('0'),'计划阶段的让过必须真正写进状态');
+});
+
+test('phase door never advances past an unresolved encounter card',async()=>{
+ const e=environment();await opening(e);
+ /* 直接构造「探险阶段 · 探查中已翻开一张未结算的牌」 */
+ e.run(`{while(state.phase<2)E.endPhase(state);
+         for(const p of state.players)E.questing.pass(state,p.id);
+         E.questing.move(state);
+         for(const pid of state.questing.order)E.questing.submitDeployment(state,pid,[E.questing.eligible(state,pid)[0].uid]);
+         let g=0;while(state.questing.tasks.length&&g++<20){const sp=E.questing.spec(state,state.questing.tasks[0].id);E.questing.choose(state,sp.task.id,{skip:true});}
+         E.endPhase(state);E.questing.drawNext(state);
+         render();}`);
+ assert.equal(e.run('state.phase'),2);
+ assert(e.run('!!state.questing.current'),'应有一张未结算的遭遇牌');
+ const step=e.run('state.questing.step');
+ await e.click({action:'endPhase'});
+ assert.equal(e.run('state.questing.step'),step,'未结算遭遇牌时不得推进探险步骤');
+ assert(e.run('state.questing.current'),'未结算的遭遇牌必须还在');
+});
+
+module.exports={environment};

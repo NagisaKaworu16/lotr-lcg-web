@@ -368,7 +368,9 @@ $('#app').onclick=async ev=>{const b=ev.target.closest('[data-action]');if(!b||b
  if(a.startsWith('chooser')){await handleChooser(b);return;}
  if(a.startsWith('deck')){if(await PlayerUI.handleDecks(b))return;if(a==='deckGoSetup'){tab='table';render();return;}}
  if(a==='starterTest'){captureSetup();const idx=Math.min(Math.max(Number(b.dataset.player||0),0),setupDraft.players-1),next='starter-'+b.dataset.sphere,prior=setupDraft.decks[idx],other=setupDraft.decks.indexOf(next);if(other>=0&&other!==idx)setupDraft.decks[other]=prior;setupDraft.decks[idx]=next;if($('#pc-deck-'+idx))$('#pc-deck-'+idx).value=next;if(other>=0&&other!==idx&&$('#pc-deck-'+other))$('#pc-deck-'+other).value=prior;render();toast('已为玩家'+(idx+1)+'选择'+(b.dataset.name||'预组牌')+'；请选择剧本并点击开始远征。');return;}
- if(a==='keepHand'||a==='mulligan'){mutate(()=>E.openingChoice(state,pid,a==='mulligan'));return;}
+ if(a==='keepHand'||a==='mulligan'){mutate(()=>{E.openingChoice(state,pid,a==='mulligan');
+  /* v0.15.67：全员已确认起始手牌时自动执行剧本设置，不再需要额外点确认按钮。 */
+  if(state.players.every(p=>p.openingConfirmed))E.startScenario(state);});return;}
  if(a==='finishSetup'){mutate(()=>E.startScenario(state));return;}
  if(a==='setupDraw'){mutate(()=>E.setupRevealStep(state));return;}
  if(a==='setupResolve'){mutate(()=>E.setupRevealStep(state));return;}

@@ -6434,15 +6434,19 @@ if(typeof module!=='undefined')module.exports=CombatRulesFactory;
 </script><script>
 /* Refresh framework and distinct end-of-round triggers. */
 const RefreshRulesFactory=(H,R,Q)=>{
- const need=(v,m)=>{if(!v)throw Error(m);},alive=s=>s.players.filter(p=>!p.eliminated),x=s=>s.refreshing;
+ const need=(v,m)=>{if(!v)throw Error(m);},alive=s=>s.players.filter(p=>!p.eliminated),x=s=>s.refreshing,
+ /* v0.15.67：没有蛛网要支付的玩家没有决策点，视为已确认（空确认），不阻塞二次确认结算。 */
+ settled=s=>alive(s).every(p=>!webs(s,p.id).length||x(s).approvals.includes(p.id));
  const order=s=>alive(s).map(p=>p.id).sort((a,b)=>(a-s.first+s.players.length)%s.players.length-(b-s.first+s.players.length)%s.players.length);
  const log=(s,t)=>H.log(s,'刷新 · '+t,'P6');
  function check(s,step){need(s.phase===6&&x(s)?.round===s.round&&!x(s).completed&&s.status==='playing','当前没有进行中的刷新阶段');need(!s.pending.length&&!x(s).queue.length,'请先结算卡牌响应');if(step)need(x(s).step===step,'当前刷新步骤不允许此操作');}
- function start(s){need(s.phase===6&&s.combat?.completed,'请先完成战斗阶段');need(x(s)?.round!==s.round,'本回合刷新已初始化');const ids=order(s);s.refreshing={round:s.round,step:'ready',order:ids,index:ids.length,queue:[],tasks:[],finalPasses:[],approvals:[],payPlans:{},discussion:true,completed:false,closing:false};log(s,'先选择蛛网费用，全员确认后执行重置、威胁与先手轮换');}
+ function start(s){need(s.phase===6&&s.combat?.completed,'请先完成战斗阶段');need(x(s)?.round!==s.round,'本回合刷新已初始化');const ids=order(s);s.refreshing={round:s.round,step:'ready',order:ids,index:ids.length,queue:[],tasks:[],finalPasses:[],approvals:[],payPlans:{},discussion:true,completed:false,closing:false};log(s,'先选择蛛网费用，全员确认后执行重置、威胁与先手轮换');
+  /* v0.15.67：全员都无蛛网时没有决策点，直接结算；否则等待有蛛网的玩家确认。 */
+  if(alive(s).every(p=>!webs(s,p.id).length)){log(s,'没有需支付的蛛网费用，自动完成刷新确认');approve(s,s.first);}}
  function webs(s,pid){return R.chars(s).filter(c=>c.kind==='hero'&&c.controller===pid&&c.state.exhausted).map(c=>({...c,cost:2*s.conditions.filter(a=>a.id===80&&String(a.target)===String(c.uid)).length})).filter(c=>c.cost);}
  function valid(s,pid,ids){need(alive(s).some(p=>p.id===pid)&&Array.isArray(ids)&&new Set(ids.map(String)).size===ids.length,'无效玩家或重复英雄');for(const uid of ids){const c=webs(s,pid).find(c=>String(c.uid)===String(uid));need(c&&c.state.resources>=c.cost,'蛛网费用必须由该英雄支付，每张2资源');}}
- function propose(s,pid,ids){check(s,'ready');valid(s,pid,ids);x(s).payPlans[pid]=[...ids];x(s).approvals=[];}
- function approve(s,pid){check(s,'ready');need(alive(s).some(p=>p.id===pid)&&!x(s).approvals.includes(pid),'无效或重复确认');for(const p of alive(s))valid(s,p.id,x(s).payPlans[p.id]||[]);x(s).approvals.push(pid);if(!alive(s).every(p=>x(s).approvals.includes(p.id)))return;
+ function propose(s,pid,ids){check(s,'ready');valid(s,pid,ids);x(s).payPlans[pid]=[...ids];x(s).approvals=[];if(alive(s).length===1){log(s,'单人模式自动确认刷新方案');approve(s,pid);}}
+ function approve(s,pid){check(s,'ready');need(alive(s).some(p=>p.id===pid)&&!x(s).approvals.includes(pid),'无效或重复确认');for(const p of alive(s))valid(s,p.id,x(s).payPlans[p.id]||[]);x(s).approvals.push(pid);if(!settled(s))return;
   const oldFirst=s.first;
   for(const c of R.chars(s)){const cost=webs(s,c.controller).find(h=>h.uid===c.uid)?.cost||0;if(cost){if((x(s).payPlans[c.controller]||[]).some(uid=>String(uid)===String(c.uid))){c.state.resources-=cost;c.state.exhausted=false;}}else c.state.exhausted=false;c.state.committed=false;}
   for(const c of [...R.attaches(s),...R.enemies(s),...R.locations(s)])c.state.exhausted=false;
@@ -10261,7 +10265,7 @@ const WindowUI=(()=>{
 </script><script src="phase-log.js"></script><script>
 /* Tabletop view: UI drafts never pay, exhaust, reveal, or bypass phase validation. */
 /* 界面版本徽标唯一来源：须与 CHANGELOG.md 最新条目标题一致（planning-dom-tests 有校验）。 */
-const APP_VERSION='v0.15.66';
+const APP_VERSION='v0.15.67';
 /* ── 决策弹窗（v0.15.62）──────────────────────────────────────────────
    底部长住的那块阶段面板已经去掉（和角色区右上角的「结束阶段」重复，还白占一行高度）。
    需要玩家拍板的事不再常驻显示，改成「轮到你决定时才弹出来」。
@@ -11281,7 +11285,9 @@ $('#app').onclick=async ev=>{const b=ev.target.closest('[data-action]');if(!b||b
  if(a.startsWith('chooser')){await handleChooser(b);return;}
  if(a.startsWith('deck')){if(await PlayerUI.handleDecks(b))return;if(a==='deckGoSetup'){tab='table';render();return;}}
  if(a==='starterTest'){captureSetup();const idx=Math.min(Math.max(Number(b.dataset.player||0),0),setupDraft.players-1),next='starter-'+b.dataset.sphere,prior=setupDraft.decks[idx],other=setupDraft.decks.indexOf(next);if(other>=0&&other!==idx)setupDraft.decks[other]=prior;setupDraft.decks[idx]=next;if($('#pc-deck-'+idx))$('#pc-deck-'+idx).value=next;if(other>=0&&other!==idx&&$('#pc-deck-'+other))$('#pc-deck-'+other).value=prior;render();toast('已为玩家'+(idx+1)+'选择'+(b.dataset.name||'预组牌')+'；请选择剧本并点击开始远征。');return;}
- if(a==='keepHand'||a==='mulligan'){mutate(()=>E.openingChoice(state,pid,a==='mulligan'));return;}
+ if(a==='keepHand'||a==='mulligan'){mutate(()=>{E.openingChoice(state,pid,a==='mulligan');
+  /* v0.15.67：全员已确认起始手牌时自动执行剧本设置，不再需要额外点确认按钮。 */
+  if(state.players.every(p=>p.openingConfirmed))E.startScenario(state);});return;}
  if(a==='finishSetup'){mutate(()=>E.startScenario(state));return;}
  if(a==='setupDraw'){mutate(()=>E.setupRevealStep(state));return;}
  if(a==='setupResolve'){mutate(()=>E.setupRevealStep(state));return;}
