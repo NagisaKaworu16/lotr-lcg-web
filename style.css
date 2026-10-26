@@ -1463,32 +1463,16 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
 .window-panel.compact>.window-blocked>summary{color:#5c675a}
 .window-panel.compact>.window-blocked>summary:hover{color:#24392f}
 
-/* ── 18c. 决策弹窗（v0.15.62）─────────────────────────────────────────
-   底部那块常驻阶段面板已删：它和角色区右上角的「结束阶段」重复，还白占一行高度。
-   需要玩家拍板的事改成「轮到你决定时才出现」，不在时缩成桌面右上角一枚「待决定」角标。
-
-   层级要点：弹窗层 z-index 40，而 <dialog>（PlanningUI.form 的选目标/付资源）由浏览器放在
-   top layer，永远高于任何 z-index——所以内层不需要特殊处理，也不会被这里盖住。
-   pointer-events 只在有内容时开启，收起状态下不挡牌桌点击。 */
-.decide-layer{
- /* 位置由 JS 实测后写进 --decide-left / --decide-w（见 DecisionUI.place）。
-    原因：牌桌的「可点区」在哪一列随视口变——1440 宽时玩家区右缘 1017、日志轴从 1026 起，
-    弹窗贴右正好落在只读的日志上；缩到 1100 宽时两列都变窄，同一位置就会压住手牌与「结束阶段」。
-    写死任何一组数值都只对某几个分辨率成立，所以改成「先量再放」。 */
- position:fixed;inset:0;z-index:40;display:flex;align-items:flex-start;justify-content:flex-end;
- padding:88px 18px 16px;overflow:auto;
- /* 遮罩不拦截点击（pointer-events:none），只有弹窗本体收事件。
-    理由：这个弹窗不是「挡住你做别的事」，而是「把当前该你决定的事摆到眼前」——
-    探险投入要回牌桌点角色卡、打牌要按住手牌看牌文，全屏拦截会让这些动作做不了。
-    视觉上仍然压暗背景（径向渐变），视线自然会落到中间的框上。 */
- pointer-events:none;
- background:radial-gradient(ellipse at 50% 26%,#14291c00 0%,#14291c14 45%,#14291c3d 100%)}
-.decide-layer>.decide-box{pointer-events:auto}
-.decide-box{
- width:var(--decide-w,560px);max-height:calc(100vh - 110px);display:flex;flex-direction:column;
- background:#fffdf6;border:1px solid #c9b98a;border-radius:12px;
- box-shadow:0 24px 60px #14291c59;outline:none}
-.decide-box:focus-visible{box-shadow:0 24px 60px #14291c59,0 0 0 3px #c0a35a}
+/* ── 18c. 待决定面板（v0.15.69）──────────────────────────────────────
+   不再是浮层：待决定的内容就地渲染进手牌区「结束阶段」按钮所在的那一块，
+   标题在按钮下一行接着展开，玩家在同一个位置完成决定与推进行动。
+   内层的 <dialog>（PlanningUI.form 的选目标/付资源）仍在浏览器 top layer，
+   永远高于普通元素——不会被这里盖住。 */
+.decide-inline{
+ margin:10px 0 4px;background:#fffdf6;border:1px solid #c9b98a;border-radius:12px;
+ box-shadow:0 10px 30px #14291c26}
+.decide-inline .decide-head{
+ border-radius:11px 11px 0 0}
 .decide-head{
  display:flex;align-items:center;gap:12px;padding:13px 16px;
  border-bottom:1px solid #e2e5d9;background:#f4f1e4;border-radius:12px 12px 0 0}
