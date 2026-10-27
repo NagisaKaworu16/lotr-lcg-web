@@ -34,7 +34,7 @@ const WIDTH = arg('width', 1440);
   await page.locator('[data-action="ngNext"]').click(); await page.waitForTimeout(400);
   await page.locator('[data-action="chooserConfirm"]').click(); await page.waitForTimeout(800);
   for (const x of await page.locator('button[data-action="keepHand"]').all()) await x.click();
-  await page.locator('button[data-action="finishSetup"]').click();
+  {const fin=page.locator('button[data-action="finishSetup"]');if(await fin.count())await fin.click();};
   await page.waitForTimeout(500);
 
   add('进行中不显示计分面板', await page.locator('.score-panel').count() === 0);

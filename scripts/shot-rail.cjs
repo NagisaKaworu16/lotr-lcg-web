@@ -19,7 +19,7 @@ const FILE='file:///'+path.join(ROOT,'index.html').replace(/\\/g,'/');
  await p.locator('[data-action="ngNext"]').click(); await p.waitForTimeout(300);
  await p.locator('[data-action="chooserConfirm"]').click(); await p.waitForTimeout(700);
  for(const x of await p.locator('button[data-action="keepHand"]').all())await x.click();
- await p.locator('button[data-action="finishSetup"]').click();
+ {const fin=p.locator('button[data-action="finishSetup"]');if(await fin.count())await fin.click();};
  await p.waitForTimeout(800);
  const info=await p.evaluate(()=>{
   const rail=document.querySelector('.phase-rail-v'),hit=document.querySelector('.rail-win.hit');

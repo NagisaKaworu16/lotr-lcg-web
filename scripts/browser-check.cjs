@@ -66,9 +66,11 @@ let browser;
     await el.click(); idle = 0; await page.waitForTimeout(380); return true;
   };
   /* 兜底：智能/强制窗口的选项按钮（卡名目标、响应选项、关闭窗口等）。
-     排除回退／详细模式／重置等危险或不推进流程的按钮。 */
+     排除回退／详细模式／重置等危险或不推进流程的按钮。
+     v0.15.77：扫描范围扩到整个 PANEL——战斗响应窗口等选项在 .decide-box 里，
+     只扫 .operation-content 会漏点导致 stall（2026-10-27 实测防御响应窗口卡死）。 */
   const windowOption = async () => {
-    const els = page.locator('.operation-content button:not([disabled])');
+    const els = page.locator(`${PANEL} button:not([disabled])`);
     const n = await els.count();
     for (let k = 0; k < n; k++) {
       const t = (await els.nth(k).textContent() || '').trim();

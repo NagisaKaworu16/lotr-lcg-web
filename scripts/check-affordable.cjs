@@ -71,7 +71,7 @@ const handState = page => page.evaluate(() => {
     if (!hit) break;
     await page.waitForTimeout(160);
   }
-  await page.locator('button[data-action="finishSetup"]').click();
+  {const fin=page.locator('button[data-action="finishSetup"]');if(await fin.count())await fin.click();};
   await page.waitForTimeout(800);
 
   /* 建局后自动落在计划阶段（资源阶段已自动结算）；保险起见再推一下 */

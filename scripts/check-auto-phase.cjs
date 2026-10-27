@@ -17,7 +17,7 @@ const {chromium}=require('playwright-core'),path=require('path'),ROOT=path.join(
  await p.locator('[data-action="ngNext"]').click();await p.waitForTimeout(300);
  await p.locator('[data-action="chooserConfirm"]').click();await p.waitForTimeout(700);
  for(let i=0;i<8;i++){const n=await p.evaluate(()=>{const b=document.querySelector('button[data-action="keepHand"]:not([disabled])');if(b){window.clk(b);return 1}return 0});if(!n)break;await p.waitForTimeout(160);}
- await p.locator('button[data-action="finishSetup"]').click();await p.waitForTimeout(700);
+ {const fin=p.locator('button[data-action="finishSetup"]');if(await fin.count())await fin.click();};await p.waitForTimeout(700);
 
  await p.evaluate(()=>{const t=window.toast;window.toast=m=>{window.__lastToast=String(m);return t&&t(m)}});
  const ev=async fn=>{const r=await p.evaluate(fn);await p.waitForTimeout(260);return r};

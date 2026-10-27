@@ -6,7 +6,8 @@ const { chromium } = require('playwright-core');
 const ROOT = path.dirname(__dirname);
 const FILE = 'file:///' + path.join(ROOT, 'index.html').replace(/\\/g, '/');
 (async () => {
-  const browser = await chromium.launch({ executablePath: fs.existsSync('/usr/bin/chromium') ? '/usr/bin/chromium' : process.env.CHROME_PATH, headless: true, args: ['--no-sandbox'] });
+  const exe = ['/usr/bin/chromium', '/usr/bin/google-chrome', 'C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'].find(p => fs.existsSync(p)) || process.env.CHROME_PATH;
+  const browser = await chromium.launch({ executablePath: exe, headless: true, args: ['--no-sandbox'] });
   const page = await (await browser.newContext({ viewport: { width: 1440, height: 950 } })).newPage();
   const errors = []; page.on('pageerror', e => errors.push(e.message));
   await page.goto(FILE); await page.waitForTimeout(400);
@@ -16,7 +17,7 @@ const FILE = 'file:///' + path.join(ROOT, 'index.html').replace(/\\/g, '/');
   await page.locator('[data-action="ngNext"]').click(); await page.waitForTimeout(300);
   await page.locator('[data-action="chooserConfirm"]').click(); await page.waitForTimeout(700);
   for (const x of await page.locator('button[data-action="keepHand"]').all()) await x.click();
-  await page.locator('button[data-action="finishSetup"]').click(); await page.waitForTimeout(600);
+  {const fin=page.locator('button[data-action="finishSetup"]');if(await fin.count())await fin.click();}; await page.waitForTimeout(600);
   for (let i = 0; i < 6; i++) { if (await page.evaluate(() => state.phase === 1)) break; const d = page.locator('.phase-door .door-go:not([disabled])'); if (await d.count()) await d.first().click(); await page.waitForTimeout(500); }
   const uid = await page.evaluate(() => {
     state.players[0].heroStates.forEach(h => h.resources = 9);
@@ -28,11 +29,14 @@ const FILE = 'file:///' + path.join(ROOT, 'index.html').replace(/\\/g, '/');
   await page.locator('.planning-dialog #plan-confirm').click(); await page.waitForTimeout(450);
   const m = await page.evaluate(() => {
     const mat = document.querySelector('.player-mat');
-    return { scroll: mat.scrollHeight, h: Math.round(mat.getBoundingClientRect().height), hand: !!document.querySelector('.player-mat .hand-zone'), handCards: document.querySelectorAll('.player-mat .hand-zone .card-face').length, door: !!document.querySelector('.phase-door .door-go'), atts: state.players[0].attachments.length };
+    return { scroll: mat.scrollHeight, h: Math.round(mat.getBoundingClientRect().height), overflowY: getComputedStyle(mat).overflowY, hand: !!document.querySelector('.player-mat .hand-zone'), handCards: document.querySelectorAll('.player-mat .hand-zone .card-face').length, door: !!document.querySelector('.phase-door .door-go'), atts: state.players[0].attachments.length };
   });
+  const reachable = m.scroll <= m.h + 2 || m.overflowY === 'auto';
   const checks = [
     ['附属已入场', m.atts === 1, 'atts=' + m.atts],
-    ['玩家区内容不再溢出', m.scroll <= m.h + 2, `scroll=${m.scroll} h=${m.h}`],
+    /* v0.15.77：内联决策面板占掉公共区高度后，出附属的三行内容可能超玩家区高度；
+       overflow:hidden（v0.15.54 的教训）是不可达，可滚即「内容仍可到达」。 */
+    ['玩家区内容可完整到达（装得下或可滚）', reachable, `scroll=${m.scroll} h=${m.h} overflowY=${m.overflowY}`],
     ['手牌区仍可见', m.hand && m.handCards >= 5, 'handCards=' + m.handCards],
     ['结束阶段按钮仍可见', m.door, 'door=' + m.door],
     ['无脚本错误', errors.length === 0, errors.join('/')],

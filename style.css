@@ -588,6 +588,10 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
 
 /* ── 4. 各区独立滚动，页面不滚 ───────────────────────────────────── */
 .public-table,.player-mat{min-height:0;overflow:hidden;display:flex;flex-direction:column}
+/* v0.15.77：玩家区兜底可滚——决策面板内联（v0.15.76）占掉公共区高度后，
+   出附属的三行内容可能超过玩家区可用高度；overflow:hidden 会把手牌下缘直接裁掉
+   （不可达），可滚是「内容仍可到达」的底线。 */
+.player-mat{overflow-y:auto;overflow-x:hidden}
 .tabletop-rail{min-height:0;overflow:hidden;display:grid;gap:10px;
  /* v0.15.50：阶段竖轴与日志合并为同一个框体——竖轴在左、日志贴右，
     外层 rail 统一提供边框与底色，内部不再各自套框。 */
@@ -1530,6 +1534,16 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
 .decide-list{list-style:none;margin:10px 0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
 .decide-list li{padding:3px 9px;border:1px solid #d8dcd0;border-radius:5px;font-size:13px;background:#f2f1e7;color:#7c8674}
 .decide-list li.ok{border-color:#a8c2a1;background:#eef4e9;color:#40603a}
+/* ── 18d. 开局起始手牌按钮条（v0.15.77）──────────────────────────────
+   开局面板退役后只留两个按钮，贴在手牌区上方（看到谁的手牌按钮就是谁的；
+   放上方而非下方——空间不足时优先保操作入口可见，被推的是手牌）。
+   该玩家选择过之后整条变为一句状态说明；全员确认由引擎自动执行剧本设置。 */
+.opening-inline{
+ display:flex;align-items:center;flex-wrap:wrap;gap:10px;
+ margin:10px 0 0;padding:8px 12px;
+ border:1px dashed #c9b98a;border-radius:10px;background:#faf7ec}
+.opening-inline button{flex:0 0 auto}
+.opening-inline.done{border-style:solid;border-color:#d8dcd0;background:transparent}
 
 /* 顶部操作条：内容为空时整条收成一行摘要。
    .operation-content 本身已有 :empty{display:none}，这里再把标题行的内边距收窄、

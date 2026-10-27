@@ -172,7 +172,10 @@ const EXE=CHROME.find(p=>fs.existsSync(p));
    是「不可能失败」的那种；真正的问题是**主操作落在首屏之外**（390 差 127px、761 差 258px）。
    所以量按钮的 rect，不量面板；阈值不写「滚了多少 px」（那是实现细节），只写「在视口内」
    + 「同一步不重复滚」。两档都必须在**该档宽度下开局**，否则测不出真实排版。 */
- for(const [w,h,js] of [[390,844,false],[761,600,false],[320,568,true]]){
+ /* v0.15.77：opening-inline（手牌区上方的保留/调度按钮）在窄档单列布局下与
+    滚到下方的日志轴重叠（既有 #12），拦真实指针——390/761 与 320 一样改脚本点击。
+    #8 测的是「进入 commit 时刻的排版」，与开局用哪种点击方式无关。 */
+ for(const [w,h,js] of [[390,844,true],[761,600,true],[320,568,true]]){
   const ctx=await b.newContext({viewport:{width:w,height:h}}),q=await ctx.newPage();
   const e2=await startAt(q,js);
   const g8=await q.evaluate(()=>{

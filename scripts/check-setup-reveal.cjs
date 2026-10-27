@@ -51,7 +51,7 @@ const WIDTH = arg('width', 1440);
   }
   for (const x of await page.locator('button[data-action="keepHand"]').all()) await x.click();
   await page.waitForTimeout(200);
-  await page.locator('button[data-action="finishSetup"]').click();
+  {const fin=page.locator('button[data-action="finishSetup"]');if(await fin.count())await fin.click();};
   await page.waitForTimeout(700);
   // 开局翻牌后可能登记「人工结算」事项（例如翻出威胁≥35才生效的诡计），点掉才不会挡住下一步。
   const clearPending = async (rounds = 6) => {
@@ -67,7 +67,11 @@ const WIDTH = arg('width', 1440);
   const hasPanel = await panel.count() > 0;
   add('安都因开局出现逐张翻牌面板', hasPanel, hasPanel ? '' : '未找到 .setup-flow');
   const title = hasPanel ? await panel.innerText() : '';
-  add('面板说明每位玩家各翻1张', /每位玩家各1张/.test(title), title.split('\n')[0] || '');
+  /* v0.15.77 修正：① 塔型剧本（安都因）标题写「每张目标各1张」，非塔型写「每位玩家各1张」；
+     ② v0.15.76 起面板内联 .decide-box，其 panel-title h2 被 .decide-body 的防重复规则
+     display:none——innerText 不含隐藏文本，改用 textContent 取标题。 */
+  const h2text = hasPanel ? await panel.locator('h2').first().textContent().catch(() => '') : '';
+  add('面板说明每位玩家各翻1张', /每张目标各1张|每位玩家各1张/.test(h2text), (h2text || title.split('\n')[0] || '').trim());
   add('未翻开前不出现取消按钮', await page.locator('[data-action="setupCancel"]').count() === 0);
 
   // 逐张翻开并结算，记录每一步的取消按钮数量

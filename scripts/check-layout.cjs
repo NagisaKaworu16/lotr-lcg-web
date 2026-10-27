@@ -33,7 +33,7 @@ const near = (a, b, tol = 1) => Math.abs(a - b) <= tol;
   await page.locator('[data-action="chooserConfirm"]').click();
   await page.waitForTimeout(700);
   for (const x of await page.locator('button[data-action="keepHand"]').all()) await x.click();
-  await page.locator('button[data-action="finishSetup"]').click();
+  {const fin=page.locator('button[data-action="finishSetup"]');if(await fin.count())await fin.click();};
   await page.waitForTimeout(700);
 
   const geo = await page.evaluate(() => {

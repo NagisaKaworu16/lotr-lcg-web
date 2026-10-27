@@ -1,6 +1,6 @@
 {
  "width": 1440,
- "at": "2026-10-27T08:48:31.582Z",
+ "at": "2026-10-27T09:20:23.723Z",
  "ok": true,
  "checks": [
   {
@@ -36,7 +36,7 @@
   {
    "name": "操作栏标题显示当前任务与阶段",
    "ok": true,
-   "detail": "打出卡牌或使用行动 | MIDDLE-EARTH EXPEDITION · V0.15.76 | 结算计划阶段结束"
+   "detail": "打出卡牌或使用行动 | MIDDLE-EARTH EXPEDITION · V0.15.77 | 结算计划阶段结束"
   },
   {
    "name": "能到达探险投入步骤",
@@ -81,7 +81,7 @@
   {
    "name": "操作栏提示二次确认进度",
    "ok": true,
-   "detail": "名单已就绪 · 等待二次确认（0/2） | 玩家1 · 待确认 | 玩家2 · 待确认 | MIDDLE-EARTH EXPEDITION · V0.15.76 :: 玩家1 · 待确认 | 玩家2 · 待确认"
+   "detail": "名单已就绪 · 等待二次确认（0/2） | 玩家1 · 待确认 | 玩家2 · 待确认 | MIDDLE-EARTH EXPEDITION · V0.15.77 :: 玩家1 · 待确认 | 玩家2 · 待确认"
   },
   {
    "name": "二次确认收成单颗「确认派遣」",
@@ -116,7 +116,7 @@
   {
    "name": "投入后的强制效果被接管为当前任务",
    "ok": true,
-   "detail": "tasks=1 dock=选择强制效果目标 | MIDDLE-EARTH EXPEDITION · V0.15.76"
+   "detail": "tasks=1 dock=选择强制效果目标 | MIDDLE-EARTH EXPEDITION · V0.15.77"
   },
   {
    "name": "无脚本错误",
