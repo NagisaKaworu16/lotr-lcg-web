@@ -1,3 +1,13 @@
+# v0.15.75 · 对局 HUD 上移导航栏 + 玩家区三行分区：附属区→角色区→手牌区（2026-10-27）
+
+- **对局 HUD（方案 A 落地）**：`shell.html` 的 header 末尾新增静态容器 `.game-hud#gameHud`；`app.js` 新增 `syncGameHUD()`（render() 尾部同步，不另起渲染路径），仅在「对局页签 + 对局进行中 + 真实牌桌（heroStates 齐）」时显示。内容=剧本名＋回合/人数/难度/当前阶段＋**玩家页签**（威胁/资源/伤害汇总、起始/淘汰标记，选择器仍是 `.player-tabs`）＋「重新选择剧本」。header 在 `#app` 之外，点击委托不到——把 `$('#app').onclick` 的大箭头提为具名 `handleAction(ev)`，`#app` 与 `#gameHud` 共用同一个分发器。
+- **`.expedition-title` 标题条整行移除**（约 38px+margins 归还牌桌）：`DesktopUI.hudHTML(s,p)` 承接其全部信息，导出供 app.js 调用；操作条保留为单行 sticky（任务提示＋等待 chips＋阶段＋推进按钮）。
+- **bottom-deck 三行分区**（用户指定顺序）：附属区（`.own-attachments`，仅在有附属时渲染）→ 角色区（`.own-characters`，英雄+盟友）→ 手牌区（`.hand-zone`）。附属卡用 72px 紧凑幅面（画幅 424/500 裁切），比角色行矮约 60px；`DecisionUI.place()` 的可点元素测量集合加入 `.own-attachments`。
+- **脚本迁移**：browser-check 的 reset 选择器 `.expedition-title button…` → `.game-hud button…`；check-onescreen 的 landmark `.expedition-title` → `.game-hud`。`.player-tabs` 选择器在六个脚本中原样有效（HUD 保留类名）。
+- **开局阻塞 bug（本版关键修复）**：`hudHTML` 引用了 `tableHTML` 内的局部 `const tabStats`——浏览器里开局链路 `chooserConfirm → mutate → render → syncGameHUD → hudHTML` 抛 `ReferenceError: tabStats is not defined`，被 `mutate` 的 catch 吞掉并把 `state` 回滚为 null，表现为「点开始远征后桌面无反应」（toast 有提示但一闪而过）。CI 全绿是因为测试假 DOM 没有 `#gameHud`，`syncGameHUD` 在 `hudHTML` 之前就提前返回——**真实浏览器独有路径，教训：新渲染函数被 syncGameHUD 这类「先改 hidden 再 innerHTML」的调用包裹时，CI 盲区在容器缺失分支**。修复：`tabStats(s,o)` 提升为模块级函数（显式接收 s）；新增回归测试直接调用 `DesktopUI.hudHTML` 抓同步异常。
+- **测试**：478 项 CI 全绿。浏览器实测（1440×950）：开局全链路恢复（chooserConfirm 后 state 正常、无 toast 异常、无 console/pageerror）；三行纵向顺序 att(585)<chars(589)<hand(753) 正确、手牌底 897≤950 全部 7 张视口内可点、点手牌正常弹「选择目标与支付资源」；HUD 对局外 hidden、对局中显示（剧本名/回合/难度/阶段/页签/reset 齐全）、无任何报错。
+
+
 # v0.15.74 · 出牌阶段去弹窗：阶段控制收进「结束阶段」旁按钮条；删盟友/附属大画廊，手牌区恢复常显（2026-10-27）
 
 - **问题 1（手牌区消失）**：`PlanningUI.board(p)` 在 bottom-deck 里渲染「盟友区／附属区」整卡画廊——一旦打出盟友或附属，画廊把 `.hand-zone` 推出锁高视口（实测 1440×950 出一张盟友后 hand.top=1226 > 950，页面 `overflow:hidden` 不可滚，手牌完全不可见不可点）。画廊与角色行的桌面卡完全重复（v0.15.64 的注释早就记录过「空态占 265px 把手牌挤出 bottom-deck」）。**整块删除** `PlanningUI.board`；盟友继续由 `.own-characters` 的角色卡渲染（属性代币/伤害/资源/能力按钮齐全），附属继续由附属卡渲染（「附于 X」+ 能力按钮）。实测出盟友后手牌 6/6 全部在视口内可点。

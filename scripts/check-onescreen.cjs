@@ -39,7 +39,7 @@ const W = arg('width', 1440), H = arg('height', 900);
       bodyH: Math.round(document.body.scrollHeight),
       header: g('header'),
       table: g('.desktop-table'),
-      title: g('.expedition-title'),
+      title: g('.game-hud'),
       dock: g('.operation-dock'),
       dockContent: g('.operation-content'),
       layout: g('.tabletop-layout'),

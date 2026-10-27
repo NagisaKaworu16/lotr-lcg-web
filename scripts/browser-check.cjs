@@ -288,7 +288,7 @@ let browser;
 
   // ============ 4人 都尔哥多 @1920 + 长手牌 ============
   await page.setViewportSize({ width: 1920, height: 1080 });
-  await page.locator('.expedition-title button[data-action="desktop"][data-desktop="reset"]').click();
+  await page.locator('.game-hud button[data-action="desktop"][data-desktop="reset"]').click();
   await page.waitForTimeout(400);
   await startGame(4, '逃离多尔哥多');
   note('start-4p', await page.evaluate(() => state.players.length === 4), { scenario: await page.evaluate(() => state.scenario) });

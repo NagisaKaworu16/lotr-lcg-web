@@ -378,14 +378,14 @@ function render(){captureSetup();document.querySelectorAll('nav button').forEach
     派遣面板输出的键：quest-actor-<pid> / quest-commit-<uid> / quest-submit /
     quest-withdraw / quest-approve / quest-unapprove。 */
  const focusKey=document.activeElement&&document.activeElement.dataset?String(document.activeElement.dataset.focusKey||''):'';
- $('#app').innerHTML=tab==='table'?(deckChooser?chooserPage():table()):tab==='decks'?(PlayerUI.isBuilding()?PlayerUI.builder():PlayerUI.decksPage()):tab==='catalog'?catalog():help();$('#undo').disabled=!history.length;$('#export').disabled=!state;if(tab==='table'&&state&&$('#hand-player'))$('#hand-player').onchange=ev=>{handView=Number(ev.target.value);render();};if(tab==='table'&&state&&$('#planning-actor'))$('#planning-actor').onchange=ev=>{handView=Number(ev.target.value);render();};if(tab==='table'&&state)QuestUI.bind();if(tab==='table'&&!state)bindSetup();if(tab==='decks'){PlayerUI.bindDecks();PlayerUI.bind();}ImageLibrary.bindErrors(document.querySelector('#app'));if(tab==='catalog'){filterCatalog();const si=$('#search');if(si)si.oninput=filterCatalog;const pf=$('#podFilter');if(pf)pf.onchange=()=>{podFilter=pf.value||'';render();};}trackView();showDrawToast();if(tab==='table'&&state)DecisionUI.place();if(focusKey){const back=document.querySelector('[data-focus-key="'+focusKey.replace(/"/g,'')+'"]');if(back&&typeof back.focus==='function')back.focus({preventScroll:true});}
+ $('#app').innerHTML=tab==='table'?(deckChooser?chooserPage():table()):tab==='decks'?(PlayerUI.isBuilding()?PlayerUI.builder():PlayerUI.decksPage()):tab==='catalog'?catalog():help();$('#undo').disabled=!history.length;$('#export').disabled=!state;if(tab==='table'&&state&&$('#hand-player'))$('#hand-player').onchange=ev=>{handView=Number(ev.target.value);render();};if(tab==='table'&&state&&$('#planning-actor'))$('#planning-actor').onchange=ev=>{handView=Number(ev.target.value);render();};if(tab==='table'&&state)QuestUI.bind();if(tab==='table'&&!state)bindSetup();if(tab==='decks'){PlayerUI.bindDecks();PlayerUI.bind();}ImageLibrary.bindErrors(document.querySelector('#app'));if(tab==='catalog'){filterCatalog();const si=$('#search');if(si)si.oninput=filterCatalog;const pf=$('#podFilter');if(pf)pf.onchange=()=>{podFilter=pf.value||'';render();};}trackView();showDrawToast();if(tab==='table'&&state){DecisionUI.place();syncGameHUD();}else syncGameHUD();if(focusKey){const back=document.querySelector('[data-focus-key="'+focusKey.replace(/"/g,'')+'"]');if(back&&typeof back.focus==='function')back.focus({preventScroll:true});}
  /* #8：步骤变了才给一次对齐机会。放在焦点恢复之后——focus({preventScroll:true}) 不滚动，
     这里再滚不会被它顶回去。 */
  const qstep=tab==='table'&&state&&state.questing&&state.phase===2?state.questing.step:null;
  if(qstep!==lastScrolledStep){lastScrolledStep=qstep;if(qstep==='commit')scrollMainActionIntoView();}}
 async function choose(title,body,read){return new Promise(resolve=>{let d=document.createElement('dialog');d.innerHTML=`<h2>${enc(title)}</h2><div>${body}</div><div class="actions"><button class="primary" id="ok">确认</button><button id="cancel">取消</button></div>`;document.body.append(d);d.showModal();d.querySelector('#ok').onclick=()=>{let v=read(d);d.close();d.remove();resolve(v);};d.querySelector('#cancel').onclick=()=>{d.close();d.remove();resolve(null);};d.oncancel=()=>{d.remove();resolve(null);};});}
 function playerOptions(){return state.players.filter(p=>!p.eliminated).map(p=>`<option value="${p.id}">${enc(p.name)}</option>`).join('');}
-$('#app').onclick=async ev=>{const b=ev.target.closest('[data-action]');if(!b||b.disabled)return;const a=b.dataset.action,uid=Number(b.dataset.uid),id=Number(b.dataset.id),pid=Number(b.dataset.player);
+async function handleAction(ev){const b=ev.target.closest('[data-action]');if(!b||b.disabled)return;const a=b.dataset.action,uid=Number(b.dataset.uid),id=Number(b.dataset.id),pid=Number(b.dataset.player);
  if(a==='decide'){DecisionUI.handle(b.dataset.decide);return;}
  if(a==='desktop'){DesktopUI.handle(b);return;}
  if(a==='logScope'){const v=b.dataset.scope;if(!['round','all'].includes(v))return;logScope=v;render();return;}
@@ -438,7 +438,15 @@ $('#app').onclick=async ev=>{const b=ev.target.closest('[data-action]');if(!b||b
  if(a==='endPhase'){mutate(()=>{const r=E.endPhase(state),said=r.steps.filter(Boolean);if(state.phase===2&&state.questing)E.questing.enableDiscussion(state);toast(said.length?said.join(' · '):'本阶段还有必须由你处理的事项，见角色卡下方的清单。');});if(state&&state.status==='playing'){const p=E.planning.active(state);if(p!==null&&p!==undefined)handView=p;}return;}
  const handlers={next:()=>{E.nextPhase(state);if(state.phase===2&&state.questing)E.questing.enableDiscussion(state);const p=E.planning.active(state);if(p!==null&&p!==undefined)handView=p;},stage:()=>E.stage(state),advance:()=>E.advance(state),questResult:()=>E.resolveQuest(state,+$('#willpower').value),checks:()=>E.encounterChecks(state),shadows:()=>E.shadows(state),shadow:()=>E.revealShadows(state,uid),defeat:()=>E.defeat(state,uid),returnEnemy:()=>E.returnEnemy(state,uid),returnObjective:()=>E.returnObjective(state,uid),rescue:()=>E.rescue(state,id),resolve:()=>E.resolve(state,id,$('#choice-'+id)?.value),threat:()=>{E.adjustThreat(state,state.players[pid],Number(b.dataset.n));},discardCondition:()=>{let i=state.conditions.findIndex(c=>c.uid===uid);if(i>=0)state.discard.push(...state.conditions.splice(i,1));}};
  if(handlers[a])mutate(handlers[a]);
-};
+}
+/* v0.15.75：对局 HUD 的点击走同一个分发器（header 在 #app 外，委托不到）。 */
+$('#app').onclick=ev=>handleAction(ev);
+const gameHud=$('#gameHud');
+if(gameHud)gameHud.onclick=ev=>handleAction(ev);
+/* v0.15.75：syncGameHUD——对局 HUD 渲染进顶部导航栏（shell.html 静态容器）。
+   只在「对局页签 + 对局进行中 + 真实牌桌」时显示；每次 render() 同步一次，
+   不另起渲染路径（HUD 内的按钮 data-action 与牌桌共用一套分发）。 */
+function syncGameHUD(){if(!gameHud||!gameHud.innerHTML&&gameHud.hidden===undefined)return;const show=tab==='table'&&state&&state.status==='playing'&&state.players.every(p=>p.heroStates);if(!show){gameHud.hidden=true;gameHud.innerHTML='';return;}gameHud.hidden=false;gameHud.innerHTML=DesktopUI.hudHTML(state,state.players[handView]||state.players[0]);}
 const decksTab=$('#decksTab');if(decksTab)decksTab.onclick=()=>{tab='decks';render();};
 $('#tableTab').onclick=()=>goHome();$('#catalogTab').onclick=()=>{tab='catalog';render();};$('#helpTab').onclick=()=>{tab='help';render();};
 /* 页签上的卡池数量原为 shell.html 里写死的 55，卡池一扩就骗人，这里按数据回填。 */

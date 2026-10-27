@@ -670,3 +670,14 @@ test('quest deployment panel: after everyone submits the door waits for the seco
  assert(/id="quest-rules"/.test(locked),'D 态仍保留规则折叠——只读时更需要查规则');
  assert(!locked.includes('quest-main-action')&&!locked.includes('data-quest="commit"')&&!locked.includes('data-quest="approveDeployment"'),'D 态不渲染任何派遣按钮');
 });
+test('game HUD renders without internal references breaking the opening flow',async()=>{/* v0.15.75 回归：hudHTML 曾引用 tableHTML 内的局部 tabStats，
+  浏览器里开局 mutate→render→syncGameHUD 抛 ReferenceError，被 mutate 的 catch
+  吞掉并把 state 回滚为 null（CI 假 DOM 无 #gameHud 时 syncGameHUD 提前返回，
+  所以既有测试全绿）。直接调用 hudHTML 抓同步异常。 */
+ const e=environment();await opening(e);
+ const hud=e.run('DesktopUI.hudHTML(state,state.players[handView]||state.players[0])');
+ assert(hud.includes('hud-name'),'HUD 应有剧本名');
+ assert(hud.includes('tab-stats'),'HUD 应有玩家状态汇总');
+ assert(hud.includes('data-desktop="reset"'),'HUD 应有重新选择剧本入口');
+ assert(hud.includes('data-desktop="view"'),'HUD 应有玩家页签');
+});
