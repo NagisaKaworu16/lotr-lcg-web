@@ -1,3 +1,10 @@
+# v0.15.76 · 决策弹窗退役：全部待决定事项内联公共桌面顶部（2026-10-27）
+
+- **用户指令**：把浮动决策弹窗完全移除显示，其功能（开局保留手牌/整手调度、目标与附属选择、各阶段事项等）直接放在公共桌面上。
+- **`DecisionUI` 重构**：`html(s,pid)` 从「浮动层 + 收起角标」两态改为单一内联面板——`<section class="decide-box" role="region">`（`.decide-head` 标题 + `.decide-body` 内容），渲染为 `.public-table` 的第一个子块（探险区上方）。`pending()` 五 kind（opening/setup/select/phase/window）判定逻辑不变。**随之删除**：`.decide-layer` 浮动骨架、`.decide-badge` 收起角标、`.decide-x` 收起按钮、Esc 监听、resize 监听、`place()` 实测定位（约 60 行几何代码）、`openKind/lastKey` 开合状态机、`handle/sync/reset/isOpen` 导出；app.js 对应删掉 `DecisionUI.sync/reset/place/handle` 四处调用。**类名沿用** `.decide-box/.decide-body`：六个验收脚本的 PANEL 选择器与既有测试（decide-box 切片断言）零改动。
+- **取舍**：面板占公共桌面顶部一行高度（有事项时），探险区整体下移——这是「放桌面」的本来代价；换来的是事项常驻可见、永不遮挡手牌/角色卡/探查区、不再有「收起后找不到入口」的状态。无事项时返回空串，不占任何高度。
+- **测试**：478 项 CI 全绿（版本徽标校验随 CHANGELOG 更新通过）。
+
 # v0.15.75 · 对局 HUD 上移导航栏 + 玩家区三行分区：附属区→角色区→手牌区（2026-10-27）
 
 - **对局 HUD（方案 A 落地）**：`shell.html` 的 header 末尾新增静态容器 `.game-hud#gameHud`；`app.js` 新增 `syncGameHUD()`（render() 尾部同步，不另起渲染路径），仅在「对局页签 + 对局进行中 + 真实牌桌（heroStates 齐）」时显示。内容=剧本名＋回合/人数/难度/当前阶段＋**玩家页签**（威胁/资源/伤害汇总、起始/淘汰标记，选择器仍是 `.player-tabs`）＋「重新选择剧本」。header 在 `#app` 之外，点击委托不到——把 `$('#app').onclick` 的大箭头提为具名 `handleAction(ev)`，`#app` 与 `#gameHud` 共用同一个分发器。

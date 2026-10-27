@@ -1,29 +1,25 @@
 /* Tabletop view: UI drafts never pay, exhaust, reveal, or bypass phase validation. */
 /* 界面版本徽标唯一来源：须与 CHANGELOG.md 最新条目标题一致（planning-dom-tests 有校验）。 */
-const APP_VERSION='v0.15.75';
-/* ── 决策弹窗（v0.15.62）──────────────────────────────────────────────
-   底部长住的那块阶段面板已经去掉（和角色区右上角的「结束阶段」重复，还白占一行高度）。
-   需要玩家拍板的事不再常驻显示，改成「轮到你决定时才弹出来」。
+const APP_VERSION='v0.15.76';
+/* ── 决策面板（v0.15.62 弹窗 → v0.15.76 内联公共桌面）─────────────────
+   需要玩家拍板的事不再用浮动弹窗（v0.15.73 的 .decide-layer/收起角标/Esc 全部退役）：
+   内容整块内联在公共桌面顶部（.public-table 第一个子块），常驻可见、不遮挡任何
+   可点区域，玩家在桌面上直接看到并处理当前事项。
 
    判据沿用 ArkhamHorror 的那条线，不是凭感觉分的：
-     · 规则书写 must（强制结算、自动抽牌加资源）→ 引擎算完，只在日志留一句，绝不弹窗；
-     · 规则书写 may / choose / up to（选目标、选响应、选防御者、定投入名单）→ 必须问人，才弹。
+     · 规则书写 must（强制结算、自动抽牌加资源）→ 引擎算完，只在日志留一句，绝不显示面板；
+     · 规则书写 may / choose / up to（选目标、选响应、选防御者、定投入名单）→ 必须问人，才显示。
    所以 decide() 只认「引擎自己下不了结论的那些点」，其余一律返回 null，界面上什么也不出现。
 
    为什么不用 dialog.showModal()：PlanningUI.form() 内层已经占了一个 <dialog>，
    两层 showModal 叠在一起时，后开的会抢焦点、关掉时把前一层的 backdrop 也带走。
-   这里改成普通定位层 + 自己管焦点，内层 dialog 才能正常浮在它上面（z-index 见 CSS）。 */
+   面板是普通文档流元素，内层 dialog 照常浮在它上面（z-index 见 CSS）。
+   类名沿用 .decide-box/.decide-body：六个验收脚本的选择器与既有测试依赖它们。 */
 const DecisionUI=(()=>{
  /* 本模块独立于 DesktopUI 的闭包，所以依赖在这里自取，不靠外层作用域。
     早期版本直接写 esc()/setupPendingReveal()，一移出闭包就在 render() 里炸「not defined」——
     render() 的异常会被 mutate() 的 catch 吞掉并回滚整个状态，症状是「按钮点了没反应」。 */
  const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const setupOpen=s=>DesktopUI.setupPendingReveal(s);
- /* 测量必须在排版之后做（连续两帧），但 requestAnimationFrame 不是处处都有——
-    Node 的 DOM 测试环境里就没有，直接调用会让 render() 抛 ReferenceError，
-    而 render() 的异常会被 mutate() 吞掉并回滚，症状是「点了按钮没反应」。
-    没有 rAF 时退化成同步调用：布局测量在测试里反正用不到，但绝不能因此中断渲染。 */
- const nextFrame=fn=>(typeof requestAnimationFrame==='function')?requestAnimationFrame(fn):(fn(),0);
 
  /* 当前是否真的需要玩家决定。返回 null 表示「没有要问的」，调用方据此决定弹不弹。 */
  function pending(s,pid,door){
@@ -128,109 +124,17 @@ const DecisionUI=(()=>{
   }
   return null;
  }
- /* 放置弹窗：量一遍牌桌上真正可点的元素（手牌、角色卡、探查区卡牌、结束阶段），
-    挑一个不压住它们的位置。窄屏放不下时退成底部抽屉（那时牌桌已是单列，上下滚动本来就要做）。 */
- function place(){
-  const lay=document.querySelector('.decide-layer'),box=document.querySelector('.decide-box');
-  if(!lay||!box)return;
-  const vw=document.documentElement.clientWidth,vh=document.documentElement.clientHeight;
-  /* 用实测判断「是不是单列」，不用写死的宽度阈值：
-     单列时日志轴会掉到玩家区下方（rail.top 明显大于 mat.top），双列时两者顶对齐。
-     1100~1280 这一段断点是「双列但很窄」，光看宽度会误判成双列，实测才不会。 */
-  const mat=document.querySelector('.player-mat'),rail=document.querySelector('.tabletop-rail');
-  const stacked=!mat||!rail||rail.getBoundingClientRect().top>=mat.getBoundingClientRect().bottom-8;
-
-  /* 可点元素的右缘与下缘：弹窗必须让开这两条线。 */
-  const boxes=[...document.querySelectorAll('.hand-card,.character-card,.encounter-card,.own-characters,.own-attachments,.hand-zone')]
-   .map(e=>e.getBoundingClientRect()).filter(r=>r.width&&r.height);
-  const rightMost=boxes.reduce((m,r)=>Math.max(m,r.right),0);
-  const bottomMost=boxes.reduce((m,r)=>Math.max(m,r.bottom),0);
-  const gap=14;
-
-  if(!stacked){
-   /* 双列：往右列留白里塞。宽度＝屏幕右缘到可点区右缘。 */
-   const avail=vw-rightMost-gap*2;
-   if(avail>=300){
-    const w=Math.min(560,Math.max(300,avail));
-    box.style.setProperty('--decide-w',w+'px');
-    lay.style.justifyContent='flex-end';lay.style.alignItems='flex-start';
-    /* 优先贴日志轴左缘（挡住只读列代价最小），但绝不越过可点区右缘。 */
-    const railLeft=rail?rail.getBoundingClientRect().left:vw;
-    lay.style.paddingLeft=Math.max(rightMost+gap,railLeft-w-gap)+'px';
-    lay.style.paddingRight=gap+'px';
-    /* 顶部必须让开标题行（expedition-title 上的玩家页签就在那儿）——
-       v0.15.73 曾漏设 paddingTop，弹窗从视口 0 开始把页签整个盖住。 */
-    const railTop=rail?rail.getBoundingClientRect().top:gap;
-    const pt=Math.max(gap,Math.round(railTop));
-    lay.style.paddingTop=pt+'px';lay.style.paddingBottom=gap+'px';
-    box.style.maxHeight=Math.round(vh-pt-gap)+'px';
-    return;
-   }
-  }
-  /* 单列 / 右侧没空间：留到牌桌下方的空白里。
-     这里不用「贴屏幕底」，而是贴「可点区下缘 + 间距」——手牌下方通常还有一段空白，
-     弹窗正好落在那儿；真没空白时再退回贴底。 */
-  const roomBelow=vh-bottomMost-gap*2;
-  lay.style.justifyContent='center';lay.style.alignItems='flex-start';
-  box.style.setProperty('--decide-w','100%');
-  lay.style.paddingLeft=gap+'px';lay.style.paddingRight=gap+'px';
-  /* 只要下方还留得下一段（>=120px，够显示两行正文），就放在下方——
-     宁可让弹窗矮一点要滚动，也不要去盖手牌：投名单、出牌都得点牌桌上的东西。
-     以前这里用 200px 做门槛，1100×800 实测只有 156px 就被判成「放不下」，
-     于是整块手牌被弹窗盖住，正是这一条踩过的坑。 */
-  if(roomBelow>=120){
-   lay.style.paddingTop=Math.round(bottomMost+gap)+'px';lay.style.paddingBottom=gap+'px';
-   box.style.maxHeight=Math.round(roomBelow)+'px';
-  }else{
-   /* 下方真的只剩几十像素：只能覆盖屏幕下半截，牌桌上半部分仍可见可点。 */
-   lay.style.alignItems='flex-end';lay.style.paddingTop='12px';lay.style.paddingBottom='12px';
-   box.style.maxHeight='min(38vh,'+Math.round(vh*0.38)+'px)';
-  }
- }
-
- /* 弹窗开合状态记在模块里，不进 state：它纯粹是视图态，不该污染存档与撤销栈。 */
- let openKind=null,lastKey='';
- function key(s,p){const d=pending(s,p.id===undefined?handView:p.id);return d?d.kind+'|'+d.title:'';}
- /* v0.15.73：弹窗彻底离开手牌区——手牌区只留牌，待决定的内容渲染成
-    非模态浮动层（.decide-layer 固定铺满、pointer-events:none，只有 .decide-box
-    本身接鼠标），牌桌上的手牌、角色卡、探查区照常可点。
-    玩家主动收起后只留一枚角标（.decide-badge），点了再开，不反复打断。 */
- const open=(s,pid)=>{
+ /* v0.15.76：待决定内容渲染为内联面板（.public-table 第一个子块）。
+   没有要决定的事就返回空串，不占任何高度。没有开合状态、没有收起角标、
+   没有 Esc 与 place() 定位——面板在文档流里，随页面滚动，永不遮挡牌桌。 */
+ function html(s,pid){
   const d=pending(s,pid);if(!d)return '';
-  return `<div class="decide-layer" data-stop="1"><section class="decide-box" role="dialog" aria-label="${esc(d.title)}" tabindex="-1">
-   <div class="decide-head"><h2>${esc(d.title)}</h2><button class="decide-x" data-action="decide" data-decide="close">收起</button></div>
+  return `<section class="decide-box" role="region" aria-label="${esc(d.title)}">
+   <div class="decide-head"><h2>${esc(d.title)}</h2></div>
    <div class="decide-body">${d.body}</div>
-  </section></div>`;
- };
- const badge=(s,pid)=>{
-  const d=pending(s,pid);if(!d)return '';
-  return `<button class="decide-badge" data-action="decide" data-decide="open" aria-expanded="false">${esc(d.title)}<b>1</b></button>`;
- };
- function html(s,pid){return openKind?open(s,pid):badge(s,pid);}
- function handle(kind){
-  /* 角标点开时也要重新定位：收起期间可能换过分辨率或转过屏。 */
-  if(kind==='open'){openKind=key(state,handView).split('|')[0]||'phase';render();nextFrame(()=>{const b=document.querySelector('.decide-box');if(b)b.focus();place();});return false;}
-  if(kind==='close'){openKind=null;render();return false;}
-  return true;
+  </section>`;
  }
- /* 需要决定、且玩家没主动收起时，才自动展开——这是「轮到你决定时才弹」的落点。
-   已经收起过就不反复弹出打断人，只留角标。 */
- function sync(s,pid){
-  const k=key(s,pid);
-  if(!k){openKind=null;lastKey='';return;}
-  if(k!==lastKey){lastKey=k;openKind=k.split('|')[0];}
- }
- function reset(){openKind=null;lastKey='';}
- /* Esc 收起弹窗：不劫持原生 <dialog>（组队确认框正在开着时让路）。 */
- if(typeof window!=='undefined')window.addEventListener('keydown',e=>{
-  if(e.key!=='Escape'||openKind===null)return;
-  try{if(document.querySelector('dialog[open]'))return;}catch(e2){}
-  try{handle('close');}catch(e3){}
- });
- /* 转／改窗口时重算一次，否则弹窗还停在旧分辨率的坐标上。 */
- if(typeof window!=='undefined')window.addEventListener('resize',()=>{try{place();}catch(e){}});
- function isOpen(){return openKind!==null;}
- return {pending,html,handle,sync,reset,isOpen,place};
+ return {pending,html};
 })();
 const DesktopUI=(()=>{
  const E=ScenarioEngine,R=E.planning,Q=E.questing,C=E.combat,esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -439,7 +343,7 @@ const DesktopUI=(()=>{
    const probe=unaff?(()=>{const rec=ImageLibrary.by[c.code],url=rec?ImageLibrary.safeUrl(rec.faces?.B||rec.imageUrl):null;return url?` data-hover-src="${esc(url)}" data-hover-shape="tall"`:'';})():'';
    return `<article class="table-card hand-card ${sp.legal?'selectable':''}${unaff?' unaffordable':''}"${probe}><button class="card-face" data-action="planning" data-plan="play" data-player="${p.id}" data-uid="${c.uid}" ${sp.legal?'':'disabled'} aria-label="使用${esc(meta.nameZh)}">${art(c.code)}</button><div class="table-card-caption"><b>${esc(meta.nameZh)}</b><span>费用 ${meta.cost??'—'} · ${esc(meta.sphereName||meta.sphere)}</span></div>${inspect(c.code)}<span class="card-legality">${esc(reason)}</span></article>`;}).join('');
   /* 玩家状态条已提升为模块级 tabStats(s,o)——见 hudHTML 上方注释。 */
-  return `<div class="desktop-table"><div class="tabletop-layout"><div class="tabletop-main"><div class="operation-dock" role="region" aria-label="当前操作"><div class="operation-title"><span class="operation-indicator"></span><strong>${esc(prompt(s,m))}</strong><div class="operation-chips">${status(s)?.chips||''}</div><span class="small">第 ${s.phase+1}/7 阶段 · ${E.phases[s.phase]}</span><span class="dock-eyebrow">MIDDLE-EARTH EXPEDITION · ${APP_VERSION}</span>${next(s)}</div><details class="phase-hint-wrap"><summary>本阶段说明</summary><p class="small phase-hint">${esc(phaseHint())}</p></details><div class="operation-content">${scorePanel(s)}${phasePanel(s,p.id,m)}</div></div><div class="public-table"><div class="quest-location-row"><section class="table-zone quest-zone"><div class="zone-heading"><h2>当前探险 · ${esc(q.stage)}</h2><strong>${q.points?s.progress+' / '+q.points+' 进度':'特殊胜利条件'}</strong></div><div class="quest-display"><div class="quest-art-wrap">${ImageLibrary.art('enc-'+q.id,'',s.setupPending?'A':'B')}${q.points?`<div class="card-tokens quest-tokens" aria-hidden="true">${tk('progress',s.progress)}</div>`:''}</div><div><h3>${esc(q.name)}</h3><p>${esc(s.setupPending?q.front:q.back)}</p><span class="small muted">${esc(E.gate(s)||'满足条件后由规则自动推进')}</span></div></div>${q.points?`<div class="quest-progress" role="progressbar" aria-label="探险进度" aria-valuemin="0" aria-valuemax="${q.points}" aria-valuenow="${s.progress}"><div class="quest-progress-fill" style="width:${Math.min(100,Math.round(s.progress/q.points*100))}%"></div><span class="quest-progress-label">${s.progress} / ${q.points}</span></div>`:''}</section>${row('当前地点',s.active?encounter(s,s.active,'active',m):'','active-zone')}</div>${row('探查区 <span class="threat-total">总威胁 '+E.threat(s)+'</span>',s.staging.map(c=>encounter(s,c,'staging',m)).join(''))}${s.objectives.length?row('剧本目标',s.objectives.map(c=>encounter(s,c,'objective',m)).join('')):''}${others}</div><section class="player-mat"><div class="zone-heading"><h2>${esc(p.name)} · ${esc(p.registeredDeck?.name||'玩家区域')}</h2><span class="own-piles">威胁 ${p.threat}${s.first===p.id?' · 起始玩家':''} · <span class="pile-chip">牌库 <b>${p.playerDeck.length}</b></span> · <span class="pile-chip">弃牌 <b>${p.playerDiscard.length}</b></span></span></div>${p.engaged.length?row('交战区',p.engaged.map(c=>encounter(s,c,'engaged',m)).join('')):''}<section class="table-zone bottom-deck" aria-label="队伍与手牌"><div class="zone-heading"><h2>队伍与手牌 <span class="small muted">英雄 ${p.heroStates.length} · 盟友 ${p.allies.length} · 附属 ${p.attachments.length} · 手牌 ${p.hand.length}</span></h2>${phaseDoor(s)}</div>${PlanningUI.strip(s,p.id)}<div class="table-card-row own-attachments" aria-label="附属区">${p.attachments.length?p.attachments.map(c=>{const meta=R.data(s,c),host=R.find(s,c.target),legal=R.abilitySpec(s,p.id,c.uid).legal;return `<article class="table-card"><button class="card-face" data-action="planning" data-plan="ability" data-player="${p.id}" data-uid="${c.uid}" ${legal?'':'disabled'}>${art(c.code)}</button><div class="table-card-caption"><b>${esc(meta.nameZh)}</b><span>附于 ${esc(host?.meta.nameZh||host?.meta.name||'目标已离场')}</span></div>${inspect(c.code)}</article>`;}).join(''):''}</div><div class="table-card-row own-characters">${playerChars(s,p).map(c=>character(s,c,m)).join('')}</div><div class="table-card-row hand-zone">${hand}</div></section></section></div>${DecisionUI.html(s,p.id)}<aside class="tabletop-rail">${PhaseLog.rail(s,railOpen())}<section class="table-log" aria-label="远征日志">${PhaseLog.panel(s,logMarks(),logScope(),railOpen(),false)}</section></aside></div></div>`;
+  return `<div class="desktop-table"><div class="tabletop-layout"><div class="tabletop-main"><div class="operation-dock" role="region" aria-label="当前操作"><div class="operation-title"><span class="operation-indicator"></span><strong>${esc(prompt(s,m))}</strong><div class="operation-chips">${status(s)?.chips||''}</div><span class="small">第 ${s.phase+1}/7 阶段 · ${E.phases[s.phase]}</span><span class="dock-eyebrow">MIDDLE-EARTH EXPEDITION · ${APP_VERSION}</span>${next(s)}</div><details class="phase-hint-wrap"><summary>本阶段说明</summary><p class="small phase-hint">${esc(phaseHint())}</p></details><div class="operation-content">${scorePanel(s)}${phasePanel(s,p.id,m)}</div></div><div class="public-table">${DecisionUI.html(s,p.id)}<div class="quest-location-row"><section class="table-zone quest-zone"><div class="zone-heading"><h2>当前探险 · ${esc(q.stage)}</h2><strong>${q.points?s.progress+' / '+q.points+' 进度':'特殊胜利条件'}</strong></div><div class="quest-display"><div class="quest-art-wrap">${ImageLibrary.art('enc-'+q.id,'',s.setupPending?'A':'B')}${q.points?`<div class="card-tokens quest-tokens" aria-hidden="true">${tk('progress',s.progress)}</div>`:''}</div><div><h3>${esc(q.name)}</h3><p>${esc(s.setupPending?q.front:q.back)}</p><span class="small muted">${esc(E.gate(s)||'满足条件后由规则自动推进')}</span></div></div>${q.points?`<div class="quest-progress" role="progressbar" aria-label="探险进度" aria-valuemin="0" aria-valuemax="${q.points}" aria-valuenow="${s.progress}"><div class="quest-progress-fill" style="width:${Math.min(100,Math.round(s.progress/q.points*100))}%"></div><span class="quest-progress-label">${s.progress} / ${q.points}</span></div>`:''}</section>${row('当前地点',s.active?encounter(s,s.active,'active',m):'','active-zone')}</div>${row('探查区 <span class="threat-total">总威胁 '+E.threat(s)+'</span>',s.staging.map(c=>encounter(s,c,'staging',m)).join(''))}${s.objectives.length?row('剧本目标',s.objectives.map(c=>encounter(s,c,'objective',m)).join('')):''}${others}</div><section class="player-mat"><div class="zone-heading"><h2>${esc(p.name)} · ${esc(p.registeredDeck?.name||'玩家区域')}</h2><span class="own-piles">威胁 ${p.threat}${s.first===p.id?' · 起始玩家':''} · <span class="pile-chip">牌库 <b>${p.playerDeck.length}</b></span> · <span class="pile-chip">弃牌 <b>${p.playerDiscard.length}</b></span></span></div>${p.engaged.length?row('交战区',p.engaged.map(c=>encounter(s,c,'engaged',m)).join('')):''}<section class="table-zone bottom-deck" aria-label="队伍与手牌"><div class="zone-heading"><h2>队伍与手牌 <span class="small muted">英雄 ${p.heroStates.length} · 盟友 ${p.allies.length} · 附属 ${p.attachments.length} · 手牌 ${p.hand.length}</span></h2>${phaseDoor(s)}</div>${PlanningUI.strip(s,p.id)}<div class="table-card-row own-attachments" aria-label="附属区">${p.attachments.length?p.attachments.map(c=>{const meta=R.data(s,c),host=R.find(s,c.target),legal=R.abilitySpec(s,p.id,c.uid).legal;return `<article class="table-card"><button class="card-face" data-action="planning" data-plan="ability" data-player="${p.id}" data-uid="${c.uid}" ${legal?'':'disabled'}>${art(c.code)}</button><div class="table-card-caption"><b>${esc(meta.nameZh)}</b><span>附于 ${esc(host?.meta.nameZh||host?.meta.name||'目标已离场')}</span></div>${inspect(c.code)}</article>`;}).join(''):''}</div><div class="table-card-row own-characters">${playerChars(s,p).map(c=>character(s,c,m)).join('')}</div><div class="table-card-row hand-zone">${hand}</div></section></section></div><aside class="tabletop-rail">${PhaseLog.rail(s,railOpen())}<section class="table-log" aria-label="远征日志">${PhaseLog.panel(s,logMarks(),logScope(),railOpen(),false)}</section></aside></div></div>`;
  }
  function handle(el){const k=el.dataset.desktop,uid=+el.dataset.uid,pid=+el.dataset.player,m=mode(state,handView),d=draft(state,m);
   if(k==='view'){handView=pid;render();return;}if(k==='reset'){if(confirm('结束当前桌面并重新选择剧本？建议先导出存档。'))mutate(()=>state=null);return;}

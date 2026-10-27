@@ -1504,27 +1504,21 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
 .game-hud button[data-desktop=reset]{background:transparent;border-color:#647460;color:#e8b9a8;font-size:12.5px;padding:3px 10px}
 .game-hud button[data-desktop=reset]:hover{background:#46604c;color:#f6c8b4;border-color:#a17d6a}
 
-/* ── 18c. 待决定弹窗（v0.15.73）──────────────────────────────────────
-   弹窗彻底离开手牌区：非模态浮动层。.decide-layer 固定铺满视口但
-   pointer-events:none（层只是定位骨架），只有 .decide-box 本身接鼠标——
-   弹窗开着时牌桌上的手牌、角色卡、探查区照常可点（出牌、投名单都靠桌面点击）。
-   位置与尺寸由 DecisionUI.place() 实测可点元素后用内联样式给出。
+/* ── 18c. 待决定面板（v0.15.76）──────────────────────────────────────
+   弹窗退役：待决定内容内联在公共桌面顶部（.public-table 第一个子块），
+   常驻可见、随页面滚动，不再浮动遮挡任何牌桌元素——收起角标、Esc、
+   place() 定位随之全部移除。类名沿用 v0.15.73 的 .decide-box/.decide-body
+   （六个验收脚本的选择器与既有测试依赖它们）。
    内层的 <dialog>（PlanningUI.form 的选目标/付资源）仍在浏览器 top layer，
-   永远高于普通元素——不会被这里盖住。 */
-.decide-layer{
- position:fixed;inset:0;z-index:40;pointer-events:none;display:flex}
+   永远高于普通元素——不会被面板盖住。 */
 .decide-box{
- pointer-events:auto;display:flex;flex-direction:column;min-width:0;
- width:var(--decide-w,420px);max-height:calc(100vh - 130px);
- background:#fffdf6;border:1px solid #c9b98a;border-radius:12px;
- box-shadow:0 10px 30px #14291c40;outline:none}
+ margin:0 0 14px;background:#fffdf6;border:1px solid #c9b98a;border-radius:12px;
+ box-shadow:0 4px 14px #14291c26}
 .decide-head{
- display:flex;align-items:center;gap:12px;padding:13px 16px;
- border-bottom:1px solid #e2e5d9;background:#f4f1e4;border-radius:12px 12px 0 0;
- flex:0 0 auto}
-.decide-head h2{font-size:17px;margin:0;flex:1 1 auto;min-width:0}
-.decide-x{padding:4px 10px;font-size:12.5px;flex:0 0 auto;color:#5f6a58}
-.decide-body{padding:14px 16px 18px;overflow:auto;min-height:0}
+ display:flex;align-items:center;gap:12px;padding:11px 16px;
+ border-bottom:1px solid #e2e5d9;background:#f4f1e4;border-radius:12px 12px 0 0}
+.decide-head h2{font-size:16px;margin:0;flex:1 1 auto;min-width:0}
+.decide-body{padding:12px 16px 16px}
 .decide-body .panel{border:0;background:transparent;padding:0;margin:0}
 .decide-body .panel-title{margin-bottom:10px}
 /* 弹窗框头已经写了阶段名，面板自己那条「阶段2 · 计划阶段」再写一遍就是重复。
@@ -1536,14 +1530,6 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
 .decide-list{list-style:none;margin:10px 0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
 .decide-list li{padding:3px 9px;border:1px solid #d8dcd0;border-radius:5px;font-size:13px;background:#f2f1e7;color:#7c8674}
 .decide-list li.ok{border-color:#a8c2a1;background:#eef4e9;color:#40603a}
-/* 收起后的角标：贴牌桌右上角，避开顶栏导航与阶段轴。 */
-.decide-badge{
- position:fixed;top:50px;right:18px;z-index:30;
- display:inline-flex;align-items:center;gap:6px;padding:7px 12px;
- background:#365842;color:#fff8e6;border:1px solid #c4a265;border-radius:999px;
- font-size:13px;box-shadow:0 6px 18px #14291c3d;cursor:pointer}
-.decide-badge:hover{background:#2c4a37;border-color:#e3c88c}
-.decide-badge b{background:#c4a265;color:#23392c;border-radius:999px;padding:0 6px;font-size:12px;line-height:17px}
 
 /* 顶部操作条：内容为空时整条收成一行摘要。
    .operation-content 本身已有 :empty{display:none}，这里再把标题行的内边距收窄、

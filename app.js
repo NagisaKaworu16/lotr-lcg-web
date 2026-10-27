@@ -370,15 +370,13 @@ function showDrawToast(){
  const timer=setTimeout(close,4000);
  d.onclick=ev=>{if(ev.target===d||ev.target.id==='draw-close')close();};}
 
-function render(){captureSetup();document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));const navBtn=$('#'+({table:'tableTab',decks:'decksTab',catalog:'catalogTab',help:'helpTab'}[tab]));if(navBtn)navBtn.classList.add('active');/* 弹窗状态跟着引擎走：每次重绘前先问一次「现在有没有要玩家决定的」。
-     有且是新出现的就自动展开；已经收起过的不再反复弹，只留角标。 */
- if(tab==='table'&&state&&!deckChooser)DecisionUI.sync(state,handView);else DecisionUI.reset();
+function render(){captureSetup();document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));const navBtn=$('#'+({table:'tableTab',decks:'decksTab',catalog:'catalogTab',help:'helpTab'}[tab]));if(navBtn)navBtn.classList.add('active');/* v0.15.76：决策面板内联公共桌面，无开合状态——render 每次直接画，不再需要 sync/reset。 */
  /* v0.15.70：整页 innerHTML 重绘会把焦点扔回 body，键盘玩家每点一次就被弹到页首。
     重绘前记住带 data-focus-key 的活动元素，重绘后按同一个键把焦点放回去（不滚动）。
     派遣面板输出的键：quest-actor-<pid> / quest-commit-<uid> / quest-submit /
     quest-withdraw / quest-approve / quest-unapprove。 */
  const focusKey=document.activeElement&&document.activeElement.dataset?String(document.activeElement.dataset.focusKey||''):'';
- $('#app').innerHTML=tab==='table'?(deckChooser?chooserPage():table()):tab==='decks'?(PlayerUI.isBuilding()?PlayerUI.builder():PlayerUI.decksPage()):tab==='catalog'?catalog():help();$('#undo').disabled=!history.length;$('#export').disabled=!state;if(tab==='table'&&state&&$('#hand-player'))$('#hand-player').onchange=ev=>{handView=Number(ev.target.value);render();};if(tab==='table'&&state&&$('#planning-actor'))$('#planning-actor').onchange=ev=>{handView=Number(ev.target.value);render();};if(tab==='table'&&state)QuestUI.bind();if(tab==='table'&&!state)bindSetup();if(tab==='decks'){PlayerUI.bindDecks();PlayerUI.bind();}ImageLibrary.bindErrors(document.querySelector('#app'));if(tab==='catalog'){filterCatalog();const si=$('#search');if(si)si.oninput=filterCatalog;const pf=$('#podFilter');if(pf)pf.onchange=()=>{podFilter=pf.value||'';render();};}trackView();showDrawToast();if(tab==='table'&&state){DecisionUI.place();syncGameHUD();}else syncGameHUD();if(focusKey){const back=document.querySelector('[data-focus-key="'+focusKey.replace(/"/g,'')+'"]');if(back&&typeof back.focus==='function')back.focus({preventScroll:true});}
+ $('#app').innerHTML=tab==='table'?(deckChooser?chooserPage():table()):tab==='decks'?(PlayerUI.isBuilding()?PlayerUI.builder():PlayerUI.decksPage()):tab==='catalog'?catalog():help();$('#undo').disabled=!history.length;$('#export').disabled=!state;if(tab==='table'&&state&&$('#hand-player'))$('#hand-player').onchange=ev=>{handView=Number(ev.target.value);render();};if(tab==='table'&&state&&$('#planning-actor'))$('#planning-actor').onchange=ev=>{handView=Number(ev.target.value);render();};if(tab==='table'&&state)QuestUI.bind();if(tab==='table'&&!state)bindSetup();if(tab==='decks'){PlayerUI.bindDecks();PlayerUI.bind();}ImageLibrary.bindErrors(document.querySelector('#app'));if(tab==='catalog'){filterCatalog();const si=$('#search');if(si)si.oninput=filterCatalog;const pf=$('#podFilter');if(pf)pf.onchange=()=>{podFilter=pf.value||'';render();};}trackView();showDrawToast();syncGameHUD();if(focusKey){const back=document.querySelector('[data-focus-key="'+focusKey.replace(/"/g,'')+'"]');if(back&&typeof back.focus==='function')back.focus({preventScroll:true});}
  /* #8：步骤变了才给一次对齐机会。放在焦点恢复之后——focus({preventScroll:true}) 不滚动，
     这里再滚不会被它顶回去。 */
  const qstep=tab==='table'&&state&&state.questing&&state.phase===2?state.questing.step:null;
@@ -386,7 +384,6 @@ function render(){captureSetup();document.querySelectorAll('nav button').forEach
 async function choose(title,body,read){return new Promise(resolve=>{let d=document.createElement('dialog');d.innerHTML=`<h2>${enc(title)}</h2><div>${body}</div><div class="actions"><button class="primary" id="ok">确认</button><button id="cancel">取消</button></div>`;document.body.append(d);d.showModal();d.querySelector('#ok').onclick=()=>{let v=read(d);d.close();d.remove();resolve(v);};d.querySelector('#cancel').onclick=()=>{d.close();d.remove();resolve(null);};d.oncancel=()=>{d.remove();resolve(null);};});}
 function playerOptions(){return state.players.filter(p=>!p.eliminated).map(p=>`<option value="${p.id}">${enc(p.name)}</option>`).join('');}
 async function handleAction(ev){const b=ev.target.closest('[data-action]');if(!b||b.disabled)return;const a=b.dataset.action,uid=Number(b.dataset.uid),id=Number(b.dataset.id),pid=Number(b.dataset.player);
- if(a==='decide'){DecisionUI.handle(b.dataset.decide);return;}
  if(a==='desktop'){DesktopUI.handle(b);return;}
  if(a==='logScope'){const v=b.dataset.scope;if(!['round','all'].includes(v))return;logScope=v;render();return;}
  if(a==='logToggle'){logOpen=!logOpen;render();return;}
