@@ -35,7 +35,7 @@ body:has(.desktop-table) header{padding:10px 22px;background:#273f32;gap:22px;bo
 body:has(.desktop-table) main{padding:16px 22px 32px}
 .desktop-table main button{background:#fffdf6;color:#24392f;border-color:#c6cfc1;font-size:14px;padding:6px 10px}.desktop-table main button:hover{background:#f1e8d1;border-color:#ad8b4b}.desktop-table main button:disabled{opacity:.48}.desktop-table main button.primary{background:#365842;border-color:#365842;color:#fff}.desktop-table main select,.desktop-table main input{background:#fff;color:#24392f;border-color:#d8dcd0}.desktop-table .badge{background:#f2f1e7;color:#55603f}.desktop-table .notice{background:#f4eddc;color:#73613e}.desktop-table .warning-text{color:#a26a34}.desktop-table .win{background:#dfead4;color:#42603b}.desktop-table .lost{background:#f2dfd5;color:#934f3c}
 .expedition-title{display:flex;align-items:center;gap:22px;flex-wrap:wrap;margin-bottom:16px}.expedition-title h1{font-size:26px;margin:1px 0}.expedition-title>.player-tabs{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}.player-tabs button.active{background:#527085;border-color:#d7c18b;color:#fff}.tabletop-layout{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:16px;align-items:start}.tabletop-main{min-width:0;display:grid;gap:18px}.operation-dock{position:sticky;top:8px;z-index:5;background:#233b4c;box-shadow:0 6px 18px #0005;border:1px solid #6c91a8;border-radius:9px;overflow:hidden}.operation-title{display:flex;gap:12px;align-items:center;padding:12px 16px;background:#304e62;flex-wrap:wrap}.operation-title strong{font-size:16px}.operation-title>.primary{margin-left:auto}.operation-indicator{width:8px;height:8px;background:#e3c88c;box-shadow:0 0 10px #e3c88c55;border-radius:50%}.operation-content{max-height:30vh;overflow:auto;overscroll-behavior:contain;padding:0 14px}.operation-content:empty{display:none}.operation-content>.panel{border:0;background:transparent;padding:12px 0;margin:0;border-radius:0}.operation-content h2{font-size:15px}.operation-content p{margin:5px 0;font-size:14px}.operation-content .actions{margin-top:7px}.operation-content .table-selection{padding:10px 12px;background:#182e3b;border:1px solid #55768c;border-radius:6px;margin:8px 0}.operation-content .table-selection p{color:#d1e4ee}.operation-content .planning-board,.operation-content .planning-hand{display:none}
-.public-table{background:radial-gradient(ellipse at top,#30424e,#25343e 70%);border:1px solid #4c606c;border-radius:10px;padding:16px;display:grid;gap:16px;min-width:0}.table-zone{min-width:0}.zone-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:9px;flex-wrap:wrap;line-height:1.3}.zone-heading h2{font-size:15px;color:#dbe6ee;font-weight:600}.zone-heading h3{font-size:15px}.zone-heading>span{font-size:14px;color:#bfcbd4}.threat-total{margin-left:12px;font-size:14px;color:#e9c98e}.table-card-row{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;min-height:48px}.zone-empty{display:flex;align-items:center;justify-content:center;min-height:68px;width:100%;border:1px dashed #526571;border-radius:6px;color:#adbbc6;font-size:14px}.quest-location-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(180px,.6fr);gap:20px;border-bottom:1px solid #4a5b67;padding-bottom:16px}.quest-display{display:flex;gap:16px;align-items:flex-start}.quest-display>.card-art{width:128px;min-width:100px;flex:none;margin:0}.quest-display .image-loading-note{display:none}.quest-display h3{color:#edd4a3}.quest-display p{font-size:14px;color:#d3dde4;line-height:1.7}.active-zone .table-card-row{min-height:155px}.player-mat{background:#23333f;border:1px solid #657b88;border-top:3px solid #c6ac74;border-radius:10px;padding:16px;display:grid;gap:16px}.player-mat>.zone-heading{margin-bottom:0}.player-mat>.table-zone+.table-zone{border-top:1px solid #455762;padding-top:14px}.other-player{padding-top:14px;border-top:1px solid #4c5e6b}.table-card{width:122px;flex:0 0 122px;min-width:0;background:#182630;border:1px solid #526572;border-radius:7px;padding:4px;position:relative;box-shadow:0 3px 7px #0003}.table-card .card-face{display:block;position:relative;width:100%;padding:0;border:1px solid transparent;border-radius:4px;overflow:hidden;background:#101d26;min-height:154px}.table-card .card-face:disabled{opacity:1}.card-face img{display:block;width:100%;aspect-ratio:424/600;object-fit:contain}.card-face img[hidden]{display:none}.card-face:has(img[hidden]):after{content:'卡图加载失败，请查看牌名与数值';display:block;padding:18px 8px;color:#bac7d0;font-size:13px}.table-card-fallback{display:block;padding:20px 5px;color:#b6c4ce}.table-card-caption{padding:6px 3px 3px;font-size:12px;line-height:1.6;overflow-wrap:anywhere}.table-card-caption b{display:block;color:#f0e5c8;font-size:14px}.table-card-caption span{display:block;color:#c3d0da}.table-card .inspect-card{width:100%;padding:2px 4px;font-size:12px;border-color:#405563;background:transparent;margin-top:3px}.table-card.selectable{border-color:#79b9db;box-shadow:0 0 0 1px #79b9db55,0 3px 7px #0003}.table-card.selectable .card-face{cursor:pointer}.table-card.selectable .card-face:hover{border-color:#fff3cf;filter:brightness(1.1)}.table-card.selected{border:2px solid #e8c473;padding:3px;box-shadow:0 0 12px #e8c47344}.selection-mark{position:absolute;bottom:6px;left:6px;background:#e8c473;color:#202936;border-radius:4px;padding:1px 7px;font-size:13px;font-weight:700}.table-card.exhausted .card-face img{filter:brightness(.64) saturate(.7)}
+.public-table{background:radial-gradient(ellipse at top,#30424e,#25343e 70%);border:1px solid #4c606c;border-radius:10px;padding:16px;display:grid;gap:16px;min-width:0;min-height:0;overflow-y:auto}.table-zone{min-width:0}.zone-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:9px;flex-wrap:wrap;line-height:1.3}.zone-heading h2{font-size:15px;color:#dbe6ee;font-weight:600}.zone-heading h3{font-size:15px}.zone-heading>span{font-size:14px;color:#bfcbd4}.threat-total{margin-left:12px;font-size:14px;color:#e9c98e}.table-card-row{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;min-height:48px}.zone-empty{display:flex;align-items:center;justify-content:center;min-height:68px;width:100%;border:1px dashed #526571;border-radius:6px;color:#adbbc6;font-size:14px}.quest-location-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(180px,.6fr);gap:20px;border-bottom:1px solid #4a5b67;padding-bottom:16px}.quest-display{display:flex;gap:16px;align-items:flex-start}.quest-display>.card-art{width:128px;min-width:100px;flex:none;margin:0}.quest-display .image-loading-note{display:none}.quest-display h3{color:#edd4a3}.quest-display p{font-size:14px;color:#d3dde4;line-height:1.7}.active-zone .table-card-row{min-height:155px}.player-mat{background:#23333f;border:1px solid #657b88;border-top:3px solid #c6ac74;border-radius:10px;padding:16px;display:grid;gap:16px}.player-mat>.zone-heading{margin-bottom:0}.player-mat>.table-zone+.table-zone{border-top:1px solid #455762;padding-top:14px}.other-player{padding-top:14px;border-top:1px solid #4c5e6b}.table-card{width:122px;flex:0 0 122px;min-width:0;background:#182630;border:1px solid #526572;border-radius:7px;padding:4px;position:relative;box-shadow:0 3px 7px #0003}.table-card .card-face{display:block;position:relative;width:100%;padding:0;border:1px solid transparent;border-radius:4px;overflow:hidden;background:#101d26;min-height:154px}.table-card .card-face:disabled{opacity:1}.card-face img{display:block;width:100%;aspect-ratio:424/600;object-fit:contain}.card-face img[hidden]{display:none}.card-face:has(img[hidden]):after{content:'卡图加载失败，请查看牌名与数值';display:block;padding:18px 8px;color:#bac7d0;font-size:13px}.table-card-fallback{display:block;padding:20px 5px;color:#b6c4ce}.table-card-caption{padding:6px 3px 3px;font-size:12px;line-height:1.6;overflow-wrap:anywhere}.table-card-caption b{display:block;color:#f0e5c8;font-size:14px}.table-card-caption span{display:block;color:#c3d0da}.table-card .inspect-card{width:100%;padding:2px 4px;font-size:12px;border-color:#405563;background:transparent;margin-top:3px}.table-card.selectable{border-color:#79b9db;box-shadow:0 0 0 1px #79b9db55,0 3px 7px #0003}.table-card.selectable .card-face{cursor:pointer}.table-card.selectable .card-face:hover{border-color:#fff3cf;filter:brightness(1.1)}.table-card.selected{border:2px solid #e8c473;padding:3px;box-shadow:0 0 12px #e8c47344}.selection-mark{position:absolute;bottom:6px;left:6px;background:#e8c473;color:#202936;border-radius:4px;padding:1px 7px;font-size:13px;font-weight:700}.table-card.exhausted .card-face img{filter:brightness(.64) saturate(.7)}
 .character-card.exhausted .card-face img{transform:rotate(90deg) scale(.7)}
 .character-card .card-face img{transition:transform .25s ease}.table-card.exhausted .table-card-caption>span:last-child{color:#e3b68a}.table-card.unavailable{opacity:.55}.table-card details{font-size:13px;padding:2px 4px;color:#c3d0da}.card-legality{display:block;font-size:12px;color:#abbac6;padding:3px}.peer-cards .table-card{width:100px;flex-basis:100px}.peer-cards .card-face{min-height:124px}.peer-cards .table-card-caption b{font-size:13px}.tabletop-rail{position:sticky;top:8px;display:grid;gap:12px;max-height:calc(100vh - 20px);overflow:auto;scrollbar-width:thin}.tabletop-rail>section,.tabletop-rail>details{background:#23323e;border:1px solid #475b6b;border-radius:8px;padding:13px}.tabletop-rail h2{font-size:15px;margin-bottom:10px}.rail-step{display:flex;gap:12px;padding:9px 8px;color:#9eafbd;border-left:2px solid transparent;align-items:center}.rail-step>span{font-size:13px;letter-spacing:1px;color:#96a9b7}.rail-step b{font-size:14px}.rail-step small{margin-left:auto;font-size:12px;color:#e4c68c}.rail-step.current{color:#fff2d7;background:#3c5061;border-left-color:#ddbc75;border-radius:2px}.rail-step.past{color:#b8c8bf}.deck-rail .deck-counts div{background:#182b37;color:#c6d5df}.deck-rail .deck-counts strong{font-size:23px;color:#efdfb8}.tabletop-rail summary{font-size:14px}.tabletop-rail p{font-size:13px;color:#b9c9d4}.table-log>div{max-height:265px;overflow:auto}.table-log p{border-bottom:1px solid #405361;padding-bottom:8px}.desktop-table .quest-layout{grid-template-columns:1fr}.desktop-table .panel .hero{color:#23392e}
 @media(min-width:1700px){.table-card{width:136px;flex-basis:136px}.peer-cards .table-card{width:110px;flex-basis:110px}.tabletop-layout{grid-template-columns:minmax(0,1fr) 340px}.operation-content{max-height:27vh}}
@@ -670,7 +670,9 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
    保证角色行+手牌行始终可见。 */
 .player-mat>.table-zone:not(.bottom-deck){flex:1 1 auto;min-height:0;overflow:auto}
 .player-mat .bottom-deck{
- flex:0 0 auto;min-height:0;display:flex;flex-direction:column;gap:4px;
+ /* v0.15.79：决策面板下移后 bottom-deck 吃满玩家区剩余高度（mat 已是 flex 列），
+    内部「附属/角色/面板/手牌」弹性分配；无此约束面板自然高会把手牌推出视口。 */
+ flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:4px;
  border:1px solid #dfe3d6;border-radius:8px;background:#f7f5ea;padding:5px 8px 6px;overflow:hidden}
 
 /* ── 7b. 出牌阶段控制条（v0.15.74）────────────────────────────────
@@ -688,6 +690,12 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
 .player-mat .bottom-deck>.zone-heading h2{font-size:12.5px}
 .player-mat .bottom-deck>.zone-heading .small{font-size:11px}
 .player-mat .own-characters{flex:1 1 auto;min-height:0;overflow:auto;align-items:flex-start}
+/* v0.15.79：决策面板下移到手牌区上方后，与角色行/手牌行同抢玩家区高度——
+   面板做成弹性块：内容少时自然高，内容多时被压到剩余空间并内部滚动，
+   角色卡与手牌始终钉在视口内（v0.15.74 的教训：整块内容被推出去=不可用）。 */
+.player-mat .decide-box{flex:1 1 auto;min-height:96px;display:flex;flex-direction:column;margin:0 0 10px}
+.player-mat .decide-box .decide-head{flex:0 0 auto}
+.player-mat .decide-box .decide-body{flex:1 1 auto;min-height:0;overflow-y:auto}
 /* v0.15.75：附属区独立成行（角色行上方）。无附属时不渲染该行、零占位。 */
 .player-mat .own-attachments{flex:0 0 auto;min-height:0;overflow:auto;align-items:flex-start}
 /* 三行并存时纵向预算紧张：附属卡用 72px 紧凑幅面（424/500 裁切），
@@ -802,7 +810,7 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
 .player-mat .own-characters .table-card .card-face,.player-mat .own-attachments .table-card .card-face{min-height:0}
 .player-mat .own-characters .table-card .card-face img,.player-mat .own-attachments .table-card .card-face img{aspect-ratio:424/600}
 .player-mat .own-characters .inspect-card,.player-mat .own-attachments .inspect-card{font-size:11px;padding:1px 4px;min-height:0;line-height:1.4}
-.player-mat .bottom-deck .own-characters{overflow:auto;min-height:160px}
+.player-mat .bottom-deck .own-characters{overflow:auto;min-height:132px}
 
 /* 15. 牌桌区重排：探险条 + 地点并排（地点空时自动收窄），探查区与玩家角色区吃满。
        手牌区高度改为按牌面宽度算，避免宽屏下牌被裁成条。 */
@@ -828,8 +836,7 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
 .public-table>.other-player{flex:0 1 auto;min-height:0;overflow:auto}
 .public-table>.other-player .table-card-row{max-height:none}
 
-/* 17. 分区高度再平衡：牌桌区需要容纳 探险条(128) + 探查区(132) + 其他玩家(120+)
-       合计约 390；玩家区角色行 + 手牌 156 约需 380。先给牌桌区下限，余额给玩家区。 */
+/* 17. 分区高度再平衡（历史段；实际生效的是下方 24 段的高度预算制）。 */
 .tabletop-layout{grid-template-rows:auto minmax(390px,1.05fr) minmax(0,1fr)}
 .public-table>.other-player{flex:0 0 auto;min-height:0}
 .public-table>.other-player .table-card-row{max-height:120px;overflow:auto}
@@ -900,11 +907,14 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
          玩家区 = 角色行 150 + 手牌行 140 + 标题 24 ≈ 314
        两者相加 682 < 751，余量给牌桌区的探查区（遭遇牌最多的地方）。 */
 .tabletop-layout{
- /* v0.15.55：顶部压缩后把省出的高度给玩家区——角色卡要完整可见（需 ≥120px
-    的角色行），牌桌区保底不变。
-    v0.15.56：阶段3 投入面板（玩家切换 + 角色勾选 + 提交）需要约 150px，
-    header 由 68→38px 省出的量直接加到这里，牌桌保底不变。 */
- grid-template-rows:auto minmax(0,1fr) clamp(340px,48vh,470px)}
+/* v0.15.55：顶部压缩后把省出的高度给玩家区——角色卡要完整可见（需 ≥120px
+   的角色行），牌桌区保底不变。
+   v0.15.56：阶段3 投入面板（玩家切换 + 角色勾选 + 提交）需要约 150px，
+   header 由 68→38px 省出的量直接加到这里，牌桌保底不变。
+   v0.15.79：决策面板内联进玩家区（手牌上方，与开局按钮同槽），玩家区 =
+   面板 + 角色行 + 手牌三段，48vh→50vh；牌桌区有内滚兜底（.public-table
+   overflow-y:auto），余额减少由探查区/其他玩家区消化。 */
+ grid-template-rows:auto minmax(0,1fr) clamp(340px,50vh,470px)}
 /* 牌桌区内部按「剩余给探查区」分配，其他玩家区拿固定 104 */
 .public-table{display:flex;flex-direction:column}
 .public-table>.table-zone{flex:1 1 auto;min-height:0}
