@@ -1,6 +1,6 @@
 /* Tabletop view: UI drafts never pay, exhaust, reveal, or bypass phase validation. */
 /* 界面版本徽标唯一来源：须与 CHANGELOG.md 最新条目标题一致（planning-dom-tests 有校验）。 */
-const APP_VERSION='v0.15.77';
+const APP_VERSION='v0.15.78';
 /* ── 决策面板（v0.15.62 弹窗 → v0.15.76 内联公共桌面）─────────────────
    需要玩家拍板的事不再用浮动弹窗（v0.15.73 的 .decide-layer/收起角标/Esc 全部退役）：
    内容整块内联在公共桌面顶部（.public-table 第一个子块），常驻可见、不遮挡任何
