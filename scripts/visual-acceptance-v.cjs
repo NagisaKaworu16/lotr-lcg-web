@@ -284,7 +284,7 @@ async function gotoCommit(page, players) {
   if (!setupFixed.confirmed) throw new Error('起始手牌未能全部确认：' + JSON.stringify(setupFixed));
   await page.waitForTimeout(240);
 
-  const PANEL = ':is(.operation-content, .decide-box)';
+  const PANEL = ':is(.operation-content, .decide-box, .planning-strip)';
   /* 文字匹配的按钮一律走 tap()：常规点击失败后直接 DOM click，不用 force。 */
   const clickAny = async (sel, text) => {
     const el = text ? page.locator(sel, { hasText: text }).first() : page.locator(sel).first();

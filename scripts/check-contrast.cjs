@@ -84,7 +84,7 @@ const AUDIT = (min) => {
   await audit('resource');
 
   /* v0.15.70：派遣面板在 .decide-box 里，提交／确认改用 data-quest 选择器。 */
-  const PANEL = ':is(.operation-content, .decide-box)';
+  const PANEL = ':is(.operation-content, .decide-box, .planning-strip)';
   const clickBtn = async text => { const el = page.locator(PANEL + ' button:not([disabled])', { hasText: text }).first(); if (!await el.count()) return false; await el.click(); await page.waitForTimeout(250); return true; };
   const clickQuest = async k => { const el = page.locator(PANEL + ' [data-quest="' + k + '"]:not([disabled])').first(); if (!await el.count()) return false; await el.click(); await page.waitForTimeout(280); /* v0.15.69 起提交名单会弹 choose() 确认框，顺手点掉 */ { const ok = page.locator('dialog[open] #ok'); if (await ok.count()) { await ok.click(); await page.waitForTimeout(300); } } return true; };
   const clickNext = async () => { const el = page.locator('.operation-title button.primary:not([disabled])').first(); if (!await el.count()) return false; await el.click(); await page.waitForTimeout(380); return true; };

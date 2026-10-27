@@ -149,7 +149,7 @@ async function drive(page, players) {
   });
   await page.waitForTimeout(240);
   // 先走 UI 推进（与验收脚本同一策略），点不动再退引擎（原因见 REPORT O3）
-  const PANEL = ':is(.operation-content, .decide-box)';
+  const PANEL = ':is(.operation-content, .decide-box, .planning-strip)';
   const clickAny = async (sel, text) => {
     const el = text ? page.locator(sel, { hasText: text }).first() : page.locator(sel).first();
     if (!await el.count()) return false;

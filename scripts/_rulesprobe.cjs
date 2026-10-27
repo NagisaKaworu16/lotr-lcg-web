@@ -79,7 +79,7 @@ const readRules = () => {
   });
   await page.waitForTimeout(240);
 
-  const PANEL = ':is(.operation-content, .decide-box)';
+  const PANEL = ':is(.operation-content, .decide-box, .planning-strip)';
   const clickAny = async (sel, text) => {
     const el = text ? page.locator(sel, { hasText: text }).first() : page.locator(sel).first();
     if (!await el.count()) return false;

@@ -31,7 +31,7 @@ const WIDTH = arg('width', 1440);
 
   /* v0.15.70：派遣面板就地渲染在手牌区「结束阶段」同一块（.decide-box），
      旧的 .mat-phase 已随 v0.15.69 移除；三处都要找。 */
-  const PANEL = ':is(.operation-content, .decide-box, .mat-phase)';
+  const PANEL = ':is(.operation-content, .decide-box, .planning-strip, .mat-phase)';
   const clickBtn = async t => { const el = page.locator(PANEL + ' button:not([disabled])', { hasText: t }).first(); if (!await el.count()) return false; await el.click(); await page.waitForTimeout(260); return true; };
   /* v0.15.70：派遣的提交／确认收成 data-quest 上的唯一主按钮，文字标签会随状态变（提交名单／提交空名单）。
      v0.15.69 起提交名单会弹 choose() 模态确认框（quest-ui.js commit 分支），点完按钮要顺手点掉它。 */

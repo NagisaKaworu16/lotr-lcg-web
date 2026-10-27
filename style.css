@@ -665,6 +665,18 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
 .player-mat .bottom-deck{
  flex:0 0 auto;min-height:0;display:flex;flex-direction:column;gap:4px;
  border:1px solid #dfe3d6;border-radius:8px;background:#f7f5ea;padding:5px 8px 6px;overflow:hidden}
+
+/* ── 7b. 出牌阶段控制条（v0.15.74）────────────────────────────────
+   计划阶段不再弹浮层弹窗（右上角弹窗遮挡牌桌）。阶段控制以按钮形式
+   收进角色区「结束阶段」按钮旁：强制响应、结束出牌步骤、放弃剩余行动。
+   空时整条不占高度（:empty）。 */
+.planning-strip{
+ display:flex;flex-wrap:wrap;align-items:center;gap:8px;
+ margin:2px 6px 0;font-size:13px}
+.planning-strip:empty{display:none}
+.planning-strip button{padding:3px 11px;min-height:26px;font-size:12.5px}
+.planning-strip .planning-choice-hint{font-weight:600;color:#5c4a1e}
+.planning-strip .planning-halt{color:#8a4a3a}
 .player-mat .bottom-deck>.zone-heading{flex:0 0 auto;min-height:0;margin-bottom:0}
 .player-mat .bottom-deck>.zone-heading h2{font-size:12.5px}
 .player-mat .bottom-deck>.zone-heading .small{font-size:11px}

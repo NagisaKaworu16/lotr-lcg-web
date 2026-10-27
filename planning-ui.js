@@ -3,21 +3,22 @@ const PlanningUI=(()=>{
  function button(text,kind,attrs='',disabled=false){return `<button data-action="planning" data-plan="${kind}" ${attrs} ${disabled?'disabled':''}>${text}</button>`;}
  function handButton(p,x){if(!state||![1,2,3,4,5,6].includes(state.phase)||!state.planning)return '<button disabled>计划阶段可操作</button>';if(R.context(state)?.discussion&&R.context(state).plannedActions?.some(a=>a.kind==='play'&&a.uid===x.uid))return '<button disabled>已暂定，可在交流缓冲区撤销</button>';const sp=R.playSpec(state,p.id,x.uid);return `<p class="small muted">${esc(sp.legal?(sp.meta.type==='event'?sp.timing.label:'可打出'):sp.reason)}</p>${button(sp.meta?.type==='event'?([2,3,4,5,6].includes(state.phase)&&R.context(state)?.discussion?'暂定事件':'使用事件'):'打出', 'play',`data-player="${p.id}" data-uid="${x.uid}"`,!sp.legal)}`;}
  function heroStats(p,i){const h=p.heroStates?.[i];if(!h)return '';let v;try{v=R.stats(state,h.uid);}catch{return '<span class="badge">囚禁／已离场</span>'; }return `<span class="hero-state-line">资源 ${h.resources} · 伤害 ${h.damage}/${v.health} · ${h.exhausted?'横置':'重置'}${h.committed?' · 已投入探险':''}</span><span class="small">当前 意${v.willpower} 攻${v.attack} 防${v.defense} 血${v.health}</span>`;}
- function board(p){if(!p.heroStates)return '';const area=(items,kind)=>`<div class="cards">${items.length?items.map(x=>{const m=R.data(state,x),c=R.find(state,x.uid),v=kind==='ally'?R.stats(state,x.uid):null,host=kind==='attachment'?R.find(state,x.target):null;return `<article class="card permanent-card sphere-${m.sphere} ${x.exhausted?'is-exhausted':''}"><div class="number"><span>${kind==='ally'?'盟友':'附属'} · ${x.exhausted?'横置':'重置'}${x.committed?' · 已投入探险':''}</span><span>#${m.code}</span></div>${ImageLibrary.art(x.code)}<h3>${esc(m.nameZh)}</h3>${v?`<div class="stats">意${v.willpower} 攻${v.attack} 防${v.defense} 血${v.health}<br>伤害 ${x.damage||0}/${v.health}</div>`:''}${host?`<p class="small">附于：${esc(host.meta.nameZh||host.meta.name)}${host.controller!==undefined?' · '+esc(state.players[host.controller].name):''}</p>`:''}<details><summary class="small">能力说明</summary><div class="small rules-text">${esc(m.rulesText)}</div></details>${[1,2,3,4,5,6].includes(state.phase)?(()=>{const a=R.abilitySpec(state,p.id,x.uid);return a.legal||!a.reason.includes('没有可主动使用')?button('使用能力','ability',`data-player="${p.id}" data-uid="${x.uid}"`,!a.legal):'';})():''}</article>`;}).join(''):'<div class="empty">暂无'+(kind==='ally'?'盟友':'附属')+'</div>'}</div>`;
-  /* v0.15.64：空区不再渲染大占位（实测两个空态占 265px，把手牌挤出
-     bottom-deck 的 overflow:hidden 之外——开局与计划阶段手牌完全不可见）。
-     数量信息在「队伍与手牌」标题里已有；有任何盟友/附属才渲染该区。 */
-  const secs=[];
-  if(p.allies.length)secs.push(`<div class="panel-title"><h3>盟友区 · ${p.allies.length}</h3></div>${area(p.allies,'ally')}`);
-  if(p.attachments.length)secs.push(`<div class="panel-title"><h3>附属区 · ${p.attachments.length}</h3></div>${area(p.attachments,'attachment')}`);
-  return secs.length?`<section class="player-permanents">${secs.join('')}</section>`:'';
- }
- function panel(s,pid){if(s.phase!==1||!s.planning)return '';const pl=s.planning;if(pl.completed)return `<section class="panel deck-valid"><h2>阶段2 · 计划阶段验收完成</h2><p>所有玩家已结束出牌并放弃剩余行动；阶段结束效果和临时修正已结算。盟友、附属、资源和横置状态保留。可以点击“进入探险阶段”继续。</p></section>`;
-  const actor=s.players[pid]&&!s.players[pid].eliminated?pid:pl.order[0],current=R.active(s),ch=R.choiceSpec(s),as=R.abilities(s,actor);
-  /* v0.15.68：单人时出牌步骤与放弃行动已自动化，面板只留一个「结束计划阶段」；
-     顺序徽标与两段说明文字只对多人有序有意义，单人删去。 */
-  if(s.players.filter(p=>!p.eliminated).length===1)return `<section class="panel planning-panel"><div class="panel-title"><h2>阶段2 · 计划阶段</h2><span class="badge">${pl.closing?'阶段结束结算中':ch?'有响应待处理':'出牌与行动窗口'}</span></div>${pl.halted?`<p class="notice">${esc(pl.halted)}</p>`:''}${ch?`<div class="notice"><b>${esc(ch.message)}</b><div>${button(ch.task.optional?'选择响应／放弃':'处理强制选择','choice',`data-id="${ch.task.id}"`)}</div></div>`:''}<div class="actions">${button('结束计划阶段','finish','',!!ch||pl.closing)}</div><div class="planning-actions"><label class="small">使用行动的玩家 <select id="planning-actor">${s.players.filter(p=>!p.eliminated).map(p=>`<option value="${p.id}" ${p.id===actor?'selected':''}>${esc(p.name)}</option>`).join('')}</select></label><div class="actions">${as.map(a=>`<span title="${esc(a.reason)}">${button(a.name,'ability',`data-player="${actor}" data-uid="${a.uid}"`,!a.legal)}</span>`).join('')||'<span class="small muted">当前没有在场的主动能力。</span>'}</div></div></section>`;
-  return `<section class="panel planning-panel"><div class="panel-title"><h2>阶段2 · 计划阶段</h2><span class="badge">${pl.closing?'阶段结束结算中':current!==null?'当前出牌：'+esc(s.players[current].name):'所有玩家已结束盟友／附属出牌'}</span></div><div class="planning-order">${pl.order.map((id,i)=>`<span class="badge ${id===current?'on':''}">${esc(s.players[id].name)} ${i<pl.index?'已结束':id===current?'正在出牌':'等待'}</span>`).join('')}</div><p class="small muted">盟友和附属按起始玩家顺序打出；合法的通用行动可由其他玩家使用。费用和修正由程序计算，所有响应必须明确选择或放弃。</p>${pl.halted?`<p class="notice">${esc(pl.halted)}</p>`:''}${ch?`<div class="notice"><b>${esc(ch.message)}</b><div>${button(ch.task.optional?'选择响应／放弃':'处理强制选择','choice',`data-id="${ch.task.id}"`)}</div></div>`:''}<div class="actions">${current!==null?button('结束我的盟友／附属出牌步骤','endTurn',`data-player="${current}"`,!!ch||pl.closing):pl.order.map(id=>button(s.players[id].name+(pl.finalPasses.includes(id)?' 已放弃剩余行动':'：放弃剩余行动'),'pass',`data-player="${id}"`,pl.finalPasses.includes(id)||!!ch||pl.closing)).join('')}</div><div class="planning-actions"><label class="small">使用行动的玩家 <select id="planning-actor">${s.players.filter(p=>!p.eliminated).map(p=>`<option value="${p.id}" ${p.id===actor?'selected':''}>${esc(p.name)}</option>`).join('')}</select></label><div class="actions">${as.map(a=>`<span title="${esc(a.reason)}">${button(a.name,'ability',`data-player="${actor}" data-uid="${a.uid}"`,!a.legal)}</span>`).join('')||'<span class="small muted">当前没有在场的主动能力。</span>'}</div><p class="small muted">${esc(R.window(s).label)}。通用事件位于手牌区；响应只在对应即时窗口处理。</p></div></section>`;
+ /* v0.15.74：出牌阶段控制条——计划阶段不再弹任何浮层弹窗（用户要求：点手牌直接出牌，
+    阶段控制以按钮形式收进角色区「结束阶段」旁）。这里只放引擎自己走不完的三件事：
+    强制响应（处理强制选择／选择响应）、结束我的出牌步骤（多人）、放弃剩余行动（轮次走完后）。
+    能力不在这里：角色卡与附属卡的卡面自带「使用能力」按钮（character()/附属 article）。 */
+ function strip(s,pid){
+  if(s.phase!==1||!s.planning||s.planning.completed)return '';
+  const pl=s.planning,ch=R.choiceSpec(s),solo=s.players.filter(p=>!p.eliminated).length===1;
+  const btn=(label,kind,args='',disabled=false)=>`<button data-action="planning" data-plan="${kind}" ${args} ${disabled?'disabled':''}>${esc(label)}</button>`;
+  const parts=[];
+  if(pl.halted)parts.push(`<span class="small planning-halt">${esc(pl.halted)}</span>`);
+  if(ch)parts.push(`<b class="planning-choice-hint">${esc(ch.message)}</b>`,btn(ch.task.optional?'选择响应／放弃':'处理强制选择','choice',`data-id="${ch.task.id}"`));
+  if(solo)parts.push(btn('结束计划阶段','finish','',!!ch||pl.closing));
+  else if(R.active(s)!==null)parts.push(btn('结束我的盟友／附属出牌步骤','endTurn',`data-player="${R.active(s)}"`,!!ch||pl.closing));
+  else parts.push(...pl.order.filter(id=>!s.players[id].eliminated).map(id=>btn(s.players[id].name+(pl.finalPasses.includes(id)?' 已放弃剩余行动':'：放弃剩余行动'),'pass',`data-player="${id}"`,pl.finalPasses.includes(id)||!!ch||pl.closing)));
+  if(!parts.length)return '';
+  return `<div class="planning-strip" aria-label="计划阶段操作">${parts.join('')}</div>`;
  }
  function canFinish(s){const p=s.planning;return !!p&&(p.completed||!p.completed&&!p.queue.length&&R.active(s)===null&&s.players.filter(p=>!p.eliminated).every(x=>p.finalPasses.includes(x.id))&&!p.halted);}
  function title(kind){return kind==='play'?'选择目标与支付资源':kind==='ability'?'使用卡牌能力':'处理响应／强制效果';}
@@ -48,5 +49,5 @@ const PlanningUI=(()=>{
     while(R.active(state)!==null)R.endTurn(state,R.active(state));
     if(!state.planning.finalPasses.includes(solo))R.passAction(state,solo);}
    E.nextPhase(state);});return;}if(kind==='endTurn'){mutate(()=>{R.endTurn(state,pid);const next=R.active(state);if(next!==null)handView=next;});return;}if(kind==='pass'){mutate(()=>R.passAction(state,pid));return;}const a=await form(kind,pid,uid,Number(b.dataset.id));if(!a)return;mutate(()=>{if([2,3,4,5,6].includes(state.phase)&&R.context(state)?.discussion&&['play','ability'].includes(kind))E.questing.queueAction(state,kind,pid,uid,a);else if(kind==='play')R.play(state,pid,uid,a);else if(kind==='ability')R.activate(state,pid,uid,a);else R.resolveChoice(state,Number(b.dataset.id),a);});}
- return {panel,board,handButton,heroStats,handle,canFinish,form};
+ return {strip,handButton,heroStats,handle,canFinish,form};
 })();

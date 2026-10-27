@@ -39,7 +39,7 @@ let browser;
   let idle = 0;
   /* v0.15.70：派遣面板就地渲染在手牌区「结束阶段」同一块（.decide-box），
      不再是操作条里的一块；三处都要找。 */
-  const PANEL = ':is(.operation-content, .decide-box)';
+  const PANEL = ':is(.operation-content, .decide-box, .planning-strip)';
   const clickBtn = async text => {
     const el = page.locator(`${PANEL} button:not([disabled])`, { hasText: text }).first();
     if (!await el.count()) return false;
