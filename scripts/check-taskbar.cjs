@@ -29,9 +29,12 @@ const WIDTH = arg('width', 1440);
   const checks = [];
   const add = (name, ok, detail = '') => checks.push({ name, ok: !!ok, detail: String(detail) });
 
-  /* v0.15.46：完整阶段面板已从操作条搬到角色卡下方的 .mat-phase，两处都要找。 */
-  const PANEL = ':is(.operation-content, .mat-phase)';
+  /* v0.15.70：派遣面板就地渲染在手牌区「结束阶段」同一块（.decide-inline），
+     旧的 .mat-phase 已随 v0.15.69 移除；三处都要找。 */
+  const PANEL = ':is(.operation-content, .decide-inline, .mat-phase)';
   const clickBtn = async t => { const el = page.locator(PANEL + ' button:not([disabled])', { hasText: t }).first(); if (!await el.count()) return false; await el.click(); await page.waitForTimeout(260); return true; };
+  /* v0.15.70：派遣的提交／确认收成 data-quest 上的唯一主按钮，文字标签会随状态变（提交名单／提交空名单）。 */
+  const clickQuest = async k => { const el = page.locator(PANEL + ' [data-quest="' + k + '"]:not([disabled])').first(); if (!await el.count()) return false; await el.click(); await page.waitForTimeout(320); return true; };
   const clickNext = async () => { const el = page.locator('.operation-title button.primary:not([disabled])').first(); if (!await el.count()) return false; await el.click(); await page.waitForTimeout(400); return true; };
   const dockText = () => page.evaluate(() => document.querySelector('.operation-title')?.innerText.replace(/\n/g, ' | ') || '');
   const chips = () => page.evaluate(() => [...document.querySelectorAll('.op-chip')].map(x => x.textContent.trim()));
@@ -98,8 +101,7 @@ const WIDTH = arg('width', 1440);
   add('点牌只产生草稿：日志/横置/已投入均不变', draft.log === before.log && draft.exhausted === before.exhausted && draft.committed === before.committed, `selected=${draft.selected}`);
   add('点牌后有金色选中标记', draft.selected > 0, `selected=${draft.selected}`);
 
-  await clickBtn('提交暂定派遣名单');
-  await page.waitForTimeout(320);
+  await clickQuest('commit');
   const mid = await page.evaluate(() => ({ locked: !!state.questing.deploymentLocked, chips: [...document.querySelectorAll('.op-chip')].map(x => x.textContent.trim()), title: document.querySelector('.operation-title').innerText.replace(/\n/g, ' | '), view: handView }));
   add('单人提交后不执行、不锁定', !mid.locked, `locked=${mid.locked}`);
   add('操作栏显示全员确认进度', mid.chips.length === 2 && mid.chips.some(c => c.includes('待提交')) && mid.chips.some(c => c.includes('已提交')), mid.chips.join(' | '));
@@ -107,19 +109,18 @@ const WIDTH = arg('width', 1440);
 
   const card2 = page.locator('.player-mat .character-card.selectable .card-face').first();
   if (await card2.count()) { await card2.click(); await page.waitForTimeout(150); }
-  await clickBtn('提交暂定派遣名单');
-  await page.waitForTimeout(450);
-  const ready = await page.evaluate(() => ({ locked: !!state.questing.deploymentLocked, committed: state.players.flatMap(p => p.heroStates.filter(h => h.committed).length).reduce((a, b) => a + b, 0), title: document.querySelector('.operation-title').innerText.replace(/\n/g, ' | '), chips: [...document.querySelectorAll('.op-chip')].map(x => x.textContent.trim()), approvals: [...document.querySelectorAll('.operation-content button, .mat-phase button')].filter(b => /二次确认派遣/.test(b.textContent) && !/取消/.test(b.textContent)).length }));
+  await clickQuest('commit');
+  const ready = await page.evaluate(() => ({ locked: !!state.questing.deploymentLocked, committed: state.players.flatMap(p => p.heroStates.filter(h => h.committed).length).reduce((a, b) => a + b, 0), title: document.querySelector('.operation-title').innerText.replace(/\n/g, ' | '), chips: [...document.querySelectorAll('.op-chip')].map(x => x.textContent.trim()), approvals: (state.questing.deploymentApprovals || []).length, confirmButtons: document.querySelectorAll('.decide-inline [data-quest="approveDeployment"]:not([disabled])').length }));
   add('两人都提交后仍不执行，进入二次确认', !ready.locked && ready.committed === 0, `locked=${ready.locked} committed=${ready.committed}`);
   add('操作栏提示二次确认进度', /二次确认/.test(ready.title) && ready.chips.length === 2 && ready.chips.every(c => c.includes('待确认')), ready.title + ' :: ' + ready.chips.join(' | '));
-  add('二次确认按钮按玩家逐个提供', ready.approvals === 2, `buttons=${ready.approvals}`);
+  add('二次确认收成单颗「确认派遣」', ready.confirmButtons === 1 && ready.approvals === 0, `buttons=${ready.confirmButtons} approvals=${ready.approvals}`);
 
   for (let i = 0; i < 4; i++) {
-    const btn = page.locator('.operation-content button:not([disabled]), .mat-phase button:not([disabled])').filter({ hasText: '二次确认派遣' }).filter({ hasNotText: '取消' }).first();
-    if (!await btn.count()) break;
-    await btn.click(); await page.waitForTimeout(320);
+    /* 确认是按人来的：确认后 UI 自动把操作权交给下一位未确认玩家，所以这里可以连点。 */
+    if (!await clickQuest('approveDeployment')) break;
   }
-  const after = await page.evaluate(() => ({ locked: !!state.questing.deploymentLocked, committed: state.players.flatMap(p => p.heroStates.filter(h => h.committed).length).reduce((a, b) => a + b, 0), exhausted: state.players.flatMap(p => p.heroStates.filter(h => h.exhausted).length).reduce((a, b) => a + b, 0) }));
+  const after = await page.evaluate(() => ({ locked: !!state.questing.deploymentLocked, committed: state.players.flatMap(p => p.heroStates.filter(h => h.committed).length).reduce((a, b) => a + b, 0), exhausted: state.players.flatMap(p => p.heroStates.filter(h => h.exhausted).length).reduce((a, b) => a + b, 0), approvals: (state.questing.deploymentApprovals || []).length }));
+  add('确认后 approvals 递增', after.approvals >= 2, `approvals=${after.approvals}`);
   add('全员二次确认后才执行投入', after.locked && after.committed > 0 && after.exhausted > 0, `locked=${after.locked} committed=${after.committed} exhausted=${after.exhausted}`);
 
   // ---- 4. automation, smart windows, per-player switching ----------------

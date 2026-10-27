@@ -42,9 +42,9 @@ test('review confirmation commits exactly the selected draft; local back restore
 test('stale deployment review is rejected without committing or discarding later state',async()=>{const e=environment();await commitScreen(e);const uid=e.run('state.players[0].heroStates[0].uid');e.run(`QuestUI.setDraft(state,0,[${uid}]);`);const result=e.click({action:'quest',quest:'commit',player:'0'});e.run('state.players[0].heroStates[0].resources++;');const changed=e.run('JSON.stringify(state)');e.dialogs.at(-1).querySelector('#ok').click();await result;assert.equal(e.run('JSON.stringify(state)'),changed);assert(e.base.get('toast').textContent.includes('桌面已变化'));});
 
 test('multiplayer UI exposes cancel confirmation until final player submits, then locks and applies the revised selection',async()=>{const e=environment();e.run(`{const cfg=['leadership','spirit'].map(sp=>PlayerCards.config(PlayerCards.starter(PlayerUI.getSnapshot(),sp),PlayerUI.getSnapshot()));state=E.create('mirkwood',2,12345,cfg,{deferSetup:true});E.openingChoice(state,0);E.openingChoice(state,1);E.startScenario(state);E.nextPhase(state);E.planning.endTurn(state,0);E.planning.endTurn(state,1);E.planning.passAction(state,0);E.planning.passAction(state,1);E.nextPhase(state);E.nextPhase(state);E.questing.pass(state,0);E.questing.pass(state,1);E.questing.move(state);handView=0;QuestUI.setDraft(state,0,[state.players[0].heroStates[0].uid]);render();}`);let action=e.click({action:'quest',quest:'commit',player:'0'});e.dialogs.at(-1).querySelector('#ok').click();await action;/* 提交后 UI 自动把视角切到未提交的玩家1，这里切回玩家0 再断言其面板 */
-e.run('handView=0;render();');assert(seen(e,'取消确认，修改派遣'));assert.equal(e.run('state.players[0].heroStates[0].exhausted'),false);await e.click({action:'quest',quest:'withdraw',player:'0'});assert(!e.run('state.questing.deployments[0].confirmed'));e.run('QuestUI.setDraft(state,0,[]);');action=e.click({action:'quest',quest:'commit',player:'0'});e.dialogs.at(-1).querySelector('#ok').click();await action;e.run('handView=1;render();');/* v0.15.62 起提交状态改为操作条 chip：「玩家1 · 已提交」 */
+e.run('handView=0;render();');assert(seen(e,'data-quest="withdraw"'));assert.equal(e.run('state.players[0].heroStates[0].exhausted'),false);await e.click({action:'quest',quest:'withdraw',player:'0'});assert(!e.run('state.questing.deployments[0].confirmed'));e.run('QuestUI.setDraft(state,0,[]);');action=e.click({action:'quest',quest:'commit',player:'0'});e.dialogs.at(-1).querySelector('#ok').click();await action;e.run('handView=1;render();');/* v0.15.62 起提交状态改为操作条 chip：「玩家1 · 已提交」 */
 assert(seen(e,'玩家1 · 已提交'));action=e.click({action:'quest',quest:'commit',player:'1'});e.dialogs.at(-1).querySelector('#ok').click();await action;/* v0.15.62 二次确认流程：全员提交后还需各自「二次确认派遣」才锁定并正式投入 */
-assert.equal(e.run('state.questing.deploymentLocked'),undefined,'仅提交尚未二次确认时不得锁定');for(const p of ['0','1'])await e.click({action:'quest',quest:'approveDeployment',player:p});assert.equal(e.run('state.questing.deploymentLocked'),true);assert.equal(e.run('state.questing.step'),'afterCommit');assert(e.run('state.players.every(p=>p.heroStates.every(h=>!h.committed))'),'本测试双方名单为空，不应有角色被投入');assert(!seen(e,'取消确认，修改派遣'));});
+assert.equal(e.run('state.questing.deploymentLocked'),undefined,'仅提交尚未二次确认时不得锁定');for(const p of ['0','1'])await e.click({action:'quest',quest:'approveDeployment',player:p});assert.equal(e.run('state.questing.deploymentLocked'),true);assert.equal(e.run('state.questing.step'),'afterCommit');assert(e.run('state.players.every(p=>p.heroStates.every(h=>!h.committed))'),'本测试双方名单为空，不应有角色被投入');assert(!seen(e,'data-quest="withdraw"'));});
 
 test('discussion UI queues an event, permits cancellation without cost, then executes only on secondary confirmation',async()=>{const e=environment();await opening(e);await e.click({action:'planning',plan:'endTurn',player:'0'});await e.click({action:'planning',plan:'pass',player:'0'});await e.click({action:'next'});await e.click({action:'next'});e.run(`{const p=state.players[0];if(!p.hand.some(c=>c.code==='01022')){const i=p.playerDeck.findIndex(c=>c.code==='01022');p.hand.push(p.playerDeck.splice(i,1)[0]);}render();}`);const uid=e.run("state.players[0].hand.find(c=>c.code==='01022').uid"),resources=e.run('state.players[0].heroStates.reduce((n,h)=>n+h.resources,0)');for(let i=0;i<2;i++){const action=e.click({action:'planning',plan:'play',player:'0',uid:String(uid)});const d=e.dialogs.at(-1);assert(d.innerHTML.includes('加入暂定清单'));d.querySelector('#plan-confirm').click();await action;assert.equal(e.run('state.questing.plannedActions.length'),1);assert.equal(e.run('state.players[0].heroStates.reduce((n,h)=>n+h.resources,0)'),resources);assert(seen(e,'暂定行动 · 交流缓冲区'));if(i===0)await e.click({action:'quest',quest:'cancelAction',player:'0',id:String(e.run('state.questing.plannedActions[0].id'))});}await e.click({action:'quest',quest:'approveActions',player:'0'});assert.equal(e.run('state.questing.plannedActions.length'),0);assert.equal(e.run('state.players[0].heroStates.reduce((n,h)=>n+h.resources,0)'),resources-2);assert(e.run(`state.players[0].playerDiscard.some(c=>c.uid===${uid})`));await e.click({action:'quest',quest:'pass',player:'0'});assert(seen(e,'取消放弃行动'));await e.click({action:'quest',quest:'unpass',player:'0'});assert.equal(e.run('state.questing.finalPasses.length'),0);});
 test('solo deployment auto-confirms and commits immediately after submission',async()=>{const e=environment();await commitScreen(e);e.run('QuestUI.setDraft(state,0,[state.players[0].heroStates[0].uid]);');const action=e.click({action:'quest',quest:'commit',player:'0'});e.dialogs.at(-1).querySelector('#ok').click();await action;/* v0.15.66：单人模式确认人=提案人本人，提交即自动二次确认并正式投入 */
@@ -577,4 +577,67 @@ test('phase door never advances past an unresolved encounter card',async()=>{
  await e.click({action:'endPhase'});
  assert.equal(e.run('state.questing.step'),step,'未结算遭遇牌时不得推进探险步骤');
  assert(e.run('state.questing.current'),'未结算的遭遇牌必须还在');
+});
+
+/* ── v0.15.70：派遣面板四态 ─────────────────────────────────────────────
+   这一组盯的是「一屏唯一主操作」与「草稿态不得出现『已投入』」两件事：
+   旧版把「未提交」和「已提交」写成两条并列分支，状态重叠时同一件事渲染两遍，
+   两颗绿按钮同时招手——断言换成按 data-quest / data-focus-key 数，才抓得住回归。 */
+function twoPlayerCommit(e){
+ e.run(`{const cfg=['leadership','spirit'].map(sp=>PlayerCards.config(PlayerCards.starter(PlayerUI.getSnapshot(),sp),PlayerUI.getSnapshot()));state=E.create('mirkwood',2,12345,cfg,{deferSetup:true});E.openingChoice(state,0);E.openingChoice(state,1);E.startScenario(state);E.nextPhase(state);E.planning.endTurn(state,0);E.planning.endTurn(state,1);E.planning.passAction(state,0);E.planning.passAction(state,1);E.nextPhase(state);E.nextPhase(state);E.questing.pass(state,0);E.questing.pass(state,1);E.questing.move(state);handView=0;render();}`);
+ return e.base.get('app').innerHTML;
+}
+test('quest deployment panel: one primary action, no 已投入 while unlocked, no leftover dropdown',async()=>{
+ const e=environment();const html=twoPlayerCommit(e);
+ assert(html.includes('class="quest-deploy" data-state="A"'),'草稿态应带 data-state="A"');
+ assert(html.includes('暂定 0 名'),'草稿态状态行应写「暂定 N 名」');
+ assert(!/已投入/.test(html),'deploymentLocked 未置位时页面不得出现「已投入」');
+ assert(!html.includes('id="planning-actor"'),'下拉框选玩家已被玩家分段按钮组取代');
+ assert(html.includes('role="radiogroup"')&&html.includes('aria-label="当前操作玩家"'),'多人局应渲染玩家分段按钮组');
+ assert(html.includes('data-quest-actor="0"')&&html.includes('data-quest-actor="1"'),'每位玩家一颗 radio');
+ assert.equal((html.match(/data-focus-key="quest-submit"/g)||[]).length,1,'草稿态只有一颗提交主按钮');
+ assert(!html.includes('data-focus-key="quest-withdraw"')&&!html.includes('data-focus-key="quest-approve"'),'草稿态不应出现其他状态的主操作');
+ assert(html.includes('class="commit-hint"'),'规则说明应折叠在 details 里');
+ /* 主操作行里绿色实心按钮只允许一颗 */
+ const row=(html.match(/<div class="quest-main-action">[\s\S]*?<\/div>/)||[''])[0];
+ assert.equal((row.match(/class="primary"/g)||[]).length,1,'主操作行只能有一颗 primary');
+});
+test('quest deployment panel: solo table renders no player switch group',async()=>{
+ const e=environment();await commitScreen(e);
+ const html=e.base.get('app').innerHTML;
+ assert(html.includes('class="quest-deploy" data-state="A"'),'单人局同样走四态面板');
+ assert(!html.includes('role="radiogroup"'),'单人局不渲染玩家分段按钮组');
+ assert(!/已投入/.test(html),'未锁定前不得出现「已投入」');
+});
+test('quest deployment panel: after everyone submits the door waits for the second confirmation',async()=>{
+ const e=environment();twoPlayerCommit(e);
+ /* 玩家0 交一名角色（阿拉贡带投入响应，锁定时会停在 commit 段，正好用来验 D 态），玩家1 交空名单。 */
+ e.run('QuestUI.setDraft(state,0,[state.players[0].heroStates[0].uid]);render();');
+ for(const p of ['0','1']){const a=e.click({action:'quest',quest:'commit',player:p});e.dialogs.at(-1).querySelector('#ok').click();await a;}
+ e.run('handView=0;render();');
+ const html=e.base.get('app').innerHTML;
+ assert(html.includes('class="quest-deploy" data-state="C-in"'),'全员已交、本人未确认时应为 C-in');
+ assert(!/已投入/.test(html),'未锁定前（含 C 态）不得出现「已投入」');
+ const region=html.slice(html.indexOf('class="decide-inline"'));
+ assert.equal((region.slice(0,region.indexOf('</section>')).match(/class="primary"/g)||[]).length,1,'C 态一屏只留一颗绿按钮');
+ assert(html.includes('data-quest="approveDeployment"'),'C 态的主操作是「确认派遣」');
+ assert(!html.includes('data-quest="commit"'),'C 态不应再出现提交按钮');
+ assert(/<button class="primary door-go" data-action="endPhase" disabled/.test(html),'C 态结束阶段必须被拦住，避免同屏两颗绿按钮');
+ assert(/等 [^"]*二次确认/.test(html),'门禁提示应写「等 X 二次确认」');
+ await e.click({action:'quest',quest:'approveDeployment',player:'0'});
+ /* 确认是按人来的：确认后 UI 自动把操作权交给下一位未确认玩家，这里切回玩家0 再断言其面板。 */
+ e.run('handView=0;render();');
+ const mid=e.base.get('app').innerHTML;
+ assert(mid.includes('class="quest-deploy" data-state="C-out"'),'确认后应为 C-out');
+ assert(mid.includes('data-quest="unapproveDeployment"'),'C-out 用 ghost 取消确认');
+ assert(!mid.includes('data-quest="approveDeployment"'),'C-out 不再给确认按钮');
+ for(const p of ['0','1'])if(!e.run('state.questing.deploymentLocked'))await e.click({action:'quest',quest:'approveDeployment',player:p});
+ assert.equal(e.run('state.questing.deploymentLocked'),true);
+ /* 引擎仍在按顺序投入（阿拉贡的投入响应待结算）→ step 还是 commit，面板必须只读。 */
+ assert.equal(e.run('state.questing.step'),'commit');
+ e.run('handView=0;render();');
+ const locked=e.base.get('app').innerHTML;
+ assert(locked.includes('class="quest-deploy" data-state="D"'),'锁定后为只读 D 态');
+ assert(locked.includes('已投入 1 名'),'锁定态状态行写「已投入 N 名」');
+ assert(!locked.includes('quest-main-action')&&!locked.includes('data-quest="commit"')&&!locked.includes('data-quest="approveDeployment"'),'D 态不渲染任何派遣按钮');
 });

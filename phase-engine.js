@@ -48,8 +48,10 @@ const PhaseRulesFactory=(E)=>{
       'completed'，结束阶段按钮却仍禁用，悬停还写「等 玩家1、玩家2 提交投入名单」。
       改为按 step 位置判定，和下面 result 项同一套写法。 */
    const afterCommit=(c.step!=='commit'&&c.step!=='beforeCommit')||!!c.deploymentLocked;
-   for(const id of order)add('deploy:'+id,(s.players[id]?.name||('玩家'+(id+1)))+' 提交派遣名单',afterCommit||!!c.deployments?.[id]?.confirmed,'待提交',()=>afterCommit||!!c.deployments?.[id]?.confirmed);
-   for(const id of order)add('dconfirm:'+id,(s.players[id]?.name||('玩家'+(id+1)))+' 二次确认派遣',afterCommit||(c.deploymentApprovals||[]).includes(id),'待确认',()=>afterCommit||(c.deploymentApprovals||[]).includes(id));
+   /* v0.15.70：已淘汰玩家不会再提交／确认名单，继续把他们列成待办会让「结束阶段」永远禁用。 */
+   const liveOrder=order.filter(id=>!s.players[id]?.eliminated);
+   for(const id of liveOrder)add('deploy:'+id,(s.players[id]?.name||('玩家'+(id+1)))+' 提交派遣名单',afterCommit||!!c.deployments?.[id]?.confirmed,'待提交',()=>afterCommit||!!c.deployments?.[id]?.confirmed);
+   for(const id of liveOrder)add('dconfirm:'+id,(s.players[id]?.name||('玩家'+(id+1)))+' 二次确认派遣',afterCommit||(c.deploymentApprovals||[]).includes(id),'待确认',()=>afterCommit||(c.deploymentApprovals||[]).includes(id));
    add('commit','按起始玩家顺序投入角色',afterCommit||c.commitIndex>=order.length,'待投入',()=>afterCommit||c.commitIndex>=order.length);
    /* 逐张探查只有 'staging' 这一段是活的：走出 staging 后 current/remaining 天然为空。 */
    const notStaging=c.step!=='staging';

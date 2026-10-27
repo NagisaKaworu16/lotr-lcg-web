@@ -1,6 +1,6 @@
 /* Tabletop view: UI drafts never pay, exhaust, reveal, or bypass phase validation. */
 /* 界面版本徽标唯一来源：须与 CHANGELOG.md 最新条目标题一致（planning-dom-tests 有校验）。 */
-const APP_VERSION='v0.15.69';
+const APP_VERSION='v0.15.70';
 /* ── 决策弹窗（v0.15.62）──────────────────────────────────────────────
    底部长住的那块阶段面板已经去掉（和角色区右上角的「结束阶段」重复，还白占一行高度）。
    需要玩家拍板的事不再常驻显示，改成「轮到你决定时才弹出来」。
@@ -89,24 +89,12 @@ const DecisionUI=(()=>{
      以前渲染在操作条里）。现在操作条只剩摘要，所以这里必须把 picker 的内容接上，
      否则「投入前行动窗口」会变成一个只有「已投入：无人」、没有任何可点控件的空面板。 */
    const detail=ScenarioEngine.windows.settings(s).mode==='detailed';
-   let html=detail?QuestUI.panel(s,pid):'';
+   /* v0.15.70：picker 现在与详细模式共用同一份四态派遣面板（草稿／已提交／待确认／已锁定
+     全在里面），锁定后的只读状态交给 panel 兜底，两层不再各写一份「提交／确认」入口。 */
+   let html=QuestUI.panel(s,pid)||'';
    if(!detail){
-    /* picker 是「控制 + 状态」的完整一块（自带意志／威胁行），但它只管到「提交名单」为止。
-       全员提交之后的「二次确认派遣」在 QuestUI.panel 的 discussion 分支里，picker 从来不渲染——
-       以前靠操作条之外的地方兜，现在只有弹窗，必须把它接上，否则名单齐了就再也点不动。 */
-    /* 名单全部提交后的讨论期，picker 只剩一颗「取消确认，修改派遣」，而 panel 里有
-       同样的这颗 + 两人的「二次确认派遣」。两份拼起来会看到两个一模一样的按钮，
-       所以这一个阶段只取 panel，不拼 picker。 */
-    const allIn=(q.order||[]).length>0&&q.order.every(id=>{const d=q.deployments&&q.deployments[id];return d&&d.confirmed;});
-    if(q.deploymentLocked||allIn){
-     /* 锁定后 picker 一律返回空（它只管「还没投」的那一段），控制全在 panel 里：
-        投入响应「选择并结算」、逐张探查。所以锁定期和讨论期都取 panel。 */
-     html=QuestUI.panel(s,pid)||'';
-    }else{
-     html=(QuestUI.picker(s,pid)||'')||(q.step==='staging'&&q.current?(QuestUI.revealCard(s)||''):'');
-    }
-    /* 这里不能再提前 return null：下面还有「名单锁定期只读状态卡」要兜。
-       之前把 return 写在这个 if 里，锁定后 html 恒为空，弹窗和角标一起消失。 */
+    html=(QuestUI.picker(s,pid)||'')||(q.step==='staging'&&q.current?(QuestUI.revealCard(s)||''):'')||html;
+    /* 这里不能再提前 return null：下面还有「名单锁定期只读状态卡」要兜。 */
    }
    /* 名单锁定、正在按顺序横置与结算投入响应——这一段玩家没有选择可做，
       但也不能让弹窗彻底消失：刚点完「二次确认」就什么都不见了，人会以为卡住。
@@ -270,7 +258,11 @@ const DesktopUI=(()=>{
   if(m.kind==='quest')preview='暂定意志 '+selected.reduce((n,c)=>n+R.stats(s,c.uid).willpower,0);
   if(m.kind==='defense'){const defense=selected.reduce((n,c)=>n+R.stats(s,c.uid).defense,0),atk=R.find(s,s.combat.attack.uid);preview=`暂定防御 ${defense} · 敌人当前攻击 ${(atk?R.stats(s,atk.uid).attack:0)+(s.combat.attack.bonus||0)}（暗影与后续效果仍可能改变）`;}
   if(m.kind==='attack'){const attack=selected.reduce((n,c)=>n+R.stats(s,c.uid).attack,0),target=d.target?R.find(s,d.target):null;preview=`暂定基础攻击 ${attack}${target?' · 目标防御 '+R.stats(s,target.uid).defense+' · 基础伤害预估 '+Math.max(0,attack-R.stats(s,target.uid).defense):' · 请先点选目标敌人'}（特殊能力以正式结算为准）`;}
-  return `<div class="table-selection"><b>${esc(s.players[m.player].name)} · ${m.kind==='quest'?'点击角色暂定投入':m.kind==='defense'?'点击角色暂定防御；不选表示无人防御':'先点敌人，再点参与攻击的角色'}</b><p aria-live="polite">${esc(preview)} · 已选 ${selected.length} 名</p><div class="actions">${b(m.kind==='quest'?'提交暂定派遣名单':m.kind==='defense'?'提交暂定防御名单':'提交暂定攻击名单','submit','',m.kind==='attack'&&(!d.target||!selected.length))}${b('清空选择','clear')}${m.kind==='attack'?`<button data-action="combatFlow" data-combat="endAttacks" data-player="${m.player}">暂定结束我的攻击</button>`:''}</div><p class="small muted">这里只暂定名单。全员二次确认后才横置、支付并执行。</p></div>`;
+  /* v0.15.70：探险阶段的提交入口收敛到底部派遣面板那颗唯一的主按钮。
+     这块在 quest 模式只留只读摘要与「清空选择」橡皮擦——它本来是同一屏里的
+     第三份提交入口，四人局角色行横滚时还会被带出视野。 */
+  const submit=m.kind==='quest'?'':b(m.kind==='defense'?'提交暂定防御名单':'提交暂定攻击名单','submit','',m.kind==='attack'&&(!d.target||!selected.length));
+  return `<div class="table-selection"><b>${esc(s.players[m.player].name)} · ${m.kind==='quest'?'点击角色暂定投入':m.kind==='defense'?'点击角色暂定防御；不选表示无人防御':'先点敌人，再点参与攻击的角色'}</b><p aria-live="polite">${esc(preview)} · 已选 ${selected.length} 名</p><div class="actions">${submit}${b('清空选择','clear')}${m.kind==='attack'?`<button data-action="combatFlow" data-combat="endAttacks" data-player="${m.player}">暂定结束我的攻击</button>`:''}</div><p class="small muted">这里只暂定名单。全员二次确认后才横置、支付并执行。</p></div>`;
  }
  function next(s){const x=R.context(s),done=x?.completed;let label='',disabled=false;
  if(s.status==='won'||s.status==='lost')return `<span class="badge">${s.status==='won'?'剧本已结束 · 见上方结算':'远征已结束 · 见上方结算'}</span>`;
@@ -316,7 +308,8 @@ const DesktopUI=(()=>{
   if(s.pending.length)return {label:'先处理剧本待结算事项',chips:chip('待结算 '+s.pending.length+' 项')};
   const q=s.questing,c=s.combat,t=s.traveling,e=s.encountering,r=s.refreshing,ids=live(s).map(p=>p.id);
   if(q&&q.round===s.round&&!q.completed){
-   if(q.step==='commit'&&!q.deploymentLocked){const order=q.order||[],done=order.filter(id=>q.deployments?.[id]?.confirmed),pend=order.filter(id=>!q.deployments?.[id]?.confirmed);
+   /* v0.15.70：已淘汰玩家不计入「全员」——否则操作条会一直点名等一个已经被淘汰的人。 */
+   if(q.step==='commit'&&!q.deploymentLocked){const order=(q.order||[]).filter(id=>!s.players[id]?.eliminated),done=order.filter(id=>q.deployments?.[id]?.confirmed),pend=order.filter(id=>!q.deployments?.[id]?.confirmed);
     if(pend.length)return {label:'等待 '+pend.map(id=>s.players[id]?.name||('玩家'+(id+1))).join('、')+' 提交派遣名单（'+done.length+'/'+order.length+'）',chips:chipRow(s,order,done,'已提交','待提交')};
     const app=q.deploymentApprovals||[];return {label:'名单已就绪 · 等待二次确认（'+app.length+'/'+order.length+'）',chips:chipRow(s,order,app,'已确认','待确认')};}
    if(q.actionLocked)return {label:'正在执行暂定行动',chips:chip('全员已确认','done')};
@@ -371,14 +364,22 @@ const DesktopUI=(()=>{
   /* 探险阶段的投入名单是「必须玩家定」的选择：引擎不会替人挑角色，
      所以按钮要禁用并直接点名等谁，不能让玩家点了没反应。
      注意判据要带上 !q.completed 和 step 限定：名单锁定走完 commit 段之后，
-     即使有人 deployments 里缺 confirmed 也不该再拦门（那是引擎自己该收的尾）。 */
-  const q=s.questing,waiting=s.phase===2&&q&&!q.completed&&q.step==='commit'&&!q.deploymentLocked
-   ?(q.order||[]).filter(id=>!q.deployments?.[id]?.confirmed).map(id=>s.players[id]?.name||('玩家'+(id+1))):[];
-  const blocked=waiting.length>0;
-  const tail=s.pending.length?'有剧本事项待结算':blocked?'等 '+waiting.join('、')+' 提交投入名单':left.length?'还差 '+left.length+' 项':'必需操作已全部完成';
+     即使有人 deployments 里缺 confirmed 也不该再拦门（那是引擎自己该收的尾）。
+     v0.15.70：全员提交之后还有一层「二次确认」——以前这里只算提交，于是 C 态时
+     门禁是绿的、底部「确认派遣」也是绿的，同一屏两颗绿按钮同时招手。
+     现在两段一起算：未提交 → 等提交；已齐未确认 → 等确认；已淘汰的玩家不计。 */
+  const q=s.questing,phaseQ=s.phase===2&&q&&!q.completed&&q.step==='commit'&&!q.deploymentLocked;
+  const aliveQ=phaseQ?(q.order||[]).filter(id=>!s.players[id]?.eliminated):[];
+  const nameOf=id=>s.players[id]?.name||('玩家'+(id+1));
+  const waitingSub=aliveQ.filter(id=>!q.deployments?.[id]?.confirmed).map(nameOf);
+  const waitingApr=(phaseQ&&!waitingSub.length&&(q.order||[]).length>1&&q.discussion)
+   ?aliveQ.filter(id=>!(q.deploymentApprovals||[]).includes(id)).map(nameOf):[];
+  const blocked=waitingSub.length>0||waitingApr.length>0;
+  const blockedWhy=waitingSub.length?'等 '+waitingSub.join('、')+' 提交名单':waitingApr.length?'等 '+waitingApr.join('、')+' 二次确认':'';
+  const tail=s.pending.length?'有剧本事项待结算':blocked?blockedWhy:left.length?'还差 '+left.length+' 项':'必需操作已全部完成';
   /* '· ' 前缀把「已通过」的项也画成待办，收尾后一条都不剩时不要拼出一个空标题。 */
   const tipFull=full?(list.some(x=>!x.check())?full:list.map(x=>'✓ '+x.label).join('\n')):'';
-  return `<span class="phase-door${ready?' ready':''}" aria-label="结束阶段"><span class="door-state" hidden>${esc(tail)}</span><button class="primary door-go" data-action="endPhase" ${s.pending.length||blocked?'disabled':''} title="${esc((s.pending.length?'先结算剧本事项\n':blocked?'等 '+waiting.join('、')+' 提交投入名单\n':left.length?'还差 '+left.length+' 项必需操作\n':'可以结束\n')+(tipFull||'本阶段没有必需操作'))}">${esc(ready&&!blocked?'结束阶段 → '+phaseAfterName(s):'结束阶段')}</button></span>`;
+  return `<span class="phase-door${ready?' ready':''}" aria-label="结束阶段"><span class="door-state" hidden>${esc(tail)}</span><button class="primary door-go" data-action="endPhase" ${s.pending.length||blocked?'disabled':''} title="${esc((s.pending.length?'先结算剧本事项\n':blocked?blockedWhy+'\n':left.length?'还差 '+left.length+' 项必需操作\n':'可以结束\n')+(tipFull||'本阶段没有必需操作'))}">${esc(ready&&!blocked?'结束阶段 → '+phaseAfterName(s):'结束阶段')}</button></span>`;
  }
  function phaseAfterName(s){if(s.phase>=6)return '下一回合';return phasesName[s.phase+1];}
  const phasesName=['资源','计划','探险','旅行','遭遇','战斗','刷新'];

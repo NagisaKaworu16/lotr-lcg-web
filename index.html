@@ -1551,9 +1551,86 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
  .expedition-title>span{white-space:normal}
 }
 
+/* ── 20b. 探险阶段 · 派遣名单面板（v0.15.70）───────────────────────────
+   一块面板只留一个主操作：R0 状态行 → R1 玩家分段按钮组 → R2 名单勾选区 →
+   R3 主操作行（sticky）→ R4 折叠规则说明。原先这段是「下拉框 + 并排徽章 +
+   逐人二次确认按钮」两条分支叠加渲染，四人局里同一件事有三个入口、两颗绿按钮。
+   字号阶梯：状态行/提示 12px、角色 chip 12.5px、玩家 chip 13px、主按钮 14px。
+   12px 不用 --muted（对比度约 3.8:1），改 #5f6a58；提示类用 #6b5a35。 */
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.quest-deploy{display:grid;gap:9px;min-width:0;font-size:12.5px;color:#2f4038}
+.quest-deploy[data-state="A"],.quest-deploy[data-state="B"],
+.quest-deploy[data-state="C-in"],.quest-deploy[data-state="C-out"]{
+ border-left:3px solid transparent;padding:2px 0 2px 11px}
+.quest-deploy[data-state="A"]{border-left:3px dashed #c9b98a}
+.quest-deploy[data-state="B"],.quest-deploy[data-state="C-in"],.quest-deploy[data-state="C-out"]{border-left:3px solid var(--gold)}
+.quest-deploy[data-state="D"]{padding:2px 0}
+
+/* R0 状态行：数字按等宽数位对齐，勾选时不会左右跳。 */
+.quest-status{display:flex;align-items:center;gap:8px;margin:0;font-size:12px;font-weight:600;color:#2f4038;font-variant-numeric:tabular-nums}
+.state-pill{flex:0 0 auto;padding:1px 8px;border-radius:999px;border:1px solid var(--line);background:#f2f1e7;color:#5f6a58;font-size:11.5px;font-weight:600;letter-spacing:.4px}
+.quest-deploy[data-state="A"] .state-pill{border-color:#c9b98a;background:#f7f1e0;color:#6b5a35}
+.quest-deploy[data-state="B"] .state-pill,.quest-deploy[data-state="C-in"] .state-pill,
+.quest-deploy[data-state="C-out"] .state-pill{border-color:#a8c2a1;background:#eef4e9;color:#3f6a48}
+
+/* R1 玩家分段按钮组（role=radiogroup）：一颗胶囊一颗人，三态靠圆点表达，
+   取代原来「下拉框 + 并排徽章」两份同一信息。 */
+.quest-actors{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;border:0;min-width:0}
+.actor-chip{position:relative;display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border:1px solid var(--line);border-radius:999px;background:#fffdf6;font-size:13px;font-weight:500;color:#3f5047;line-height:1.5;cursor:pointer}
+.actor-chip input{position:absolute;width:1px;height:1px;opacity:0;margin:0;padding:0;pointer-events:none}
+.actor-chip .dot{width:8px;height:8px;border-radius:50%;border:1.5px solid #b3b9a8;background:transparent;flex:0 0 auto}
+.actor-chip[data-state="sub"] .dot{border-color:#3f6a48;background:#3f6a48}
+.actor-chip[data-state="ok"] .dot{border-color:#3f6a48;background:#3f6a48;box-shadow:0 0 0 2px #eadfc2}
+.actor-chip[data-state="ok"]{border-color:#a8c2a1;background:#eef4e9;font-weight:600}
+.actor-chip:has(input:checked){font-weight:600;border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
+.actor-chip:focus-within{outline:2px solid var(--gold);outline-offset:1px}
+
+/* R2 名单区：原生 checkbox 的 chip，勾选只改本地草稿。 */
+.quest-deploy .quest-commit-list{display:flex;flex-wrap:wrap;gap:6px;margin:0}
+.quest-deploy .quest-commit-list label{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border:1px solid var(--line);border-radius:6px;background:#f6f5ec;font-size:12.5px;color:#3f5047;line-height:1.5;cursor:pointer}
+.quest-deploy .quest-commit-list label[data-state="on"]{border-color:var(--green);background:#eef4e9;color:var(--ink);font-weight:600}
+.quest-deploy .quest-commit-list input{width:14px;height:14px;margin:0;padding:0;accent-color:var(--green)}
+.quest-deploy .quest-commit-list small{font-size:12px;color:#5f6a58}
+.quest-deploy .quest-commit-list.empty{display:block;padding:7px 10px;border:1px dashed var(--line);border-radius:6px;color:#5f6a58}
+
+/* R3 主操作行：贴在滚动容器底部，滚名单时也在原地。
+   一屏只允许一颗绿色实心按钮，次要操作一律 ghost。 */
+.quest-main-action{position:sticky;bottom:0;z-index:1;display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding-top:8px;border-top:1px solid #e6e4d6;background:#fffdf6}
+.quest-main-action .primary{min-height:34px;padding:0 18px;border-radius:6px;font-size:14px;font-weight:600;background:var(--green);color:#fff8e6;border-color:var(--green)}
+.quest-ghost{background:transparent;border:0;padding:0;min-height:24px;color:#5f6a58;font-size:12.5px;text-decoration:underline dotted;text-underline-offset:3px}
+.quest-ghost:hover{background:transparent;color:var(--green);border-color:transparent}
+.action-note{margin-left:auto;font-size:12px;color:#6b5a35;font-variant-numeric:tabular-nums}
+
+/* R4 规则说明：默认折叠，不占高度。 */
+.commit-hint{margin:0;font-size:12px;color:#5f6a58}
+.commit-hint>summary{display:inline-flex;align-items:center;cursor:pointer;list-style:none;padding:2px 0;color:#5f6a58}
+.commit-hint>summary::-webkit-details-marker{display:none}
+.commit-hint>summary:hover{color:var(--green)}
+.commit-hint[open]>summary{color:var(--green)}
+.commit-hint>p{margin:4px 0 0;font-size:12px;line-height:1.65;color:#5f6a58}
+
+/* 窄屏：玩家 chip 换行、名单两列纵向滚，主按钮整宽；不出横向滚动条。 */
+@media(max-width:600px){
+ .quest-actors{flex-wrap:wrap}
+ .quest-deploy .quest-commit-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;overflow-y:auto}
+ .quest-deploy .quest-commit-list label{min-width:0}
+ .quest-main-action{flex-wrap:wrap;gap:8px}
+ .quest-main-action .primary{flex:1 1 100%;min-height:38px}
+ .action-note{margin-left:0;order:3;flex:1 1 100%}
+}
+/* 触摸设备：用 padding 扩命中区到 ≥44px，不用 transform:scale（会糊字也压不住布局）。 */
+@media(pointer:coarse){
+ .actor-chip{padding:9px 14px;min-height:44px}
+ .quest-deploy .quest-commit-list label{padding:11px 12px;min-height:44px}
+ .quest-main-action .primary{min-height:44px}
+ .quest-ghost{min-height:44px;padding:0 6px}
+ .commit-hint>summary{min-height:44px}
+}
+
 </style></head><body>
 <header><nav><button id="tableTab" class="active nav-home" title="回到首页"><svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><defs><linearGradient id="brandGold" x1="10" y1="8" x2="54" y2="57" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fdf4cd"/><stop offset=".32" stop-color="#e3c47a"/><stop offset=".55" stop-color="#a9853f"/><stop offset=".78" stop-color="#e8cb86"/><stop offset="1" stop-color="#fffae0"/></linearGradient><radialGradient id="brandField" cx=".5" cy=".42" r=".58"><stop offset="0" stop-color="#8a4a16"/><stop offset=".46" stop-color="#4a2a10"/><stop offset="1" stop-color="#150e07"/></radialGradient></defs><circle cx="32" cy="32" r="21" fill="#0d1710" fill-opacity=".62"/><circle cx="32" cy="32" r="21" fill="none" stroke="url(#brandGold)" stroke-width="7"/><path d="M14.6 19.2A21 21 0 0 1 32.6 10.9" fill="none" stroke="#fffbe8" stroke-width="2.4" stroke-linecap="round" opacity=".55"/></svg>首页</button><button id="catalogTab">卡牌 <span>55</span></button><button id="decksTab">我的卡组</button><button id="helpTab">说明与完成范围</button></nav><div class="history-nav"><button id="navBack" type="button" title="后退" aria-label="后退">←</button><button id="navFwd" type="button" title="前进" aria-label="前进">→</button></div><div class="header-actions"><button id="undo">撤销一步</button><button id="export">导出存档</button><label class="button" for="import">导入存档</label><input id="import" type="file" accept="application/json" hidden></div></header>
-<main id="app"></main><div id="toast" role="status" aria-live="polite"></div>
+<main id="app"></main><div id="toast" role="status" aria-live="polite"></div><div id="live" role="status" aria-live="polite" class="sr-only"></div>
 <script>
 /* 中文名称及规则为本项目工作译名/机制摘要；非官方译文。 */
 const LOTR_DATA = {
@@ -6142,19 +6219,30 @@ const QuestRulesFactory=(H,R)=>{
   if(!planned(s).length){x.actionLocked=false;x.actionApprovals=[];x.finalPasses=[];log(s,'已确认的行动执行完成，请继续交流或结束本窗口');}
  }
  function withdrawDeploymentApproval(s,pid){check(s);need(q(s).discussion&&!q(s).deploymentLocked,'名单已锁定');need(q(s).order.includes(pid),'无效玩家');q(s).deploymentApprovals=(q(s).deploymentApprovals||[]).filter(id=>id!==pid);}
- function approveDeployment(s,pid){check(s);const x=q(s);need(x.discussion&&x.step==='commit'&&!x.deploymentLocked&&x.order.includes(pid),'当前不能二次确认派遣');need(x.order.every(id=>x.deployments?.[id]?.confirmed),'请先由每位玩家提交暂定派遣名单');for(const id of x.order)validateDeployment(s,id,x.deployments[id].ids);x.deploymentApprovals??=[];need(!x.deploymentApprovals.includes(pid),'已二次确认');x.deploymentApprovals.push(pid);if(x.order.every(id=>x.deploymentApprovals.includes(id))){x.deploymentLocked=true;log(s,'全员二次确认，正式执行投入');resumeDeployment(s);}}
+ function approveDeployment(s,pid){check(s);const x=q(s);
+ /* v0.15.70：「全员」一律排除已淘汰玩家——中途有人被淘汰时，order 里那位永远不会再提交／确认，
+    这一条会把整队永久卡在「已提交待他人」。 */
+ const all=()=>x.order.filter(id=>!s.players[id]?.eliminated);
+ need(x.discussion&&x.step==='commit'&&!x.deploymentLocked&&x.order.includes(pid),'当前不能二次确认派遣');need(all().every(id=>x.deployments?.[id]?.confirmed),'请先由每位玩家提交暂定派遣名单');for(const id of all())validateDeployment(s,id,x.deployments[id].ids);x.deploymentApprovals??=[];need(!x.deploymentApprovals.includes(pid),'已二次确认');x.deploymentApprovals.push(pid);if(all().every(id=>x.deploymentApprovals.includes(id))){x.deploymentLocked=true;log(s,'全员二次确认，正式执行投入');resumeDeployment(s);}}
  function validateDeployment(s,pid,uids){need(q(s).order.includes(pid),'无效玩家');need(Array.isArray(uids)&&new Set(uids.map(String)).size===uids.length,'投入名单不能重复');const allowed=eligible(s,pid);need(uids.every(id=>allowed.some(c=>same(c.uid,id))),'只能投入己方重置且可用的角色');}
- function submitDeployment(s,pid,uids){check(s);const x=q(s);need(x.step==='commit'&&!x.deploymentLocked&&!x.tasks.length,'派遣名单已锁定');need(!x.deployments?.[pid]?.confirmed,'请先取消确认再修改名单');validateDeployment(s,pid,uids);
+function submitDeployment(s,pid,uids){check(s);const x=q(s);need(x.step==='commit'&&!x.deploymentLocked&&!x.tasks.length,'派遣名单已锁定');need(!x.deployments?.[pid]?.confirmed,'请先取消确认再修改名单');validateDeployment(s,pid,uids);
   // Validate all earlier submissions before committing any of the table.
-  for(const id of x.order)if(x.deployments?.[id]?.confirmed)validateDeployment(s,id,x.deployments[id].ids);
+  /* v0.15.70：已淘汰玩家不再计入「全员」（见 approveDeployment 同一条注释）。 */
+  const all=()=>x.order.filter(id=>!s.players[id]?.eliminated);
+  for(const id of all())if(x.deployments?.[id]?.confirmed)validateDeployment(s,id,x.deployments[id].ids);
   x.deployments??={};x.deployments[pid]={ids:uids.map(Number),confirmed:true};log(s,s.players[pid].name+'确认派遣名单，等待全员确认');
   invalidateAgreement(s);
   /* v0.15.66：单人模式时确认人=提案人本人，自动完成二次确认。 */
   if(x.discussion&&s.players.filter(p=>!p.eliminated).length===1&&x.order.length===1)approveDeployment(s,pid);
-  if(!x.discussion&&x.order.every(id=>x.deployments[id]?.confirmed)){x.deploymentLocked=true;log(s,'全员已确认，锁定派遣名单并按起始玩家顺序执行投入');resumeDeployment(s);}
- }
+  if(!x.discussion&&all().every(id=>x.deployments[id]?.confirmed)){x.deploymentLocked=true;log(s,'全员已确认，锁定派遣名单并按起始玩家顺序执行投入');resumeDeployment(s);}
+}
  function withdrawDeployment(s,pid){check(s);const x=q(s);need(x.step==='commit'&&!x.deploymentLocked,'全员已确认，不能再修改派遣名单');need(x.deployments?.[pid]?.confirmed,'该玩家尚未确认');x.deployments[pid].confirmed=false;invalidateAgreement(s);log(s,s.players[pid].name+'取消派遣确认，可修改名单');}
- function resumeDeployment(s){const x=q(s);if(!x?.deploymentLocked||x.step!=='commit'||x.tasks.length||x.queue.length||s.pending.length||s.status!=='playing')return;while(x.step==='commit'&&!x.tasks.length&&!x.queue.length){const pid=x.order[x.commitIndex];commit(s,pid,x.deployments[pid].ids,true);}}
+ function resumeDeployment(s){const x=q(s);if(!x?.deploymentLocked||x.step!=='commit'||x.tasks.length||x.queue.length||s.pending.length||s.status!=='playing')return;
+ /* v0.15.70：已淘汰的玩家（或锁定前从未提交的人）没有名单可横置，跳过并按顺序继续，
+    否则 x.deployments[pid] 为 undefined，整段投入会在这里抛错，全队卡死。 */
+ while(x.step==='commit'&&!x.tasks.length&&!x.queue.length&&x.commitIndex<x.order.length){const pid=x.order[x.commitIndex];
+  if(s.players[pid]?.eliminated||!x.deployments?.[pid]){x.commitIndex++;if(x.commitIndex>=x.order.length)x.step='afterCommit';continue;}
+  commit(s,pid,x.deployments[pid].ids,true);}}
  function commit(s,pid,uids,fromBatch=false){check(s);const x=q(s);need(!x.deployments||(x.deploymentLocked&&fromBatch),'请先让所有玩家确认派遣名单');need(x.step==='commit'&&!x.tasks.length,'当前不是可投入角色的步骤');need(x.order[x.commitIndex]===pid,'请按起始玩家顺序投入');need(Array.isArray(uids)&&new Set(uids.map(String)).size===uids.length,'投入名单不能重复');const available=eligible(s,pid);need(uids.every(id=>available.some(c=>same(c.uid,id))),'只能投入己方重置且可用的角色');const chosen=uids.map(id=>available.find(c=>same(c.uid,id)));for(const c of chosen){c.state.exhausted=true;c.state.committed=true;}
   log(s,s.players[pid].name+'投入：'+(chosen.map(c=>c.meta.nameZh).join('、')||'无人'));
   for(const c of chosen)if(['01001','01002','01044','01045'].includes(c.meta.code))task(s,'commitResponse',pid,{uid:c.uid,code:c.meta.code},true);
@@ -6592,8 +6680,10 @@ const PhaseRulesFactory=(E)=>{
       'completed'，结束阶段按钮却仍禁用，悬停还写「等 玩家1、玩家2 提交投入名单」。
       改为按 step 位置判定，和下面 result 项同一套写法。 */
    const afterCommit=(c.step!=='commit'&&c.step!=='beforeCommit')||!!c.deploymentLocked;
-   for(const id of order)add('deploy:'+id,(s.players[id]?.name||('玩家'+(id+1)))+' 提交派遣名单',afterCommit||!!c.deployments?.[id]?.confirmed,'待提交',()=>afterCommit||!!c.deployments?.[id]?.confirmed);
-   for(const id of order)add('dconfirm:'+id,(s.players[id]?.name||('玩家'+(id+1)))+' 二次确认派遣',afterCommit||(c.deploymentApprovals||[]).includes(id),'待确认',()=>afterCommit||(c.deploymentApprovals||[]).includes(id));
+   /* v0.15.70：已淘汰玩家不会再提交／确认名单，继续把他们列成待办会让「结束阶段」永远禁用。 */
+   const liveOrder=order.filter(id=>!s.players[id]?.eliminated);
+   for(const id of liveOrder)add('deploy:'+id,(s.players[id]?.name||('玩家'+(id+1)))+' 提交派遣名单',afterCommit||!!c.deployments?.[id]?.confirmed,'待提交',()=>afterCommit||!!c.deployments?.[id]?.confirmed);
+   for(const id of liveOrder)add('dconfirm:'+id,(s.players[id]?.name||('玩家'+(id+1)))+' 二次确认派遣',afterCommit||(c.deploymentApprovals||[]).includes(id),'待确认',()=>afterCommit||(c.deploymentApprovals||[]).includes(id));
    add('commit','按起始玩家顺序投入角色',afterCommit||c.commitIndex>=order.length,'待投入',()=>afterCommit||c.commitIndex>=order.length);
    /* 逐张探查只有 'staging' 这一段是活的：走出 staging 后 current/remaining 天然为空。 */
    const notStaging=c.step!=='staging';
@@ -10049,34 +10139,184 @@ const QuestUI=(()=>{
  let draft={context:null,player:null,ids:[]};
  function draftFor(s,pid){if(draft.context!==s.questing||draft.player!==pid)draft={context:s.questing,player:pid,ids:[...(s.questing.deployments?.[pid]?.ids||[])]};const allowed=R.eligible(s,pid).map(c=>c.uid);draft.ids=draft.ids.filter(id=>allowed.includes(id));return [...draft.ids];}
  function setDraft(s,pid,ids){const allowed=R.eligible(s,pid).map(c=>c.uid);draft={context:s.questing,player:pid,ids:[...new Set(ids)].filter(id=>allowed.includes(id))};}
- function bind(){if(!state?.questing||state.questing.step!=='commit')return;const pid=state.players[handView]&&!state.players[handView].eliminated?handView:state.first;document.querySelectorAll('[data-commit]').forEach(el=>el.onchange=()=>{setDraft(state,pid,[...document.querySelectorAll('[data-commit]:checked')].map(x=>+x.dataset.commit));const box=document.querySelector('#quest-draft-summary');if(box)box.textContent=draftSummary(state,pid);});}
- function draftSummary(s,pid){const ids=draftFor(s,pid);return '待确认：'+ids.length+'名角色，当前意志合计 '+ids.reduce((n,id)=>n+P.stats(s,id).willpower,0)+'。尚未横置角色或触发响应，可随时修改。';}
- const steps={beforeCommit:'投入前行动窗口',commit:'暂定派遣与全队确认',afterCommit:'投入后行动窗口',staging:'逐张探查',afterStaging:'探险结算前行动窗口',afterResult:'结算后行动窗口',completed:'阶段3验收完成'};
+ const steps={beforeCommit:'投入前行动窗口',commit:'派遣名单',afterCommit:'投入后行动窗口',staging:'逐张探查',afterStaging:'探险结算前行动窗口',afterResult:'结算后行动窗口',completed:'阶段3验收完成'};
+
+ /* ── 派遣名单：四态枚举（v0.15.70）────────────────────────────────────
+    旧版是「两条并列的 if 各往 body 追加一段」，于是状态重叠时同一件事渲染两遍：
+    详细模式里同时有下拉框、并排徽章、逐人「二次确认派遣」按钮和两块说明文字，
+    牌桌操作条里还有第三颗「提交暂定派遣名单」。现在一次算出唯一状态，
+    纵向四段只在一处渲染：
+      R0 状态行 · R1 玩家分段按钮组 · R2 名单勾选区 · R3 主操作行 · R4 折叠说明
+    状态判据（lock=deploymentLocked，sub=本人已提交，allSub=全队已提交，ok=本人已确认）：
+      A    !lock && !sub                              草稿
+      B    !lock && sub && !allSub                    已提交，等别人
+      C-in !lock && allSub && discussion && !ok       待确认（唯一主操作=确认派遣）
+      C-out!lock && allSub && discussion && ok        已确认，等别人
+      D    lock                                       只读，不渲染主操作
+    单人局永远到不了 C：引擎在 submitDeployment 里提交即自动 approveDeployment。 */
+ const HINT='名单全部提交后才能二次确认；确认后仍可取消。任何修改都会清除所有人的确认。全员确认后按起始玩家顺序横置，并结算投入响应。';
+ const nameOf=(s,id)=>s.players[id]?.name||('玩家'+(id+1));
+ /* 已淘汰的玩家不再参与「全员提交／全员确认」判据：否则中途被淘汰会让全队永远卡在 B/C。 */
+ const aliveOrder=s=>(s.questing.order||[]).filter(id=>!s.players[id]?.eliminated);
+ function stateOf(s,pid){
+  const q=s.questing,alive=aliveOrder(s),apr=q.deploymentApprovals||[];
+  if(q.deploymentLocked)return 'D';
+  if(!q.deployments?.[pid]?.confirmed)return 'A';
+  if(alive.length&&!alive.every(id=>q.deployments?.[id]?.confirmed))return 'B';
+  if((q.order||[]).length>1&&q.discussion){
+   if(!apr.includes(pid))return 'C-in';
+   if(!alive.every(id=>apr.includes(id)))return 'C-out';
+  }
+  return 'D';
+ }
+ /* R0 的数字 = Σ 已提交名单 + 本机草稿（未提交者按 0 计），所以草稿态也能看到「我勾了会怎样」。 */
+ function tally(s,pid,ph){
+  let n=0,will=0;
+  /* 已淘汰玩家的名单不会再被横置（引擎在 resumeDeployment 里跳过），所以也不计入合计。 */
+  for(const id of aliveOrder(s)){const d=s.questing.deployments?.[id];if(!d?.confirmed)continue;n+=d.ids.length;will+=d.ids.reduce((a,uid)=>a+P.stats(s,uid).willpower,0);}
+  if(ph==='A'){const ids=draftFor(s,pid);n+=ids.length;will+=ids.reduce((a,uid)=>a+P.stats(s,uid).willpower,0);}
+  return {n,will};
+ }
+ /* 「已投入」三字只允许出现在锁定态；草稿态一律写「暂定」。 */
+ function statusText(s,pid,ph){
+  const {n,will}=tally(s,pid,ph);
+  return ph==='D'?`已投入 ${n} 名 · 意志 ${will}`:`暂定 ${n} 名 · 意志 ${will} ／ 威胁 ${ScenarioEngine.threat(s)}`;
+ }
+ const PILL={A:'草稿',B:'已提交','C-in':'待确认','C-out':'待确认'};
+ function statusRow(s,pid,ph){const pill=PILL[ph]?`<span class="state-pill">${PILL[ph]}</span>`:'';return `<p class="quest-status">${pill}<span data-quest-status>${esc(statusText(s,pid,ph))}</span></p>`;}
+ /* R1：一颗分段按钮（role=radiogroup）替代「下拉框 + 并排徽章」——后者是同屏两份同一信息。
+    三态圆点纯 CSS：空心环=未提交、实心=已提交、实心加金环=已二次确认。
+    点击只改 this browser 的 handView（视图态），零游戏状态变更、不进 history。 */
+ function actorGroup(s,pid){
+  const q=s.questing,order=aliveOrder(s),apr=q.deploymentApprovals||[];
+  if(order.length<2)return '';
+  const chips=order.map(id=>{const sub=!!q.deployments?.[id]?.confirmed,ok=apr.includes(id),tone=ok?'ok':sub?'sub':'idle',label=ok?'已确认':sub?'已提交':'未提交';
+   return `<label class="actor-chip" data-state="${tone}"><input type="radio" name="quest-actor" value="${id}" data-quest-actor="${id}" data-focus-key="quest-actor-${id}" ${id===pid?'checked':''} aria-label="${esc(nameOf(s,id))}，${label}"><span class="dot" aria-hidden="true"></span>${esc(nameOf(s,id))}</label>`;}).join('');
+  return `<fieldset class="quest-actors" role="radiogroup" aria-label="当前操作玩家">${chips}</fieldset>`;
+ }
+ /* R2：只用原生 checkbox（复用 [data-commit] 绑定），勾选不重绘整页。 */
+ function commitList(s,pid,ph){
+  if(ph!=='A')return '';
+  const mine=P.chars(s).filter(c=>c.controller===pid),selected=draftFor(s,pid);
+  if(!mine.length)return '<div class="quest-commit-list empty">本回合无可用角色</div>';
+  return `<div class="quest-commit-list">${mine.map(c=>`<label data-state="${selected.includes(c.uid)?'on':''}"><input type="checkbox" data-commit="${c.uid}" data-focus-key="quest-commit-${c.uid}" ${c.state.exhausted?'disabled':''} ${selected.includes(c.uid)?'checked':''}><span>${esc(c.meta.nameZh)}</span><small>意${P.stats(s,c.uid).willpower}</small></label>`).join('')}</div>`;
+ }
+ /* R3：一屏唯一主操作。左侧最多一颗绿色主按钮，右侧是 ghost 次操作，行尾一句小字说「还差谁」。 */
+ function mainAction(s,pid,ph){
+  if(ph==='D')return '';
+  const q=s.questing,alive=aliveOrder(s),apr=q.deploymentApprovals||[];
+  const done=alive.filter(id=>q.deployments?.[id]?.confirmed).length,waitSub=alive.filter(id=>!q.deployments?.[id]?.confirmed),waitApr=alive.filter(id=>!apr.includes(id));
+  let main='',ghost='',note='';
+  if(ph==='A'){
+   const n=draftFor(s,pid).length;
+   main=`<button class="primary" data-action="quest" data-quest="commit" data-player="${pid}" data-focus-key="quest-submit">${n?'提交名单':'提交空名单'}</button>`;
+   note=`已提交 ${done}/${alive.length} 人`;
+  }else if(ph==='B'){
+   ghost=`<button class="quest-ghost" data-action="quest" data-quest="withdraw" data-player="${pid}" data-focus-key="quest-withdraw">修改名单</button>`;
+   note=`还差 ${waitSub.map(id=>nameOf(s,id)).join('、')} 提交`;
+  }else if(ph==='C-in'){
+   main=`<button class="primary" data-action="quest" data-quest="approveDeployment" data-player="${pid}" data-focus-key="quest-approve">确认派遣</button>`;
+   note='尚未横置';
+  }else if(ph==='C-out'){
+   ghost=`<button class="quest-ghost" data-action="quest" data-quest="unapproveDeployment" data-player="${pid}" data-focus-key="quest-unapprove">取消确认</button>`;
+   note=`还差 ${waitApr.map(id=>nameOf(s,id)).join('、')} 确认`;
+  }
+  return `<div class="quest-main-action">${main}${ghost}<span class="action-note">${esc(note)}</span></div>`;
+ }
+ /* R4：方法论收进折叠，默认不占高度。 */
+ function hintRow(){return `<details class="commit-hint"><summary>规则说明</summary><p>${esc(HINT)}</p></details>`;}
+ function deploySection(s,pid){
+  const ph=stateOf(s,pid);
+  if(ph==='D')return `<div class="quest-deploy" data-state="D">${statusRow(s,pid,ph)}</div>`;
+  return `<div class="quest-deploy" data-state="${ph}">${statusRow(s,pid,ph)}${actorGroup(s,pid)}${commitList(s,pid,ph)}${mainAction(s,pid,ph)}${hintRow()}</div>`;
+ }
+ /* 勾选复选框只改本地草稿与摘要文字，绝不 render()——整页重绘会把焦点丢掉。 */
+ function syncDraftBits(s,pid){
+  if(typeof document==='undefined'||typeof document.querySelector!=='function')return;
+  const ids=draftFor(s,pid);
+  const box=document.querySelector('[data-quest-status]');
+  if(box)box.textContent=statusText(s,pid,'A');
+  const commit=document.querySelector('[data-quest="commit"]');
+  if(commit)commit.textContent=ids.length?'提交名单':'提交空名单';
+  document.querySelectorAll('[data-commit]').forEach(el=>{const l=el.closest&&el.closest('label');if(l&&l.dataset)l.dataset.state=el.checked?'on':'';});
+ }
+ /* 牌桌角色卡与勾选双向同步：反向点卡本来就能同步，正向勾选以前只改摘要，
+    牌桌上的「已选」角标不动，玩家会以为没勾上。 */
+ function syncTableMarks(s,pid){
+  if(typeof document==='undefined'||typeof document.querySelectorAll!=='function')return;
+  const ids=draftFor(s,pid);
+  document.querySelectorAll('.character-card').forEach(card=>{
+   const on=ids.includes(Number(card.dataset&&card.dataset.cardUid));
+   if(card.classList){if(on)card.classList.add('selected');else card.classList.remove('selected');}
+   const face=card.querySelector&&card.querySelector('.card-face');
+   if(face&&face.setAttribute)face.setAttribute('aria-pressed',on?'true':'false');
+   const mark=card.querySelector&&card.querySelector('.selection-mark');
+   if(on&&!mark&&typeof document.createElement==='function'){
+    const span=document.createElement('span');span.className='selection-mark';span.textContent='已选';if(face&&face.append)face.append(span);
+   }else if(!on&&mark&&mark.remove)mark.remove();
+  });
+ }
+ function bind(){
+  if(typeof document==='undefined'||typeof document.querySelectorAll!=='function')return;
+  if(!state?.questing||state.questing.step!=='commit')return;
+  const pid=state.players[handView]&&!state.players[handView].eliminated?handView:state.first;
+  document.querySelectorAll('[data-commit]').forEach(el=>el.onchange=()=>{
+   setDraft(state,pid,[...document.querySelectorAll('[data-commit]:checked')].map(x=>+x.dataset.commit));
+   syncDraftBits(state,pid);syncTableMarks(state,pid);
+  });
+  document.querySelectorAll('[data-quest-actor]').forEach(el=>el.onchange=()=>{
+   const next=Number(el.dataset.questActor);
+   if(Number.isInteger(next)&&next!==handView){handView=next;render();}
+  });
+ }
+ /* 播报：先清空再异步写入，#live 是 shell.html 里的 role=status 空节点。
+    同一句话连续播两次时，浏览器只在内容「变化」时才读，所以必须先清空。 */
+ function say(text){
+  if(typeof document==='undefined'||typeof document.querySelector!=='function'||!text)return;
+  const box=document.querySelector('#live');if(!box)return;
+  box.textContent='';
+  setTimeout(()=>{box.textContent=text;},30);
+ }
+ function deployedCount(s){return Object.values(s.questing.deployments||{}).reduce((n,d)=>n+((d.ids||[]).length),0);}
  /* 面板底部只留一个出口：本阶段还有必需操作时点它=列出还差什么；
     全部完成时点它=引擎自检并推进。撤销走顶栏「撤销一步」，这里不再重复。 */
  function panel(s,pid){if(s.phase!==2||!s.questing)return '';const q=s.questing,ch=P.choiceSpec(s),sp=R.spec(s),actor=s.players[pid]&&!s.players[pid].eliminated?pid:s.first;const w=P.window(s);let body='';
   if(q.completed)return '<section class="panel deck-valid"><h2>阶段3 · 探险阶段验收完成</h2><p>探险结果与阶段结束效果已结算。点「结束阶段」进入第四阶段 · 旅行。</p></section>';
   if(ch)body+=`<div class="notice">${esc(ch.message)} <button data-action="planning" data-plan="choice" data-id="${ch.task.id}">处理卡牌响应</button></div>`;
   if(sp)body+=`<div class="notice">${esc(sp.message)} ${button('选择并结算','choice',`data-id="${sp.task.id}"`,!!ch)}</div>${q.tasks.filter(t=>t!==sp.task&&t.kind==='commitResponse').map(t=>button('先结算：'+(P.find(s,t.payload.uid)?.meta.nameZh||'投入响应'),'choice',`data-id="${t.id}"`,!!ch)).join('')}`;
-  /* v0.15.56：面板只有 ~150px，「徽章 + 说明 + 下拉 + 勾选 + 按钮」全塞进来必然要滚。
-     这里只保留控件本身：玩家徽章与切换器一行、角色勾选一行（横滚）、提交按钮一行。 */
-  if(q.step==='commit'&&!q.deploymentLocked&&!sp&&!ch){const id=actor,selected=draftFor(s,id),confirmed=!!q.deployments?.[id]?.confirmed;
-   body+=`<div class="mat-commit"><div class="actions compact-chips"><select id="planning-actor" aria-label="查看／操作玩家">${q.order.map(pid=>`<option value="${pid}" ${pid===id?'selected':''}>${esc(s.players[pid].name)}${q.deployments?.[pid]?.confirmed?' ✓':''}</option>`).join('')}</select>${q.order.map(pid=>`<span class="badge">${esc(s.players[pid].name)}${q.deployments?.[pid]?.confirmed?' ✓':' ·'}</span>`).join('')}</div>${confirmed?'':`<div class="quest-commit-list">${P.chars(s).filter(c=>c.controller===id).map(c=>`<label><input type="checkbox" data-commit="${c.uid}" ${c.state.exhausted?'disabled':''} ${selected.includes(c.uid)?'checked':''}>${esc(c.meta.nameZh)}·意${P.stats(s,c.uid).willpower}</label>`).join('')}</div>`}<div class="actions">${confirmed?button('取消确认，修改派遣','withdraw',`data-player="${id}"`):button('提交暂定派遣名单 →','commit',`data-player="${id}"`)}</div></div>`;}
-  if(q.discussion&&q.step==='commit'&&!q.deploymentLocked&&!sp&&!ch&&q.order.every(id=>q.deployments?.[id]?.confirmed)){body+=`<div class="notice"><b>派遣交流与缓冲期</b><p>名单已全部提交，但尚未投入。此时仍可取消确认并调整名单；任何修改会清除所有人的二次确认。</p><div class="actions">${q.order.map(id=>button(s.players[id].name+(q.deploymentApprovals?.includes(id)?'：取消二次确认':'：二次确认派遣'),q.deploymentApprovals?.includes(id)?'unapproveDeployment':'approveDeployment',`data-player="${id}"`)).join('')}</div></div>`;}
+  /* 派遣这一段整块交给 deploySection：状态枚举只有一份实现，详细模式与智能模式共用。 */
+  if(q.step==='commit')body+=sp||ch?`<div class="quest-deploy" data-state="${q.deploymentLocked?'D':'A'}">${statusRow(s,actor,q.deploymentLocked?'D':'A')}</div>`:deploySection(s,actor);
   if(q.discussion&&(q.plannedActions?.length||q.actionLocked||q.actionError)){body+=`<section class="notice"><h3>暂定行动 · 交流缓冲区</h3><p>按下列顺序执行；全员二次确认前不支付、不弃牌、不抽牌。修改或撤销会清除全体二次确认。</p>${q.actionError?`<p>${esc(q.actionError)}</p>`:''}${(q.plannedActions||[]).map(a=>{const source=a.kind==='play'?s.players[a.player].hand.find(c=>c.uid===a.uid):P.find(s,a.uid)?.state;const m=source?P.data(s,{...source,owner:a.player}):null;return `<p>${esc(s.players[a.player].name)} · ${a.kind==='play'?'事件':'能力'}：${esc(m?.nameZh||'#'+a.uid)} ${button('撤销此暂定行动','cancelAction',`data-player="${a.player}" data-id="${a.id}"`,q.actionLocked)}</p>`;}).join('')}<div class="actions">${q.order.filter(id=>!s.players[id].eliminated).map(id=>button(s.players[id].name+(q.actionApprovals?.includes(id)?'：取消二次确认':'：二次确认行动'),q.actionApprovals?.includes(id)?'unapproveActions':'approveActions',`data-player="${id}"`,!q.plannedActions?.length||q.actionLocked||!!ch||!!sp)).join('')}</div>${q.actionLocked?'<p>全员已确认，正在执行；请先处理效果与响应。</p>':''}</section>`;}
   if(q.step==='staging'&&!sp&&!ch){if(q.current){const c=q.current.card;body+=`<div class="quest-reveal">${ImageLibrary.encounterArt(c.id)}<h3>${esc(c.name)}</h3><p>${esc(c.rule)}</p><p>厄运 ${c.doomed||0} · ${c.surge?'涌现':'无涌现'} · ${q.current.canceled?'翻开效果已取消':'等待结算'}</p><div class="actions">${R.cancelOptions(s).map(o=>button(o.label,'cancel',`data-value="${o.value}"`)).join('')}${button('结算此牌的关键词与效果','reveal')}</div></div>`;}else body+=button(q.remaining.length?'翻开下一张遭遇牌（待翻 '+q.remaining.length+'）':'结束探查，开放行动窗口','draw');}
   if(w.kind==='action'&&!q.actionLocked&&ScenarioEngine.windows.settings(s).mode==='detailed'){body+=`<p class="small">事件与主动能力先进入暂定清单，全员二次确认后执行。${q.plannedActions?.length?'暂定行动尚未执行，请先二次确认或撤销。':'等待结束行动：'+(s.players.filter(p=>!p.eliminated&&!q.finalPasses.includes(p.id)).map(p=>esc(p.name)).join('、')||'全员已放弃，可以推进')}。放弃后仍可取消放弃。</p><div class="actions">${s.players.filter(p=>!p.eliminated).map(p=>button(p.name+(q.finalPasses.includes(p.id)?'：取消放弃行动':'：放弃本窗口行动'),q.finalPasses.includes(p.id)?'unpass':'pass',`data-player="${p.id}"`,false)).join('')}${button(q.step==='beforeCommit'?'开始投入角色':q.step==='afterCommit'?'开始探查':q.step==='afterStaging'?'自动结算探险':'结束探险阶段','move','',!!q.plannedActions?.length||!s.players.filter(p=>!p.eliminated).every(p=>q.finalPasses.includes(p.id)))}</div><label>使用行动的玩家 <select id="planning-actor">${s.players.filter(p=>!p.eliminated).map(p=>`<option value="${p.id}" ${p.id===actor?'selected':''}>${esc(p.name)}</option>`).join('')}</select></label><div class="actions">${P.abilities(s,actor).map(a=>`<button data-action="planning" data-plan="ability" data-player="${actor}" data-uid="${a.uid}" title="${esc(a.reason)}" ${a.legal?'':'disabled'}>${esc(a.name)}</button>`).join('')}</div><p class="small muted">事件在下方手牌区操作；任一行动会清除全体玩家的放弃标记。</p>`;}
-  return `<section class="panel questing-panel"><div class="panel-title"><h2>阶段3 · ${steps[q.step]}</h2><strong>投入意志 ${R.total(s)} ／ 探查区威胁 ${ScenarioEngine.threat(s)}</strong></div><p class="small mat-only">已投入：${P.chars(s).filter(c=>c.state.committed).map(c=>esc(c.meta.nameZh)+'（意'+P.stats(s,c.uid).willpower+'）').join('、')||'无人'}</p>${q.result?`<p class="notice">本次结果：意志 ${q.result.willpower} − 威胁 ${q.result.threat} = ${q.result.delta}。${q.result.delta>0?'进度已自动分配':q.result.delta<0?'每位玩家威胁已增加'+(-q.result.delta):'平局，不放进度、不增加威胁'}。</p>`:''}${body}</section>`;
+  /* 「已投入：阿拉贡（意3）」——无人时不渲染这一行（旧版会印一句「无人」）。 */
+  const committed=P.chars(s).filter(c=>c.state.committed).map(c=>esc(c.meta.nameZh)+'（意'+P.stats(s,c.uid).willpower+'）');
+  const doneLine=committed.length?`<p class="small mat-only">已投入：${committed.join('、')}</p>`:'';
+  /* commit 这一段的数字在 R0 状态行里，标题行不再重复「投入意志」；
+     其他步骤（探查、结果）没有 R0，仍在标题行给出意志／威胁。 */
+  const head=q.step==='commit'?`<div class="panel-title"><h2>阶段3 · ${steps[q.step]}</h2></div>`:`<div class="panel-title"><h2>阶段3 · ${steps[q.step]}</h2><strong>投入意志 ${R.total(s)} ／ 探查区威胁 ${ScenarioEngine.threat(s)}</strong></div>`;
+  return `<section class="panel questing-panel">${head}${doneLine}${q.result?`<p class="notice">本次结果：意志 ${q.result.willpower} − 威胁 ${q.result.threat} = ${q.result.delta}。${q.result.delta>0?'进度已自动分配':q.result.delta<0?'每位玩家威胁已增加'+(-q.result.delta):'平局，不放进度、不增加威胁'}。</p>`:''}${body}</section>`;
  }
  async function handle(b){const k=b.dataset.quest,pid=+b.dataset.player,id=+b.dataset.id;
   if(k==='back'){if(history.length){state=history.pop();save();render();}return;}
-  if(k==='withdraw'){mutate(()=>R.withdrawDeployment(state,pid));return;}
+  if(k==='withdraw'){const q=state?.questing,was=(q?.deploymentApprovals||[]).length;mutate(()=>R.withdrawDeployment(state,pid));
+   if(was&&state?.questing&&!state.questing.deploymentLocked)say(`${nameOf(state,pid)} 改了名单，确认已重置，请重新确认`);return;}
   if(k==='clear'){setDraft(state,pid,[]);render();return;}
   if(k==='commit'){
    const ids=draftFor(state,pid),before=JSON.stringify(state);const selected=ids.map(id=>P.find(state,id));
-   const ok=await choose('确认派遣 · '+state.players[pid].name,`<p>${selected.length?'将派遣以下角色：':'本次不派遣角色（0名）。'}</p><ul>${selected.map(c=>`<li>${esc(c.meta.nameZh)} · 意志 ${P.stats(state,c.uid).willpower}</li>`).join('')}</ul><p>当前意志合计 <b>${selected.reduce((n,c)=>n+P.stats(state,c.uid).willpower,0)}</b>。遭遇与后续行动可能改变此数值。</p><p>本次确认只提交名单；所有玩家提交名单并完成二次确认后才统一锁定，按起始玩家顺序横置并处理投入响应。全员确认前仍可取消确认并修改。点击取消可返回重新选择，当前勾选会保留。</p>`,()=>true);
+   const solo=(state.questing.order||[]).length<2;
+   const ok=await choose('提交名单 · '+state.players[pid].name,`<p>${selected.length?'将派遣以下角色：':'本次不派遣角色（0名）。'}</p><ul>${selected.map(c=>`<li>${esc(c.meta.nameZh)} · 意志 ${P.stats(state,c.uid).willpower}</li>`).join('')}</ul><p>当前意志合计 <b>${selected.reduce((n,c)=>n+P.stats(state,c.uid).willpower,0)}</b>。遭遇与后续行动可能改变此数值。</p><p>${solo?'单人局：提交即投入。':'只提交名单。全员确认后才横置。返回修改时勾选会保留。'}</p>`,()=>true);
    if(ok)mutate(()=>{if(JSON.stringify(state)!==before)throw Error('桌面已变化，请重新核对派遣名单。');R.submitDeployment(state,pid,ids);draft={context:null,player:null,ids:[]};});
-   /* v0.15.56：提交后自动把操作权交给下一位未确认的玩家，否则第二个人永远轮不到提交。 */
+   if(ok&&state?.questing){
+    const q=state.questing,alive=aliveOrder(state);
+    if(q.deploymentLocked)say(`已锁定，正在按顺序投入 ${deployedCount(state)} 名角色`);
+    else if(q.step==='commit'){
+     const wait=alive.filter(x=>!q.deployments?.[x]?.confirmed);
+     if(wait.length)say(`${nameOf(state,pid)} 已提交名单，还差 ${wait.map(x=>nameOf(state,x)).join('、')}`);
+     else say(`名单已齐，等待 ${alive.filter(x=>!(q.deploymentApprovals||[]).includes(x)).length} 人确认，尚未横置`);
+    }
+   }
+   /* 提交后自动把操作权交给下一位未提交的玩家，否则第二个人永远轮不到提交。 */
    if(ok&&state?.questing?.step==='commit'&&!state.questing.deploymentLocked&&typeof handView!=='undefined'){
     const next=(state.questing.order||[]).find(x=>!state.questing.deployments?.[x]?.confirmed);
     if(next!==undefined&&next!==handView){handView=next;render();}
@@ -10084,15 +10324,29 @@ const QuestUI=(()=>{
    return;
   }
   if(k==='choice'){const sp=R.spec(state,id);if(!sp)return;let values=await choose(sp.message,sp.fields.map(f=>`<label>${esc(f.label)}<select id="quest-${f.key}">${f.options.map(o=>`<option value="${esc(o.value)}">${esc(o.label)}</option>`).join('')}</select></label>`).join('')+(sp.task.optional?'<p><label><input id="quest-skip" type="checkbox">放弃此响应</label></p>':''),d=>({...Object.fromEntries(sp.fields.map(f=>[f.key,d.querySelector('#quest-'+f.key).value])),skip:!!d.querySelector('#quest-skip')?.checked}));if(values)mutate(()=>R.choose(state,id,values));return;}
-  mutate(()=>{if(k==='unpass')R.unpass(state,pid);if(k==='approveDeployment')R.approveDeployment(state,pid);if(k==='unapproveDeployment')R.withdrawDeploymentApproval(state,pid);if(k==='approveActions')R.approveActions(state,pid);if(k==='unapproveActions')R.withdrawActionApproval(state,pid);if(k==='cancelAction')R.cancelAction(state,pid,id);if(k==='pass')R.pass(state,pid);if(k==='move')R.move(state);if(k==='draw')R.drawNext(state);if(k==='reveal')R.resolveReveal(state);if(k==='cancel')R.cancel(state,b.dataset.value);});
+  if(k==='approveDeployment'||k==='unapproveDeployment'){
+   const before=(state.questing?.deploymentApprovals||[]).length,name=state?.players[pid]?.name||('玩家'+(pid+1));
+   mutate(()=>{if(k==='approveDeployment')R.approveDeployment(state,pid);else R.withdrawDeploymentApproval(state,pid);});
+   const q=state?.questing;
+   if(q&&(q.deploymentApprovals||[]).length!==before){
+    if(q.deploymentLocked)say(`已锁定，正在按顺序投入 ${deployedCount(state)} 名角色`);
+    else if(k==='unapproveDeployment')say(`${name} 取消确认，尚未横置`);
+    else say(`已确认 ${(q.deploymentApprovals||[]).length}／${aliveOrder(state).length}，尚未横置`);
+   }
+   /* 确认后把操作权交给下一位未确认的玩家：确认是按人来的，不切换就只能看到「取消确认」。 */
+   if(k==='approveDeployment'&&q&&!q.deploymentLocked&&typeof handView!=='undefined'){
+    const next=aliveOrder(state).find(x=>!(q.deploymentApprovals||[]).includes(x));
+    if(next!==undefined&&next!==handView){handView=next;render();}
+   }
+   return;
+  }
+  mutate(()=>{if(k==='unpass')R.unpass(state,pid);if(k==='approveActions')R.approveActions(state,pid);if(k==='unapproveActions')R.withdrawActionApproval(state,pid);if(k==='cancelAction')R.cancelAction(state,pid,id);if(k==='pass')R.pass(state,pid);if(k==='move')R.move(state);if(k==='draw')R.drawNext(state);if(k==='reveal')R.resolveReveal(state);if(k==='cancel')R.cancel(state,b.dataset.value);});
  }
  /* 操作条只放这一步必须的输入：选角色投入 / 结算正在翻开的遭遇牌。
     其余说明、状态与「结束阶段」都在角色卡下方的完整面板里。 */
  function picker(s,pid){const q=s.questing;
-  /* v0.15.56：beforeCommit（投入前行动窗口）也要给出「开始投入」入口。
-     此前 picker 只在 step==='commit' 渲染，玩家在投入前窗口打完事件、全员确认后，
-     只能靠打开详细模式才能找到那个「开始投入角色」按钮——智能模式下就此永久卡住。
-     现在投入前窗口直接把入口放到角色卡下方（与结束阶段同一处），点一下进 commit。 */
+  /* 投入前行动窗口也要给出「开始投入」入口：此前 picker 只在 step==='commit' 渲染，
+     玩家在投入前窗口打完事件、全员确认后只能靠详细模式找到那个按钮——智能模式下就此永久卡住。 */
   if(!q||q.completed)return '';
   if(q.step==='beforeCommit'&&!q.deploymentLocked&&!R.spec(s)&&!P.choiceSpec(s)&&!q.actionLocked){
    const left=q.order.filter(id=>!q.finalPasses.includes(id));
@@ -10101,19 +10355,17 @@ const QuestUI=(()=>{
    return `<section class="panel questing-panel compact"><div class="panel-title"><h2>投入前行动窗口</h2><strong class="small">意志 0 ／ 威胁 ${ScenarioEngine.threat(s)}</strong></div><p class="small muted">${q.plannedActions?.length?'暂定行动尚未执行，请先在上方二次确认或撤销。':left.length?'全队放弃本窗口行动后即可投入角色（可随时取消放弃）。':'全员已放弃，可以投入角色。'}</p><div class="actions">${left.map(id=>`<button data-action="quest" data-quest="pass" data-player="${id}">${esc(s.players[id].name)}：放弃本窗口行动</button>`).join('')}${passed.map(id=>`<button data-action="quest" data-quest="unpass" data-player="${id}">${esc(s.players[id].name)}：取消放弃</button>`).join('')}</div><div class="actions"><button class="primary" data-action="quest" data-quest="move" ${(!q.plannedActions?.length&&!left.length)?'':'disabled'}>开始投入角色 →</button></div></section>`;
   }
   if(q.step!=='commit'||q.deploymentLocked||R.spec(s)||P.choiceSpec(s))return '';
-  const id=s.players[pid]&&!s.players[pid].eliminated?pid:s.first,confirmed=!!q.deployments?.[id]?.confirmed,selected=draftFor(s,id);
-  /* v0.15.56：投入名单按玩家分别提交，必须能切换操作者；此前只有详细模式的面板带下拉框，
-     智能模式的紧凑面板把玩家钉死在当前 handView，第二个人永远提交不了自己的名单。 */
-  /* v0.15.56：面板只有 ~90px，先给按钮再给说明——按钮必须第一眼可见；
-     角色勾选放进可横向滚动的窄条，文案压成 title 悬停提示。 */
-  return `<section class="panel questing-panel compact"><div class="panel-title"><h2>投入角色</h2><strong class="small">意志 ${selected.reduce((n,uid)=>n+P.stats(s,uid).willpower,0)} ／ 威胁 ${ScenarioEngine.threat(s)}</strong></div><div class="actions compact-chips" title="${confirmed?'已提交暂定名单，可取消后修改。':'勾选重置角色后提交；全员二次确认后统一横置。'}">${q.order.map(x=>`<span class="badge">${esc(s.players[x].name)}${q.deployments?.[x]?.confirmed?' ✓':' ·'}</span>`).join('')}<select id="planning-actor" aria-label="查看／操作玩家">${q.order.map(x=>`<option value="${x}" ${x===id?'selected':''}>${esc(s.players[x].name)}</option>`).join('')}</select></div>${confirmed?'':`<div class="quest-commit-list">${P.chars(s).filter(c=>c.controller===id).map(c=>`<label><input type="checkbox" data-commit="${c.uid}" ${c.state.exhausted?'disabled':''} ${selected.includes(c.uid)?'checked':''}>${esc(c.meta.nameZh)}·意${P.stats(s,c.uid).willpower}</label>`).join('')}</div>`}<div class="actions">${confirmed?button('取消确认，修改派遣','withdraw',`data-player="${id}"`):button('提交暂定派遣名单 →','commit',`data-player="${id}"`)}</div></section>`;
+  const actor=s.players[pid]&&!s.players[pid].eliminated?pid:s.first;
+  /* 智能模式与详细模式共用同一份四段式面板：以前这里是一份精简的重复实现，
+     两处各改一半就成了「同一件事两个入口、两颗绿按钮」。 */
+  return `<section class="panel questing-panel compact">${deploySection(s,actor)}</section>`;
  }
  function revealCard(s){const c=s.questing&&s.questing.current&&s.questing.current.card;if(!c)return '';
   return `<section class="panel questing-panel compact"><div class="panel-title"><h2>翻开的遭遇</h2><strong>${c.surge?'涌现':'无涌现'}</strong></div><p><b>${esc(c.name)}</b></p><p class="small muted">${esc(c.rule)}</p><div class="actions">${R.cancelOptions(s).map(o=>button(o.label,'cancel',`data-value="${o.value}"`)).join('')}${button('结算此牌的关键词与效果','reveal')}</div></section>`;
  }
  /* 决策弹窗的标题直接用这里的中文步骤名，免得两处各写一份文案、改一处漏一处。 */
  function stepName(step){return steps[step]||'';}
- return {panel,handle,bind,setDraft,draftFor,picker,revealCard,stepName};
+ return {panel,handle,bind,setDraft,draftFor,picker,revealCard,stepName,stateOf};
 })();
 
 </script><script>
@@ -10279,7 +10531,7 @@ const WindowUI=(()=>{
 </script><script src="phase-log.js"></script><script>
 /* Tabletop view: UI drafts never pay, exhaust, reveal, or bypass phase validation. */
 /* 界面版本徽标唯一来源：须与 CHANGELOG.md 最新条目标题一致（planning-dom-tests 有校验）。 */
-const APP_VERSION='v0.15.69';
+const APP_VERSION='v0.15.70';
 /* ── 决策弹窗（v0.15.62）──────────────────────────────────────────────
    底部长住的那块阶段面板已经去掉（和角色区右上角的「结束阶段」重复，还白占一行高度）。
    需要玩家拍板的事不再常驻显示，改成「轮到你决定时才弹出来」。
@@ -10368,24 +10620,12 @@ const DecisionUI=(()=>{
      以前渲染在操作条里）。现在操作条只剩摘要，所以这里必须把 picker 的内容接上，
      否则「投入前行动窗口」会变成一个只有「已投入：无人」、没有任何可点控件的空面板。 */
    const detail=ScenarioEngine.windows.settings(s).mode==='detailed';
-   let html=detail?QuestUI.panel(s,pid):'';
+   /* v0.15.70：picker 现在与详细模式共用同一份四态派遣面板（草稿／已提交／待确认／已锁定
+     全在里面），锁定后的只读状态交给 panel 兜底，两层不再各写一份「提交／确认」入口。 */
+   let html=QuestUI.panel(s,pid)||'';
    if(!detail){
-    /* picker 是「控制 + 状态」的完整一块（自带意志／威胁行），但它只管到「提交名单」为止。
-       全员提交之后的「二次确认派遣」在 QuestUI.panel 的 discussion 分支里，picker 从来不渲染——
-       以前靠操作条之外的地方兜，现在只有弹窗，必须把它接上，否则名单齐了就再也点不动。 */
-    /* 名单全部提交后的讨论期，picker 只剩一颗「取消确认，修改派遣」，而 panel 里有
-       同样的这颗 + 两人的「二次确认派遣」。两份拼起来会看到两个一模一样的按钮，
-       所以这一个阶段只取 panel，不拼 picker。 */
-    const allIn=(q.order||[]).length>0&&q.order.every(id=>{const d=q.deployments&&q.deployments[id];return d&&d.confirmed;});
-    if(q.deploymentLocked||allIn){
-     /* 锁定后 picker 一律返回空（它只管「还没投」的那一段），控制全在 panel 里：
-        投入响应「选择并结算」、逐张探查。所以锁定期和讨论期都取 panel。 */
-     html=QuestUI.panel(s,pid)||'';
-    }else{
-     html=(QuestUI.picker(s,pid)||'')||(q.step==='staging'&&q.current?(QuestUI.revealCard(s)||''):'');
-    }
-    /* 这里不能再提前 return null：下面还有「名单锁定期只读状态卡」要兜。
-       之前把 return 写在这个 if 里，锁定后 html 恒为空，弹窗和角标一起消失。 */
+    html=(QuestUI.picker(s,pid)||'')||(q.step==='staging'&&q.current?(QuestUI.revealCard(s)||''):'')||html;
+    /* 这里不能再提前 return null：下面还有「名单锁定期只读状态卡」要兜。 */
    }
    /* 名单锁定、正在按顺序横置与结算投入响应——这一段玩家没有选择可做，
       但也不能让弹窗彻底消失：刚点完「二次确认」就什么都不见了，人会以为卡住。
@@ -10549,7 +10789,11 @@ const DesktopUI=(()=>{
   if(m.kind==='quest')preview='暂定意志 '+selected.reduce((n,c)=>n+R.stats(s,c.uid).willpower,0);
   if(m.kind==='defense'){const defense=selected.reduce((n,c)=>n+R.stats(s,c.uid).defense,0),atk=R.find(s,s.combat.attack.uid);preview=`暂定防御 ${defense} · 敌人当前攻击 ${(atk?R.stats(s,atk.uid).attack:0)+(s.combat.attack.bonus||0)}（暗影与后续效果仍可能改变）`;}
   if(m.kind==='attack'){const attack=selected.reduce((n,c)=>n+R.stats(s,c.uid).attack,0),target=d.target?R.find(s,d.target):null;preview=`暂定基础攻击 ${attack}${target?' · 目标防御 '+R.stats(s,target.uid).defense+' · 基础伤害预估 '+Math.max(0,attack-R.stats(s,target.uid).defense):' · 请先点选目标敌人'}（特殊能力以正式结算为准）`;}
-  return `<div class="table-selection"><b>${esc(s.players[m.player].name)} · ${m.kind==='quest'?'点击角色暂定投入':m.kind==='defense'?'点击角色暂定防御；不选表示无人防御':'先点敌人，再点参与攻击的角色'}</b><p aria-live="polite">${esc(preview)} · 已选 ${selected.length} 名</p><div class="actions">${b(m.kind==='quest'?'提交暂定派遣名单':m.kind==='defense'?'提交暂定防御名单':'提交暂定攻击名单','submit','',m.kind==='attack'&&(!d.target||!selected.length))}${b('清空选择','clear')}${m.kind==='attack'?`<button data-action="combatFlow" data-combat="endAttacks" data-player="${m.player}">暂定结束我的攻击</button>`:''}</div><p class="small muted">这里只暂定名单。全员二次确认后才横置、支付并执行。</p></div>`;
+  /* v0.15.70：探险阶段的提交入口收敛到底部派遣面板那颗唯一的主按钮。
+     这块在 quest 模式只留只读摘要与「清空选择」橡皮擦——它本来是同一屏里的
+     第三份提交入口，四人局角色行横滚时还会被带出视野。 */
+  const submit=m.kind==='quest'?'':b(m.kind==='defense'?'提交暂定防御名单':'提交暂定攻击名单','submit','',m.kind==='attack'&&(!d.target||!selected.length));
+  return `<div class="table-selection"><b>${esc(s.players[m.player].name)} · ${m.kind==='quest'?'点击角色暂定投入':m.kind==='defense'?'点击角色暂定防御；不选表示无人防御':'先点敌人，再点参与攻击的角色'}</b><p aria-live="polite">${esc(preview)} · 已选 ${selected.length} 名</p><div class="actions">${submit}${b('清空选择','clear')}${m.kind==='attack'?`<button data-action="combatFlow" data-combat="endAttacks" data-player="${m.player}">暂定结束我的攻击</button>`:''}</div><p class="small muted">这里只暂定名单。全员二次确认后才横置、支付并执行。</p></div>`;
  }
  function next(s){const x=R.context(s),done=x?.completed;let label='',disabled=false;
  if(s.status==='won'||s.status==='lost')return `<span class="badge">${s.status==='won'?'剧本已结束 · 见上方结算':'远征已结束 · 见上方结算'}</span>`;
@@ -10595,7 +10839,8 @@ const DesktopUI=(()=>{
   if(s.pending.length)return {label:'先处理剧本待结算事项',chips:chip('待结算 '+s.pending.length+' 项')};
   const q=s.questing,c=s.combat,t=s.traveling,e=s.encountering,r=s.refreshing,ids=live(s).map(p=>p.id);
   if(q&&q.round===s.round&&!q.completed){
-   if(q.step==='commit'&&!q.deploymentLocked){const order=q.order||[],done=order.filter(id=>q.deployments?.[id]?.confirmed),pend=order.filter(id=>!q.deployments?.[id]?.confirmed);
+   /* v0.15.70：已淘汰玩家不计入「全员」——否则操作条会一直点名等一个已经被淘汰的人。 */
+   if(q.step==='commit'&&!q.deploymentLocked){const order=(q.order||[]).filter(id=>!s.players[id]?.eliminated),done=order.filter(id=>q.deployments?.[id]?.confirmed),pend=order.filter(id=>!q.deployments?.[id]?.confirmed);
     if(pend.length)return {label:'等待 '+pend.map(id=>s.players[id]?.name||('玩家'+(id+1))).join('、')+' 提交派遣名单（'+done.length+'/'+order.length+'）',chips:chipRow(s,order,done,'已提交','待提交')};
     const app=q.deploymentApprovals||[];return {label:'名单已就绪 · 等待二次确认（'+app.length+'/'+order.length+'）',chips:chipRow(s,order,app,'已确认','待确认')};}
    if(q.actionLocked)return {label:'正在执行暂定行动',chips:chip('全员已确认','done')};
@@ -10650,14 +10895,22 @@ const DesktopUI=(()=>{
   /* 探险阶段的投入名单是「必须玩家定」的选择：引擎不会替人挑角色，
      所以按钮要禁用并直接点名等谁，不能让玩家点了没反应。
      注意判据要带上 !q.completed 和 step 限定：名单锁定走完 commit 段之后，
-     即使有人 deployments 里缺 confirmed 也不该再拦门（那是引擎自己该收的尾）。 */
-  const q=s.questing,waiting=s.phase===2&&q&&!q.completed&&q.step==='commit'&&!q.deploymentLocked
-   ?(q.order||[]).filter(id=>!q.deployments?.[id]?.confirmed).map(id=>s.players[id]?.name||('玩家'+(id+1))):[];
-  const blocked=waiting.length>0;
-  const tail=s.pending.length?'有剧本事项待结算':blocked?'等 '+waiting.join('、')+' 提交投入名单':left.length?'还差 '+left.length+' 项':'必需操作已全部完成';
+     即使有人 deployments 里缺 confirmed 也不该再拦门（那是引擎自己该收的尾）。
+     v0.15.70：全员提交之后还有一层「二次确认」——以前这里只算提交，于是 C 态时
+     门禁是绿的、底部「确认派遣」也是绿的，同一屏两颗绿按钮同时招手。
+     现在两段一起算：未提交 → 等提交；已齐未确认 → 等确认；已淘汰的玩家不计。 */
+  const q=s.questing,phaseQ=s.phase===2&&q&&!q.completed&&q.step==='commit'&&!q.deploymentLocked;
+  const aliveQ=phaseQ?(q.order||[]).filter(id=>!s.players[id]?.eliminated):[];
+  const nameOf=id=>s.players[id]?.name||('玩家'+(id+1));
+  const waitingSub=aliveQ.filter(id=>!q.deployments?.[id]?.confirmed).map(nameOf);
+  const waitingApr=(phaseQ&&!waitingSub.length&&(q.order||[]).length>1&&q.discussion)
+   ?aliveQ.filter(id=>!(q.deploymentApprovals||[]).includes(id)).map(nameOf):[];
+  const blocked=waitingSub.length>0||waitingApr.length>0;
+  const blockedWhy=waitingSub.length?'等 '+waitingSub.join('、')+' 提交名单':waitingApr.length?'等 '+waitingApr.join('、')+' 二次确认':'';
+  const tail=s.pending.length?'有剧本事项待结算':blocked?blockedWhy:left.length?'还差 '+left.length+' 项':'必需操作已全部完成';
   /* '· ' 前缀把「已通过」的项也画成待办，收尾后一条都不剩时不要拼出一个空标题。 */
   const tipFull=full?(list.some(x=>!x.check())?full:list.map(x=>'✓ '+x.label).join('\n')):'';
-  return `<span class="phase-door${ready?' ready':''}" aria-label="结束阶段"><span class="door-state" hidden>${esc(tail)}</span><button class="primary door-go" data-action="endPhase" ${s.pending.length||blocked?'disabled':''} title="${esc((s.pending.length?'先结算剧本事项\n':blocked?'等 '+waiting.join('、')+' 提交投入名单\n':left.length?'还差 '+left.length+' 项必需操作\n':'可以结束\n')+(tipFull||'本阶段没有必需操作'))}">${esc(ready&&!blocked?'结束阶段 → '+phaseAfterName(s):'结束阶段')}</button></span>`;
+  return `<span class="phase-door${ready?' ready':''}" aria-label="结束阶段"><span class="door-state" hidden>${esc(tail)}</span><button class="primary door-go" data-action="endPhase" ${s.pending.length||blocked?'disabled':''} title="${esc((s.pending.length?'先结算剧本事项\n':blocked?blockedWhy+'\n':left.length?'还差 '+left.length+' 项必需操作\n':'可以结束\n')+(tipFull||'本阶段没有必需操作'))}">${esc(ready&&!blocked?'结束阶段 → '+phaseAfterName(s):'结束阶段')}</button></span>`;
  }
  function phaseAfterName(s){if(s.phase>=6)return '下一回合';return phasesName[s.phase+1];}
  const phasesName=['资源','计划','探险','旅行','遭遇','战斗','刷新'];
@@ -11264,7 +11517,12 @@ function showDrawToast(){
 function render(){captureSetup();document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));const navBtn=$('#'+({table:'tableTab',decks:'decksTab',catalog:'catalogTab',help:'helpTab'}[tab]));if(navBtn)navBtn.classList.add('active');/* 弹窗状态跟着引擎走：每次重绘前先问一次「现在有没有要玩家决定的」。
      有且是新出现的就自动展开；已经收起过的不再反复弹，只留角标。 */
  if(tab==='table'&&state&&!deckChooser)DecisionUI.sync(state,handView);else DecisionUI.reset();
- $('#app').innerHTML=tab==='table'?(deckChooser?chooserPage():table()):tab==='decks'?(PlayerUI.isBuilding()?PlayerUI.builder():PlayerUI.decksPage()):tab==='catalog'?catalog():help();$('#undo').disabled=!history.length;$('#export').disabled=!state;if(tab==='table'&&state&&$('#hand-player'))$('#hand-player').onchange=ev=>{handView=Number(ev.target.value);render();};if(tab==='table'&&state&&$('#planning-actor'))$('#planning-actor').onchange=ev=>{handView=Number(ev.target.value);render();};if(tab==='table'&&state)QuestUI.bind();if(tab==='table'&&!state)bindSetup();if(tab==='decks'){PlayerUI.bindDecks();PlayerUI.bind();}ImageLibrary.bindErrors(document.querySelector('#app'));if(tab==='catalog'){filterCatalog();const si=$('#search');if(si)si.oninput=filterCatalog;const pf=$('#podFilter');if(pf)pf.onchange=()=>{podFilter=pf.value||'';render();};}trackView();showDrawToast();}
+ /* v0.15.70：整页 innerHTML 重绘会把焦点扔回 body，键盘玩家每点一次就被弹到页首。
+    重绘前记住带 data-focus-key 的活动元素，重绘后按同一个键把焦点放回去（不滚动）。
+    派遣面板输出的键：quest-actor-<pid> / quest-commit-<uid> / quest-submit /
+    quest-withdraw / quest-approve / quest-unapprove。 */
+ const focusKey=document.activeElement&&document.activeElement.dataset?String(document.activeElement.dataset.focusKey||''):'';
+ $('#app').innerHTML=tab==='table'?(deckChooser?chooserPage():table()):tab==='decks'?(PlayerUI.isBuilding()?PlayerUI.builder():PlayerUI.decksPage()):tab==='catalog'?catalog():help();$('#undo').disabled=!history.length;$('#export').disabled=!state;if(tab==='table'&&state&&$('#hand-player'))$('#hand-player').onchange=ev=>{handView=Number(ev.target.value);render();};if(tab==='table'&&state&&$('#planning-actor'))$('#planning-actor').onchange=ev=>{handView=Number(ev.target.value);render();};if(tab==='table'&&state)QuestUI.bind();if(tab==='table'&&!state)bindSetup();if(tab==='decks'){PlayerUI.bindDecks();PlayerUI.bind();}ImageLibrary.bindErrors(document.querySelector('#app'));if(tab==='catalog'){filterCatalog();const si=$('#search');if(si)si.oninput=filterCatalog;const pf=$('#podFilter');if(pf)pf.onchange=()=>{podFilter=pf.value||'';render();};}trackView();showDrawToast();if(focusKey){const back=document.querySelector('[data-focus-key="'+focusKey.replace(/"/g,'')+'"]');if(back&&typeof back.focus==='function')back.focus({preventScroll:true});}}
 async function choose(title,body,read){return new Promise(resolve=>{let d=document.createElement('dialog');d.innerHTML=`<h2>${enc(title)}</h2><div>${body}</div><div class="actions"><button class="primary" id="ok">确认</button><button id="cancel">取消</button></div>`;document.body.append(d);d.showModal();d.querySelector('#ok').onclick=()=>{let v=read(d);d.close();d.remove();resolve(v);};d.querySelector('#cancel').onclick=()=>{d.close();d.remove();resolve(null);};d.oncancel=()=>{d.remove();resolve(null);};});}
 function playerOptions(){return state.players.filter(p=>!p.eliminated).map(p=>`<option value="${p.id}">${enc(p.name)}</option>`).join('');}
 $('#app').onclick=async ev=>{const b=ev.target.closest('[data-action]');if(!b||b.disabled)return;const a=b.dataset.action,uid=Number(b.dataset.uid),id=Number(b.dataset.id),pid=Number(b.dataset.player);

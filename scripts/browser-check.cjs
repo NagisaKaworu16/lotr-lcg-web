@@ -37,16 +37,21 @@ let browser;
   await page.waitForTimeout(500);
 
   let idle = 0;
+  /* v0.15.70：派遣面板就地渲染在手牌区「结束阶段」同一块（.decide-inline），
+     不再是操作条里的一块；三处都要找。 */
+  const PANEL = ':is(.operation-content, .decide-inline)';
   const clickBtn = async text => {
-    const el = page.locator(`.operation-content button:not([disabled])`, { hasText: text }).first();
+    const el = page.locator(`${PANEL} button:not([disabled])`, { hasText: text }).first();
     if (!await el.count()) return false;
     await el.click(); idle = 0; await page.waitForTimeout(280); return true;
   };
-  const approve = async () => {
-    const el = page.locator('.operation-content button:not([disabled])').filter({ hasText: '二次确认' }).filter({ hasNotText: '取消' }).first();
+  /* 派遣的提交／二次确认收成 data-quest 上的唯一主按钮（文字会随状态变，不能靠文字定位）。 */
+  const clickQuest = async k => {
+    const el = page.locator(`${PANEL} [data-quest="${k}"]:not([disabled])`).first();
     if (!await el.count()) return false;
-    await el.click(); await page.waitForTimeout(300); return true;
+    await el.click(); idle = 0; await page.waitForTimeout(300); return true;
   };
+  const approve = () => clickQuest('approveDeployment');
   const clickNext = async () => {
     const el = page.locator('.operation-title button.primary:not([disabled])').first();
     if (!await el.count()) return false;
@@ -161,7 +166,7 @@ let browser;
     const card = page.locator('.player-mat .character-card.selectable .card-face').first();
     if (await card.count()) { await card.click(); await page.waitForTimeout(150); }
     const viewBefore = await page.evaluate(() => handView);
-    if (!await clickBtn('提交暂定派遣名单')) break;
+    if (!await clickQuest('commit')) break;
     autoSwitch = await page.evaluate(vb => ({ viewBefore: vb, viewAfter: handView, confirmed: state.questing.order.map(id => !!state.questing.deployments?.[id]?.confirmed) }), viewBefore);
     if (pending.length > 1) break;
   }
@@ -182,7 +187,7 @@ let browser;
         await page.locator('.player-tabs button').nth(pending[0]).click(); await page.waitForTimeout(200);
         const card = page.locator('.player-mat .character-card.selectable .card-face').first();
         if (await card.count()) { await card.click(); await page.waitForTimeout(150); }
-        if (await clickBtn('提交暂定派遣名单')) continue;
+        if (await clickQuest('commit')) continue;
       } else {
         if (await approve()) continue;
         if (await clickBtn('开始投入角色')) continue;

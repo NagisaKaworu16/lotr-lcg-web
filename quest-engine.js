@@ -35,19 +35,30 @@ const QuestRulesFactory=(H,R)=>{
   if(!planned(s).length){x.actionLocked=false;x.actionApprovals=[];x.finalPasses=[];log(s,'已确认的行动执行完成，请继续交流或结束本窗口');}
  }
  function withdrawDeploymentApproval(s,pid){check(s);need(q(s).discussion&&!q(s).deploymentLocked,'名单已锁定');need(q(s).order.includes(pid),'无效玩家');q(s).deploymentApprovals=(q(s).deploymentApprovals||[]).filter(id=>id!==pid);}
- function approveDeployment(s,pid){check(s);const x=q(s);need(x.discussion&&x.step==='commit'&&!x.deploymentLocked&&x.order.includes(pid),'当前不能二次确认派遣');need(x.order.every(id=>x.deployments?.[id]?.confirmed),'请先由每位玩家提交暂定派遣名单');for(const id of x.order)validateDeployment(s,id,x.deployments[id].ids);x.deploymentApprovals??=[];need(!x.deploymentApprovals.includes(pid),'已二次确认');x.deploymentApprovals.push(pid);if(x.order.every(id=>x.deploymentApprovals.includes(id))){x.deploymentLocked=true;log(s,'全员二次确认，正式执行投入');resumeDeployment(s);}}
+ function approveDeployment(s,pid){check(s);const x=q(s);
+ /* v0.15.70：「全员」一律排除已淘汰玩家——中途有人被淘汰时，order 里那位永远不会再提交／确认，
+    这一条会把整队永久卡在「已提交待他人」。 */
+ const all=()=>x.order.filter(id=>!s.players[id]?.eliminated);
+ need(x.discussion&&x.step==='commit'&&!x.deploymentLocked&&x.order.includes(pid),'当前不能二次确认派遣');need(all().every(id=>x.deployments?.[id]?.confirmed),'请先由每位玩家提交暂定派遣名单');for(const id of all())validateDeployment(s,id,x.deployments[id].ids);x.deploymentApprovals??=[];need(!x.deploymentApprovals.includes(pid),'已二次确认');x.deploymentApprovals.push(pid);if(all().every(id=>x.deploymentApprovals.includes(id))){x.deploymentLocked=true;log(s,'全员二次确认，正式执行投入');resumeDeployment(s);}}
  function validateDeployment(s,pid,uids){need(q(s).order.includes(pid),'无效玩家');need(Array.isArray(uids)&&new Set(uids.map(String)).size===uids.length,'投入名单不能重复');const allowed=eligible(s,pid);need(uids.every(id=>allowed.some(c=>same(c.uid,id))),'只能投入己方重置且可用的角色');}
- function submitDeployment(s,pid,uids){check(s);const x=q(s);need(x.step==='commit'&&!x.deploymentLocked&&!x.tasks.length,'派遣名单已锁定');need(!x.deployments?.[pid]?.confirmed,'请先取消确认再修改名单');validateDeployment(s,pid,uids);
+function submitDeployment(s,pid,uids){check(s);const x=q(s);need(x.step==='commit'&&!x.deploymentLocked&&!x.tasks.length,'派遣名单已锁定');need(!x.deployments?.[pid]?.confirmed,'请先取消确认再修改名单');validateDeployment(s,pid,uids);
   // Validate all earlier submissions before committing any of the table.
-  for(const id of x.order)if(x.deployments?.[id]?.confirmed)validateDeployment(s,id,x.deployments[id].ids);
+  /* v0.15.70：已淘汰玩家不再计入「全员」（见 approveDeployment 同一条注释）。 */
+  const all=()=>x.order.filter(id=>!s.players[id]?.eliminated);
+  for(const id of all())if(x.deployments?.[id]?.confirmed)validateDeployment(s,id,x.deployments[id].ids);
   x.deployments??={};x.deployments[pid]={ids:uids.map(Number),confirmed:true};log(s,s.players[pid].name+'确认派遣名单，等待全员确认');
   invalidateAgreement(s);
   /* v0.15.66：单人模式时确认人=提案人本人，自动完成二次确认。 */
   if(x.discussion&&s.players.filter(p=>!p.eliminated).length===1&&x.order.length===1)approveDeployment(s,pid);
-  if(!x.discussion&&x.order.every(id=>x.deployments[id]?.confirmed)){x.deploymentLocked=true;log(s,'全员已确认，锁定派遣名单并按起始玩家顺序执行投入');resumeDeployment(s);}
- }
+  if(!x.discussion&&all().every(id=>x.deployments[id]?.confirmed)){x.deploymentLocked=true;log(s,'全员已确认，锁定派遣名单并按起始玩家顺序执行投入');resumeDeployment(s);}
+}
  function withdrawDeployment(s,pid){check(s);const x=q(s);need(x.step==='commit'&&!x.deploymentLocked,'全员已确认，不能再修改派遣名单');need(x.deployments?.[pid]?.confirmed,'该玩家尚未确认');x.deployments[pid].confirmed=false;invalidateAgreement(s);log(s,s.players[pid].name+'取消派遣确认，可修改名单');}
- function resumeDeployment(s){const x=q(s);if(!x?.deploymentLocked||x.step!=='commit'||x.tasks.length||x.queue.length||s.pending.length||s.status!=='playing')return;while(x.step==='commit'&&!x.tasks.length&&!x.queue.length){const pid=x.order[x.commitIndex];commit(s,pid,x.deployments[pid].ids,true);}}
+ function resumeDeployment(s){const x=q(s);if(!x?.deploymentLocked||x.step!=='commit'||x.tasks.length||x.queue.length||s.pending.length||s.status!=='playing')return;
+ /* v0.15.70：已淘汰的玩家（或锁定前从未提交的人）没有名单可横置，跳过并按顺序继续，
+    否则 x.deployments[pid] 为 undefined，整段投入会在这里抛错，全队卡死。 */
+ while(x.step==='commit'&&!x.tasks.length&&!x.queue.length&&x.commitIndex<x.order.length){const pid=x.order[x.commitIndex];
+  if(s.players[pid]?.eliminated||!x.deployments?.[pid]){x.commitIndex++;if(x.commitIndex>=x.order.length)x.step='afterCommit';continue;}
+  commit(s,pid,x.deployments[pid].ids,true);}}
  function commit(s,pid,uids,fromBatch=false){check(s);const x=q(s);need(!x.deployments||(x.deploymentLocked&&fromBatch),'请先让所有玩家确认派遣名单');need(x.step==='commit'&&!x.tasks.length,'当前不是可投入角色的步骤');need(x.order[x.commitIndex]===pid,'请按起始玩家顺序投入');need(Array.isArray(uids)&&new Set(uids.map(String)).size===uids.length,'投入名单不能重复');const available=eligible(s,pid);need(uids.every(id=>available.some(c=>same(c.uid,id))),'只能投入己方重置且可用的角色');const chosen=uids.map(id=>available.find(c=>same(c.uid,id)));for(const c of chosen){c.state.exhausted=true;c.state.committed=true;}
   log(s,s.players[pid].name+'投入：'+(chosen.map(c=>c.meta.nameZh).join('、')||'无人'));
   for(const c of chosen)if(['01001','01002','01044','01045'].includes(c.meta.code))task(s,'commitResponse',pid,{uid:c.uid,code:c.meta.code},true);

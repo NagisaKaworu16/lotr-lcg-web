@@ -82,13 +82,17 @@ const AUDIT = (min) => {
   await page.waitForTimeout(700);
   await audit('resource');
 
-  const clickBtn = async text => { const el = page.locator('.operation-content button:not([disabled])', { hasText: text }).first(); if (!await el.count()) return false; await el.click(); await page.waitForTimeout(250); return true; };
+  /* v0.15.70：派遣面板在 .decide-inline 里，提交／确认改用 data-quest 选择器。 */
+  const PANEL = ':is(.operation-content, .decide-inline)';
+  const clickBtn = async text => { const el = page.locator(PANEL + ' button:not([disabled])', { hasText: text }).first(); if (!await el.count()) return false; await el.click(); await page.waitForTimeout(250); return true; };
+  const clickQuest = async k => { const el = page.locator(PANEL + ' [data-quest="' + k + '"]:not([disabled])').first(); if (!await el.count()) return false; await el.click(); await page.waitForTimeout(280); return true; };
   const clickNext = async () => { const el = page.locator('.operation-title button.primary:not([disabled])').first(); if (!await el.count()) return false; await el.click(); await page.waitForTimeout(380); return true; };
   for (let i = 0; i < 26; i++) {
     if (await clickBtn('结束我的盟友')) continue;
     if (await clickBtn('：放弃剩余行动')) continue;
     if (await clickBtn('开始投入角色')) continue;
-    if (await clickBtn('提交暂定派遣名单')) continue;
+    if (await clickQuest('commit')) continue;
+    if (await clickQuest('approveDeployment')) continue;
     if (await clickBtn('继续到下一决策点')) continue;
     if (!await clickNext()) {
       const phase = await page.evaluate(() => state.phase);
