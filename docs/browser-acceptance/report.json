@@ -1,7 +1,7 @@
 {
-  "pageUrl": "file:////workspace/repo/index.html",
-  "executablePath": "/usr/bin/chromium",
-  "startedAt": "2026-10-24T08:58:13.395Z",
+  "pageUrl": "file:///C:/Users/Administrator/WorkBuddy/魔戒LCG/index.html",
+  "executablePath": "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe",
+  "startedAt": "2026-10-27T04:18:31.957Z",
   "checks": [
     {
       "name": "start-2p",
@@ -15,7 +15,7 @@
       "dock": {
         "sticky": false,
         "scrollable": false,
-        "overflowY": "hidden"
+        "overflowY": "visible"
       }
     },
     {
@@ -26,7 +26,7 @@
       "dock": {
         "sticky": false,
         "scrollable": false,
-        "overflowY": "hidden"
+        "overflowY": "visible"
       }
     },
     {
@@ -51,7 +51,7 @@
       "dock": {
         "sticky": false,
         "scrollable": false,
-        "overflowY": "hidden"
+        "overflowY": "visible"
       }
     },
     {
@@ -79,90 +79,19 @@
       "dock": {
         "sticky": false,
         "scrollable": false,
-        "overflowY": "hidden"
+        "overflowY": "visible"
       }
-    },
-    {
-      "name": "full-round-loop",
-      "ok": true,
-      "phase": 0,
-      "round": 2,
-      "view": 1,
-      "quest": {
-        "step": "completed",
-        "locked": true
-      },
-      "travel": true,
-      "enc": true,
-      "combat": {
-        "step": "completed",
-        "proposal": false
-      },
-      "refresh": true
-    },
-    {
-      "name": "layout:05-2p-round2-1440",
-      "ok": true,
-      "overflowX": false,
-      "scrollWidth": 1440,
-      "dock": {
-        "sticky": false,
-        "scrollable": false,
-        "overflowY": "hidden"
-      }
-    },
-    {
-      "name": "images-load",
-      "ok": true,
-      "total": 58,
-      "failed": 0
-    },
-    {
-      "name": "start-4p",
-      "ok": true,
-      "scenario": "dolguldur"
-    },
-    {
-      "name": "layout:06-4p-1920",
-      "ok": true,
-      "overflowX": false,
-      "scrollWidth": 1920,
-      "dock": {
-        "sticky": false,
-        "scrollable": false,
-        "overflowY": "hidden"
-      }
-    },
-    {
-      "name": "layout:07-4p-long-hand-1920",
-      "ok": true,
-      "overflowX": false,
-      "scrollWidth": 1920,
-      "dock": {
-        "sticky": false,
-        "scrollable": false,
-        "overflowY": "hidden"
-      }
-    },
-    {
-      "name": "long-hand-no-overflow",
-      "ok": true,
-      "overflowX": false,
-      "handCards": 16
     }
   ],
   "screenshots": [
     "01-2p-setup-1440.png",
     "02-2p-planning-1440.png",
     "03-2p-quest-pick-1440.png",
-    "04-2p-quest-1440.png",
-    "05-2p-round2-1440.png",
-    "06-4p-1920.png",
-    "07-4p-long-hand-1920.png"
+    "04-2p-quest-1440.png"
   ],
   "consoleErrors": [],
   "pageErrors": [],
   "failedImages": [],
-  "finishedAt": "2026-10-24T08:58:44.673Z",
-  "ok": true
+  "error": "locator.click: Timeout 6000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator(':is(.operation-content, .decide-inline) button:not([disabled])').filter({ hasText: '处理响应／选择' }).first()\u001b[22m\n\u001b[2m    - locator resolved to <button data-id=\"107\" data-travel=\"choice\" data-action=\"travelFlow\">处理响应／选择</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <dialog open=\"\">…</dialog> intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m    - element is visible, enabled and stable\u001b[22m\n\u001b[2m    - scrolling into view if needed\u001b[22m\n\u001b[2m    - done scrolling\u001b[22m\n\u001b[2m    - <dialog open=\"\">…</dialog> intercepts pointer events\u001b[22m\n\u001b[2m  2 × retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m      - waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <select data-travel-field=\"target\">…</select> from <dialog open=\"\">…</dialog> subtree intercepts pointer events\u001b[22m\n\u001b[2m  2 × retrying click action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n\u001b[2m      - waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <dialog open=\"\">…</dialog> intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n\u001b[2m      - waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <dialog open=\"\">…</dialog> intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n\u001b[2m      - waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <select data-travel-field=\"target\">…</select> from <dialog open=\"\">…</dialog> subtree intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n\u001b[2m      - waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <select data-travel-field=\"target\">…</select> from <dialog open=\"\">…</dialog> subtree intercepts pointer events\u001b[22m\n\u001b[2m  2 × retrying click action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n\u001b[2m      - waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <dialog open=\"\">…</dialog> intercepts pointer events\u001b[22m\n\u001b[2m  - retrying click action\u001b[22m\n\u001b[2m    - waiting 500ms\u001b[22m\n",
+  "ok": false
 }

@@ -46,25 +46,30 @@ const QuestUI=(()=>{
   if(ph==='A'){const ids=draftPeek(s,pid);n+=ids.length;will+=ids.reduce((a,uid)=>a+P.stats(s,uid).willpower,0);}
   return {n,will};
  }
-/* 「已投入」只属于锁定态；未锁一律「暂定」。D 态前缀留空（pill 已写「执行中」），
-   但数字模板与其它状态完全一致——跨状态比 .r0-num 的右缘与宽度都不会跳。 */
+/* 「已投入」只属于锁定态，所以 D 态的前缀是「实际」，未锁一律「暂定」——
+   两个都是两个汉字，五态前缀实宽严格相等，数字文本的起点才不会跟着状态跳。
+   （v0.15.72 更正：早前 D 态用空前缀 + .r0-label:empty{display:none}，会让整行左移 20px。） */
 function statusParts(s,pid,ph){
- const {n,will}=tally(s,pid,ph),threat=ScenarioEngine.threat(s);
- return {label:ph==='D'?'':'暂定',num:`${n} 名 · 意志 ${will} ／ 威胁 ${threat}`};
+ const {n,will}=tally(s,pid,ph);
+ return {label:ph==='D'?'实际':'暂定',num:`${n} 名 · 意志 ${will}`};
 }
 const pillOf=(s,ph)=>{if(ph==='A')return '草稿';if(ph==='B')return '已提交';if(ph==='C1')return '待确认';if(ph==='C2'){const q=s.questing;return '已确认 '+((q.deploymentApprovals||[]).length)+'/'+liveOrder(s).length;}return '执行中';};
 /* R0 头部：一行装「谁 · 交了多少」（pill + 前缀 + 数字）和「切换看谁的名单」（分段按钮组），
    行尾小字说「还差谁」。宽屏一行、窄屏自动落两行，但只算一段，不再多一层纵向分隔。
-   数字右对齐 + tabular-nums + 等宽模板：前缀字数变化时数字不横跳。 */
+   这一行是**内容宽、左锚**的：跨状态稳定的是数字文本的起点（pill 等宽 + 前缀等宽），
+   不是右缘——要右缘恒定就得让 .r0 撑满整行，那会把数字甩到面板远端、和状态词之间空出几百像素。
+   .r0 带 tabindex=-1：单人局没有 R1 胶囊，焦点恢复时落在这里（见 focusActor）。 */
 function headRow(s,pid,ph){
  const {label,num}=statusParts(s,pid,ph),q=s.questing,live=liveOrder(s),apr=q.deploymentApprovals||[];
  let note='';
  if(ph==='B')note='还差 '+live.filter(id=>!q.deployments?.[id]?.confirmed).map(id=>nameOf(s,id)).join('、')+' 提交';
  if(ph==='C1')note='尚未横置角色';
  if(ph==='C2')note='还差 '+live.filter(id=>!apr.includes(id)).map(id=>nameOf(s,id)).join('、')+' 确认';
- const group=live.length<2?'':`<fieldset class="quest-actors" role="radiogroup" aria-label="当前操作玩家">${live.map(id=>{const sub=!!q.deployments?.[id]?.confirmed,ok=apr.includes(id),tone=ok?'ok':sub?'sub':'idle',label2=ok?'已确认':sub?'已提交':'未提交';
+ /* D 态不渲染玩家切换：tally() 是全员累加，pid 只在 A 态影响草稿，D 态切人时 R0 数字
+   一个字符都不会变——那是一个点了没有任何反馈的死控件。 */
+ const group=(live.length<2||ph==='D')?'':`<fieldset class="quest-actors" role="radiogroup" aria-label="当前操作玩家">${live.map(id=>{const sub=!!q.deployments?.[id]?.confirmed,ok=apr.includes(id),tone=ok?'ok':sub?'sub':'idle',label2=ok?'已确认':sub?'已提交':'未提交';
   return `<label class="actor-chip" data-state="${tone}"><input type="radio" name="quest-actor" value="${id}" data-quest-actor="${id}" data-focus-key="quest-actor-${id}" ${id===pid?'checked':''} aria-label="${esc(nameOf(s,id))}，${label2}"><span class="dot" aria-hidden="true"></span>${esc(nameOf(s,id))}</label>`;}).join('')}</fieldset>`;
- return `<div class="r-head"><div class="r0"><span class="state-pill" data-state="${ph}">${esc(pillOf(s,ph))}</span><span class="r0-label">${esc(label)}</span><span class="r0-num">${esc(num)}</span></div>${group}${note?`<span class="action-note">${esc(note)}</span>`:''}</div>`;
+ return `<div class="r-head"><div class="r0" tabindex="-1"><span class="state-pill" data-state="${ph}">${esc(pillOf(s,ph))}</span><span class="r0-label">${esc(label)}</span><span class="r0-num">${esc(num)}</span></div>${group}${note?`<span class="action-note">${esc(note)}</span>`:''}</div>`;
 }
  /* R1 名单区（三条互斥分支，同一位置演化）：
    A 可勾选网格；B/C1/C2 一行只读「已提交：本人名单」；D「已投入：全队名单」。
@@ -164,7 +169,18 @@ function deploySection(s,pid){
    if(Number.isInteger(next)&&next!==handView){handView=next;render();}
   });
  }
- /* 播报：先清空再异步写入，#live 是 shell.html 里的 role=status 空节点（在 #app 之外，
+ /* 提交／确认之后的焦点落点：多人局落新操作者的 R1 胶囊，单人局落 .r0。
+   为什么不落「下一位的确认派遣」：#1 它会被 render 的按 key 恢复顺手选中，按住回车
+   就连续替两个人确认；#2 胶囊是非推进性动作（只切视图），回车最坏也只是再看一遍。
+   为什么必须显式 focus：render 只在 innerHTML 替换前记住 activeElement 的 key，替身
+   状态一变（quest-approve → quest-unapprove / 切到别人）就匹配不上，焦点会掉回 body。 */
+function focusActor(pid){
+ if(typeof document==='undefined'||typeof document.querySelector!=='function')return;
+ const chip=Number.isInteger(pid)?document.querySelector('[data-quest-actor="'+pid+'"]'):null;
+ const el=chip||document.querySelector('.r0');
+ if(el&&typeof el.focus==='function')el.focus({preventScroll:true});
+}
+/* 播报：先清空再异步写入，#live 是 shell.html 里的 role=status 空节点（在 #app 之外，
     否则每次 render 都会把它连内容一起销毁）。同一句连播两次时浏览器只在内容变化时才读。 */
  function say(text){
   if(typeof document==='undefined'||typeof document.querySelector!=='function'||!text)return;
@@ -190,8 +206,11 @@ function deploySection(s,pid){
   if(q.discussion&&(q.plannedActions?.length||q.actionLocked||q.actionError)){body+=`<section class="notice"><h3>暂定行动 · 交流缓冲区</h3><p>按下列顺序执行；全员二次确认前不支付、不弃牌、不抽牌。修改或撤销会清除全体二次确认。</p>${q.actionError?`<p>${esc(q.actionError)}</p>`:''}${(q.plannedActions||[]).map(a=>{const source=a.kind==='play'?s.players[a.player].hand.find(c=>c.uid===a.uid):P.find(s,a.uid)?.state;const m=source?P.data(s,{...source,owner:a.player}):null;return `<p>${esc(s.players[a.player].name)} · ${a.kind==='play'?'事件':'能力'}：${esc(m?.nameZh||'#'+a.uid)} ${button('撤销此暂定行动','cancelAction',`data-player="${a.player}" data-id="${a.id}"`,q.actionLocked)}</p>`;}).join('')}<div class="actions">${q.order.filter(id=>!s.players[id].eliminated).map(id=>button(s.players[id].name+(q.actionApprovals?.includes(id)?'：取消二次确认':'：二次确认行动'),q.actionApprovals?.includes(id)?'unapproveActions':'approveActions',`data-player="${id}"`,!q.plannedActions?.length||q.actionLocked||!!ch||!!sp)).join('')}</div>${q.actionLocked?'<p>全员已确认，正在执行；请先处理效果与响应。</p>':''}</section>`;}
   if(q.step==='staging'&&!sp&&!ch){if(q.current){const c=q.current.card;body+=`<div class="quest-reveal">${ImageLibrary.encounterArt(c.id)}<h3>${esc(c.name)}</h3><p>${esc(c.rule)}</p><p>厄运 ${c.doomed||0} · ${c.surge?'涌现':'无涌现'} · ${q.current.canceled?'翻开效果已取消':'等待结算'}</p><div class="actions">${R.cancelOptions(s).map(o=>button(o.label,'cancel',`data-value="${o.value}"`)).join('')}${button('结算此牌的关键词与效果','reveal')}</div></div>`;}else body+=button(q.remaining.length?'翻开下一张遭遇牌（待翻 '+q.remaining.length+'）':'结束探查，开放行动窗口','draw');}
   if(w.kind==='action'&&!q.actionLocked&&ScenarioEngine.windows.settings(s).mode==='detailed'&&actor!==null){body+=`<p class="small">事件与主动能力先进入暂定清单，全员二次确认后执行。${q.plannedActions?.length?'暂定行动尚未执行，请先二次确认或撤销。':'等待结束行动：'+(s.players.filter(p=>!p.eliminated&&!q.finalPasses.includes(p.id)).map(p=>esc(p.name)).join('、')||'全员已放弃，可以推进')}。放弃后仍可取消放弃。</p><div class="actions">${s.players.filter(p=>!p.eliminated).map(p=>button(p.name+(q.finalPasses.includes(p.id)?'：取消放弃行动':'：放弃本窗口行动'),q.finalPasses.includes(p.id)?'unpass':'pass',`data-player="${p.id}"`,false)).join('')}${button(q.step==='beforeCommit'?'开始投入角色':q.step==='afterCommit'?'开始探查':q.step==='afterStaging'?'自动结算探险':'结束探险阶段','move','',!!q.plannedActions?.length||!s.players.filter(p=>!p.eliminated).every(p=>q.finalPasses.includes(p.id)))}</div><label>使用行动的玩家 <select id="planning-actor">${s.players.filter(p=>!p.eliminated).map(p=>`<option value="${p.id}" ${p.id===actor?'selected':''}>${esc(p.name)}</option>`).join('')}</select></label><div class="actions">${P.abilities(s,actor).map(a=>`<button data-action="planning" data-plan="ability" data-player="${actor}" data-uid="${a.uid}" title="${esc(a.reason)}" ${a.legal?'':'disabled'}>${esc(a.name)}</button>`).join('')}</div><p class="small muted">事件在下方手牌区操作；任一行动会清除全体玩家的放弃标记。</p>`;}
-  /* commit 这一段的数字在 R0 里，标题行不再重复「投入意志」；其他步骤（探查、结果）没有 R0。 */
-  const head=q.step==='commit'?`<div class="panel-title"><h2>阶段3 · ${steps[q.step]}</h2></div>`:`<div class="panel-title"><h2>阶段3 · ${steps[q.step]}</h2><strong>投入意志 ${R.total(s)} ／ 探查区威胁 ${ScenarioEngine.threat(s)}</strong></div>`;
+  /* commit 这一段的数字在 R0 里，标题行不再重复「投入意志」；但威胁必须在这里补上——
+     v0.15.72 把「／ 威胁 N」从 R0 数字串里移出（它在界面上已是第四处重复，且全局值
+     不属于「我的派遣」这一行），玩家在 commit 时仍需要看到意志要对抗多少威胁。其他
+     步骤（探查、结果）没有 R0，威胁照旧随标题走。 */
+  const head=q.step==='commit'?`<div class="panel-title"><h2>阶段3 · ${steps[q.step]}</h2><strong>探查区威胁 ${ScenarioEngine.threat(s)}</strong></div>`:`<div class="panel-title"><h2>阶段3 · ${steps[q.step]}</h2><strong>投入意志 ${R.total(s)} ／ 探查区威胁 ${ScenarioEngine.threat(s)}</strong></div>`;
   return `<section class="panel questing-panel">${head}${q.result?`<p class="notice">本次结果：意志 ${q.result.willpower} − 威胁 ${q.result.threat} = ${q.result.delta}。${q.result.delta>0?'进度已自动分配':q.result.delta<0?'每位玩家威胁已增加'+(-q.result.delta):'平局，不放进度、不增加威胁'}。</p>`:''}${body}</section>`;
  }
  async function handle(b){const k=b.dataset.quest,pid=+b.dataset.player,id=+b.dataset.id;
@@ -209,7 +228,18 @@ function deploySection(s,pid){
    const ids=draftFor(state,pid),before=JSON.stringify(state);const selected=ids.map(id=>P.find(state,id));
    const solo=(state.questing.order||[]).length<2;
    const ok=await choose('提交名单 · '+state.players[pid].name,`<p>${selected.length?'将派遣以下角色：':'本次不派遣角色（0名）。'}</p><ul>${selected.map(c=>`<li>${esc(c.meta.nameZh)} · 意志 ${P.stats(state,c.uid).willpower}</li>`).join('')}</ul><p>当前意志合计 <b>${selected.reduce((n,c)=>n+P.stats(state,c.uid).willpower,0)}</b>。遭遇与后续行动可能改变此数值。</p><p>${solo?'单人局：提交即投入。':'只提交名单。全员确认后才横置。返回修改时勾选会保留。'}</p>`,()=>true);
-   if(ok)mutate(()=>{if(JSON.stringify(state)!==before)throw Error('桌面已变化，请重新核对派遣名单。');R.submitDeployment(state,pid,ids);draft={context:null,player:null,ids:[]};});
+   /* 提交 + 交接操作权必须进同一次 mutate（同一次 render）：提交后如果先渲染再单独
+     渲染一次切人，第二次 innerHTML 替换会把第一次恢复的焦点连节点一起丢掉（U18-a）。 */
+   let handedTo=null;
+   if(ok)mutate(()=>{
+    if(JSON.stringify(state)!==before)throw Error('桌面已变化，请重新核对派遣名单。');
+    R.submitDeployment(state,pid,ids);draft={context:null,player:null,ids:[]};
+    const q=state.questing;
+    if(q.step==='commit'&&!q.deploymentLocked&&typeof handView!=='undefined'){
+     const next=liveOrder(state).find(x=>!q.deployments?.[x]?.confirmed);
+     if(next!==undefined&&next!==handView){handView=next;handedTo=next;}
+    }
+   });
    if(ok&&state?.questing){
     const q=state.questing,live=liveOrder(state);
     if(q.deploymentLocked)say(`已锁定，正在按顺序投入 ${deployedCount(state)} 名角色`);
@@ -218,29 +248,34 @@ function deploySection(s,pid){
      if(wait.length)say(`${nameOf(state,pid)} 已提交名单，还差 ${wait.map(x=>nameOf(state,x)).join('、')}`);
      else say(`名单已齐，等待 ${live.filter(x=>!(q.deploymentApprovals||[]).includes(x)).length} 人确认，尚未横置`);
     }
-   }
-   /* 提交后自动把操作权交给下一位未提交的玩家，否则第二个人永远轮不到提交。 */
-   if(ok&&state?.questing?.step==='commit'&&!state.questing.deploymentLocked&&typeof handView!=='undefined'){
-    const next=(state.questing.order||[]).find(x=>!state.questing.deployments?.[x]?.confirmed);
-    if(next!==undefined&&next!==handView){handView=next;render();}
+    /* 操作权已经交出去了，焦点跟着交出去，别留在刚被替换掉的按钮上。 */
+    if(handedTo!==null)focusActor(handedTo);
    }
    return;
   }
   if(k==='choice'){const sp=R.spec(state,id);if(!sp)return;let values=await choose(sp.message,sp.fields.map(f=>`<label>${esc(f.label)}<select id="quest-${f.key}">${f.options.map(o=>`<option value="${esc(o.value)}">${esc(o.label)}</option>`).join('')}</select></label>`).join('')+(sp.task.optional?'<p><label><input id="quest-skip" type="checkbox">放弃此响应</label></p>':''),d=>({...Object.fromEntries(sp.fields.map(f=>[f.key,d.querySelector('#quest-'+f.key).value])),skip:!!d.querySelector('#quest-skip')?.checked}));if(values)mutate(()=>R.choose(state,id,values));return;}
   if(k==='approveDeployment'||k==='unapproveDeployment'){
    const before=(state.questing?.deploymentApprovals||[]).length,name=state?.players[pid]?.name||('玩家'+(pid+1));
-   mutate(()=>{if(k==='approveDeployment')R.approveDeployment(state,pid);else R.withdrawDeploymentApproval(state,pid);});
+   /* 二次确认也是「接力」：确认完把操作权交给下一位未确认者，并且必须和这次变更进同一次
+      mutate —— 分开渲染两次会让第二次替换把第一次恢复的焦点连节点一起丢掉（U18-a）。 */
+   let switched=null;
+   mutate(()=>{
+    if(k==='approveDeployment')R.approveDeployment(state,pid);else R.withdrawDeploymentApproval(state,pid);
+    const q=state.questing,live=liveOrder(state);
+    if(k==='approveDeployment'&&!q.deploymentLocked&&typeof handView!=='undefined'){
+     const next=live.find(x=>!(q.deploymentApprovals||[]).includes(x));
+     if(next!==undefined&&next!==handView){handView=next;switched=next;}
+    }
+   });
    const q=state?.questing;
    if(q&&(q.deploymentApprovals||[]).length!==before){
     if(q.deploymentLocked)say(`已锁定，正在按顺序投入 ${deployedCount(state)} 名角色`);
     else if(k==='unapproveDeployment')say(`${name} 取消确认，尚未横置`);
     else say(`已确认 ${(q.deploymentApprovals||[]).length}／${liveOrder(state).length}，尚未横置`);
    }
-   /* 确认后把操作权交给下一位未确认的玩家：确认是按人来的，不切换就只能看到「取消确认」。 */
-   if(k==='approveDeployment'&&q&&!q.deploymentLocked&&typeof handView!=='undefined'){
-    const next=liveOrder(state).find(x=>!(q.deploymentApprovals||[]).includes(x));
-    if(next!==undefined&&next!==handView){handView=next;render();}
-   }
+   /* 落点：交出去了就落新操作者；没交出去（已锁定 / 取消确认）就落回自己。
+      绝不按原 key 恢复成「下一位的确认派遣」——按住回车会连续替两个人确认。 */
+   focusActor(switched!==null?switched:handView);
    return;
   }
   mutate(()=>{if(k==='unpass')R.unpass(state,pid);if(k==='approveActions')R.approveActions(state,pid);if(k==='unapproveActions')R.withdrawActionApproval(state,pid);if(k==='cancelAction')R.cancelAction(state,pid,id);if(k==='pass')R.pass(state,pid);if(k==='move')R.move(state);if(k==='draw')R.drawNext(state);if(k==='reveal')R.resolveReveal(state);if(k==='cancel')R.cancel(state,b.dataset.value);});

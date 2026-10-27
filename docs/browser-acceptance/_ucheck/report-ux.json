@@ -1,0 +1,841 @@
+[
+ {
+  "viewport": "360x640",
+  "players": 4,
+  "at": "2026-10-27T04:37:17.492Z",
+  "buildMd5Start": "e576b52bf3dcd0657e0819804c2249a6",
+  "buildMd5End": "e576b52bf3dcd0657e0819804c2249a6",
+  "buildStable": true,
+  "expectedBuild": "49a607426097926d823991bf3658b91a",
+  "isFinalBuild": false,
+  "c2": {
+   "state": "C2",
+   "pill": "已确认 1/4",
+   "label": "暂定",
+   "num": "4 名 · 意志 9 ／ 威胁 3",
+   "pillW": 69.16,
+   "numW": 127.2,
+   "numClientW": 127,
+   "numTextW": 127.2,
+   "r0W": 202.36,
+   "r0H": 23.55,
+   "pillPad": [
+    "1px",
+    "4px",
+    "1px",
+    "4px"
+   ]
+  },
+  "checks": [
+   {
+    "id": "C2-态构造",
+    "measured": "C2",
+    "expect": "C2",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "G1 num 装得下文字",
+    "measured": "127.2 ≥ 127.2",
+    "expect": "rectW ≥ textW − 0.5",
+    "ok": true,
+    "note": "Range 实测文字宽，与元素盒无关；不用 scrollWidth（flex:none 下恒等）"
+   },
+   {
+    "id": "G2a num 无 ellipsis",
+    "measured": "clip",
+    "expect": "≠ ellipsis",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "G2b num overflow 可见",
+    "measured": "visible",
+    "expect": "visible",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "G2c label 可省略",
+    "measured": "ellipsis",
+    "expect": "ellipsis",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "G3b 无横向滚动",
+    "measured": "292 − 292",
+    "expect": "≤ 1",
+    "ok": true,
+    "note": "容器级：抓「num 把容器撑破」"
+   },
+   {
+    "id": "G3c doc 无横向滚动",
+    "measured": "360 − 360",
+    "expect": "≤ 1",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "U18-b r0 盒高 ≤ 26",
+    "measured": 23.55,
+    "expect": "≤ 26",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "U18-b-补 r0 高 == pill 高",
+    "measured": "|23.55 − 23.55|",
+    "expect": "≤ 0.5",
+    "ok": true,
+    "note": "证明盒高由 pill 撑起"
+   },
+   {
+    "id": "U18-c-1 label 转 sr-only",
+    "measured": "1×1",
+    "expect": "1×1",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "U18-c-1b label 仍可被读屏",
+    "measured": "暂定",
+    "expect": "暂定",
+    "ok": true,
+    "note": "sr-only 保留在可访问性树"
+   },
+   {
+    "id": "U18-c-2 r0 可见子项数",
+    "measured": "2 [{\"cls\":\"state-pill\",\"w\":69.16,\"cv\":true,\"clip\":\"auto\"},{\"cls\":\"r0-label\",\"w\":1,\"cv\":true,\"clip\":\"rect(0px, 0px, 0px, 0px)\"},{\"cls\":\"r0-num\",\"w\":127.2,\"cv\":true,\"clip\":\"auto\"}]",
+    "expect": "== 2（pill + num）",
+    "ok": true,
+    "note": "可见 = checkVisibility() 且盒宽>4；sr-only 的 clip 不被 checkVisibility 识别，必须两项取交"
+   },
+   {
+    "id": "U18-c-3 与 .sr-only 同源",
+    "measured": "8/8 一致",
+    "expect": "8 个计算属性全等",
+    "ok": true,
+    "note": "变更检测器：不是同源证明，但两份改了不一致会红"
+   },
+   {
+    "id": "U18-c-4 pill 水平 padding",
+    "measured": "[\"1px\",\"4px\",\"1px\",\"4px\"]",
+    "expect": "上下 1px / 左右 4px",
+    "ok": true,
+    "note": "垂直 1px 是 R0 盒高唯一来源，不许归零"
+   },
+   {
+    "id": "W1 最宽数值不撑破容器",
+    "measured": "292 − 292",
+    "expect": "≤ 1",
+    "ok": true,
+    "note": "文本注入「12 名 · 意志 34 ／ 威胁 50」（非真实可达局面）"
+   },
+   {
+    "id": "W2 最宽数值 num 装得下",
+    "measured": "148.81 ≥ 148.81",
+    "expect": "rectW ≥ textW − 0.5",
+    "ok": true,
+    "note": "同上，文本注入；这一档才会让 G1 真正承重"
+   },
+   {
+    "id": "W3 最宽数值 r0 不溢出",
+    "measured": "224 ≤ 224",
+    "expect": "r0.scrollW ≤ r0.clientW",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "W4 最宽数值 doc 不横向滚",
+    "measured": "360 − 360",
+    "expect": "≤ 1",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "U18-a 焦点不落 body",
+    "measured": "{\"tag\":\"INPUT\",\"id\":\"\",\"fk\":\"quest-actor-1\",\"text\":\"\",\"state\":\"C1\"}",
+    "expect": "非 BODY 且带 focusKey 或 id=live",
+    "ok": true,
+    "note": "确认派遣后 render() 全量重建"
+   },
+   {
+    "id": "五态-S1 状态序列",
+    "measured": "A→B→C1→C2→D",
+    "expect": "A→B→C1→C2→D",
+    "ok": true,
+    "note": "扫描本身是否成立"
+   },
+   {
+    "id": "五态-S2 label 文本",
+    "measured": "五态全符",
+    "expect": "A/B/C1/C2=暂定, D=实际",
+    "ok": true,
+    "note": "D 态「实际」自 v0.15.72 起；此前为空串"
+   },
+   {
+    "id": "护栏 pill 五态等宽",
+    "measured": "[69.16,69.16,69.16,69.16,69.16] 极差=0",
+    "expect": "≤ 0.5",
+    "ok": true,
+    "note": "⚠ 护栏：旧实现定宽时也绿，不可当门禁"
+   }
+  ],
+  "fail": 0,
+  "total": 22
+ },
+ {
+  "viewport": "390x844",
+  "players": 4,
+  "at": "2026-10-27T04:37:26.412Z",
+  "buildMd5Start": "e576b52bf3dcd0657e0819804c2249a6",
+  "buildMd5End": "e576b52bf3dcd0657e0819804c2249a6",
+  "buildStable": true,
+  "expectedBuild": "49a607426097926d823991bf3658b91a",
+  "isFinalBuild": false,
+  "c2": {
+   "state": "C2",
+   "pill": "已确认 1/4",
+   "label": "暂定",
+   "num": "4 名 · 意志 9 ／ 威胁 3",
+   "pillW": 69.16,
+   "numW": 127.2,
+   "numClientW": 127,
+   "numTextW": 127.2,
+   "r0W": 202.36,
+   "r0H": 23.55,
+   "pillPad": [
+    "1px",
+    "4px",
+    "1px",
+    "4px"
+   ]
+  },
+  "checks": [
+   {
+    "id": "C2-态构造",
+    "measured": "C2",
+    "expect": "C2",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "G1 num 装得下文字",
+    "measured": "127.2 ≥ 127.2",
+    "expect": "rectW ≥ textW − 0.5",
+    "ok": true,
+    "note": "Range 实测文字宽，与元素盒无关；不用 scrollWidth（flex:none 下恒等）"
+   },
+   {
+    "id": "G2a num 无 ellipsis",
+    "measured": "clip",
+    "expect": "≠ ellipsis",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "G2b num overflow 可见",
+    "measured": "visible",
+    "expect": "visible",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "G2c label 可省略",
+    "measured": "ellipsis",
+    "expect": "ellipsis",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "G3b 无横向滚动",
+    "measured": "320 − 320",
+    "expect": "≤ 1",
+    "ok": true,
+    "note": "容器级：抓「num 把容器撑破」"
+   },
+   {
+    "id": "G3c doc 无横向滚动",
+    "measured": "390 − 390",
+    "expect": "≤ 1",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "U18-b r0 盒高 ≤ 26",
+    "measured": 23.55,
+    "expect": "≤ 26",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "U18-b-补 r0 高 == pill 高",
+    "measured": "|23.55 − 23.55|",
+    "expect": "≤ 0.5",
+    "ok": true,
+    "note": "证明盒高由 pill 撑起"
+   },
+   {
+    "id": "U18-c-1 label 转 sr-only",
+    "measured": "1×1",
+    "expect": "1×1",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "U18-c-1b label 仍可被读屏",
+    "measured": "暂定",
+    "expect": "暂定",
+    "ok": true,
+    "note": "sr-only 保留在可访问性树"
+   },
+   {
+    "id": "U18-c-2 r0 可见子项数",
+    "measured": "2 [{\"cls\":\"state-pill\",\"w\":69.16,\"cv\":true,\"clip\":\"auto\"},{\"cls\":\"r0-label\",\"w\":1,\"cv\":true,\"clip\":\"rect(0px, 0px, 0px, 0px)\"},{\"cls\":\"r0-num\",\"w\":127.2,\"cv\":true,\"clip\":\"auto\"}]",
+    "expect": "== 2（pill + num）",
+    "ok": true,
+    "note": "可见 = checkVisibility() 且盒宽>4；sr-only 的 clip 不被 checkVisibility 识别，必须两项取交"
+   },
+   {
+    "id": "U18-c-3 与 .sr-only 同源",
+    "measured": "8/8 一致",
+    "expect": "8 个计算属性全等",
+    "ok": true,
+    "note": "变更检测器：不是同源证明，但两份改了不一致会红"
+   },
+   {
+    "id": "U18-c-4 pill 水平 padding",
+    "measured": "[\"1px\",\"4px\",\"1px\",\"4px\"]",
+    "expect": "上下 1px / 左右 4px",
+    "ok": true,
+    "note": "垂直 1px 是 R0 盒高唯一来源，不许归零"
+   },
+   {
+    "id": "W1 最宽数值不撑破容器",
+    "measured": "320 − 320",
+    "expect": "≤ 1",
+    "ok": true,
+    "note": "文本注入「12 名 · 意志 34 ／ 威胁 50」（非真实可达局面）"
+   },
+   {
+    "id": "W2 最宽数值 num 装得下",
+    "measured": "148.81 ≥ 148.81",
+    "expect": "rectW ≥ textW − 0.5",
+    "ok": true,
+    "note": "同上，文本注入；这一档才会让 G1 真正承重"
+   },
+   {
+    "id": "W3 最宽数值 r0 不溢出",
+    "measured": "224 ≤ 224",
+    "expect": "r0.scrollW ≤ r0.clientW",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "W4 最宽数值 doc 不横向滚",
+    "measured": "390 − 390",
+    "expect": "≤ 1",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "U18-a 焦点不落 body",
+    "measured": "{\"tag\":\"INPUT\",\"id\":\"\",\"fk\":\"quest-actor-1\",\"text\":\"\",\"state\":\"C1\"}",
+    "expect": "非 BODY 且带 focusKey 或 id=live",
+    "ok": true,
+    "note": "确认派遣后 render() 全量重建"
+   },
+   {
+    "id": "五态-S1 状态序列",
+    "measured": "A→B→C1→C2→D",
+    "expect": "A→B→C1→C2→D",
+    "ok": true,
+    "note": "扫描本身是否成立"
+   },
+   {
+    "id": "五态-S2 label 文本",
+    "measured": "五态全符",
+    "expect": "A/B/C1/C2=暂定, D=实际",
+    "ok": true,
+    "note": "D 态「实际」自 v0.15.72 起；此前为空串"
+   },
+   {
+    "id": "护栏 pill 五态等宽",
+    "measured": "[69.16,69.16,69.16,69.16,69.16] 极差=0",
+    "expect": "≤ 0.5",
+    "ok": true,
+    "note": "⚠ 护栏：旧实现定宽时也绿，不可当门禁"
+   }
+  ],
+  "fail": 0,
+  "total": 22
+ },
+ {
+  "viewport": "700x640",
+  "players": 4,
+  "at": "2026-10-27T04:41:32.293Z",
+  "buildMd5Start": "e576b52bf3dcd0657e0819804c2249a6",
+  "buildMd5End": "e576b52bf3dcd0657e0819804c2249a6",
+  "buildStable": true,
+  "expectedBuild": "49a607426097926d823991bf3658b91a",
+  "isFinalBuild": false,
+  "c2": {
+   "state": "C2",
+   "pill": "已确认 1/4",
+   "label": "暂定",
+   "num": "4 名 · 意志 9 ／ 威胁 3",
+   "pillW": 77.16,
+   "numW": 127.2,
+   "numClientW": 127,
+   "numTextW": 127.2,
+   "r0W": 244.36,
+   "r0H": 23.55,
+   "pillPad": [
+    "1px",
+    "8px",
+    "1px",
+    "8px"
+   ]
+  },
+  "checks": [
+   {
+    "id": "C2-态构造",
+    "measured": "C2",
+    "expect": "C2",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "G1 num 装得下文字",
+    "measured": "127.2 ≥ 127.2",
+    "expect": "rectW ≥ textW − 0.5",
+    "ok": true,
+    "note": "Range 实测文字宽，与元素盒无关；不用 scrollWidth（flex:none 下恒等）"
+   },
+   {
+    "id": "G2a num 无 ellipsis",
+    "measured": "clip",
+    "expect": "≠ ellipsis",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "G2b num overflow 可见",
+    "measured": "visible",
+    "expect": "visible",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "G2c label 可省略",
+    "measured": "ellipsis",
+    "expect": "ellipsis",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "G3b 无横向滚动",
+    "measured": "632 − 632",
+    "expect": "≤ 1",
+    "ok": true,
+    "note": "容器级：抓「num 把容器撑破」"
+   },
+   {
+    "id": "G3c doc 无横向滚动",
+    "measured": "700 − 700",
+    "expect": "≤ 1",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "G4 常规数值文本不越容器",
+    "measured": "308.36 vs 667 → -358.64",
+    "expect": "≤ 0.5",
+    "ok": true,
+    "note": "余量 = 358.64px（负数即余量）"
+   },
+   {
+    "id": "U18-b r0 盒高 ≤ 26",
+    "measured": 23.55,
+    "expect": "≤ 26",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "U18-b-补 r0 高 == pill 高",
+    "measured": "|23.55 − 23.55|",
+    "expect": "≤ 0.5",
+    "ok": true,
+    "note": "证明盒高由 pill 撑起"
+   },
+   {
+    "id": "M1 中间档容器不横向滚",
+    "measured": "632 − 632",
+    "expect": "≤ 1",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "M2 中间档数字不越容器",
+    "measured": "308.36 vs 667 → -358.64",
+    "expect": "≤ 0.5",
+    "ok": true,
+    "note": "余量 = 358.64px"
+   },
+   {
+    "id": "M3 中间档前缀未被截断",
+    "measured": "盒宽 24 / 文字宽 24",
+    "expect": "盒宽 ≥ 文字宽 − 0.5",
+    "ok": true,
+    "note": "完整显示"
+   }
+  ],
+  "fail": 0,
+  "total": 13
+ },
+ {
+  "viewport": "620x640",
+  "players": 4,
+  "at": "2026-10-27T04:42:11.603Z",
+  "buildMd5Start": "e576b52bf3dcd0657e0819804c2249a6",
+  "buildMd5End": "e576b52bf3dcd0657e0819804c2249a6",
+  "buildStable": true,
+  "expectedBuild": "49a607426097926d823991bf3658b91a",
+  "isFinalBuild": false,
+  "c2": {
+   "state": "C2",
+   "pill": "已确认 1/4",
+   "label": "暂定",
+   "num": "4 名 · 意志 9 ／ 威胁 3",
+   "pillW": 77.16,
+   "numW": 127.2,
+   "numClientW": 127,
+   "numTextW": 127.2,
+   "r0W": 244.36,
+   "r0H": 23.55,
+   "pillPad": [
+    "1px",
+    "8px",
+    "1px",
+    "8px"
+   ]
+  },
+  "checks": [
+   {
+    "id": "C2-态构造",
+    "measured": "C2",
+    "expect": "C2",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "G1 num 装得下文字",
+    "measured": "127.2 ≥ 127.2",
+    "expect": "rectW ≥ textW − 0.5",
+    "ok": true,
+    "note": "Range 实测文字宽，与元素盒无关；不用 scrollWidth（flex:none 下恒等）"
+   },
+   {
+    "id": "G2a num 无 ellipsis",
+    "measured": "clip",
+    "expect": "≠ ellipsis",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "G2b num overflow 可见",
+    "measured": "visible",
+    "expect": "visible",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "G2c label 可省略",
+    "measured": "ellipsis",
+    "expect": "ellipsis",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "G3b 无横向滚动",
+    "measured": "552 − 552",
+    "expect": "≤ 1",
+    "ok": true,
+    "note": "容器级：抓「num 把容器撑破」"
+   },
+   {
+    "id": "G3c doc 无横向滚动",
+    "measured": "620 − 620",
+    "expect": "≤ 1",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "G4 常规数值文本不越容器",
+    "measured": "308.36 vs 587 → -278.64",
+    "expect": "≤ 0.5",
+    "ok": true,
+    "note": "余量 = 278.64px（负数即余量）"
+   },
+   {
+    "id": "U18-b r0 盒高 ≤ 26",
+    "measured": 23.55,
+    "expect": "≤ 26",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "U18-b-补 r0 高 == pill 高",
+    "measured": "|23.55 − 23.55|",
+    "expect": "≤ 0.5",
+    "ok": true,
+    "note": "证明盒高由 pill 撑起"
+   },
+   {
+    "id": "M1 中间档容器不横向滚",
+    "measured": "552 − 552",
+    "expect": "≤ 1",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "M2 中间档数字不越容器",
+    "measured": "308.36 vs 587 → -278.64",
+    "expect": "≤ 0.5",
+    "ok": true,
+    "note": "余量 = 278.64px"
+   },
+   {
+    "id": "M3 中间档前缀未被截断",
+    "measured": "盒宽 24 / 文字宽 24",
+    "expect": "盒宽 ≥ 文字宽 − 0.5",
+    "ok": true,
+    "note": "完整显示"
+   }
+  ],
+  "fail": 0,
+  "total": 13
+ },
+ {
+  "viewport": "320x568",
+  "players": 4,
+  "at": "2026-10-27T04:46:51.318Z",
+  "buildMd5Start": "79dd75642807b4a25ad692fb9e0aa918",
+  "buildMd5End": "79dd75642807b4a25ad692fb9e0aa918",
+  "buildStable": true,
+  "expectedBuild": "49a607426097926d823991bf3658b91a",
+  "isFinalBuild": false,
+  "c2": {
+   "state": "C2",
+   "pill": "已确认 1/4",
+   "label": "暂定",
+   "num": "4 名 · 意志 9 ／ 威胁 3",
+   "pillW": 69.16,
+   "numW": 127.2,
+   "numClientW": 127,
+   "numTextW": 127.2,
+   "r0W": 202.36,
+   "r0H": 23.55,
+   "pillPad": [
+    "1px",
+    "4px",
+    "1px",
+    "4px"
+   ]
+  },
+  "checks": [
+   {
+    "id": "C2-态构造",
+    "measured": "C2",
+    "expect": "C2",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "G1 num 装得下文字",
+    "measured": "127.2 ≥ 127.2",
+    "expect": "rectW ≥ textW − 0.5",
+    "ok": true,
+    "note": "Range 实测文字宽，与元素盒无关；不用 scrollWidth（flex:none 下恒等）"
+   },
+   {
+    "id": "G2a num 无 ellipsis",
+    "measured": "clip",
+    "expect": "≠ ellipsis",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "G2b num overflow 可见",
+    "measured": "visible",
+    "expect": "visible",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "G2c label 可省略",
+    "measured": "ellipsis",
+    "expect": "ellipsis",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "G3b 无横向滚动",
+    "measured": "252 − 252",
+    "expect": "≤ 1",
+    "ok": true,
+    "note": "容器级：抓「num 把容器撑破」"
+   },
+   {
+    "id": "G3c doc 无横向滚动",
+    "measured": "320 − 320",
+    "expect": "≤ 1",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "G4 常规数值文本不越容器",
+    "measured": "266.36 vs 286 → -19.64",
+    "expect": "≤ 0.5",
+    "ok": true,
+    "note": "余量 = 19.64px（负数即余量）"
+   },
+   {
+    "id": "G4-前提 文本单行",
+    "measured": "1 个矩形",
+    "expect": "== 1",
+    "ok": true,
+    "note": "折行时 Range 多矩形，max right 失去意义；这条不成立则 G4 作废"
+   },
+   {
+    "id": "U18-b r0 盒高 ≤ 26",
+    "measured": 23.55,
+    "expect": "≤ 26",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "U18-b-补 r0 高 == pill 高",
+    "measured": "|23.55 − 23.55|",
+    "expect": "≤ 0.5",
+    "ok": true,
+    "note": "证明盒高由 pill 撑起"
+   },
+   {
+    "id": "U18-c-1 label 转 sr-only",
+    "measured": "1×1",
+    "expect": "1×1",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "U18-c-1b label 仍可被读屏",
+    "measured": "暂定",
+    "expect": "暂定",
+    "ok": true,
+    "note": "sr-only 保留在可访问性树"
+   },
+   {
+    "id": "U18-c-2 r0 可见子项数",
+    "measured": "2 [{\"cls\":\"state-pill\",\"w\":69.16,\"cv\":true,\"clip\":\"auto\"},{\"cls\":\"r0-label\",\"w\":1,\"cv\":true,\"clip\":\"rect(0px, 0px, 0px, 0px)\"},{\"cls\":\"r0-num\",\"w\":127.2,\"cv\":true,\"clip\":\"auto\"}]",
+    "expect": "== 2（pill + num）",
+    "ok": true,
+    "note": "可见 = checkVisibility() 且盒宽>4；sr-only 的 clip 不被 checkVisibility 识别，必须两项取交"
+   },
+   {
+    "id": "U18-c-3 与 .sr-only 同源",
+    "measured": "8/8 一致",
+    "expect": "8 个计算属性全等",
+    "ok": true,
+    "note": "变更检测器：不是同源证明，但两份改了不一致会红"
+   },
+   {
+    "id": "U18-c-4 pill 水平 padding",
+    "measured": "[\"1px\",\"4px\",\"1px\",\"4px\"]",
+    "expect": "上下 1px / 左右 4px",
+    "ok": true,
+    "note": "垂直 1px 是 R0 盒高唯一来源，不许归零"
+   },
+   {
+    "id": "W1 最宽数值文本不越容器",
+    "measured": "287.97 vs 286 → 1.97",
+    "expect": "≤ 0.5",
+    "ok": false,
+    "note": "文本注入「12 名 · 意志 99 ／ 威胁 50」（非真实可达局面）"
+   },
+   {
+    "id": "W1-前提 最宽文本单行",
+    "measured": "1 个矩形",
+    "expect": "== 1",
+    "ok": true,
+    "note": "折行则 W1 失去意义"
+   },
+   {
+    "id": "W2 最宽数值 num 装得下",
+    "measured": "148.81 ≥ 148.81",
+    "expect": "rectW ≥ textW − 0.5",
+    "ok": true,
+    "note": "同上，文本注入；这一档才会让 G1 真正承重"
+   },
+   {
+    "id": "W4 最宽数值 doc 不横向滚",
+    "measured": "320 − 320",
+    "expect": "≤ 1",
+    "ok": true,
+    "note": ""
+   },
+   {
+    "id": "W5 最宽数值容器不横向滚",
+    "measured": "254 − 252",
+    "expect": "≤ 1",
+    "ok": false,
+    "note": "容器级补证；注意出现 2px 滚动条也算红"
+   },
+   {
+    "id": "U18-a 焦点不落 body",
+    "measured": "{\"tag\":\"INPUT\",\"id\":\"\",\"fk\":\"quest-actor-1\",\"text\":\"\",\"state\":\"C1\"}",
+    "expect": "非 BODY 且带 focusKey 或 id=live",
+    "ok": true,
+    "note": "确认派遣后 render() 全量重建"
+   },
+   {
+    "id": "五态-S1 状态序列",
+    "measured": "A→B→C1→C2→D",
+    "expect": "A→B→C1→C2→D",
+    "ok": true,
+    "note": "扫描本身是否成立"
+   },
+   {
+    "id": "五态-S2 label 文本",
+    "measured": "五态全符",
+    "expect": "A/B/C1/C2=暂定, D=实际",
+    "ok": true,
+    "note": "D 态「实际」自 v0.15.72 起；此前为空串"
+   },
+   {
+    "id": "护栏 pill 五态等宽",
+    "measured": "[69.16,69.16,69.16,69.16,69.16] 极差=0",
+    "expect": "≤ 0.5",
+    "ok": true,
+    "note": "⚠ 护栏：旧实现定宽时也绿，不可当门禁"
+   },
+   {
+    "id": "五态-S3 num.left 极差",
+    "measured": "[139.16,139.16,139.16,139.16,139.16] 极差=0",
+    "expect": "≤ 1",
+    "ok": true,
+    "note": "切人/切态时数字不横跳"
+   },
+   {
+    "id": "五态-S4 pill.offsetWidth 全等",
+    "measured": "[69,69,69,69,69]",
+    "expect": "五态全等",
+    "ok": true,
+    "note": ""
+   }
+  ],
+  "fail": 2,
+  "total": 27
+ }
+]

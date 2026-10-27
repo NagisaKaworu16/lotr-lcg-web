@@ -1,0 +1,336 @@
+[
+  {
+    "viewport": "320x568",
+    "info": {
+      "phase": 2,
+      "step": "commit",
+      "deploy": "R0 ok"
+    },
+    "errs": [],
+    "data": {
+      "文本": "4 名 · 意志 9 ／ 威胁 3",
+      "num": {
+        "left": 139.16,
+        "right": 266.36,
+        "width": 127.2,
+        "top": -138.13,
+        "height": 20.39,
+        "clientWidth": 127,
+        "scrollWidth": 127,
+        "overflow": 0,
+        "flex": "0 0 auto",
+        "overflowCss": "visible",
+        "textOverflow": "clip",
+        "fontSize": "12px"
+      },
+      "r0": {
+        "left": 64,
+        "right": 266.36,
+        "width": 202.36,
+        "top": -140.13,
+        "height": 23.55
+      },
+      "pill": {
+        "left": 64,
+        "right": 133.16,
+        "width": 69.16,
+        "top": -140.13,
+        "height": 23.55,
+        "text": "已确认 3/4"
+      },
+      "rHead": {
+        "left": 64,
+        "right": 270,
+        "width": 206,
+        "top": -140.13,
+        "height": 120.94
+      },
+      "容器内容盒": {
+        "decideBody": {
+          "left": 50,
+          "right": 270
+        },
+        "decideInline": {
+          "left": 34,
+          "right": 286
+        },
+        "rHead": {
+          "left": 64,
+          "right": 270
+        }
+      },
+      "num内容盒": {
+        "left": 139.16,
+        "right": 266.36
+      },
+      "文本range": {
+        "行盒数": 1,
+        "textLeft": 139.16,
+        "textRight": 266.36,
+        "最宽盒": 127.2,
+        "rects": [
+          {
+            "left": 139.16,
+            "right": 266.36,
+            "width": 127.2,
+            "top": -136.13
+          }
+        ]
+      },
+      "候选A_旧三条": {
+        "溢出": 0,
+        "行盒数": 1,
+        "clientWidth": 127
+      },
+      "候选B_Δ右": {
+        "num右": 266.36,
+        "r0内容盒右": 266.36,
+        "Δ": 0
+      },
+      "候选C_文本可见": {
+        "文本右缘": 266.36,
+        "面板内容盒右": 286,
+        "越界": -19.64
+      }
+    },
+    "fals": [
+      {
+        "tag": "原样",
+        "文本右缘": 266.36,
+        "面板右": 286,
+        "C越界": -19.64,
+        "A溢出": 0,
+        "A行盒": 1,
+        "BΔ右": 0,
+        "num与pill同一行": true,
+        "r0宽": 202.36
+      },
+      {
+        "tag": "数字需多 60px",
+        "文本右缘": 266.36,
+        "面板右": 286,
+        "C越界": -19.64,
+        "A溢出": 0,
+        "A行盒": 1,
+        "BΔ右": 56.36,
+        "num与pill同一行": true,
+        "r0宽": 206
+      },
+      {
+        "tag": "药丸多 130px",
+        "文本右缘": 396.36,
+        "面板右": 286,
+        "C越界": 110.36,
+        "A溢出": 0,
+        "A行盒": 1,
+        "BΔ右": 126.36,
+        "num与pill同一行": true,
+        "r0宽": 206
+      },
+      {
+        "tag": "r0 限宽 150",
+        "文本右缘": 266.36,
+        "面板右": 286,
+        "C越界": -19.64,
+        "A溢出": 0,
+        "A行盒": 1,
+        "BΔ右": 52.36,
+        "num与pill同一行": true,
+        "r0宽": 150
+      }
+    ],
+    "align": {
+      "variants": {
+        "decide-inline.borderBox.right": 287,
+        "decide-inline.paddingBox.right": 286,
+        "decide-inline.contentBox.right": 286,
+        "decide-body.borderBox.right": 286,
+        "decide-body.paddingBox.right": 286,
+        "decide-body.contentBox.right": 270,
+        "overflow(decide-body)": "auto",
+        "overflow(decide-inline)": "visible"
+      },
+      "numLeft": 139.16,
+      "numW": 127.2,
+      "need4": {
+        "text": "4 名 · 意志 99 ／ 威胁 50",
+        "needRectsMax": 141.61,
+        "needRangeRectW": 141.61,
+        "行盒数": 1
+      },
+      "need12": {
+        "text": "12 名 · 意志 99 ／ 威胁 50",
+        "needRectsMax": 148.81,
+        "needRangeRectW": 148.81,
+        "行盒数": 1
+      }
+    }
+  },
+  {
+    "viewport": "1440x900",
+    "info": {
+      "phase": 2,
+      "step": "commit",
+      "deploy": "R0 ok"
+    },
+    "errs": [],
+    "data": {
+      "文本": "4 名 · 意志 9 ／ 威胁 3",
+      "num": {
+        "left": 182.16,
+        "right": 309.36,
+        "width": 127.2,
+        "top": 616.23,
+        "height": 20.39,
+        "clientWidth": 127,
+        "scrollWidth": 127,
+        "overflow": 0,
+        "flex": "0 0 auto",
+        "overflowCss": "visible",
+        "textOverflow": "clip",
+        "fontSize": "12px"
+      },
+      "r0": {
+        "left": 65,
+        "right": 309.36,
+        "width": 244.36,
+        "top": 614.23,
+        "height": 23.55
+      },
+      "pill": {
+        "left": 65,
+        "right": 142.16,
+        "width": 77.16,
+        "top": 614.23,
+        "height": 23.55,
+        "text": "已确认 3/4"
+      },
+      "rHead": {
+        "left": 65,
+        "right": 980,
+        "width": 915,
+        "top": 611.27,
+        "height": 29.5
+      },
+      "容器内容盒": {
+        "decideBody": {
+          "left": 51,
+          "right": 980
+        },
+        "decideInline": {
+          "left": 35,
+          "right": 996
+        },
+        "rHead": {
+          "left": 65,
+          "right": 980
+        }
+      },
+      "num内容盒": {
+        "left": 182.16,
+        "right": 309.36
+      },
+      "文本range": {
+        "行盒数": 1,
+        "textLeft": 182.16,
+        "textRight": 309.36,
+        "最宽盒": 127.2,
+        "rects": [
+          {
+            "left": 182.16,
+            "right": 309.36,
+            "width": 127.2,
+            "top": 618.23
+          }
+        ]
+      },
+      "候选A_旧三条": {
+        "溢出": 0,
+        "行盒数": 1,
+        "clientWidth": 127
+      },
+      "候选B_Δ右": {
+        "num右": 309.36,
+        "r0内容盒右": 309.36,
+        "Δ": 0
+      },
+      "候选C_文本可见": {
+        "文本右缘": 309.36,
+        "面板内容盒右": 996,
+        "越界": -686.64
+      }
+    },
+    "fals": [
+      {
+        "tag": "原样",
+        "文本右缘": 309.36,
+        "面板右": 996,
+        "C越界": -686.64,
+        "A溢出": 0,
+        "A行盒": 1,
+        "BΔ右": 0,
+        "num与pill同一行": true,
+        "r0宽": 244.36
+      },
+      {
+        "tag": "数字需多 60px",
+        "文本右缘": 309.36,
+        "面板右": 996,
+        "C越界": -686.64,
+        "A溢出": 0,
+        "A行盒": 1,
+        "BΔ右": 0,
+        "num与pill同一行": true,
+        "r0宽": 304.36
+      },
+      {
+        "tag": "药丸多 130px",
+        "文本右缘": 439.36,
+        "面板右": 996,
+        "C越界": -556.64,
+        "A溢出": 0,
+        "A行盒": 1,
+        "BΔ右": 0,
+        "num与pill同一行": true,
+        "r0宽": 374.36
+      },
+      {
+        "tag": "r0 限宽 150",
+        "文本右缘": 285.36,
+        "面板右": 996,
+        "C越界": -710.64,
+        "A溢出": 0,
+        "A行盒": 1,
+        "BΔ右": 70.36,
+        "num与pill同一行": true,
+        "r0宽": 150
+      }
+    ],
+    "align": {
+      "variants": {
+        "decide-inline.borderBox.right": 997,
+        "decide-inline.paddingBox.right": 996,
+        "decide-inline.contentBox.right": 996,
+        "decide-body.borderBox.right": 996,
+        "decide-body.paddingBox.right": 996,
+        "decide-body.contentBox.right": 980,
+        "overflow(decide-body)": "auto",
+        "overflow(decide-inline)": "visible"
+      },
+      "numLeft": 182.16,
+      "numW": 127.2,
+      "need4": {
+        "text": "4 名 · 意志 99 ／ 威胁 50",
+        "needRectsMax": 141.61,
+        "needRangeRectW": 141.61,
+        "行盒数": 1
+      },
+      "need12": {
+        "text": "12 名 · 意志 99 ／ 威胁 50",
+        "needRectsMax": 148.81,
+        "needRangeRectW": 148.81,
+        "行盒数": 1
+      }
+    }
+  }
+]

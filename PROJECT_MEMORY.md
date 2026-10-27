@@ -1,11 +1,12 @@
 # 项目记忆入口
 
-更新日期：2026-10-26（北京时间）。此文件只保存魔戒 LCG 项目状态。
+更新日期：2026-10-27（北京时间）。此文件只保存魔戒 LCG 项目状态。
 
 ## 当前基线
 
 - 离线网页版魔戒 LCG 桌面，原版基础版普通模式、三个独立剧本、1–4人同机。
-- 游戏版本 v0.15.71（2026-10-26，分支 `feature/setup-cancel-scoring`）。今日推进：
+- 游戏版本 v0.15.72（2026-10-27，分支 `feature/setup-cancel-scoring`）。今日推进：
+  - **v0.15.72**：派遣面板 R0 跨状态不横跳——更正 v0.15.71「`.r0-num` 右对齐即右缘恒定」的错判（`.r0` 是 `flex:0 1 auto` 的内容宽盒，`text-align:right` 无宽度可对齐，A→D 左右缘一起位移 20px）；改为内容宽、左锚，跨状态稳定的是**数字文本起点**，靠 `.state-pill` 等宽（`min-width:77.16px`，窄屏 `69.16px`）+ 前缀五态都写两个汉字（`暂定`／D 态 `实际`）+ `.r0-num{flex:none;tabular-nums}` 去掉 `text-align:right`。一次交互一次重绘（`commit`／`approveDeployment` 各自合并进单个 `mutate()`），修掉 `approveDeployment` 后焦点被第二次替换抹掉的 U18-a。`.door-go:disabled` 换中性底 `#eceae0`。**#8**：`questing.step` 变为 `commit` 那一次把 `.quest-main-action` 主按钮 `scrollIntoView({block:'nearest'})`（锚按钮不锚面板，`lastScrolledStep` 保证同一步只滚一次），旧判据「面板 top ≥ 0」作废（在 v0.15.71 上恒绿）。测试 477 项 + 浏览器 `check-quest-panel.cjs` 37 条 + 新建 `check-quest-r0.cjs` 30 条（三档 × W1–W9，`num.left` 极差实测 0）。
   - **v0.15.71**：探险阶段「派遣名单」面板收尾——状态枚举 `C-in/C-out` 改名 `C1/C2`；R0 拆成 pill + 前缀 + 数字三段（数字右对齐 `tabular-nums`，前缀字数变化不横跳）；R2 改成「一个位置演化」：A 勾选网格 → B/C1/C2 只读「已提交：…」→ D 只读「已投入：…」，承载「提交 ≠ 投入」；R4 `<details>`（summary 固定「规则与名单」）新增全队名单明细 `.quest-roster`（名字／N 名·意志 M／已提交·草稿·未提交），展开态由 `rulesOpen` 记住；`withdraw` 在已有人确认时先二次确认（说明会清除全队 N 次确认）；新增纯函数 `draftPeek()` 与有副作用的 `draftFor()` 分离；有卡牌响应待结算时不渲染派遣控件。全部 20 套 477 项测试零失败。
   - **v0.15.70**：探险阶段「派遣名单」面板精简——玩家分段按钮组（`role=radiogroup`）取代下拉＋并排徽章、四态枚举渲染（草稿／已提交／待确认／已锁定，不再两条 if 叠加渲染）、单一主操作（一屏只留一颗绿按钮）、说明收进 `<details>`；删掉 `.table-selection` 里第 3 颗提交入口；结束阶段门禁同时计入未提交与未确认；淘汰玩家不再计入「全员」（修掉中途淘汰必卡死的死锁）；新增 `#live` a11y 播报与 `data-focus-key` 焦点保持。
   - **v0.15.64**：修复开局弃牌阶段看不到手牌（空态占位挤占、开局面板迁入决策弹窗）。

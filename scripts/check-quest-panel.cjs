@@ -11,23 +11,36 @@ const EXE=CHROME.find(p=>fs.existsSync(p));
 (async()=>{
  if(!EXE)throw new Error('未找到本机 Chrome/Edge');
  const b=await chromium.launch({executablePath:EXE,headless:true,args:['--no-sandbox']});
+ /* 开局统一走一遍真实点击：2 人、基础剧本、进到「派遣名单」步骤为止。
+    #8 要求在**进入 commit 的那一刻**主按钮就在视口内，所以开局宽度必须是目标档，
+    不能让测试自己 scrollIntoView 之后再量（那样任何实现都能过）。 */
+ const startAt=async(q,js)=>{
+  const errs=[];q.on('pageerror',e=>errs.push(e.message));
+  /* 320 档：`#12`（阶段轨与开局面板重叠 377px）会拦掉**真实指针**点击，
+     但那不影响 `el.click()` 派发的 DOM 事件——所以窄档改用脚本点击走完开局，
+     测的是「进入 commit 的排版」，不是「开局面板能不能点到」。 */
+  const tap=async sel=>{if(js)await q.evaluate(s=>document.querySelector(s)?.click(),sel);else await q.locator(sel).first().click();await q.waitForTimeout(280);};
+  await q.goto('file:///'+path.join(ROOT,'index.html'));await q.waitForTimeout(450);
+  await q.selectOption('#playerCount','2');
+  await q.locator('.ng-tabs button',{hasText:'新版扩展'}).click();await q.waitForTimeout(250);
+  await q.locator('.ng-card',{hasText:'基础剧本合集'}).first().click();await q.waitForTimeout(300);
+  await tap('[data-action="ngNext"]');
+  await tap('[data-action="chooserConfirm"]');
+  await q.waitForTimeout(400);
+  /* 必须带 :not([disabled])：已确认玩家的按钮留在 DOM 里只变 disabled，
+     .first() 会永远选中第一个人的那颗并等到超时（visual 2026-10-27 实测，1440 同样复现）。 */
+  for(let i=0;i<6;i++){if(!(await q.locator('button[data-action="keepHand"]:not([disabled])').count()))break;await tap('button[data-action="keepHand"]:not([disabled])');}
+  /* v0.15.64 起全员确认手牌后引擎自动执行剧本设置，「确认手牌并执行剧本设置」按钮随面板消失。 */
+  if(await q.locator('button[data-action="finishSetup"]').count())await tap('button[data-action="finishSetup"]');
+  await q.waitForTimeout(600);
+  await q.evaluate(()=>{for(let i=0;i<10;i++){if(state.phase>=2)break;try{ScenarioEngine.endPhase(state)}catch(e){break}}render()});
+  await q.waitForTimeout(250);
+  await q.evaluate(()=>document.querySelector('.phase-door .door-go:not([disabled])')?.click());
+  await q.waitForTimeout(450);
+  return errs;
+ };
  const p=await (await b.newContext({viewport:{width:1440,height:950}})).newPage();
- const errs=[];p.on('pageerror',e=>errs.push(e.message));
- await p.goto('file:///'+path.join(ROOT,'index.html'));await p.waitForTimeout(450);
- await p.selectOption('#playerCount','2');
- await p.locator('.ng-tabs button',{hasText:'新版扩展'}).click();await p.waitForTimeout(250);
- await p.locator('.ng-card',{hasText:'基础剧本合集'}).first().click();await p.waitForTimeout(300);
- await p.locator('[data-action="ngNext"]').click();await p.waitForTimeout(300);
- await p.locator('[data-action="chooserConfirm"]').click();await p.waitForTimeout(700);
- for(const x of await p.locator('button[data-action="keepHand"]').all())await x.click();
- /* v0.15.64 起全员确认手牌后引擎自动执行剧本设置，「确认手牌并执行剧本设置」按钮随面板消失。 */
- const finish=p.locator('button[data-action="finishSetup"]');
- if(await finish.count())await finish.click();
- await p.waitForTimeout(750);
- await p.evaluate(()=>{for(let i=0;i<10;i++){if(state.phase>=2)break;try{ScenarioEngine.endPhase(state)}catch(e){break}}render()});
- await p.waitForTimeout(250);
- await p.evaluate(()=>document.querySelector('.phase-door .door-go:not([disabled])')?.click());
- await p.waitForTimeout(450);
+ const errs=await startAt(p);
  const g=await p.evaluate(()=>{
   const r=e=>{const b=e.getBoundingClientRect();return {y:Math.round(b.y),bottom:Math.round(b.bottom),w:Math.round(b.width)}};
   const panel=document.querySelector('.decide-inline .quest-deploy');
@@ -81,7 +94,7 @@ const EXE=CHROME.find(p=>fs.existsSync(p));
  const d1=await metrics();
  const focusOk=await p.evaluate(()=>!!document.activeElement&&document.activeElement.dataset.commit!==undefined);
  checks.push(
-  ['勾选后 R0 数字随草稿更新', /^1 名 · 意志 \d+ ／ 威胁 \d+$/.test(d1.num), `${d0.num} → ${d1.num}`],
+  ['勾选后 R0 数字随草稿更新', /^1 名 · 意志 \d+$/.test(d1.num), `${d0.num} → ${d1.num}`],
   /* 纵向只允许四段：头部（状态+合计+玩家 chip）/ 名单区 / 主操作 / 规则与名单。 */
   ['A 态纵向块数 = 4', d1.blocks.length===4, `${d1.blocks.length}: ${d1.blocks.join(',')}`],
   /* 12px × line-height 1.7 ≈ 20.4px，加 pill 的 1px padding + 1px 边框 = 24px 单行；
@@ -154,6 +167,29 @@ const EXE=CHROME.find(p=>fs.existsSync(p));
  checks.push(['跨状态数字列不动（左/宽/右 |Δ|≤1px）',
   !!nr1&&!!nrD&&Math.abs(nrD.x-nr1.x)<=1&&Math.abs(nrD.w-nr1.w)<=1&&Math.abs((nrD.x+nrD.w)-(nr1.x+nr1.w))<=1,
   nr1&&nrD?`${nr1.x}/${nr1.w} → ${nrD.x}/${nrD.w}`:'缺测量']);
+/* ── 第三段：#8「进入 commit 时唯一的推进按钮必须在视口内」──
+   判据换了：旧判据「面板 top ≥ 0」在 v0.15.71 上恒绿（实测 top=971/858，远大于 0），
+   是「不可能失败」的那种；真正的问题是**主操作落在首屏之外**（390 差 127px、761 差 258px）。
+   所以量按钮的 rect，不量面板；阈值不写「滚了多少 px」（那是实现细节），只写「在视口内」
+   + 「同一步不重复滚」。两档都必须在**该档宽度下开局**，否则测不出真实排版。 */
+ for(const [w,h,js] of [[390,844,false],[761,600,false],[320,568,true]]){
+  const ctx=await b.newContext({viewport:{width:w,height:h}}),q=await ctx.newPage();
+  const e2=await startAt(q,js);
+  const g8=await q.evaluate(()=>{
+   const btn=document.querySelector('.quest-main-action .primary')||document.querySelector('.quest-main-action button');
+   if(!btn)return null;const r=btn.getBoundingClientRect();
+   return {step:state.questing&&state.questing.step,top:Math.round(r.top),bottom:Math.round(r.bottom),vh:innerHeight,y:Math.round(scrollY)};
+  });
+  checks.push([`#8 ${w}x${h} 进入 commit 时主按钮完整在视口内`,
+   !!g8&&g8.step==='commit'&&g8.top>=-1&&g8.bottom<=g8.vh+1,
+   g8?`step=${g8.step} top=${g8.top} bottom=${g8.bottom} vh=${g8.vh} scrollY=${g8.y}`:'无主按钮']);
+  /* 幂等：同一步内连续 render 5 次，scrollY 一次都不许动——否则连续确认四个人会抖四次。 */
+  const ys=await q.evaluate(()=>{const a=[];for(let i=0;i<5;i++){render();a.push(Math.round(scrollY));}return a;});
+  checks.push([`#8 ${w}x${h} 同一步内重复 render 不抢滚动`,
+   ys.every(y=>y===(g8&&g8.y)), `render×5 → ${ys.join(',')}（进入时 ${g8&&g8.y}）`]);
+  checks.push([`#8 ${w}x${h} 无脚本错误`, e2.length===0, e2.slice(0,2).join(';')||'0']);
+  await ctx.close();
+ }
  for(const [n,ok,d] of checks)console.log(`${ok?'PASS':'FAIL'}  ${n}  [${d}]`);
  const fail=checks.filter(c=>!c[1]).length;
  console.log(`\n${checks.length-fail}/${checks.length} passed`);

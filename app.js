@@ -1,6 +1,26 @@
 'use strict';
 const E=ScenarioEngine,D=LOTR_DATA,$=s=>document.querySelector(s);
 let state=null,history=[],tab='table',handView=0;
+/* #8：进入派遣名单（questing.step === 'commit'）的那一次，把唯一的推进按钮滚进视口。
+   为什么要这个：面板渲染在手牌区「结束阶段」同一块里，390 下主按钮落在折线下方 127px、
+   761 下 258px——玩家进阶段后首屏看不到「要做的那件事」。
+   两条约束（缺一条就会从「看不见」变成「一直抖」）：
+     1) 锚点是**主操作按钮**，不是面板容器。滚容器要多滚 110px，会把 R0/R1 一起顶出去，
+        玩家反而丢了「我交了几名、还差谁」这个上下文——只保证「要做的那件事」在场。
+     2) 只在 step **变化**时触发一次。记 lastScrolledStep，同一步内任何 render（勾选、
+        修改名单、确认后的自动切人）都不许再滚，否则连续确认四个人会抖四次。
+   有意取舍：只滚主按钮时，滚动后 .r-head 可能整体出视口。这是用「上下文」换「按钮」，
+   可接受；R4 规则说明展开后落到视口外同样可接受（R4 是「查」，不是「做」）。
+   不要为了让它也可见改回去滚整个容器。 */
+let lastScrolledStep=null;
+function scrollMainActionIntoView(){
+ const row=document.querySelector('#app .quest-main-action');
+ if(!row)return;
+ /* 主按钮优先；只有 ghost 的态（C2 取消确认、D 只读）退到操作行本身，别让可点的东西留在屏外。 */
+ const target=row.querySelector('button.primary')||row.querySelector('button')||row;
+ if(typeof target.scrollIntoView!=='function')return;
+ target.scrollIntoView({block:'nearest'});
+}
 /* 日志显示范围：'round'（默认，仅本回合）| 'all'。纯视图偏好，不写入对局状态、
    不进撤销历史，刷新页面沿用本次会话内的选择；后续要加「按阶段筛选」等维度时，
    在这里扩成对象（如 {scope:'round',phases:[]}）再传给 PhaseLog.panel 即可。 */
@@ -358,7 +378,11 @@ function render(){captureSetup();document.querySelectorAll('nav button').forEach
     派遣面板输出的键：quest-actor-<pid> / quest-commit-<uid> / quest-submit /
     quest-withdraw / quest-approve / quest-unapprove。 */
  const focusKey=document.activeElement&&document.activeElement.dataset?String(document.activeElement.dataset.focusKey||''):'';
- $('#app').innerHTML=tab==='table'?(deckChooser?chooserPage():table()):tab==='decks'?(PlayerUI.isBuilding()?PlayerUI.builder():PlayerUI.decksPage()):tab==='catalog'?catalog():help();$('#undo').disabled=!history.length;$('#export').disabled=!state;if(tab==='table'&&state&&$('#hand-player'))$('#hand-player').onchange=ev=>{handView=Number(ev.target.value);render();};if(tab==='table'&&state&&$('#planning-actor'))$('#planning-actor').onchange=ev=>{handView=Number(ev.target.value);render();};if(tab==='table'&&state)QuestUI.bind();if(tab==='table'&&!state)bindSetup();if(tab==='decks'){PlayerUI.bindDecks();PlayerUI.bind();}ImageLibrary.bindErrors(document.querySelector('#app'));if(tab==='catalog'){filterCatalog();const si=$('#search');if(si)si.oninput=filterCatalog;const pf=$('#podFilter');if(pf)pf.onchange=()=>{podFilter=pf.value||'';render();};}trackView();showDrawToast();if(focusKey){const back=document.querySelector('[data-focus-key="'+focusKey.replace(/"/g,'')+'"]');if(back&&typeof back.focus==='function')back.focus({preventScroll:true});}}
+ $('#app').innerHTML=tab==='table'?(deckChooser?chooserPage():table()):tab==='decks'?(PlayerUI.isBuilding()?PlayerUI.builder():PlayerUI.decksPage()):tab==='catalog'?catalog():help();$('#undo').disabled=!history.length;$('#export').disabled=!state;if(tab==='table'&&state&&$('#hand-player'))$('#hand-player').onchange=ev=>{handView=Number(ev.target.value);render();};if(tab==='table'&&state&&$('#planning-actor'))$('#planning-actor').onchange=ev=>{handView=Number(ev.target.value);render();};if(tab==='table'&&state)QuestUI.bind();if(tab==='table'&&!state)bindSetup();if(tab==='decks'){PlayerUI.bindDecks();PlayerUI.bind();}ImageLibrary.bindErrors(document.querySelector('#app'));if(tab==='catalog'){filterCatalog();const si=$('#search');if(si)si.oninput=filterCatalog;const pf=$('#podFilter');if(pf)pf.onchange=()=>{podFilter=pf.value||'';render();};}trackView();showDrawToast();if(focusKey){const back=document.querySelector('[data-focus-key="'+focusKey.replace(/"/g,'')+'"]');if(back&&typeof back.focus==='function')back.focus({preventScroll:true});}
+ /* #8：步骤变了才给一次对齐机会。放在焦点恢复之后——focus({preventScroll:true}) 不滚动，
+    这里再滚不会被它顶回去。 */
+ const qstep=tab==='table'&&state&&state.questing&&state.phase===2?state.questing.step:null;
+ if(qstep!==lastScrolledStep){lastScrolledStep=qstep;if(qstep==='commit')scrollMainActionIntoView();}}
 async function choose(title,body,read){return new Promise(resolve=>{let d=document.createElement('dialog');d.innerHTML=`<h2>${enc(title)}</h2><div>${body}</div><div class="actions"><button class="primary" id="ok">确认</button><button id="cancel">取消</button></div>`;document.body.append(d);d.showModal();d.querySelector('#ok').onclick=()=>{let v=read(d);d.close();d.remove();resolve(v);};d.querySelector('#cancel').onclick=()=>{d.close();d.remove();resolve(null);};d.oncancel=()=>{d.remove();resolve(null);};});}
 function playerOptions(){return state.players.filter(p=>!p.eliminated).map(p=>`<option value="${p.id}">${enc(p.name)}</option>`).join('');}
 $('#app').onclick=async ev=>{const b=ev.target.closest('[data-action]');if(!b||b.disabled)return;const a=b.dataset.action,uid=Number(b.dataset.uid),id=Number(b.dataset.id),pid=Number(b.dataset.player);
