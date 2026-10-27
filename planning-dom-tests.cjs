@@ -636,7 +636,7 @@ test('quest deployment panel: after everyone submits the door waits for the seco
  /* 已提交后 R2 换成只读「已提交：…」，勾选框整块撤走——避免提交完还能原地改名单。 */
  assert(/class="quest-submitted"[^>]*>已提交：阿拉贡/.test(html),'B/C1 态 R2 应写「已提交：本人名单」');
  assert(!html.includes('data-commit='),'已提交后不应再有勾选框');
- const region=html.slice(html.indexOf('class="decide-inline"'));
+ const region=html.slice(html.indexOf('class="decide-box"'));
  assert.equal((region.slice(0,region.indexOf('</section>')).match(/class="primary"/g)||[]).length,1,'C 态一屏只留一颗绿按钮');
  assert(html.includes('data-quest="approveDeployment"'),'C 态的主操作是「确认派遣」');
  assert.equal((html.match(/data-quest="approveDeployment"/g)||[]).length,1,'C1 态全页只允许一颗【确认派遣】');

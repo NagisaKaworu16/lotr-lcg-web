@@ -78,14 +78,15 @@ const AUDIT = (min) => {
   await page.waitForTimeout(700);
   await audit('setup');
   for (const x of await page.locator('button[data-action="keepHand"]').all()) await x.click();
-  await page.locator('button[data-action="finishSetup"]').click();
+  /* v0.15.67 起全员确认后自动执行剧本设置，finishSetup 只在确认不齐时才存在。 */
+  { const fin = page.locator('button[data-action="finishSetup"]'); if (await fin.count()) await fin.click(); }
   await page.waitForTimeout(700);
   await audit('resource');
 
-  /* v0.15.70：派遣面板在 .decide-inline 里，提交／确认改用 data-quest 选择器。 */
-  const PANEL = ':is(.operation-content, .decide-inline)';
+  /* v0.15.70：派遣面板在 .decide-box 里，提交／确认改用 data-quest 选择器。 */
+  const PANEL = ':is(.operation-content, .decide-box)';
   const clickBtn = async text => { const el = page.locator(PANEL + ' button:not([disabled])', { hasText: text }).first(); if (!await el.count()) return false; await el.click(); await page.waitForTimeout(250); return true; };
-  const clickQuest = async k => { const el = page.locator(PANEL + ' [data-quest="' + k + '"]:not([disabled])').first(); if (!await el.count()) return false; await el.click(); await page.waitForTimeout(280); return true; };
+  const clickQuest = async k => { const el = page.locator(PANEL + ' [data-quest="' + k + '"]:not([disabled])').first(); if (!await el.count()) return false; await el.click(); await page.waitForTimeout(280); /* v0.15.69 起提交名单会弹 choose() 确认框，顺手点掉 */ { const ok = page.locator('dialog[open] #ok'); if (await ok.count()) { await ok.click(); await page.waitForTimeout(300); } } return true; };
   const clickNext = async () => { const el = page.locator('.operation-title button.primary:not([disabled])').first(); if (!await el.count()) return false; await el.click(); await page.waitForTimeout(380); return true; };
   for (let i = 0; i < 26; i++) {
     if (await clickBtn('结束我的盟友')) continue;

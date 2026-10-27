@@ -123,3 +123,18 @@
 **措辞禁令**：不许写「精确贴边 / 余量为 0」（会让人跑去收窄 pill，白折腾）；不许写「余量充足」；**不许只报一个余量数字不带文本内容**。「20.6px 不到一个汉字宽，仍属紧」是允许的写法。
 
 **教训（本轮四次改口的总结）**：把结构恒等式当间距事实读，会**同时**得出「恒真判据」和「假的余量结论」——两者同源，而且会在不同人身上各犯一次。同一行数字有三个真值这件事还说明：**「余量」不是行的属性，是「内容 × 可用宽」的二维函数**，报一个数必然误导。
+
+## D014 · 待决定内容一律走非模态浮动弹窗，手牌区只留牌（v0.15.73）
+
+**决策**：`DecisionUI.html()` 输出两态——展开时 `.decide-layer`（fixed 铺满、`pointer-events:none`）+ `.decide-box`（`pointer-events:auto`）；收起后 `.decide-badge` 角标。弹窗不再渲染进手牌区（v0.15.69 的内联方案把手牌挤没了），注入点在 `<aside class="tabletop-rail">` 之前。
+
+**为什么非模态而不是 `showModal()`**：计划阶段出牌、探险阶段投名单都依赖**桌面点击**（手牌卡、角色卡在牌桌上，不在弹窗里），模态会锁死流程；且 PlanningUI.form 已占一个 top layer `<dialog>`，双层 showModal 会互相抢焦点。
+
+**触发与自动的判据（沿 Arkham「must 不弹、may 才弹」）**：规则书 must（强制结算、自动抽牌、提交后按序横置、无选择的投入响应）引擎算完只留日志；may/choose/up to 才进 `pending()`，五种 kind：opening（开局弃牌）/ setup（设置揭示）/ select（防御与攻击目标草稿）/ phase（等谁放弃行动、等人提交名单——引擎自己走不完的步骤；锁定期给只读状态卡）/ window（智能模式可做的事）。
+
+**三条实现红线**：
+1. `place()` 双列分支**必须设 `paddingTop`**（v0.15.73 曾漏设，弹窗从视口 0 开始盖住标题行的玩家页签）；顶部下限 = 日志轴 top，`maxHeight` 随之重算。
+2. `place()` 只在 `handle('open')` 与 resize 调用不够——`render()` 尾部也要调，否则重绘后弹窗停在旧坐标。
+3. Esc 收起要让路原生 `<dialog>`（`document.querySelector('dialog[open]')` 存在即跳过），不劫持 choose()/form 的确认框。
+
+**验收脚本两处陈旧（非重构引入，v0.15.63–69 拉取后未重跑所致）**：v0.15.67 起全员确认自动执行剧本设置，`finishSetup` 按钮点不到（check-taskbar/check-contrast 改条件点击）；提交名单会弹 `choose()` 确认框，`clickQuest` 后必须点掉 `dialog[open] #ok`（check-taskbar/check-contrast 补 acceptChoose）。browser-check nav 补 `data-encounter="tie"`（交战同值敌人选择）与「暂定本次不旅行」两分支——此前 stall 报告只看 `.operation-content`，面板搬进弹窗后显示 `buttons:[]` 属探针失明，不是真没有按钮。

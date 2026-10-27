@@ -39,7 +39,7 @@ const STATES=[
 ];
 
 const measure=()=>{
- const dep=document.querySelector('.decide-inline .quest-deploy');
+ const dep=document.querySelector('.decide-box .quest-deploy');
  if(!dep)return null;
  const pill=dep.querySelector('.state-pill'),num=dep.querySelector('.r0-num'),r0=dep.querySelector('.r0'),label=dep.querySelector('.r0-label');
  const rb=e=>{const b=e.getBoundingClientRect();return {left:+b.left.toFixed(2),width:+b.width.toFixed(2),right:+b.right.toFixed(2)}};

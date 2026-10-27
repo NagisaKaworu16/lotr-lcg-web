@@ -29,12 +29,14 @@ const WIDTH = arg('width', 1440);
   const checks = [];
   const add = (name, ok, detail = '') => checks.push({ name, ok: !!ok, detail: String(detail) });
 
-  /* v0.15.70：派遣面板就地渲染在手牌区「结束阶段」同一块（.decide-inline），
+  /* v0.15.70：派遣面板就地渲染在手牌区「结束阶段」同一块（.decide-box），
      旧的 .mat-phase 已随 v0.15.69 移除；三处都要找。 */
-  const PANEL = ':is(.operation-content, .decide-inline, .mat-phase)';
+  const PANEL = ':is(.operation-content, .decide-box, .mat-phase)';
   const clickBtn = async t => { const el = page.locator(PANEL + ' button:not([disabled])', { hasText: t }).first(); if (!await el.count()) return false; await el.click(); await page.waitForTimeout(260); return true; };
-  /* v0.15.70：派遣的提交／确认收成 data-quest 上的唯一主按钮，文字标签会随状态变（提交名单／提交空名单）。 */
-  const clickQuest = async k => { const el = page.locator(PANEL + ' [data-quest="' + k + '"]:not([disabled])').first(); if (!await el.count()) return false; await el.click(); await page.waitForTimeout(320); return true; };
+  /* v0.15.70：派遣的提交／确认收成 data-quest 上的唯一主按钮，文字标签会随状态变（提交名单／提交空名单）。
+     v0.15.69 起提交名单会弹 choose() 模态确认框（quest-ui.js commit 分支），点完按钮要顺手点掉它。 */
+  const acceptChoose = async () => { const ok = page.locator('dialog[open] #ok'); if (await ok.count()) { await ok.click(); await page.waitForTimeout(320); return true; } return false; };
+  const clickQuest = async k => { const el = page.locator(PANEL + ' [data-quest="' + k + '"]:not([disabled])').first(); if (!await el.count()) return false; await el.click(); await page.waitForTimeout(320); await acceptChoose(); return true; };
   const clickNext = async () => { const el = page.locator('.operation-title button.primary:not([disabled])').first(); if (!await el.count()) return false; await el.click(); await page.waitForTimeout(400); return true; };
   const dockText = () => page.evaluate(() => document.querySelector('.operation-title')?.innerText.replace(/\n/g, ' | ') || '');
   const chips = () => page.evaluate(() => [...document.querySelectorAll('.op-chip')].map(x => x.textContent.trim()));
@@ -47,7 +49,10 @@ const WIDTH = arg('width', 1440);
   await page.locator('[data-action="chooserConfirm"]').click();
   await page.waitForTimeout(700);
   for (const x of await page.locator('button[data-action="keepHand"]').all()) await x.click();
-  await page.locator('button[data-action="finishSetup"]').click();
+  /* v0.15.67 起全员确认后自动执行剧本设置（app.js keepHand 分支内联 startScenario），
+     finishSetup 按钮只在确认不齐时才存在；留一行兜底给老路径。 */
+  const fin = page.locator('button[data-action="finishSetup"]');
+  if (await fin.count()) await fin.click();
   await page.waitForTimeout(600);
 
   const marks = await page.evaluate(() => {
@@ -110,7 +115,7 @@ const WIDTH = arg('width', 1440);
   const card2 = page.locator('.player-mat .character-card.selectable .card-face').first();
   if (await card2.count()) { await card2.click(); await page.waitForTimeout(150); }
   await clickQuest('commit');
-  const ready = await page.evaluate(() => ({ locked: !!state.questing.deploymentLocked, committed: state.players.flatMap(p => p.heroStates.filter(h => h.committed).length).reduce((a, b) => a + b, 0), title: document.querySelector('.operation-title').innerText.replace(/\n/g, ' | '), chips: [...document.querySelectorAll('.op-chip')].map(x => x.textContent.trim()), approvals: (state.questing.deploymentApprovals || []).length, confirmButtons: document.querySelectorAll('.decide-inline [data-quest="approveDeployment"]:not([disabled])').length }));
+  const ready = await page.evaluate(() => ({ locked: !!state.questing.deploymentLocked, committed: state.players.flatMap(p => p.heroStates.filter(h => h.committed).length).reduce((a, b) => a + b, 0), title: document.querySelector('.operation-title').innerText.replace(/\n/g, ' | '), chips: [...document.querySelectorAll('.op-chip')].map(x => x.textContent.trim()), approvals: (state.questing.deploymentApprovals || []).length, confirmButtons: document.querySelectorAll('.decide-box [data-quest="approveDeployment"]:not([disabled])').length }));
   add('两人都提交后仍不执行，进入二次确认', !ready.locked && ready.committed === 0, `locked=${ready.locked} committed=${ready.committed}`);
   add('操作栏提示二次确认进度', /二次确认/.test(ready.title) && ready.chips.length === 2 && ready.chips.every(c => c.includes('待确认')), ready.title + ' :: ' + ready.chips.join(' | '));
   add('二次确认收成单颗「确认派遣」', ready.confirmButtons === 1 && ready.approvals === 0, `buttons=${ready.confirmButtons} approvals=${ready.approvals}`);

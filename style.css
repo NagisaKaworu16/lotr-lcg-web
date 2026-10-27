@@ -1465,19 +1465,24 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
 .window-panel.compact>.window-blocked>summary{color:#5c675a}
 .window-panel.compact>.window-blocked>summary:hover{color:#24392f}
 
-/* ── 18c. 待决定面板（v0.15.69）──────────────────────────────────────
-   不再是浮层：待决定的内容就地渲染进手牌区「结束阶段」按钮所在的那一块，
-   标题在按钮下一行接着展开，玩家在同一个位置完成决定与推进行动。
+/* ── 18c. 待决定弹窗（v0.15.73）──────────────────────────────────────
+   弹窗彻底离开手牌区：非模态浮动层。.decide-layer 固定铺满视口但
+   pointer-events:none（层只是定位骨架），只有 .decide-box 本身接鼠标——
+   弹窗开着时牌桌上的手牌、角色卡、探查区照常可点（出牌、投名单都靠桌面点击）。
+   位置与尺寸由 DecisionUI.place() 实测可点元素后用内联样式给出。
    内层的 <dialog>（PlanningUI.form 的选目标/付资源）仍在浏览器 top layer，
    永远高于普通元素——不会被这里盖住。 */
-.decide-inline{
- margin:10px 0 4px;background:#fffdf6;border:1px solid #c9b98a;border-radius:12px;
- box-shadow:0 10px 30px #14291c26}
-.decide-inline .decide-head{
- border-radius:11px 11px 0 0}
+.decide-layer{
+ position:fixed;inset:0;z-index:40;pointer-events:none;display:flex}
+.decide-box{
+ pointer-events:auto;display:flex;flex-direction:column;min-width:0;
+ width:var(--decide-w,420px);max-height:calc(100vh - 130px);
+ background:#fffdf6;border:1px solid #c9b98a;border-radius:12px;
+ box-shadow:0 10px 30px #14291c40;outline:none}
 .decide-head{
  display:flex;align-items:center;gap:12px;padding:13px 16px;
- border-bottom:1px solid #e2e5d9;background:#f4f1e4;border-radius:12px 12px 0 0}
+ border-bottom:1px solid #e2e5d9;background:#f4f1e4;border-radius:12px 12px 0 0;
+ flex:0 0 auto}
 .decide-head h2{font-size:17px;margin:0;flex:1 1 auto;min-width:0}
 .decide-x{padding:4px 10px;font-size:12.5px;flex:0 0 auto;color:#5f6a58}
 .decide-body{padding:14px 16px 18px;overflow:auto;min-height:0}

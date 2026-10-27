@@ -37,9 +37,9 @@ let browser;
   await page.waitForTimeout(500);
 
   let idle = 0;
-  /* v0.15.70：派遣面板就地渲染在手牌区「结束阶段」同一块（.decide-inline），
+  /* v0.15.70：派遣面板就地渲染在手牌区「结束阶段」同一块（.decide-box），
      不再是操作条里的一块；三处都要找。 */
-  const PANEL = ':is(.operation-content, .decide-inline)';
+  const PANEL = ':is(.operation-content, .decide-box)';
   const clickBtn = async text => {
     const el = page.locator(`${PANEL} button:not([disabled])`, { hasText: text }).first();
     if (!await el.count()) return false;
@@ -246,9 +246,12 @@ let browser;
     if (await clickBtn('处理卡牌响应')) continue;
     if (await clickBtn('结算本张暗影／继续')) continue;
     if (await clickBtn('二次确认旅行')) continue;
+    if (await clickBtn('暂定本次不旅行')) continue;
     if (await clickBtn('暂定：')) continue;
     if (await clickBtn('暂定不主动交战')) continue;
     if (await clickBtn('选择并结算')) continue;
+    /* 交战同值敌人：起始玩家要从同值敌人里挑一个接战（面板按钮 data-encounter="tie"）。 */
+    { const tie = page.locator(PANEL + ' [data-encounter="tie"]:not([disabled])').first(); if (await tie.count()) { await tie.click(); await page.waitForTimeout(300); continue; } }
     if (await clickBtn('结算此牌的关键词与效果')) continue;
     if (await clickBtn('翻开下一张遭遇牌')) continue;
     if (await clickBtn('结束探查')) continue;
@@ -267,6 +270,8 @@ let browser;
       const stall = await page.evaluate(() => ({
         title: document.querySelector('.operation-title')?.textContent.trim(),
         buttons: [...document.querySelectorAll('.operation-content button')].map(b => (b.disabled ? 'X ' : '+ ') + b.textContent.trim()).slice(0, 20),
+        boxButtons: [...document.querySelectorAll('.decide-box button')].map(b => (b.disabled ? 'X ' : '+ ') + b.textContent.trim()).slice(0, 20),
+        badge: [...document.querySelectorAll('.decide-badge')].map(b => b.textContent.trim()),
         pending: state.pending.map(t => t.text), dialogs: document.querySelectorAll('dialog').length,
         combat: state.combat && { step: state.combat.step }, enc: state.encountering && state.encountering.step,
       }));
