@@ -1324,7 +1324,9 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
 .phase-door .door-tick{width:11px;text-align:center;font-size:11px;line-height:1.4;flex:0 0 auto}
 .phase-door .door-list li.done .door-tick{color:#7fbf7a}
 .phase-door .door-go{flex:0 0 auto;margin-left:auto;padding:3px 11px;min-height:26px;font-size:12px}
-.phase-door .door-go:disabled{opacity:.55}
+/* v0.15.71（V09）：门禁禁用时不能还是绿的——绿色 = 可以按。改成纸面灰底 + 灰字，
+   opacity 不再压，否则文字对比度掉到 3:1 以下。 */
+.phase-door .door-go:disabled{background:#eceae0;border-color:var(--line);color:#8b9383;opacity:1}
 @media(max-width:760px){
  .phase-door .door-list{flex-wrap:wrap;overflow:visible}
  .phase-door .door-list li{white-space:normal}
@@ -1549,32 +1551,48 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
  .expedition-title>span{white-space:normal}
 }
 
-/* ── 20b. 探险阶段 · 派遣名单面板（v0.15.70）───────────────────────────
-   一块面板只留一个主操作：R0 状态行 → R1 玩家分段按钮组 → R2 名单勾选区 →
-   R3 主操作行（sticky）→ R4 折叠规则说明。原先这段是「下拉框 + 并排徽章 +
-   逐人二次确认按钮」两条分支叠加渲染，四人局里同一件事有三个入口、两颗绿按钮。
-   字号阶梯：状态行/提示 12px、角色 chip 12.5px、玩家 chip 13px、主按钮 14px。
+/* ── 20b. 探险阶段 · 派遣名单面板（v0.15.71）───────────────────────────
+   一块面板只留一个主操作，纵向五段：R0 摘要数字行 → R1 玩家分段按钮组 →
+   R2 名单区 → R3 主操作行（sticky）→ R4 规则与名单（折叠）。
+   一个状态只在一处渲染（A 草稿／B 已提交／C1 待确认／C2 已确认／D 只读）：
+   原先这段是「下拉框 + 并排徽章 + 逐人二次确认按钮」两条分支叠加渲染，
+   四人局里同一件事有三个入口、两颗绿按钮。
+   R0 与 R2 都在讲「N 名 · 意志 M」，但分工不同：R0 是带前缀的全队合计（暂定），
+   R2 是同一位置演化的明细（已提交 → 已投入），不再重复第二遍。
+   字号阶梯：摘要/提示 12px、角色 chip 12.5px、玩家 chip 13px、主按钮 14px。
    12px 不用 --muted（对比度约 3.8:1），改 #5f6a58；提示类用 #6b5a35。 */
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
-.quest-deploy{display:grid;gap:9px;min-width:0;font-size:12.5px;color:#2f4038}
-.quest-deploy[data-state="A"],.quest-deploy[data-state="B"],
-.quest-deploy[data-state="C-in"],.quest-deploy[data-state="C-out"]{
- border-left:3px solid transparent;padding:2px 0 2px 11px}
-.quest-deploy[data-state="A"]{border-left:3px dashed #c9b98a}
-.quest-deploy[data-state="B"],.quest-deploy[data-state="C-in"],.quest-deploy[data-state="C-out"]{border-left:3px solid var(--gold)}
-.quest-deploy[data-state="D"]{padding:2px 0}
+/* 状态竖线（3px）+ 左内缩（11px）在所有状态里都占位：锁定态看不出线，但内容不左移
+   ——否则切到 D 的瞬间整块内容横跳 14px，数字列也跟着变宽。 */
+.quest-deploy{display:grid;gap:8px;min-width:0;font-size:12.5px;color:#2f4038;border-left:3px solid transparent;padding:2px 0 2px 11px}
+.quest-deploy[data-state="A"]{border-left-style:dashed;border-left-color:#c9b98a}
+.quest-deploy[data-state="B"],.quest-deploy[data-state="C1"]{border-left-color:var(--gold)}
+.quest-deploy[data-state="C2"]{border-left-color:var(--green)}
 
-/* R0 状态行：数字按等宽数位对齐，勾选时不会左右跳。 */
-.quest-status{display:flex;align-items:center;gap:8px;margin:0;font-size:12px;font-weight:600;color:#2f4038;font-variant-numeric:tabular-nums}
-.state-pill{flex:0 0 auto;padding:1px 8px;border-radius:999px;border:1px solid var(--line);background:#f2f1e7;color:#5f6a58;font-size:11.5px;font-weight:600;letter-spacing:.4px}
-.quest-deploy[data-state="A"] .state-pill{border-color:#c9b98a;background:#f7f1e0;color:#6b5a35}
-.quest-deploy[data-state="B"] .state-pill,.quest-deploy[data-state="C-in"] .state-pill,
-.quest-deploy[data-state="C-out"] .state-pill{border-color:#a8c2a1;background:#eef4e9;color:#3f6a48}
+/* R0 头部（一段装两件事）：左边「状态 pill + 前缀 + 合计」右边玩家分段按钮组，
+   行尾小字说「还差谁」。宽屏一行、窄屏自动落成两行，但只算一段纵向块。
+   .r0-num 右对齐 + tabular-nums：右缘恒定，所以前缀字数变化时数字不横跳——
+   这个效果由对齐免费提供，不需要给前缀或药丸定宽。
+   收缩优先级：前缀可省略，数字永不省略（威胁值是这一行里唯一随操作变化的数）。
+   窄屏（≤600px）下前缀转 sr-only（视觉消失、仍在可访问性树里），宽度与 gap 同时归零，
+   并让出药丸的水平 padding —— 320 宽下数字固有宽 127px 才装得进 206px 的行。 */
+.r-head{display:flex;align-items:center;gap:6px 12px;flex-wrap:wrap;min-width:0}
+.r0{display:flex;align-items:baseline;gap:8px;flex:0 1 auto;min-width:0;font-size:12px;font-weight:600;color:#2f4038;white-space:nowrap}
+/* 前缀是这一行里最先让步的元素：可收缩、超宽时省略。数字相反 —— flex:none、不省略。 */
+.r0-label{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;font-weight:500;color:#5f6a58}
+.r0-label:empty{display:none}
+.r0-num{flex:none;text-align:right;font-variant-numeric:tabular-nums}
+/* pill 不定宽：字数变化时由右侧对齐吸收，定宽只会占用数字的空间。 */
+.state-pill{flex:0 0 auto;padding:1px 8px;border-radius:999px;border:1px solid var(--line);background:#f2f1e7;color:#5f6a58;font-size:11.5px;font-weight:600;letter-spacing:.4px;font-variant-numeric:tabular-nums;text-align:center}
+.state-pill[data-state="A"]{border-color:#c9b98a;background:#f7f1e0;color:#6b5a35}
+.state-pill[data-state="B"],.state-pill[data-state="C1"]{border-color:#a8c2a1;background:#eef4e9;color:#3f6a48}
+.state-pill[data-state="C2"]{border-color:#8fae86;background:#e4efdd;color:#2f5c3a}
+.state-pill[data-state="D"]{border-color:var(--line);background:#f2f1e7;color:#5f6a58}
 
-/* R1 玩家分段按钮组（role=radiogroup）：一颗胶囊一颗人，三态靠圆点表达，
-   取代原来「下拉框 + 并排徽章」两份同一信息。 */
-.quest-actors{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;border:0;min-width:0}
+/* 玩家分段按钮组（role=radiogroup）：一颗胶囊一颗人，三态靠圆点表达，
+   取代原来「下拉框 + 并排徽章」两份同一信息。挂在 R0 头部同一行里。 */
+.quest-actors{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;border:0;min-width:0;flex:0 1 auto}
 .actor-chip{position:relative;display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border:1px solid var(--line);border-radius:999px;background:#fffdf6;font-size:13px;font-weight:500;color:#3f5047;line-height:1.5;cursor:pointer}
 .actor-chip input{position:absolute;width:1px;height:1px;opacity:0;margin:0;padding:0;pointer-events:none}
 .actor-chip .dot{width:8px;height:8px;border-radius:50%;border:1.5px solid #b3b9a8;background:transparent;flex:0 0 auto}
@@ -1584,13 +1602,19 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
 .actor-chip:has(input:checked){font-weight:600;border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
 .actor-chip:focus-within{outline:2px solid var(--gold);outline-offset:1px}
 
-/* R2 名单区：原生 checkbox 的 chip，勾选只改本地草稿。 */
+/* R2 名单区（三条互斥分支，同一位置演化）：
+   A 可勾选网格（原生 checkbox，勾选只改本地草稿）；B/C1/C2 一行只读「已提交：…」；
+   D 一行只读「已投入：…」。「已提交 → 已投入」在同处演化，正好承载「提交 ≠ 投入」。 */
 .quest-deploy .quest-commit-list{display:flex;flex-wrap:wrap;gap:6px;margin:0}
 .quest-deploy .quest-commit-list label{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border:1px solid var(--line);border-radius:6px;background:#f6f5ec;font-size:12.5px;color:#3f5047;line-height:1.5;cursor:pointer}
 .quest-deploy .quest-commit-list label[data-state="on"]{border-color:var(--green);background:#eef4e9;color:var(--ink);font-weight:600}
 .quest-deploy .quest-commit-list input{width:14px;height:14px;margin:0;padding:0;accent-color:var(--green)}
 .quest-deploy .quest-commit-list small{font-size:12px;color:#5f6a58}
 .quest-deploy .quest-commit-list.empty{display:block;padding:7px 10px;border:1px dashed var(--line);border-radius:6px;color:#5f6a58}
+/* 只读名单行：两行截断 + title 悬浮全文，长名字不会把面板顶宽。
+   「已投入」用绿、「已提交」用灰，颜色承担「落地 vs 待定」的区分。 */
+.quest-submitted,.quest-committed{min-width:0;font-size:12px;line-height:1.6;color:#5f6a58;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.quest-committed{color:#3f6a48}
 
 /* R3 主操作行：贴在滚动容器底部，滚名单时也在原地。
    一屏只允许一颗绿色实心按钮，次要操作一律 ghost。 */
@@ -1600,16 +1624,33 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
 .quest-ghost:hover{background:transparent;color:var(--green);border-color:transparent}
 .action-note{margin-left:auto;font-size:12px;color:#6b5a35;font-variant-numeric:tabular-nums}
 
-/* R4 规则说明：默认折叠，不占高度。 */
+/* R4 规则与名单：默认折叠，不占高度。名单明细是 R0 合计的脚注
+   （未提交者按 0 计），所以只在展开时出现，一屏默认只有五段里的一行小字。 */
 .commit-hint{margin:0;font-size:12px;color:#5f6a58}
 .commit-hint>summary{display:inline-flex;align-items:center;cursor:pointer;list-style:none;padding:2px 0;color:#5f6a58}
 .commit-hint>summary::-webkit-details-marker{display:none}
 .commit-hint>summary:hover{color:var(--green)}
 .commit-hint[open]>summary{color:var(--green)}
 .commit-hint>p{margin:4px 0 0;font-size:12px;line-height:1.65;color:#5f6a58}
+.quest-roster{list-style:none;margin:6px 0 0;padding:0;min-width:0;font-size:12px;color:#3f5047}
+.quest-roster li{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:baseline;gap:8px;padding:2px 0;border-top:1px solid #eceadd}
+.quest-roster li:first-child{border-top:0}
+.quest-roster .name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500;color:#2f4038}
+.quest-roster .num{font-variant-numeric:tabular-nums;color:#5f6a58;white-space:nowrap}
+.quest-roster .st{justify-self:end;padding:0 6px;border:1px solid var(--line);border-radius:999px;background:#f4f3ea;font-size:11px;line-height:1.6;color:#5f6a58;white-space:nowrap}
+.quest-roster .st-submitted{border-color:#a8c2a1;background:#eef4e9;color:#3f6a48}
+.quest-roster .st-draft{border-color:#c9b98a;background:#f7f1e0;color:#6b5a35}
+.quest-roster .st-none{border-style:dashed}
 
-/* 窄屏：玩家 chip 换行、名单两列纵向滚，主按钮整宽；不出横向滚动条。 */
+/* 窄屏：头部两行（数字一行、玩家 chip 与提示各占一行）、名单两列纵向滚、主按钮整宽；
+   不出横向滚动条。R0 在 320px 仍保持单行：前缀转 sr-only（仍在可访问性树里）、
+   数字 flex:none 不省略；药丸只收水平 padding（垂直 1px 不动，否则盒高从 23.55 漂走）。 */
 @media(max-width:600px){
+ .r0{gap:6px}
+ /* sr-only：与 .sr-only 同一组声明，缺 clip 会剩一个 1px 可见点 */
+ .r0-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+ .state-pill{padding:1px 4px}
+ .r-head>.quest-actors{flex:1 1 100%;order:2}
  .quest-actors{flex-wrap:wrap}
  .quest-deploy .quest-commit-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;overflow-y:auto}
  .quest-deploy .quest-commit-list label{min-width:0}

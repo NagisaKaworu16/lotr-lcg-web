@@ -579,10 +579,11 @@ test('phase door never advances past an unresolved encounter card',async()=>{
  assert(e.run('state.questing.current'),'未结算的遭遇牌必须还在');
 });
 
-/* ── v0.15.70：派遣面板四态 ─────────────────────────────────────────────
+/* ── v0.15.70/v0.15.71：派遣面板五段（R0–R4）──────────────────────────────
    这一组盯的是「一屏唯一主操作」与「草稿态不得出现『已投入』」两件事：
    旧版把「未提交」和「已提交」写成两条并列分支，状态重叠时同一件事渲染两遍，
-   两颗绿按钮同时招手——断言换成按 data-quest / data-focus-key 数，才抓得住回归。 */
+   两颗绿按钮同时招手——断言换成按 data-quest / data-focus-key 数，才抓得住回归。
+   v0.15.71 起前缀与数字拆成 .r0-label / .r0-num，断言按 span 抓，不按整句抓。 */
 function twoPlayerCommit(e){
  e.run(`{const cfg=['leadership','spirit'].map(sp=>PlayerCards.config(PlayerCards.starter(PlayerUI.getSnapshot(),sp),PlayerUI.getSnapshot()));state=E.create('mirkwood',2,12345,cfg,{deferSetup:true});E.openingChoice(state,0);E.openingChoice(state,1);E.startScenario(state);E.nextPhase(state);E.planning.endTurn(state,0);E.planning.endTurn(state,1);E.planning.passAction(state,0);E.planning.passAction(state,1);E.nextPhase(state);E.nextPhase(state);E.questing.pass(state,0);E.questing.pass(state,1);E.questing.move(state);handView=0;render();}`);
  return e.base.get('app').innerHTML;
@@ -590,14 +591,22 @@ function twoPlayerCommit(e){
 test('quest deployment panel: one primary action, no 已投入 while unlocked, no leftover dropdown',async()=>{
  const e=environment();const html=twoPlayerCommit(e);
  assert(html.includes('class="quest-deploy" data-state="A"'),'草稿态应带 data-state="A"');
- assert(html.includes('暂定 0 名'),'草稿态状态行应写「暂定 N 名」');
+ const r0=(html.match(/<div class="r0">[\s\S]*?<\/div>/)||[''])[0];
+ assert(/<span class="state-pill" data-state="A">草稿<\/span>/.test(r0),'草稿态 R0 的 pill 应写「草稿」');
+ assert(/<span class="r0-label">暂定<\/span>/.test(r0),'草稿态 R0 前缀应写「暂定」');
+ assert(/<span class="r0-num">0 名 · 意志 0 ／ 威胁 \d+<\/span>/.test(r0),'草稿态 R0 应写「0 名 · 意志 0 ／ 威胁 N」');
+ assert.equal((r0.match(/意志/g)||[]).length,1,'意志合计只允许在 R0 出现一次');
  assert(!/已投入/.test(html),'deploymentLocked 未置位时页面不得出现「已投入」');
  assert(!html.includes('id="planning-actor"'),'下拉框选玩家已被玩家分段按钮组取代');
  assert(html.includes('role="radiogroup"')&&html.includes('aria-label="当前操作玩家"'),'多人局应渲染玩家分段按钮组');
  assert(html.includes('data-quest-actor="0"')&&html.includes('data-quest-actor="1"'),'每位玩家一颗 radio');
  assert.equal((html.match(/data-focus-key="quest-submit"/g)||[]).length,1,'草稿态只有一颗提交主按钮');
  assert(!html.includes('data-focus-key="quest-withdraw"')&&!html.includes('data-focus-key="quest-approve"'),'草稿态不应出现其他状态的主操作');
- assert(html.includes('class="commit-hint"'),'规则说明应折叠在 details 里');
+ assert(/class="commit-hint[^"]*"[^>]*id="quest-rules"/.test(html),'规则与名单应折叠在 details 里');
+ assert(html.includes('<summary>规则与名单</summary>'),'折叠标题只写「规则与名单」，不另起两段说明');
+ /* R4 明细：草稿态两人都还没提交，应各有一行「未提交」，且没有重复的意志合计 */
+ assert(/<ul class="commit-roster quest-roster">[\s\S]*data-roster-player="0"[\s\S]*data-roster-player="1"/.test(html),'折叠里应有全队名单明细');
+ assert((html.match(/st st-none/g)||[]).length>=2,'未提交玩家在明细里标「未提交」');
  /* 主操作行里绿色实心按钮只允许一颗 */
  const row=(html.match(/<div class="quest-main-action">[\s\S]*?<\/div>/)||[''])[0];
  assert.equal((row.match(/class="primary"/g)||[]).length,1,'主操作行只能有一颗 primary');
@@ -616,8 +625,11 @@ test('quest deployment panel: after everyone submits the door waits for the seco
  for(const p of ['0','1']){const a=e.click({action:'quest',quest:'commit',player:p});e.dialogs.at(-1).querySelector('#ok').click();await a;}
  e.run('handView=0;render();');
  const html=e.base.get('app').innerHTML;
- assert(html.includes('class="quest-deploy" data-state="C-in"'),'全员已交、本人未确认时应为 C-in');
+ assert(html.includes('class="quest-deploy" data-state="C1"'),'全员已交、本人未确认时应为 C1');
  assert(!/已投入/.test(html),'未锁定前（含 C 态）不得出现「已投入」');
+ /* 已提交后 R2 换成只读「已提交：…」，勾选框整块撤走——避免提交完还能原地改名单。 */
+ assert(/class="quest-submitted"[^>]*>已提交：阿拉贡/.test(html),'B/C1 态 R2 应写「已提交：本人名单」');
+ assert(!html.includes('data-commit='),'已提交后不应再有勾选框');
  const region=html.slice(html.indexOf('class="decide-inline"'));
  assert.equal((region.slice(0,region.indexOf('</section>')).match(/class="primary"/g)||[]).length,1,'C 态一屏只留一颗绿按钮');
  assert(html.includes('data-quest="approveDeployment"'),'C 态的主操作是「确认派遣」');
@@ -628,9 +640,10 @@ test('quest deployment panel: after everyone submits the door waits for the seco
  /* 确认是按人来的：确认后 UI 自动把操作权交给下一位未确认玩家，这里切回玩家0 再断言其面板。 */
  e.run('handView=0;render();');
  const mid=e.base.get('app').innerHTML;
- assert(mid.includes('class="quest-deploy" data-state="C-out"'),'确认后应为 C-out');
- assert(mid.includes('data-quest="unapproveDeployment"'),'C-out 用 ghost 取消确认');
- assert(!mid.includes('data-quest="approveDeployment"'),'C-out 不再给确认按钮');
+ assert(mid.includes('class="quest-deploy" data-state="C2"'),'确认后应为 C2');
+ assert(/<span class="state-pill" data-state="C2">已确认 1\/2<\/span>/.test(mid),'C2 的 pill 应写「已确认 N/M」，人数来自 deploymentApprovals');
+ assert(mid.includes('data-quest="unapproveDeployment"'),'C2 用 ghost 取消确认');
+ assert(!mid.includes('data-quest="approveDeployment"'),'C2 不再给确认按钮');
  for(const p of ['0','1'])if(!e.run('state.questing.deploymentLocked'))await e.click({action:'quest',quest:'approveDeployment',player:p});
  assert.equal(e.run('state.questing.deploymentLocked'),true);
  /* 引擎仍在按顺序投入（阿拉贡的投入响应待结算）→ step 还是 commit，面板必须只读。 */
@@ -638,6 +651,9 @@ test('quest deployment panel: after everyone submits the door waits for the seco
  e.run('handView=0;render();');
  const locked=e.base.get('app').innerHTML;
  assert(locked.includes('class="quest-deploy" data-state="D"'),'锁定后为只读 D 态');
- assert(locked.includes('已投入 1 名'),'锁定态状态行写「已投入 N 名」');
+ assert(/<span class="r0-num">1 名 · 意志 \d+ ／ 威胁 \d+<\/span>/.test(locked),'锁定态 R0 用与其它状态相同的数字模板（前缀留空），跨状态宽度不跳');
+ assert(/class="quest-committed"[^>]*>已投入：阿拉贡/.test(locked),'锁定态 R2 应写「已投入：全队名单」');
+ assert(!locked.includes('data-roster-player='),'D 态不再渲染 R3 明细（上方已有全队已投入）');
+ assert(/id="quest-rules"/.test(locked),'D 态仍保留规则折叠——只读时更需要查规则');
  assert(!locked.includes('quest-main-action')&&!locked.includes('data-quest="commit"')&&!locked.includes('data-quest="approveDeployment"'),'D 态不渲染任何派遣按钮');
 });

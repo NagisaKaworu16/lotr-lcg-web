@@ -51,7 +51,15 @@ let browser;
     if (!await el.count()) return false;
     await el.click(); idle = 0; await page.waitForTimeout(300); return true;
   };
-  const approve = () => clickQuest('approveDeployment');
+  /* v0.15.70：派遣主按钮收成 data-quest，但战斗的「二次确认」在 combat-ui.js 里走 data-combat。
+     原先按文案「二次确认」匹配的通用写法被改成只认 data-quest，战斗路径因此点不到——这里两类都认。 */
+  const approve = async () => {
+    for (const sel of ['[data-combat="approve"]', '[data-quest="approveDeployment"]']) {
+      const el = page.locator(`${PANEL} ${sel}:not([disabled])`).first();
+      if (await el.count()) { await el.click(); idle = 0; await page.waitForTimeout(300); return true; }
+    }
+    return false;
+  };
   const clickNext = async () => {
     const el = page.locator('.operation-title button.primary:not([disabled])').first();
     if (!await el.count()) return false;
@@ -123,8 +131,11 @@ let browser;
     await page.waitForTimeout(600);
     for (const x of await page.locator('button[data-action="keepHand"]').all()) await x.click();
     await page.waitForTimeout(200);
-    await page.locator('button[data-action="finishSetup"]').click();
-    await page.waitForTimeout(400);
+    /* v0.15.64 起：全员确认手牌后引擎自动执行剧本设置并进入计划阶段，
+       「确认手牌并执行剧本设置」按钮随面板一起消失。这里改为「有就点、没有就直接走」，
+       并用 setupPending 断言兜住——否则脚本会死在等待一颗永远不存在的按钮上。 */
+    const finish = page.locator('button[data-action="finishSetup"]');
+    if (await finish.count()) { await finish.click(); await page.waitForTimeout(400); }
   };
 
   // ============ 2人 幽暗密林 @1440 ============
@@ -167,6 +178,10 @@ let browser;
     if (await card.count()) { await card.click(); await page.waitForTimeout(150); }
     const viewBefore = await page.evaluate(() => handView);
     if (!await clickQuest('commit')) break;
+    /* 提交名单会弹「确认派遣」对话框（单人/多人一致）；不点确认则名单永远不会 confirmed，
+       断言会读到一个「点了但什么都没发生」的现场。 */
+    await handleDialog();
+    await page.waitForTimeout(150);
     autoSwitch = await page.evaluate(vb => ({ viewBefore: vb, viewAfter: handView, confirmed: state.questing.order.map(id => !!state.questing.deployments?.[id]?.confirmed) }), viewBefore);
     if (pending.length > 1) break;
   }

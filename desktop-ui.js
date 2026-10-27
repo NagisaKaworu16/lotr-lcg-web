@@ -1,6 +1,6 @@
 /* Tabletop view: UI drafts never pay, exhaust, reveal, or bypass phase validation. */
 /* 界面版本徽标唯一来源：须与 CHANGELOG.md 最新条目标题一致（planning-dom-tests 有校验）。 */
-const APP_VERSION='v0.15.70';
+const APP_VERSION='v0.15.71';
 /* ── 决策弹窗（v0.15.62）──────────────────────────────────────────────
    底部长住的那块阶段面板已经去掉（和角色区右上角的「结束阶段」重复，还白占一行高度）。
    需要玩家拍板的事不再常驻显示，改成「轮到你决定时才弹出来」。
@@ -255,14 +255,14 @@ const DesktopUI=(()=>{
  }
  const row=(label,body,extra='')=>`<section class="table-zone ${extra}"><div class="zone-heading"><h2>${label}</h2></div><div class="table-card-row">${body||'<span class="zone-empty">暂无卡牌</span>'}</div></section>`;
  function selection(s,m){if(!m)return '';const selected=ids(s,m).map(uid=>R.find(s,uid)).filter(Boolean),d=draft(s,m);let preview='';
-  if(m.kind==='quest')preview='暂定意志 '+selected.reduce((n,c)=>n+R.stats(s,c.uid).willpower,0);
   if(m.kind==='defense'){const defense=selected.reduce((n,c)=>n+R.stats(s,c.uid).defense,0),atk=R.find(s,s.combat.attack.uid);preview=`暂定防御 ${defense} · 敌人当前攻击 ${(atk?R.stats(s,atk.uid).attack:0)+(s.combat.attack.bonus||0)}（暗影与后续效果仍可能改变）`;}
   if(m.kind==='attack'){const attack=selected.reduce((n,c)=>n+R.stats(s,c.uid).attack,0),target=d.target?R.find(s,d.target):null;preview=`暂定基础攻击 ${attack}${target?' · 目标防御 '+R.stats(s,target.uid).defense+' · 基础伤害预估 '+Math.max(0,attack-R.stats(s,target.uid).defense):' · 请先点选目标敌人'}（特殊能力以正式结算为准）`;}
-  /* v0.15.70：探险阶段的提交入口收敛到底部派遣面板那颗唯一的主按钮。
-     这块在 quest 模式只留只读摘要与「清空选择」橡皮擦——它本来是同一屏里的
-     第三份提交入口，四人局角色行横滚时还会被带出视野。 */
-  const submit=m.kind==='quest'?'':b(m.kind==='defense'?'提交暂定防御名单':'提交暂定攻击名单','submit','',m.kind==='attack'&&(!d.target||!selected.length));
-  return `<div class="table-selection"><b>${esc(s.players[m.player].name)} · ${m.kind==='quest'?'点击角色暂定投入':m.kind==='defense'?'点击角色暂定防御；不选表示无人防御':'先点敌人，再点参与攻击的角色'}</b><p aria-live="polite">${esc(preview)} · 已选 ${selected.length} 名</p><div class="actions">${submit}${b('清空选择','clear')}${m.kind==='attack'?`<button data-action="combatFlow" data-combat="endAttacks" data-player="${m.player}">暂定结束我的攻击</button>`:''}</div><p class="small muted">这里只暂定名单。全员二次确认后才横置、支付并执行。</p></div>`;
+  /* v0.15.70：探险阶段的提交入口收敛到底部派遣面板那颗唯一的主按钮，意志总数也只在那里出现一处。
+     quest 分支因此只剩「本人已选 N 名」这一句只读摘要 + 「清空选择」橡皮擦；
+     defense/attack 的 preview 与提交按钮保持原样，不受影响。 */
+  if(m.kind==='quest')return `<div class="table-selection"><b>${esc(s.players[m.player].name)} · 点击角色暂定投入</b><p>${selected.length?'本人已选 '+selected.length+' 名':'本人未选角色'}</p><div class="actions">${b('清空选择','clear')}</div></div>`;
+  const submit=b(m.kind==='defense'?'提交暂定防御名单':'提交暂定攻击名单','submit','',m.kind==='attack'&&(!d.target||!selected.length));
+  return `<div class="table-selection"><b>${esc(s.players[m.player].name)} · ${m.kind==='defense'?'点击角色暂定防御；不选表示无人防御':'先点敌人，再点参与攻击的角色'}</b><p aria-live="polite">${esc(preview)} · 已选 ${selected.length} 名</p><div class="actions">${submit}${b('清空选择','clear')}${m.kind==='attack'?`<button data-action="combatFlow" data-combat="endAttacks" data-player="${m.player}">暂定结束我的攻击</button>`:''}</div><p class="small muted">这里只暂定名单。全员二次确认后才横置、支付并执行。</p></div>`;
  }
  function next(s){const x=R.context(s),done=x?.completed;let label='',disabled=false;
  if(s.status==='won'||s.status==='lost')return `<span class="badge">${s.status==='won'?'剧本已结束 · 见上方结算':'远征已结束 · 见上方结算'}</span>`;
