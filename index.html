@@ -1577,6 +1577,26 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
 .decide-list{list-style:none;margin:10px 0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
 .decide-list li{padding:3px 9px;border:1px solid #d8dcd0;border-radius:5px;font-size:13px;background:#f2f1e7;color:#7c8674}
 .decide-list li.ok{border-color:#a8c2a1;background:#eef4e9;color:#40603a}
+/* ── 18c. 浮层里的单张卡图：与牌桌卡牌同宽的缩略图 + 文字环绕（v0.15.84）──
+   「阶段6 · 暗影取消／结算」等面板里的遭遇／地点／暗影卡图原来是满宽的：
+   .card-art 的基础样式是 width:100%，而浮层宽 min(880px,100vw-48px)，
+   一张 424/600 的卡图于是摊成 800px 宽、1130px 高，把「本次暗影」的牌名、
+   暗影文字和「结算／继续」按钮全顶到浮层可视区之外——玩家只看得到一张巨大的卡图。
+   操作条时代靠 .operation-content .card-art{max-width:100px;float:left} 收过一次，
+   面板搬进 .decide-pop 之后那条选择器不再命中任何节点。
+   这里按同一思路补一份，尺寸取 --card-w（与牌桌卡牌、探险区立绘同宽），
+   正文与按钮绕在右侧；要看全图仍点卡图本身（.card-art 是放大按钮）。 */
+.decide-body .card-art{float:left;max-width:var(--card-w);margin:0 12px 8px 0}
+/* 卡图底下那行「英文卡图 · 本地 · 点击放大」是卡图库的说明，在 132px 宽里要折三行，
+   把整段 notice 撑高一百多像素且没有决策价值——操作条时代同样是隐藏的
+   （.operation-content .image-loading-note{display:none}）。 */
+.decide-body .card-art .image-loading-note{display:none}
+/* 收住浮动：不放的话后面那段按钮会压到卡图右侧的空白里、甚至溢出到下一段之上。
+   浮层里的卡图外壳只有这两种：.notice（暗影／遭遇）与 .quest-reveal（探险／旅行翻牌）。 */
+.decide-body .notice::after,.decide-body .quest-reveal::after{content:'';display:block;clear:both}
+/* 开局翻牌（.setup-reveal）是「96px 竖排格子」的既有版式，卡图不该浮起来，
+   也不能被上面的 max-width 压宽度——它由 .setup-reveal img{width:96px} 决定。 */
+.decide-body .setup-reveal .card-art{float:none;max-width:none;margin:0}
 /* ── 18d. 开局起始手牌按钮条（v0.15.77）──────────────────────────────
    开局面板退役后只留两个按钮，贴在手牌区上方（看到谁的手牌按钮就是谁的；
    放上方而非下方——空间不足时优先保操作入口可见，被推的是手牌）。
@@ -10949,7 +10969,7 @@ const WindowUI=(()=>{
 </script><script src="phase-log.js"></script><script>
 /* Tabletop view: UI drafts never pay, exhaust, reveal, or bypass phase validation. */
 /* 界面版本徽标唯一来源：须与 CHANGELOG.md 最新条目标题一致（planning-dom-tests 有校验）。 */
-const APP_VERSION='v0.15.83';
+const APP_VERSION='v0.15.84';
 /* ── 决策面板：一行触发条 + 非模态浮层（v0.15.81）─────────────────────
    形态演进：v0.15.62 浮动弹窗 → v0.15.76/79 内联公共桌面（常驻 96px 内容块）→ v0.15.81
    「一行触发条 + 非模态浮层」。用户报障「阶段窗口还在桌面上」：内联块把 .decide-box 撑到

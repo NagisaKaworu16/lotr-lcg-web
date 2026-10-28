@@ -1,0 +1,179 @@
+{
+  "ok": true,
+  "width": 1440,
+  "art": {
+    "shadow": {
+      "pop": {
+        "x": 16,
+        "y": 501.7,
+        "w": 880,
+        "h": 384.3
+      },
+      "body": {
+        "x": 17,
+        "y": 552.1,
+        "w": 878,
+        "h": 332.9
+      },
+      "bodyScrollH": 333
+    },
+    "setup": {
+      "pop": {
+        "x": 16,
+        "y": -259.2,
+        "w": 880,
+        "h": 259.2
+      },
+      "body": {
+        "x": 17,
+        "y": -208.8,
+        "w": 878,
+        "h": 207.8
+      },
+      "bodyScrollH": 208
+    },
+    "cardArt": {
+      "x": 52,
+      "y": 652.2,
+      "w": 132,
+      "h": 186.8
+    },
+    "img": {
+      "x": 52,
+      "y": 652.2,
+      "w": 132,
+      "h": 186.8
+    },
+    "notice": {
+      "x": 33,
+      "y": 640.2,
+      "w": 846,
+      "h": 218.8
+    },
+    "h3": {
+      "x": 52,
+      "y": 652.2,
+      "w": 811,
+      "h": 27.2
+    },
+    "h3TextX": 196,
+    "actions": {
+      "x": 196,
+      "y": 730,
+      "w": 667,
+      "h": 46.6
+    },
+    "float": "left",
+    "maxWidth": "132px",
+    "cardW": "132px",
+    "setupArt": {
+      "x": 46,
+      "y": -173.8,
+      "w": 96,
+      "h": 135.8
+    },
+    "setupFloat": "none",
+    "questArt": {
+      "x": 33,
+      "y": 82.2,
+      "w": 132,
+      "h": 186.8
+    },
+    "questH3TextX": 177,
+    "questActions": {
+      "x": 177,
+      "y": 198.6,
+      "w": 276,
+      "h": 46.6
+    },
+    "questWrap": {
+      "x": 33,
+      "y": 82.2,
+      "w": 420,
+      "h": 194.8
+    },
+    "vh": 950
+  },
+  "checks": [
+    {
+      "name": "暗影卡图不再是满宽（收成缩略图）",
+      "ok": true,
+      "detail": "132px（浮层宽 880px）"
+    },
+    {
+      "name": "缩略图宽度 = 牌桌卡牌宽 --card-w",
+      "ok": true,
+      "detail": "132px vs 132px"
+    },
+    {
+      "name": "缩略图高度不再占据一整屏",
+      "ok": true,
+      "detail": "132×186.8px，视口高 950"
+    },
+    {
+      "name": "卡图左浮动",
+      "ok": true,
+      "detail": "float=left"
+    },
+    {
+      "name": "牌名文字绕排到卡图右侧（不是被推到图下方）",
+      "ok": true,
+      "detail": "文字左缘 196 ≥ 卡图右缘 184.0"
+    },
+    {
+      "name": "文字与卡图同排（顶对齐，未被推到图下方）",
+      "ok": true,
+      "detail": "h3.y=652.2 < 图底 839.0"
+    },
+    {
+      "name": "整段 notice 高度受控（≤ 300px）",
+      "ok": true,
+      "detail": "846×218.8px"
+    },
+    {
+      "name": "浮层不因这张图触到 62vh 高度上限",
+      "ok": true,
+      "detail": "pop 384.3px < 上限 589px"
+    },
+    {
+      "name": "浮层体内无滚动（内容一屏放得下）",
+      "ok": true,
+      "detail": "内容 333px / 容器 332.9px"
+    },
+    {
+      "name": "「结算本张暗影／继续」在浮层可视区内",
+      "ok": true,
+      "detail": "按钮底 777 ≤ 浮层底 886"
+    },
+    {
+      "name": "开局翻牌 .setup-reveal 未被误伤（96px 竖排、不浮动）",
+      "ok": true,
+      "detail": "96px，float=none"
+    },
+    {
+      "name": "探险／旅行翻牌的 .quest-reveal 卡图同为缩略图",
+      "ok": true,
+      "detail": "132px vs 132px"
+    },
+    {
+      "name": ".quest-reveal 牌名文字绕排到卡图右侧",
+      "ok": true,
+      "detail": "文字左缘 177 ≥ 卡图右缘 165.0"
+    },
+    {
+      "name": ".quest-reveal 浮动被收住（容器底不短于卡图底）",
+      "ok": true,
+      "detail": "容器底 277 ≥ 图底 269"
+    },
+    {
+      "name": ".quest-reveal 的按钮与卡图不重叠",
+      "ok": true,
+      "detail": "按钮 177,198.6 vs 卡图右缘 165"
+    },
+    {
+      "name": "无脚本错误",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}

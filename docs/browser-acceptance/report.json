@@ -1,7 +1,7 @@
 {
   "pageUrl": "file:///C:/Users/Administrator/WorkBuddy/魔戒LCG/index.html",
   "executablePath": "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe",
-  "startedAt": "2026-10-28T06:35:44.596Z",
+  "startedAt": "2026-10-28T08:03:47.018Z",
   "checks": [
     {
       "name": "start-2p",
@@ -85,18 +85,18 @@
     {
       "name": "full-round-loop",
       "ok": true,
-      "phase": 2,
-      "round": 3,
-      "view": 1,
+      "phase": 5,
+      "round": 2,
+      "view": 0,
       "quest": {
-        "step": "commit",
-        "locked": false
+        "step": "completed",
+        "locked": true
       },
       "travel": true,
       "enc": true,
       "combat": {
-        "step": "completed",
-        "proposal": false
+        "step": "defenseChoice",
+        "proposal": true
       },
       "refresh": true
     },
@@ -114,7 +114,7 @@
     {
       "name": "images-load",
       "ok": true,
-      "total": 76,
+      "total": 70,
       "failed": 0
     },
     {
@@ -163,6 +163,6 @@
   "consoleErrors": [],
   "pageErrors": [],
   "failedImages": [],
-  "finishedAt": "2026-10-28T06:37:17.336Z",
+  "finishedAt": "2026-10-28T08:05:13.535Z",
   "ok": true
 }
