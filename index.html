@@ -10675,7 +10675,10 @@ function focusActor(pid){
    const open=(pickState.auto==='handover'||entering)&&(ph==='A'||ph==='C1');
    pickState={...base,key,open,prevStep:q.step};
   }else{
-   if(pickState.auto==='withdraw')pickState.open=ph==='A'||ph==='C1';
+   /* v0.15.80 返工：handover 与 withdraw 同等对待。key 不变（最后一个提交者没有交接、
+     只是自己进了 C1）时，旧实现只认 withdraw，浮层保持关闭，须手动重开——
+     与「全员交齐进入本人 C1 自动弹出」的承诺矛盾。 */
+   if(pickState.auto==='withdraw'||pickState.auto==='handover')pickState.open=ph==='A'||ph==='C1';
    pickState.prevStep=q.step;
   }
   pickState.auto='';
@@ -10733,21 +10736,50 @@ function focusActor(pid){
   const box=document.querySelector('.quest-pick');
   if(box&&pickState.open)box.innerHTML=pickInner(s,actor);
  }
- /* 点外部关闭：target 不在浮层内且不在触发按钮内→收起。只摘除浮层节点（纯视图），
-    不触发 render——否则 pointerdown 里的整页重绘会吞掉同一次点击（抽牌浮层旧事故）。 */
- if(typeof document!=='undefined'&&typeof document.addEventListener==='function'){
-  document.addEventListener('pointerdown',ev=>{
-   if(!pickState.open)return;
-   const box=document.querySelector('.quest-pick');if(!box)return;
-   const t=ev.target;if(box.contains&&box.contains(t))return;
-   const trig=document.querySelector('.pick-trigger');
-   if(trig&&trig.contains&&trig.contains(t))return;
-   pickState.open=false;pickState.confirm=false;
-   if(box.remove)box.remove();
-   if(trig&&trig.setAttribute)trig.setAttribute('aria-expanded','false');
-  },true);
+ /* 关闭浮层（× 按钮 / Esc 共用）：纯视图操作，不走 mutate；焦点交回触发按钮。 */
+ function closePick(){
+  pickState.open=false;pickState.confirm=false;render();
+  const tg=document.querySelector('.pick-trigger');
+  if(tg&&typeof tg.focus==='function')tg.focus({preventScroll:true});
  }
- return {panel,handle,bind,setDraft,draftFor,draftPeek,picker,revealCard,stepName,stateOf,liveOrder,pickHTML};
+/* 页面里是否开着内层模态 dialog（choose() 复核弹窗 / PlanningUI 表单）。
+   dialog 是模态层，其内的点击与 Esc 都不属于「操作桌面」——既不算点外部，也不抢 Esc。 */
+function dialogOpen(){
+ try{return !!(typeof document!=='undefined'&&typeof document.querySelector==='function'&&document.querySelector('dialog[open]'));}catch(e){return false;}
+}
+/* 点外部关闭：target 不在浮层内且不在触发按钮内→收起。只摘除浮层节点（纯视图），
+   不触发 render——否则 pointerdown 里的整页重绘会吞掉同一次点击（抽牌浮层旧事故）。
+   dialog[open] 存在时整个忽略：点复核弹窗的「确认」若被当成点外部，浮层会在提交后
+   被收起，C1「全员交齐自动弹出」的感知就断了。 */
+function outsidePointer(ev){
+ if(!pickState.open)return false;
+ const box=document.querySelector('.quest-pick');if(!box)return false;
+ const t=ev&&ev.target;
+ if(box.contains&&box.contains(t))return false;
+ const trig=document.querySelector('.pick-trigger');
+ if(trig&&trig.contains&&trig.contains(t))return false;
+ if(dialogOpen())return false;
+ pickState.open=false;pickState.confirm=false;
+ if(box.remove)box.remove();
+ if(trig&&trig.setAttribute)trig.setAttribute('aria-expanded','false');
+ return true;
+}
+/* Esc 关闭：与 × 同语义（配合 reduce-motion 无动画，直接收起）。有内层 dialog 时让 dialog
+   自己处理 Esc，浮层原样保留。 */
+function escClose(ev){
+ if(!pickState.open)return false;
+ if(ev&&ev.key!==undefined&&ev.key!=='Escape')return false;
+ if(dialogOpen())return false;
+ closePick();
+ return true;
+}
+/* 两个监听只注册一次；outsidePointer/escClose 同时导出给回归测试直接调用
+   （假 DOM 没有 addEventListener，测试走纯函数入口）。 */
+if(typeof document!=='undefined'&&typeof document.addEventListener==='function'){
+ document.addEventListener('pointerdown',outsidePointer,true);
+ document.addEventListener('keydown',escClose,true);
+}
+return {panel,handle,bind,setDraft,draftFor,draftPeek,picker,revealCard,stepName,stateOf,liveOrder,pickHTML,escClose,outsidePointer};
 })();
 
 </script><script>

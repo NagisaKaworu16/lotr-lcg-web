@@ -92,8 +92,9 @@ test('C1 inline confirm bar flips inside the overlay before the real approval',a
  for(const p of [0,1]){const action=e.click({action:'quest',quest:'commit',player:String(p)});e.dialogs.at(-1).querySelector('#ok').click();await action;e.run('handView=0;render();');}
  assert.equal(e.run('QuestUI.stateOf(state,0)'),'C1');
  assert.equal(e.run('(state.questing.deploymentApprovals||[]).length'),0);
- /* 打开浮层，点浮层内的「确认派遣」：第一次点击只翻转内联确认条，不产生任何确认 */
- await e.click({action:'quest',quest:'pickToggle',player:'0'});
+ /* v0.15.80 返工：最后提交者进入 C1 时浮层已自动弹出（handover 分支修好），无需手动开 */
+ assert(pickPanel(e),'进入 C1 后浮层应已自动弹出');
+ /* 点浮层内的「确认派遣」：第一次点击只翻转内联确认条，不产生任何确认 */
  const before=e.run('JSON.stringify(state)');
  await e.run(`QuestUI.handle({dataset:{action:'quest',quest:'pickApprove',player:'0'}})`);
  assert(e.base.get('app').innerHTML.includes('就是现在'),'应翻转出内联确认条');
@@ -135,4 +136,65 @@ test('auto handover after submit opens the overlay for the next uncommitted play
  assert.equal(e.run('state.questing.deployments[0].confirmed'),true);
  assert(pickRegion(e).includes('aria-expanded="true"'),'交接后浮层对下一位自动弹出');
  assert(pickRegion(e).includes('已选 0 名'),'下一位的草稿从零开始');
+});
+
+test('Esc closes the overlay when no dialog is open, and is ignored while a dialog is open',async()=>{const e=environment();await commit2(e);
+ assert(pickPanel(e),'前置：浮层已自动打开');
+ /* 无 dialog：Esc 与 × 同语义（关闭 + 焦点回触发按钮） */
+ const closed=e.run(`QuestUI.escClose({key:'Escape'})`);
+ assert.equal(closed,true,'Esc 应关闭浮层');
+ assert.equal(pickPanel(e),null,'Esc 后浮层节点消失');
+ assert(pickRegion(e).includes('aria-expanded="false"'),'Esc 后 aria-expanded=false');
+ /* 非 Escape 键不关 */
+ await e.click({action:'quest',quest:'pickToggle',player:'0'});
+ assert(pickPanel(e),'重开');
+ assert.equal(e.run(`QuestUI.escClose({key:'Enter'})`),false,'非 Esc 键不处理');
+ assert(pickPanel(e),'浮层仍在');
+ /* 有内层 dialog 时让 dialog 自己处理 Esc：浮层原样保留 */
+ e.run(`document.__q=document.querySelector;document.querySelector=s=>s==='dialog[open]'?{tag:'dialog'}:(document.__q?s===undefined?null:document.__q(s):null)`);
+ assert.equal(e.run(`QuestUI.escClose({key:'Escape'})`),false,'dialog 打开时 Esc 不关浮层');
+ assert(pickPanel(e),'dialog 打开时浮层保留');
+ e.run('document.querySelector=document.__q;delete document.__q');
+ assert.equal(e.run(`QuestUI.escClose({key:'Escape'})`),true,'dialog 关闭后 Esc 恢复生效');
+ assert.equal(pickPanel(e),null);
+});
+
+test('pointerdown inside a modal dialog must not close the overlay (C1 handover path)',async()=>{const e=environment();await commit2(e);
+ assert(pickPanel(e),'前置：浮层已打开');
+ /* 假 DOM 的 querySelector 只认 #id，这里给浮层/触发按钮装桩，使 outsidePointer 走真实分支 */
+ const stub=`document.__q=document.querySelector;
+  document.querySelector=s=>s==='.quest-pick'?{contains:t=>!!(t&&t.inPick),remove(){}}
+   :s==='.pick-trigger'?{contains:t=>!!(t&&inTrig(t)),setAttribute(){}}
+   :document.__q(s);`;
+ e.run(stub+`const inTrig=t=>false;`);
+ /* 复核弹窗打开时的 pointerdown（target 是 dialog 内的按钮，必然在浮层外）→ 不关 */
+ e.run(`document.__q2=document.querySelector;document.querySelector=s=>s==='dialog[open]'?{tag:'dialog'}:document.__q2(s)`);
+ assert.equal(e.run(`QuestUI.outsidePointer({target:{inDialog:true}})`),false,'dialog 打开时的 pointerdown 不算点外部');
+ e.run('render()');
+ assert(pickPanel(e),'浮层在复核弹窗期间保持打开');
+ /* dialog 关闭后，真正点桌面才收起 */
+ e.run(`document.querySelector=s=>s==='.quest-pick'?{contains:t=>!!(t&&t.inPick),remove(){}}:s==='.pick-trigger'?{contains:()=>false,setAttribute(){}}:document.__q(s)`);
+ assert(e.run(`QuestUI.outsidePointer({target:{}})`)===true,'dialog 关闭后点外部应收起');
+ e.run('render()');
+ assert.equal(pickPanel(e),null,'收起后重绘即离场');
+});
+
+test('last submitter entering C1 re-opens the overlay (handover branch, key unchanged)',async()=>{const e=environment();await commit2(e);
+ /* 玩家1（view 0）先提交 → 交接给玩家0；随后玩家0 作为最后提交者进入 C1。
+     两人都在同一个 handView 键下完成最后一步时（最后一个提交者没有交接），
+     syncPick 的 key 不变分支必须把 auto==='handover' 当 withdraw 同等处理。 */
+ const a1=e.click({action:'quest',quest:'commit',player:'0'});
+ e.dialogs.at(-1).querySelector('#ok').click();await a1;
+ assert.equal(e.run('handView'),1,'先手交接');
+ /* 关掉浮层，模拟玩家手动收起后再提交（旧 bug 下会一直保持关闭） */
+ await e.click({action:'quest',quest:'pickClose',player:'1'});
+ assert.equal(pickPanel(e),null,'手动收起');
+ e.run('handView=1;render();');
+ const a2=e.click({action:'quest',quest:'commit',player:'1'});
+ e.dialogs.at(-1).querySelector('#ok').click();await a2;
+ assert.equal(e.run('QuestUI.stateOf(state,1)'),'C1','最后提交者进入 C1（key 不变）');
+ assert.equal(e.run('handView'),1,'最后提交者无交接，视图不动');
+ assert(pickPanel(e),'handover 分支应恢复浮层（与 withdraw 同等）');
+ assert(pickRegion(e).includes('aria-expanded="true"'));
+ assert(pickPanel(e).includes('确认派遣'),'C1 脚部是确认派遣');
 });
