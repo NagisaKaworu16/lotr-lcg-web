@@ -158,15 +158,24 @@ let browser;
   let st = await snap();
   note('enter-quest', st.phase === 2, st);
   const before = await page.evaluate(() => ({ log: state.log.length, exhausted: JSON.stringify(state.players.flatMap(p => p.heroStates.map(h => h.exhausted))) }));
-  const pick = page.locator('.player-mat .character-card.selectable .card-face').first();
-  const draftOk = { selectable: await pick.count() };
+  /* v0.15.80：浮层自动弹出且盖住桌面角色卡时，改点浮层缩略图（同一草稿路径，
+     R3 双向同步会让桌面角色卡同样出现 .selected 金标记，断言不变）。 */
+  const collapsePick = async () => {
+    const t = page.locator('.pick-trigger[aria-expanded="true"]').first();
+    if (await t.count()) { await t.click(); await page.waitForTimeout(200); return true; }
+    return false;
+  };
+  const pickThumb = page.locator('.quest-pick .qp-card .card-face:not([aria-disabled])').first();
+  const pick = (await pickThumb.count()) ? pickThumb : page.locator('.player-mat .character-card.selectable .card-face').first();
+  const draftOk = { selectable: await page.locator('.player-mat .character-card.selectable .card-face').count() };
   if (draftOk.selectable) {
     await pick.click(); await page.waitForTimeout(200);
     const after = await page.evaluate(() => ({ log: state.log.length, exhausted: JSON.stringify(state.players.flatMap(p => p.heroStates.map(h => h.exhausted))), selected: document.querySelectorAll('.player-mat .character-card.selected').length }));
     draftOk.stateUnchanged = after.log === before.log && after.exhausted === before.exhausted;
     draftOk.marked = after.selected > 0;
     await shot('03-2p-quest-pick-1440');
-    await clickBtn('清空选择');
+    /* v0.15.80：浮层脚部的橡皮擦可见文案改为「重置选择」（aria-label 仍含「清空选择」）。 */
+    await clickBtn('重置选择');
   }
   note('pick-is-draft-only', draftOk.stateUnchanged === true && draftOk.marked === true, draftOk);
 
@@ -177,7 +186,7 @@ let browser;
     if (!pending.length) break;
     await page.locator('.player-tabs button').nth(pending[0]).click(); await page.waitForTimeout(200);
     const card = page.locator('.player-mat .character-card.selectable .card-face').first();
-    if (await card.count()) { await card.click(); await page.waitForTimeout(150); }
+    if (await card.count()) { await collapsePick(); await card.click(); await page.waitForTimeout(150); }
     const viewBefore = await page.evaluate(() => handView);
     if (!await clickQuest('commit')) break;
     /* 提交名单会弹「确认派遣」对话框（单人/多人一致）；不点确认则名单永远不会 confirmed，
@@ -203,7 +212,7 @@ let browser;
       if (pending.length) {
         await page.locator('.player-tabs button').nth(pending[0]).click(); await page.waitForTimeout(200);
         const card = page.locator('.player-mat .character-card.selectable .card-face').first();
-        if (await card.count()) { await card.click(); await page.waitForTimeout(150); }
+        if (await card.count()) { await collapsePick(); await card.click(); await page.waitForTimeout(150); }
         if (await clickQuest('commit')) continue;
       } else {
         if (await approve()) continue;

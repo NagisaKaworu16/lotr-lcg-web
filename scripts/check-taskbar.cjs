@@ -95,13 +95,21 @@ const WIDTH = arg('width', 1440);
   }
   add('能到达探险投入步骤', await page.evaluate(() => state.phase === 2 && state.questing?.step === 'commit'), await page.evaluate(() => state.phase + '/' + state.questing?.step));
 
+  /* v0.15.80：投入浮层自动弹出时会盖住桌面角色卡（非模态、从 decide-box 向上弹）。
+     点桌面卡前先点触发按钮收起浮层（纯视图操作，草稿不丢）。 */
+  const collapsePick = async () => {
+    const t = page.locator('.pick-trigger[aria-expanded="true"]').first();
+    if (await t.count()) { await t.click(); await page.waitForTimeout(200); return true; }
+    return false;
+  };
+
   // ---- 3. picking is a draft; execution waits for every player ------------
   await page.locator('.player-tabs button').nth(1).click();
   await page.waitForTimeout(250);
   const before = await page.evaluate(() => ({ log: state.log.length, exhausted: JSON.stringify(state.players.flatMap(p => p.heroStates.map(h => h.exhausted))), committed: JSON.stringify(state.players.flatMap(p => p.heroStates.map(h => !!h.committed))) }));
   const card = page.locator('.player-mat .character-card.selectable .card-face').first();
   add('投入步骤有可选角色', await card.count() > 0, `count=${await card.count()}`);
-  if (await card.count()) { await card.click(); await page.waitForTimeout(200); }
+  if (await card.count()) { await collapsePick(); await card.click(); await page.waitForTimeout(200); }
   const draft = await page.evaluate(() => ({ log: state.log.length, exhausted: JSON.stringify(state.players.flatMap(p => p.heroStates.map(h => h.exhausted))), committed: JSON.stringify(state.players.flatMap(p => p.heroStates.map(h => !!h.committed))), selected: document.querySelectorAll('.player-mat .table-card.selected').length }));
   add('点牌只产生草稿：日志/横置/已投入均不变', draft.log === before.log && draft.exhausted === before.exhausted && draft.committed === before.committed, `selected=${draft.selected}`);
   add('点牌后有金色选中标记', draft.selected > 0, `selected=${draft.selected}`);
@@ -113,7 +121,7 @@ const WIDTH = arg('width', 1440);
   add('提交后视图切到待提交玩家', mid.view === 0, `view=${mid.view}`);
 
   const card2 = page.locator('.player-mat .character-card.selectable .card-face').first();
-  if (await card2.count()) { await card2.click(); await page.waitForTimeout(150); }
+  if (await card2.count()) { await collapsePick(); await card2.click(); await page.waitForTimeout(150); }
   await clickQuest('commit');
   const ready = await page.evaluate(() => ({ locked: !!state.questing.deploymentLocked, committed: state.players.flatMap(p => p.heroStates.filter(h => h.committed).length).reduce((a, b) => a + b, 0), title: document.querySelector('.operation-title').innerText.replace(/\n/g, ' | '), chips: [...document.querySelectorAll('.op-chip')].map(x => x.textContent.trim()), approvals: (state.questing.deploymentApprovals || []).length, confirmButtons: document.querySelectorAll('.decide-box [data-quest="approveDeployment"]:not([disabled])').length }));
   add('两人都提交后仍不执行，进入二次确认', !ready.locked && ready.committed === 0, `locked=${ready.locked} committed=${ready.committed}`);

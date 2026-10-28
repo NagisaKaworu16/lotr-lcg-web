@@ -1,6 +1,6 @@
 /* Tabletop view: UI drafts never pay, exhaust, reveal, or bypass phase validation. */
 /* 界面版本徽标唯一来源：须与 CHANGELOG.md 最新条目标题一致（planning-dom-tests 有校验）。 */
-const APP_VERSION='v0.15.79';
+const APP_VERSION='v0.15.80';
 /* ── 决策面板（v0.15.62 弹窗 → v0.15.76 内联公共桌面）─────────────────
    需要玩家拍板的事不再用浮动弹窗（v0.15.73 的 .decide-layer/收起角标/Esc 全部退役）：
    内容整块内联在手牌区上方（v0.15.79 起，与开局保留/调度按钮同一位置——所有阶段的
@@ -124,9 +124,13 @@ const DecisionUI=(()=>{
    没有 Esc 与 place() 定位——面板在文档流里，随页面滚动，永不遮挡牌桌。 */
  function html(s,pid){
   const d=pending(s,pid);if(!d)return '';
+  /* v0.15.80：探险 commit 步骤的「投入角色」浮层与触发按钮渲染为 .decide-box 的
+     DOM 子节点（position:absolute 向上弹出，见 style.css 第 21 节）；
+     非 commit 语境 pickHTML 返回空串，decide-box 保持原样。 */
+  const pick=typeof QuestUI!=='undefined'&&QuestUI.pickHTML?QuestUI.pickHTML(s,pid):'';
   return `<section class="decide-box" role="region" aria-label="${esc(d.title)}">
    <div class="decide-head"><h2>${esc(d.title)}</h2></div>
-   <div class="decide-body">${d.body}</div>
+   <div class="decide-body">${d.body}</div>${pick}
   </section>`;
  }
  return {pending,html};
