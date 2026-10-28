@@ -1,0 +1,83 @@
+{
+  "ok": true,
+  "width": 1440,
+  "draw1": {
+    "before": 103,
+    "after": 104
+  },
+  "draw2": {
+    "before": 104,
+    "after": 105
+  },
+  "saved": {
+    "id": 104,
+    "round": 2,
+    "cards": [
+      {
+        "uid": 57,
+        "by": "玩家1"
+      },
+      {
+        "uid": 93,
+        "by": "玩家2"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "name": "对局已开始（有 state）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "推进到资源阶段后弹出抽牌浮层",
+      "ok": true,
+      "detail": "draw id 103 → 104"
+    },
+    {
+      "name": "浮层列出抽到的牌与费用",
+      "ok": true,
+      "detail": "资源阶段 · 抽到的牌 × 事件 #01021 中文卡图 · 本地 · 点击放大 共同事业 玩家1抽到 · 费用 0 事"
+    },
+    {
+      "name": "同一笔抽牌重复 render 不再弹",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "存档里确实留着那笔抽牌记录（复现前提）",
+      "ok": true,
+      "detail": "id=104 round=2"
+    },
+    {
+      "name": "强制刷新后不再自动弹抽牌浮层",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "刷新后存档内容未丢（同一条记录仍在 state 里）",
+      "ok": true,
+      "detail": "state.resourceDraw.id=104"
+    },
+    {
+      "name": "刷新后新一次的抽牌仍然会弹",
+      "ok": true,
+      "detail": "draw id 104 → 105"
+    },
+    {
+      "name": "点 × 可关闭浮层",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "约 4 秒后自动关闭",
+      "ok": true,
+      "detail": "出现后 4.2s 已消失"
+    },
+    {
+      "name": "无脚本错误",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}

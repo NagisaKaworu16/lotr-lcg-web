@@ -10969,7 +10969,7 @@ const WindowUI=(()=>{
 </script><script src="phase-log.js"></script><script>
 /* Tabletop view: UI drafts never pay, exhaust, reveal, or bypass phase validation. */
 /* 界面版本徽标唯一来源：须与 CHANGELOG.md 最新条目标题一致（planning-dom-tests 有校验）。 */
-const APP_VERSION='v0.15.84';
+const APP_VERSION='v0.15.85';
 /* ── 决策面板：一行触发条 + 非模态浮层（v0.15.81）─────────────────────
    形态演进：v0.15.62 浮动弹窗 → v0.15.76/79 内联公共桌面（常驻 96px 内容块）→ v0.15.81
    「一行触发条 + 非模态浮层」。用户报障「阶段窗口还在桌面上」：内联块把 .decide-box 撑到
@@ -11712,7 +11712,18 @@ function toast(t){$('#toast').textContent=t;$('#toast').style.display='block';cl
    直到下一个必须由玩家决定的地方（提交名单、选择防御者、要不要打牌……）。
    以前这些收尾挂在「结束阶段」按钮上，等于让玩家替引擎判断阶段做完了没有。 */
 function autoAdvance(){if(!state)return 0;try{return E.autoAdvance(state);}catch(e){return 0;}}
-function mutate(fn){let before=state?E.clone(state):null,logsBefore=before?before.log.length:0;try{fn();if(state){E.windows.run(state);autoAdvance();E.windows.run(state);}const seq=historyBase+history.length;history.push(before);logMarks.push({seq,before:logsBefore,after:state?state.log.length:0});if(history.length>80){history.shift();logMarks.shift();historyBase++;}save();render();}catch(e){state=before;toast(e.message);}}
+/* 本次操作新产生的 resourceDraw.id；null 表示「这次重绘不是刚抽完牌」。
+   只有 mutate 会写它，render() 消费一次即清空——刷新／切页签／撤销都不会重播旧抽牌。
+   声明放在 mutate 之前：mutate 体内要用它（虽然调用发生在脚本求值之后，仍避免 TDZ 隐患）。 */
+let pendingDrawId=null;
+function mutate(fn){let before=state?E.clone(state):null,logsBefore=before?before.log.length:0;try{fn();if(state){E.windows.run(state);autoAdvance();E.windows.run(state);}/* v0.15.85：抽牌浮层只汇报「这一次操作刚抽到的牌」。
+      以前是「状态里有一笔没展示过的抽牌就弹」，而 resourceDraw 会随存档落盘——
+      于是每次刷新都拿旧存档里那笔抽牌重新弹一遍（用户反馈「每次强制刷新都出现抽卡弹窗」）。
+      改成在 mutate 里比对前后 id：只有本条操作真的产生了新抽牌才排队展示，
+      刷新后 pendingDrawId 为 null，自然不弹；撤销回退也不会弹。 */
+   const rid=state&&state.resourceDraw?state.resourceDraw.id:null,prev=before&&before.resourceDraw?before.resourceDraw.id:null;
+   pendingDrawId=rid!==null&&rid!==prev?rid:null;
+   const seq=historyBase+history.length;history.push(before);logMarks.push({seq,before:logsBefore,after:state?state.log.length:0});if(history.length>80){history.shift();logMarks.shift();historyBase++;}save();render();}catch(e){state=before;toast(e.message);}}
 function btn(text,action,args='',cls='',disabled=false){return `<button class="${cls}" data-action="${action}" ${args} ${disabled?'disabled':''}>${text}</button>`;}
 function empty(t='此区域暂无卡牌'){return `<div class="empty">${t}</div>`;}
 const types={Enemy:'敌人',Location:'地点',Treachery:'诡计',Objective:'目标'};
@@ -12013,10 +12024,14 @@ async function handleChooser(b){const a=b.dataset.action,c=deckChooser;if(!c)ret
 }
 let lastDrawToast=0;let toastNode=null;
 /* v0.15.68：资源阶段抽牌展示浮层——约4秒自动关闭，点浮层外或 × 手动关闭。
-   用普通固定定位元素而不是原生 dialog：不阻塞决策弹窗，也不影响 modal 层级。 */
+   用普通固定定位元素而不是原生 dialog：不阻塞决策弹窗，也不影响 modal 层级。
+   v0.15.85：判据从「有没展示过的 resourceDraw」改为「本次操作刚产生的新抽牌」，
+   否则存档里的旧抽牌会在每次刷新时重弹。 */
 function showDrawToast(){
  if(toastNode){toastNode.remove();toastNode=null;}
- const rd=state&&state.resourceDraw;if(!rd||rd.id===lastDrawToast)return;lastDrawToast=rd.id;
+ const rd=state&&state.resourceDraw;
+ if(!rd||rd.id===lastDrawToast||rd.id!==pendingDrawId)return;
+ lastDrawToast=rd.id;pendingDrawId=null;
  const all=()=>state.players.flatMap(p=>p.hand);
  const items=(rd.cards||[]).map(d=>{const c=all().find(x=>x.uid===d.uid);return c?{m:E.planning.data(state,c),by:d.by}:null;}).filter(Boolean);if(!items.length)return;
  const d=document.createElement('div');d.className='draw-toast';
