@@ -1,6 +1,6 @@
 {
  "width": 1440,
- "at": "2026-10-28T08:39:47.826Z",
+ "at": "2026-10-28T09:30:19.055Z",
  "ok": true,
  "checks": [
   {
@@ -11,7 +11,7 @@
   {
    "name": "底部玩家区位于公共桌面之下",
    "ok": true,
-   "detail": "196 → 465"
+   "detail": "166 → 465"
   },
   {
    "name": "右侧牌堆与日志同栏且靠右",
@@ -36,7 +36,7 @@
   {
    "name": "操作栏标题显示当前任务与阶段",
    "ok": true,
-   "detail": "打出卡牌或使用行动 | MIDDLE-EARTH EXPEDITION · V0.15.85 | 结算计划阶段结束"
+   "detail": "打出卡牌或使用行动 | MIDDLE-EARTH EXPEDITION · V0.15.87 | 结算计划阶段结束"
   },
   {
    "name": "能到达探险投入步骤",
@@ -81,7 +81,7 @@
   {
    "name": "操作栏提示二次确认进度",
    "ok": true,
-   "detail": "名单已就绪 · 等待二次确认（0/2） | 玩家1 · 待确认 | 玩家2 · 待确认 | MIDDLE-EARTH EXPEDITION · V0.15.85 :: 玩家1 · 待确认 | 玩家2 · 待确认"
+   "detail": "名单已就绪 · 等待二次确认（0/2） | 玩家1 · 待确认 | 玩家2 · 待确认 | MIDDLE-EARTH EXPEDITION · V0.15.87 :: 玩家1 · 待确认 | 玩家2 · 待确认"
   },
   {
    "name": "二次确认收成单颗「确认派遣」",
@@ -116,7 +116,7 @@
   {
    "name": "投入后的强制效果被接管为当前任务",
    "ok": true,
-   "detail": "tasks=1 dock=选择强制效果目标 | MIDDLE-EARTH EXPEDITION · V0.15.85"
+   "detail": "tasks=1 dock=选择强制效果目标 | MIDDLE-EARTH EXPEDITION · V0.15.87"
   },
   {
    "name": "无脚本错误",

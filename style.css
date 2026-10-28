@@ -1129,7 +1129,7 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
  .player-mat .hand-zone{overflow:visible}
 }
 @media(max-height:800px){
- .player-mat .hand-zone{--hc:96px}
+ .player-mat .hand-zone{--hc:84px}
  .player-mat .hand-card{width:70px;flex:0 0 70px}
  .player-mat .hand-card+.hand-card{margin-left:-40px}
  .player-mat .hand-zone{padding-top:2px;padding-bottom:4px}
@@ -1884,3 +1884,76 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
  .draft-stats{gap:6px}
  .draft-chip{padding:3px 9px 3px 3px}
 }
+
+/* ── 22. 玩家区瘦身：行数不再随状态增加（v0.15.87）─────────────────────
+   用户实测两种「手牌消失」：
+     · 打出 1 张附属 → 附属独立行 184px，手牌被推到 y=865（900 高视口外）；
+     · 再交战 1 名敌人 → 交战行 151px，角色行与手牌一起消失（手牌 y=1021）。
+   根因不是高度不够，而是「玩家区是固定高度的窄带，而里面的行数会随状态增加」。
+   两条结构性措施（都不再占用新的一行）：
+     1. 附属挂到宿主卡右上角（角标 + 迷你卡图，见 desktop-ui.js attachChips）；
+     2. 交战区并入角色行（同一水平滚动条，中间一道竖分隔），敌人卡不再单独开场。
+   再补一条兜底：手牌永远贴底（margin-top:auto），角色行吃剩余高度并在行内滚动，
+   任何情况下都不会出现「手牌被裁到看不见、又滚不到」。 */
+
+/* 22a. 附属徽章：挂在卡名右边的一枚 15×19 迷你卡图，点开看牌 / 当前窗口能用就直接触发能力。
+   为什么不做卡角浮标：角色卡四角都被代币占着（属性代币在上、状态代币在下），浮标必然
+   压住数值；挂在卡名同一行则完全不吃额外行高（只把这一行抬高 6px）。 */
+.player-mat .own-characters .character-card .table-card-caption{position:relative;padding-right:18px}
+/* 第 746 行有「.character-card .table-card-caption span{display:none}」（角色卡名下面的
+   资源/状态行在玩家区不显示），它的特异性是 0,2,1，光写 .attach-stack 会被它压成
+   display:none（徽章宽度 0、像没渲染）。这里按 0,4,1 显式点名把它救回来。 */
+.player-mat .own-characters .character-card .table-card-caption>.attach-stack{display:flex;position:absolute;right:-1px;top:-3px;gap:2px;z-index:5}
+.attach-chip{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;width:15px;height:19px;
+ padding:0;border:1px solid #c1a874;border-radius:3px;overflow:hidden;background:#fffdf6;
+ box-shadow:0 1px 2px #1e2f2640;cursor:pointer}
+.attach-chip img{display:block;width:100%;height:100%;object-fit:cover}
+.attach-chip:hover,.attach-chip:focus-visible{border-color:#8f7031;box-shadow:0 0 0 2px #c9a24e55,0 1px 2px #1e2f2640}
+.attach-chip.is-ready{border-color:#c9a24e;box-shadow:0 0 0 2px #e8c47380,0 1px 2px #1e2f2640}
+
+/* 22b. 交战区并入角色行：一条竖虚线 + 竖排「交战」把两组卡分开，共用同一条横向滚动。 */
+.own-characters>.row-divider{display:flex;align-items:center;justify-content:center;align-self:stretch;
+ flex:0 0 18px;width:18px;margin:0 5px 0 3px;border-left:1px dashed #cfd3c6}
+.own-characters>.row-divider>span{writing-mode:vertical-rl;font-size:9.5px;letter-spacing:1.5px;line-height:1;
+ color:#8a9184;background:#f7f5ea;padding:6px 1px;border-radius:2px}
+/* 敌人卡进玩家区后：牌文折叠块隐藏（公开牌桌里同样隐藏，展开会撑高 20px），
+   文字只留「攻击/防御 + 生命」，查看按钮学角色卡浮到右上角、悬停才出现，不占行高。 */
+.player-mat .own-characters .encounter-card>details{display:none}
+.player-mat .own-characters .encounter-card .table-card-caption span{font-size:10px;line-height:1.35}
+.player-mat .own-characters .encounter-card .table-card-caption{max-height:44px;overflow:hidden}
+/* 说明行结构是 <b>卡名</b><span>攻/防/生命</span><span>暗影 N · 已翻开 N</span>：
+   暗影计数在「已交战」状态下用不上，玩家区里只保留前两段，第三段直接不显示。 */
+.player-mat .own-characters .encounter-card .table-card-caption>span+span{display:none}
+.player-mat .own-characters .encounter-card .inspect-card{position:absolute;right:1px;top:1px;z-index:4;opacity:0;transition:opacity .12s}
+.player-mat .own-characters .encounter-card .state-tokens{position:absolute;left:1px;bottom:46px;--tk:20px;padding:0}
+.player-mat .own-characters .encounter-card:hover .inspect-card,
+.player-mat .own-characters .encounter-card:focus-within .inspect-card{opacity:1}
+
+/* 22c. 高度兜底：手牌贴底固定，角色行吃剩余并内部滚动。
+   手牌行的 min-height 必须清掉：底部固定那条 `min-height:calc(96px*600/424+10px)`
+   （≈146px）比 --hc 推导出的 flex-basis 还大，矮屏下会多占 16~20px，
+   而这 20px 正是角色卡被裁掉的高度。 */
+.player-mat .bottom-deck>.hand-zone{margin-top:auto;flex:0 0 auto;min-height:0}
+.player-mat .bottom-deck>.own-characters{flex:1 1 auto;min-height:96px;overflow:auto}
+.player-mat .bottom-deck>.own-attachments{flex:0 1 auto;min-height:0}
+
+/* 22e. 矮屏（≤820 高）玩家区原本固定 356px，加上「附属+交战」后角色行只剩 96px。
+   现在行数不再增加、手牌也不再额外吃 20px（见 22c 的 min-height:0），预算重新够用：
+   标题 18 + 模块标题 26 + 控制条 29 + 角色行 146 + 手牌 122 ≈ 341。
+   只在单屏布局生效（≥1280 宽）；更窄时页面本身就是纵向滚动，不需要这条。 */
+@media(min-width:1280px) and (max-height:820px){
+ /* 768 高这一档，玩家区的三段预算是：标题 18 + 模块标题 26 + 控制条 29 + 角色行 155
+   + 手牌 104 = 332，再加敌人卡两行说明的空间，需要 ≈372（原有 356 只差 16）。
+   这一档缩卡面而不是抢牌桌：角色 76 宽（卡面 108）、敌人 84 宽（说明留两行），
+   手牌 84 高；牌桌区仍有 ≈206px。 */
+ .tabletop-layout{grid-template-rows:auto minmax(0,1fr) 372px}
+ .player-mat .own-characters .table-card{width:76px;flex:0 0 76px}
+ .player-mat .own-characters .encounter-card{width:84px;flex:0 0 84px}
+ .player-mat .own-characters .encounter-card .table-card-caption{max-height:27px}
+ /* 矮屏那条 `.hand-zone{flex:0 0 126px;height:126px}` 是写死的，--hc 改了也压不下去；
+    这里按 --hc 重新推导（+20 = 上 12 下 6 + 边框与分隔线）。 */
+ .player-mat .bottom-deck>.hand-zone{flex:0 0 calc(var(--hc) + 20px);height:auto}
+}
+/* 22d. 「本阶段说明」在桌面是纯冗余（右栏窗口竖轴已经把当前窗口与后续时机写全），
+   常驻一行 26px 却把牌桌挤掉同样高度。整块去掉。 */
+.phase-hint-wrap{display:none}
