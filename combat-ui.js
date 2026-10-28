@@ -2,6 +2,47 @@ const CombatUI=(()=>{
  const E=ScenarioEngine,T=E.combat,R=E.planning,Q=E.questing,esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const b=(label,kind,args='',disabled=false)=>`<button data-action="combatFlow" data-combat="${kind}" ${args} ${disabled?'disabled':''}>${esc(label)}</button>`;
  const names=(s,ids)=>ids.map(uid=>R.find(s,uid)?.meta.nameZh||'#'+uid).join('、')||'无人防御';
+ /* ── 防御／攻击的选人网格（v0.15.83）────────────────────────────────
+    病灶：v0.15.81 起决策面板是覆盖桌面的非模态浮层，而 defense/attack 的选人方式
+    仍是「点桌面上的角色卡」——浮层一开，角色卡全被盖住，玩家只看到一句
+    「点击角色暂定防御」却找不到任何角色可点（用户反馈截图：面板里只有文字与提交按钮）。
+    修法：与探险投入角色共用同一套缩略图视觉（.pick-panel/.pick-grid/.qp-card），
+    草稿仍走 DesktopUI.draft 的既有路径——点缩略图 = 点桌面卡，桌面卡与缩略图双向同步。 */
+ const qtk=(type,n)=>`<span class="tk tk-${type}"><img src="assets/tokens/${type}.png" alt=""><b>${n}</b></span>`;
+ function faceImg(code){const rec=ImageLibrary.by[code],url=rec?ImageLibrary.safeUrl(rec.faces?.B||rec.imageUrl):null;return url?`<img src="${esc(url)}" alt="" loading="lazy" referrerpolicy="no-referrer">`:'<span class="qp-noart">卡图暂缺</span>';}
+ function thumb(s,c,m,label){
+  const v=R.stats(s,c.uid),st=c.state||{},selected=DesktopUI.draft(s,m).ids.includes(c.uid);
+  const exhausted=!!st.exhausted,gone=!!st.destroyed;
+  const cls=['qp-card',selected?'is-selected':'',exhausted?'is-exhausted':'',gone?'is-gone':''].filter(Boolean).join(' ');
+  const name=c.meta.nameZh||c.meta.name;
+  const text=`${name}：攻击 ${v.attack||0} 防御 ${v.defense||0} 生命 ${v.health||0}，${gone||exhausted?'当前不能选择':selected?'点击移出名单':'点击加入名单'}`;
+  return `<div class="${cls}" data-card-uid="${c.uid}"><button class="card-face" data-action="desktop" data-desktop="pick" data-uid="${c.uid}" data-player="${c.controller}" aria-pressed="${selected}"${gone||exhausted?' aria-disabled="true"':''} aria-label="${esc(label+text)}">${faceImg(c.meta.code)}${selected?'<span class="selection-mark">已选</span>':''}</button><button class="qp-view" data-action="images" data-image-action="open" data-code="${esc(c.meta.code)}" aria-label="查看${esc(name)}详情">查看</button><span class="qp-name" title="${esc(name)}">${esc(name)}</span><div class="card-tokens attr-tokens">${qtk('attack',v.attack||0)+qtk('defense',v.defense||0)+qtk('hitPoints',v.health||0)}</div></div>`;
+ }
+ /* 攻击目标（敌人）的缩略图：点它走 data-desktop="target"，与桌面敌人卡同一条路径。 */
+ function targetThumb(s,e,m){
+  const v=R.stats(s,e.uid),selected=DesktopUI.draft(s,m).target===e.uid,name=e.meta.name;
+  return `<div class="qp-card ${selected?'is-selected':''}" data-card-uid="${e.uid}"><button class="card-face" data-action="desktop" data-desktop="target" data-uid="${e.uid}" aria-pressed="${selected}" aria-label="攻击目标 ${esc(name)}：攻击 ${v.attack||0} 防御 ${v.defense||0} 生命 ${v.health||0}，${selected?'当前目标':'点击选为目标'}">${faceImg('enc-'+e.meta.id)}${selected?'<span class="selection-mark">目标</span>':''}</button><button class="qp-view" data-action="images" data-image-action="open" data-code="${esc('enc-'+e.meta.id)}" aria-label="查看${esc(name)}详情">查看</button><span class="qp-name" title="${esc(name)}">${esc(name)}</span><div class="card-tokens attr-tokens">${qtk('attack',v.attack||0)+qtk('defense',v.defense||0)+qtk('hitPoints',v.health||0)}</div></div>`;
+ }
+ /* 浮层体里的选人段；只在引擎确实停在防御选择／攻击选择且尚无暂定方案时给。 */
+ function popExtra(s,pid){
+  if(!s||s.phase!==5||!s.combat)return '';
+  if(s.combat.completed||s.combat.proposal)return '';
+  const m=DesktopUI.mode(s,pid);
+  if(!m||(m.kind!=='defense'&&m.kind!=='attack'))return '';
+  const d=DesktopUI.draft(s,m);
+  if(m.kind==='defense'){
+   const list=T.defenders(s);
+   const head=`<div class="pick-bar"><span class="pick-bar-title">选择防御者 · ${esc(s.players[m.player].name)}</span><span class="pick-note">不选表示无人防御；普通防御至多 1 名</span></div>`;
+   const grid=list.length?`<div class="pick-grid">${list.map(c=>thumb(s,c,m,'防御者 ')).join('')}</div>`:'<p class="pick-empty">没有可防御的角色（可能都已横置或离场）</p>';
+   return `<div class="pick-panel combat-pick" role="group" aria-label="选择防御者">${head}${grid}</div>`;
+  }
+  const targets=T.attackTargets(s,m.player);
+  let body=`<div class="pick-bar"><span class="pick-bar-title">第一步 · 选择攻击目标</span></div>`+(targets.length?`<div class="pick-grid">${targets.map(e=>targetThumb(s,e,m)).join('')}</div>`:'<p class="pick-empty">没有合法攻击目标</p>');
+  if(d.target===null)body+=`<div class="pick-bar"><span class="pick-bar-title">第二步 · 选择参与攻击的角色</span></div><p class="pick-empty">先选目标敌人，再选攻击角色</p>`;
+  else{const list=T.attackers(s,m.player,d.target);
+   body+=`<div class="pick-bar"><span class="pick-bar-title">第二步 · 选择参与攻击的角色</span><span class="pick-note">已选 ${d.ids.length} 名</span></div>`+(list.length?`<div class="pick-grid">${list.map(c=>thumb(s,c,m,'攻击者 ')).join('')}</div>`:'<p class="pick-empty">该目标没有可派出的角色</p>');}
+  return `<div class="pick-panel combat-pick" role="group" aria-label="选择攻击目标与角色">${body}</div>`;
+ }
  function panel(s,pid){if(s.phase!==5||!s.combat)return '';const x=s.combat,ps=s.players.filter(p=>!p.eliminated),actor=ps.some(p=>p.id===pid)?pid:ps[0]?.id,sp=R.choiceSpec(s),task=T.spec(s),a=x.attack;let body='';
   if(x.completed)return '<section class="panel deck-valid"><h2>阶段6 · 战斗阶段验收完成</h2><p>暗影与阶段结束效果已处理，角色保持横置与伤害状态。可进入第七阶段刷新。</p></section>';
   if(sp)body+=`<div class="notice">${esc(sp.message)} <button data-action="planning" data-plan="choice" data-id="${sp.task.id}">处理卡牌响应</button></div>`;
@@ -32,5 +73,6 @@ const CombatUI=(()=>{
   if(k==='choice'){const sp=T.spec(state);if(!sp||sp.task.id!==id){toast('选择已过期');return;}const v=await choose(sp.message,sp.fields.map(f=>`<label>${esc(f.label)}<select id="combat-${f.key}">${f.options.map(o=>`<option value="${o.value}">${esc(o.label)}</option>`).join('')}</select></label>`).join(''),d=>Object.fromEntries(sp.fields.map(f=>[f.key,d.querySelector('#combat-'+f.key).value])));if(v)mutate(()=>T.choose(state,id,v));return;}
   mutate(()=>{if(k==='enemy')T.propose(state,pid,'enemy',uid);if(k==='endAttacks')T.propose(state,pid,'attack',null);if(k==='cancel')T.cancel(state);if(k==='approve')T.approve(state,pid);if(k==='unapprove')T.unapprove(state,pid);if(k==='respond')T.respond(state,el.dataset.value);if(k==='cancelShadow')T.cancelShadow(state,el.dataset.value);if(k==='resolveShadow')T.resolveShadow(state);if(k==='pass')Q.pass(state,pid);if(k==='unpass')Q.unpass(state,pid);if(k==='move'){E.passWindow(state);T.move(state);}if(k==='cancelAction')Q.cancelAction(state,pid,id);if(k==='approveActions')Q.approveActions(state,pid);if(k==='unapproveActions')Q.withdrawActionApproval(state,pid);});
  }
- return {panel,handle};
+function selectTitle(m){return m.kind==='attack'?'战斗 · 选择攻击目标与角色':'战斗 · 选择防御角色';}
+ return {panel,handle,popExtra,selectTitle};
 })();

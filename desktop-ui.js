@@ -1,6 +1,6 @@
 /* Tabletop view: UI drafts never pay, exhaust, reveal, or bypass phase validation. */
 /* 界面版本徽标唯一来源：须与 CHANGELOG.md 最新条目标题一致（planning-dom-tests 有校验）。 */
-const APP_VERSION='v0.15.82';
+const APP_VERSION='v0.15.83';
 /* ── 决策面板：一行触发条 + 非模态浮层（v0.15.81）─────────────────────
    形态演进：v0.15.62 浮动弹窗 → v0.15.76/79 内联公共桌面（常驻 96px 内容块）→ v0.15.81
    「一行触发条 + 非模态浮层」。用户报障「阶段窗口还在桌面上」：内联块把 .decide-box 撑到
@@ -63,7 +63,12 @@ const DecisionUI=(()=>{
    return WindowUI.panel(s)||'';
   }catch(e2){ return ''; }
  }
- function selectTitle(m){return m.kind==='attack'?'选择攻击目标':'选择要处理到的角色';}
+ function selectTitle(m){
+ /* v0.15.83：防御／攻击的选择面板标题原来统一叫「选择要处理到的角色」，
+    玩家看不出这是防御还是攻击。战斗模块给更准确的两条文案。 */
+ try{if(typeof CombatUI!=='undefined'&&CombatUI.selectTitle)return CombatUI.selectTitle(m);}catch(e){}
+ return m.kind==='attack'?'选择攻击目标':'选择要处理到的角色';
+}
  /* 每个阶段挑「这块面板该不该给玩家看」。
    判据只有一条：这一步引擎自己能不能走完？
      · 能（如探险已结算完、只差一句「点结束阶段」）→ 不给面板，操作条只留摘要；
@@ -139,7 +144,16 @@ const DecisionUI=(()=>{
    .replace(/\d+ 名 · 意志 \d+/g,'N 名 · 意志 M')
    .replace(/\bchecked\b/g,'')
    .replace(/data-state="on"/g,'data-state=""')
-   .replace(/提交空名单/g,'提交名单');
+   .replace(/提交空名单/g,'提交名单')
+   /* v0.15.83：防御／攻击的草稿数字与「有没有新决策」无关，同样要归一。
+      不归一的话，关掉浮层后在桌面上点一张角色卡，key 就变一次、浮层自己弹回来
+      （正好盖住玩家要点的下一张卡）。 */
+   .replace(/暂定防御 \d+/g,'暂定防御 N')
+   .replace(/暂定基础攻击 \d+/g,'暂定基础攻击 N')
+   .replace(/敌人当前攻击 \d+/g,'敌人当前攻击 N')
+   .replace(/目标防御 \d+/g,'目标防御 N')
+   .replace(/基础伤害预估 \d+/g,'基础伤害预估 N')
+   .replace(/已选 \d+ 名/g,'已选 N 名');
  }
  /* 「玩家真的能点」的按钮：<button> 且不带 disabled。缩略图的 aria-disabled 不算——
     那是「这张卡此刻不能选」，不是「这一步没有要做的事」。 */
@@ -166,9 +180,13 @@ const DecisionUI=(()=>{
   if(!d){pop={key:'',open:false};return '';}
   syncKey(s,d);
   const extra=typeof QuestUI!=='undefined'&&QuestUI.popExtra?QuestUI.popExtra(s,pid):'';
+  /* v0.15.83：战斗的防御／攻击选人也做成缩略图网格（浮层会盖住桌面角色卡）。
+     两个 popExtra 互斥（一个看 phase===2，一个看 phase===5），留一个兜底以防将来撞车。 */
+  const cExtra=typeof CombatUI!=='undefined'&&CombatUI.popExtra?CombatUI.popExtra(s,pid):'';
+  const pickExtra=extra||cExtra;
   const hint=typeof QuestUI!=='undefined'&&QuestUI.pickHint?QuestUI.pickHint(s,pid):'';
   const open=!!pop.open;
-  return `<section class="decide-box" role="region" aria-label="${esc(d.title)}">${triggerHTML(d,actionable(d.body)?'todo':'info',hint,open)}${open?popHTML(d,extra):''}</section>`;
+  return `<section class="decide-box" role="region" aria-label="${esc(d.title)}">${triggerHTML(d,actionable(d.body)?'todo':'info',hint,open)}${open?popHTML(d,pickExtra):''}</section>`;
  }
  /* 开合是纯视图操作：不 mutate、不入撤销历史。开启把焦点交给浮层标题（tabindex=-1），
     关闭交回触发条——键盘玩家关掉之后不该被扔回页首。 */
@@ -265,7 +283,7 @@ const DesktopUI=(()=>{
      defense/attack 的 preview 与提交按钮保持原样，不受影响。 */
   if(m.kind==='quest')return `<div class="table-selection"><b>${esc(s.players[m.player].name)} · 点击角色暂定投入</b><p>${selected.length?'本人已选 '+selected.length+' 名':'本人未选角色'}</p><div class="actions">${b('清空选择','clear')}</div></div>`;
   const submit=b(m.kind==='defense'?'提交暂定防御名单':'提交暂定攻击名单','submit','',m.kind==='attack'&&(!d.target||!selected.length));
-  return `<div class="table-selection"><b>${esc(s.players[m.player].name)} · ${m.kind==='defense'?'点击角色暂定防御；不选表示无人防御':'先点敌人，再点参与攻击的角色'}</b><p aria-live="polite">${esc(preview)} · 已选 ${selected.length} 名</p><div class="actions">${submit}${b('清空选择','clear')}${m.kind==='attack'?`<button data-action="combatFlow" data-combat="endAttacks" data-player="${m.player}">暂定结束我的攻击</button>`:''}</div><p class="small muted">这里只暂定名单。全员二次确认后才横置、支付并执行。</p></div>`;
+  return `<div class="table-selection"><b>${esc(s.players[m.player].name)} · ${m.kind==='defense'?'在浮层内点选角色暂定防御；不选表示无人防御':'先选目标敌人，再选参与攻击的角色'}</b><p aria-live="polite">${esc(preview)} · 已选 ${selected.length} 名</p><div class="actions">${submit}${b('清空选择','clear')}${m.kind==='attack'?`<button data-action="combatFlow" data-combat="endAttacks" data-player="${m.player}">暂定结束我的攻击</button>`:''}</div><p class="small muted">这里只暂定名单。全员二次确认后才横置、支付并执行。</p></div>`;
  }
  function next(s){const x=R.context(s),done=x?.completed;let label='',disabled=false;
  if(s.status==='won'||s.status==='lost')return `<span class="badge">${s.status==='won'?'剧本已结束 · 见上方结算':'远征已结束 · 见上方结算'}</span>`;
