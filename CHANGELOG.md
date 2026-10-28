@@ -1,3 +1,11 @@
+# v0.15.82 · 「放弃本窗口行动」合并进主推进按钮：点一下就全队让过（2026-10-28）
+
+- **用户疑问**：「窗口中的放弃本窗口行动到底是什么意思，为什么我每次都要点了这个才能开始选择投入角色」。查明：探险阶段在派遣(commit)之前有一个规则行动窗口(beforeCommit)，引擎 `move()` 硬校验「每位玩家须确认放弃本窗口行动」，于是单人局也要「点放弃 → 再点开始投入」两步；战斗/旅行/遭遇/刷新的行动窗口同一形态（`requirePassed`/`beginChecks`/UI 的 allPassed 禁用条件）。
+- **改法**：新增引擎函数 `passWindow(s)`（engine.js，随 api 导出）——把当前阶段所有存活玩家直接记为已让过，**不经过 `passAction` 的窗口校验**（`afterStaging` 这类 framework 步骤窗口是关着的，passAction 会拒绝）；有暂定行动未确认或 `actionLocked` 时返回 false 拒绝代点。五个阶段的「主推进按钮」点击时先调它，再调各自的 move/finish/beginChecks。
+- **UI 同步**：`quest-ui.js`（beforeCommit 紧凑面板 + 详细模式行动窗口）、`combat-ui.js`、`travel-ui.js`、`encounter-ui.js`、`refresh-ui.js` 的主按钮 disabled 条件去掉 `!全员已放弃`——只剩「有暂定行动／行动已锁定」才禁用；文案改成「准备好后直接点下方按钮，全队即视为放弃本窗口」。逐人「X：放弃本窗口行动／取消放弃」按钮**保留**（精细控制与热座场景仍可用），只是不再是必经步骤。
+- **行为对比**：单人局 beforeCommit 从「点放弃 → 点开始投入」（2 次）变为「点开始投入」（1 次）；2 人热座同样一次点击即替全员放弃并进入派遣（`finalPasses` 由 `move` 清空，符合原有语义）。
+- **测试**：新增 `pass-window-tests.cjs` 4 项（beforeCommit 一次点击进派遣且主按钮不 disabled、有暂定行动时主按钮禁用且 `passWindow` 拒绝代点、passWindow 对探险/战斗/刷新三阶段都补齐全员让过、窗口关闭的 afterStaging 也能让过并推进）。CI 489 → 493。
+
 # v0.15.81 · 决策面板统一为「一行触发条 + 非模态浮层」：全部阶段需要玩家操作时自动弹出（2026-10-27）
 
 - **用户报障**：「为什么阶段窗口还在桌面上，之前的要求不是作为弹窗显示吗」。实测 1440×950 探险 beforeCommit：`.decide-box` = 963×96px，`.decide-body` 被 flex 压到 44px 内滚——v0.15.79 把整块面板内联到手牌区上方后，桌面上永远躺着一扇 96px 的窗。

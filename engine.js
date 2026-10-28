@@ -341,6 +341,20 @@ function passAll(s){
  for(const p of live(s))if(!pl.finalPasses.includes(p.id))P2.passAction(s,p.id);
  return true;
 }
+/* 界面主推进按钮专用：把「全队已让过本窗口」直接记上，不做 passAction 的窗口校验
+   （afterStaging 这类 framework 步骤窗口是关着的，passAction 会拒绝）。
+   语义：玩家点「开始投入角色／继续战斗／结算刷新…」本身就代表「大家都不再行动了」，
+   所以他不必先逐个点一遍「放弃本窗口行动」。返回是否全员已让过。
+   有暂定行动待确认或行动已锁定时不替玩家让过（主按钮此时也应禁用）。 */
+function passWindow(s){
+ const c=s.phase===2?s.questing:s.phase===3?s.traveling:s.phase===4?s.encountering:s.phase===5?s.combat:s.phase===6?s.refreshing:null;
+ if(!c)return false;
+ if(c.plannedActions?.length||c.actionLocked)return false;
+ const ids=s.players.filter(p=>!p.eliminated).map(p=>p.id);
+ if(!Array.isArray(c.finalPasses))c.finalPasses=[];
+ for(const id of ids)if(!c.finalPasses.includes(id))c.finalPasses.push(id);
+ return ids.every(id=>c.finalPasses.includes(id));
+}
 /* 一次「结束阶段」能推进的最大步数：够走完结算 + 换卡 + 进阶段，又不会失控。 */
 const END_STEPS=12;
 /* 阶段收尾：把当前阶段该结的都结掉，然后离开本阶段。
@@ -506,7 +520,7 @@ function questDone(s){
  return ok;
 }
 function markQuestDone(s){if(s.phase===2&&!gate(s))s.questDoneRound=s.round;}
-const api={refreshing:P7,combat:P6,encountering:P5,traveling:P4,questing:P3,planning:P2,questDone,markQuestDone,endPhase,autoAdvance,closeWindow,passAll,openingChoice,startScenario,setupRevealStep,settleSetupCard,setupCancelOptions,setupCancel,resourcePhase,drawPlayer,extraShadow,resolveQuest,D,byId,phases,create,quest,gate,threat,stage,addProgress,advance,travel,engage,encounterChecks,defeat,shadows,revealShadows,returnEnemy,claim,returnObjective,nextPhase,resolve,rescue,questFailure,adjustThreat,clone,log};
+const api={refreshing:P7,combat:P6,encountering:P5,traveling:P4,questing:P3,planning:P2,questDone,markQuestDone,endPhase,autoAdvance,closeWindow,passAll,passWindow,openingChoice,startScenario,setupRevealStep,settleSetupCard,setupCancelOptions,setupCancel,resourcePhase,drawPlayer,extraShadow,resolveQuest,D,byId,phases,create,quest,gate,threat,stage,addProgress,advance,travel,engage,encounterChecks,defeat,shadows,revealShadows,returnEnemy,claim,returnObjective,nextPhase,resolve,rescue,questFailure,adjustThreat,clone,log};
 const WindowFactory=typeof WindowRulesFactory!=='undefined'?WindowRulesFactory:require('./window-engine.js');api.windows=WindowFactory(api);
 /* 阶段规则：完成判定（纯函数，UI 与「结束阶段」共用）+ 结束阶段入口。 */
 const PhaseFactory=typeof PhaseRulesFactory!=='undefined'?PhaseRulesFactory:require('./phase-engine.js');api.phaseRules=PhaseFactory(api);return api;
