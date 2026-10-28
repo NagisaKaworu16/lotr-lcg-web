@@ -40,22 +40,38 @@ let browser;
   /* v0.15.70：派遣面板就地渲染在手牌区「结束阶段」同一块（.decide-box），
      不再是操作条里的一块；三处都要找。 */
   const PANEL = ':is(.operation-content, .decide-box, .planning-strip)';
+  /* v0.15.81：决策面板 =「一行触发条 + 非模态浮层」。面板内容只在浮层打开时存在于 DOM：
+     需要玩家操作时自动弹出，但点桌面/切人/点别处都会按「点外部」收起。
+     所以「找不到控件就先把浮层打开再找一次」——触发条（.decide-trigger）是唯一把手。 */
+  const openDecide = async () => {
+    const t = page.locator('.decide-trigger[aria-expanded="false"]').first();
+    if (await t.count()) { await t.click(); await page.waitForTimeout(180); return true; }
+    return false;
+  };
+  const findIn = async (sel, text) => {
+    const q = text ? page.locator(`${PANEL} ${sel}`, { hasText: text }) : page.locator(`${PANEL} ${sel}`);
+    let el = q.first();
+    if (!await el.count()) { if (!await openDecide()) return null; el = q.first(); }
+    if (!await el.count()) return null;
+    return el;
+  };
   const clickBtn = async text => {
-    const el = page.locator(`${PANEL} button:not([disabled])`, { hasText: text }).first();
-    if (!await el.count()) return false;
+    const el = await findIn('button:not([disabled])', text);
+    if (!el) return false;
     await el.click(); idle = 0; await page.waitForTimeout(280); return true;
   };
   /* 派遣的提交／二次确认收成 data-quest 上的唯一主按钮（文字会随状态变，不能靠文字定位）。 */
   const clickQuest = async k => {
-    const el = page.locator(`${PANEL} [data-quest="${k}"]:not([disabled])`).first();
-    if (!await el.count()) return false;
+    const el = await findIn(`[data-quest="${k}"]:not([disabled])`);
+    if (!el) return false;
     await el.click(); idle = 0; await page.waitForTimeout(300); return true;
   };
   /* v0.15.70：派遣主按钮收成 data-quest，但战斗的「二次确认」在 combat-ui.js 里走 data-combat。
      原先按文案「二次确认」匹配的通用写法被改成只认 data-quest，战斗路径因此点不到——这里两类都认。 */
   const approve = async () => {
     for (const sel of ['[data-combat="approve"]', '[data-quest="approveDeployment"]']) {
-      const el = page.locator(`${PANEL} ${sel}:not([disabled])`).first();
+      let el = page.locator(`${PANEL} ${sel}:not([disabled])`).first();
+      if (!await el.count()) { await openDecide(); el = page.locator(`${PANEL} ${sel}:not([disabled])`).first(); }
       if (await el.count()) { await el.click(); idle = 0; await page.waitForTimeout(300); return true; }
     }
     return false;
@@ -70,7 +86,11 @@ let browser;
      v0.15.77：扫描范围扩到整个 PANEL——战斗响应窗口等选项在 .decide-box 里，
      只扫 .operation-content 会漏点导致 stall（2026-10-27 实测防御响应窗口卡死）。 */
   const windowOption = async () => {
-    const els = page.locator(`${PANEL} button:not([disabled])`);
+    /* v0.15.81：触发条（.decide-trigger）与 × 都是纯视图按钮——点它们不推进任何东西，
+       却会把 idle 归零，于是「开→关→开→关」无限循环。这里显式排除。 */
+    const SEL = `${PANEL} button:not([disabled]):not(.decide-trigger):not(.decide-close)`;
+    if (!await page.locator(SEL).count()) await openDecide();
+    const els = page.locator(SEL);
     const n = await els.count();
     for (let k = 0; k < n; k++) {
       const t = (await els.nth(k).textContent() || '').trim();
@@ -158,14 +178,33 @@ let browser;
   let st = await snap();
   note('enter-quest', st.phase === 2, st);
   const before = await page.evaluate(() => ({ log: state.log.length, exhausted: JSON.stringify(state.players.flatMap(p => p.heroStates.map(h => h.exhausted))) }));
-  /* v0.15.80：浮层自动弹出且盖住桌面角色卡时，改点浮层缩略图（同一草稿路径，
-     R3 双向同步会让桌面角色卡同样出现 .selected 金标记，断言不变）。 */
-  const collapsePick = async () => {
-    const t = page.locator('.pick-trigger[aria-expanded="true"]').first();
+  /* v0.15.81：浮层自动弹出且盖住桌面角色卡时，改点浮层缩略图（同一草稿路径，
+     R3 双向同步会让桌面角色卡同样出现 .selected 金标记，断言不变）。
+     触发条统一为 .decide-trigger——v0.15.80 那条独立的 .pick-trigger 已退役。 */
+  const collapseDecide = async () => {
+    const t = page.locator('.decide-trigger[aria-expanded="true"]').first();
     if (await t.count()) { await t.click(); await page.waitForTimeout(200); return true; }
     return false;
   };
-  const pickThumb = page.locator('.quest-pick .qp-card .card-face:not([aria-disabled])').first();
+  /* 战斗的「选人／选目标」都点在桌面卡上，而浮层是非模态的——它盖住桌面卡时
+     Playwright 会一直等「元素可点击」直到超时（isVisible 查不出遮挡）。所以：
+       · 点桌面卡（角色/敌人）前一律先收起浮层；
+       · 点浮层里的提交/清空按钮前先确保浮层打开（关闭态它们不在 DOM 里）。
+     两者都是幂等的，多调几次无副作用。 */
+  const clickCard = async sel => {
+    const el = page.locator(sel).first();
+    if (!await el.count()) return false;
+    await collapseDecide();
+    if (!await el.count()) return false;
+    await el.click(); idle = 0; await page.waitForTimeout(220); return true;
+  };
+  const clickPop = async sel => {
+    await openDecide();
+    const el = page.locator(`.decide-pop ${sel}:not([disabled])`).first();
+    if (!await el.count()) return false;
+    await el.click(); idle = 0; await page.waitForTimeout(300); return true;
+  };
+  const pickThumb = page.locator('.decide-pop .qp-card .card-face:not([aria-disabled])').first();
   const pick = (await pickThumb.count()) ? pickThumb : page.locator('.player-mat .character-card.selectable .card-face').first();
   const draftOk = { selectable: await page.locator('.player-mat .character-card.selectable .card-face').count() };
   if (draftOk.selectable) {
@@ -186,7 +225,7 @@ let browser;
     if (!pending.length) break;
     await page.locator('.player-tabs button').nth(pending[0]).click(); await page.waitForTimeout(200);
     const card = page.locator('.player-mat .character-card.selectable .card-face').first();
-    if (await card.count()) { await collapsePick(); await card.click(); await page.waitForTimeout(150); }
+    if (await card.count()) { await collapseDecide(); await card.click(); await page.waitForTimeout(150); }
     const viewBefore = await page.evaluate(() => handView);
     if (!await clickQuest('commit')) break;
     /* 提交名单会弹「确认派遣」对话框（单人/多人一致）；不点确认则名单永远不会 confirmed，
@@ -212,7 +251,7 @@ let browser;
       if (pending.length) {
         await page.locator('.player-tabs button').nth(pending[0]).click(); await page.waitForTimeout(200);
         const card = page.locator('.player-mat .character-card.selectable .card-face').first();
-        if (await card.count()) { await collapsePick(); await card.click(); await page.waitForTimeout(150); }
+        if (await card.count()) { await collapseDecide(); await card.click(); await page.waitForTimeout(150); }
         if (await clickQuest('commit')) continue;
       } else {
         if (await approve()) continue;
@@ -223,6 +262,8 @@ let browser;
       const need = await page.evaluate(() => state.encountering.turnOrder.filter(id => !state.encountering.choices[id]));
       if (need.length) {
         await page.locator('.player-tabs button').nth(need[0]).click(); await page.waitForTimeout(200);
+        /* 切人是「点外部」，浮层会被收起；遭遇面板的控件在浮层里，先打开再找。 */
+        await openDecide();
         const skip = page.locator(`button[data-encounter="skip"][data-player="${need[0]}"]:not([disabled])`).first();
         if (await skip.count()) { await skip.click(); await page.waitForTimeout(280); continue; }
       }
@@ -233,23 +274,21 @@ let browser;
       if (cs.proposal) { if (await approve()) continue; }
       if (cs.step === 'enemyChoice' && !cs.proposal && await clickBtn('暂定 ')) continue;
       if (cs.step === 'defenseChoice') {
-        const chosen = await page.locator('.table-card.selected').count();
-        const pickBtn = page.locator('[data-desktop="pick"]:not([disabled])').first();
-        const submit = page.locator('button[data-desktop="submit"]:not([disabled])').first();
-        if (!chosen && await pickBtn.count()) { await pickBtn.click(); await page.waitForTimeout(200); continue; }
-        if (await submit.count()) { await submit.click(); await page.waitForTimeout(300); continue; }
+        /* 防御名单：角色卡在玩家区（要收浮层），提交按钮在浮层里（要开浮层）。
+           v0.15.81 起浮层盖住桌面卡时 Playwright 会判定点击被拦截，所以不再靠 isVisible 试探。 */
+        const chosen = await page.locator('.player-mat .character-card.selected').count();
+        if (!chosen && await clickCard('.player-mat .character-card.selectable .card-face')) continue;
+        if (await clickPop('[data-desktop="submit"]')) continue;
+        /* 无人可选时名单本就可以为空，提交按钮应当可用；真的没有就交给下面的兜底。 */
       }
       if (cs.step === 'attackChoice') {
         const hasTarget = await page.locator('.encounter-card.selected').count();
-        const chosen = await page.locator('.table-card.selected').count();
-        const target = page.locator('[data-desktop="target"]:not([disabled])').first();
-        const pickBtn = page.locator('[data-desktop="pick"]:not([disabled])').first();
-        const submit = page.locator('button[data-desktop="submit"]:not([disabled])').first();
-        const endAtk = page.locator('button[data-combat="endAttacks"]:not([disabled])').first();
-        if (!hasTarget && await target.count()) { await target.click(); await page.waitForTimeout(200); continue; }
-        if (hasTarget && !chosen && await pickBtn.count()) { await pickBtn.click(); await page.waitForTimeout(200); continue; }
-        if (hasTarget && chosen && await submit.count()) { await submit.click(); await page.waitForTimeout(300); continue; }
-        if (await endAtk.count()) { await endAtk.click(); await page.waitForTimeout(300); continue; }
+        const chosen = await page.locator('.player-mat .character-card.selected').count();
+        if (!hasTarget && await clickCard('.encounter-card .card-face[data-desktop="target"]')) continue;
+        if (hasTarget && !chosen && await clickCard('.player-mat .character-card.selectable .card-face')) continue;
+        if (hasTarget && chosen && await clickPop('[data-desktop="submit"]')) continue;
+        /* 「暂定结束我的攻击」也在浮层体里（selection 的那块），同样要先打开。 */
+        if (await clickPop('[data-combat="endAttacks"]')) continue;
       }
     }
     if (await clickBtn('处理强制选择')) continue;
@@ -262,7 +301,7 @@ let browser;
     if (await clickBtn('暂定不主动交战')) continue;
     if (await clickBtn('选择并结算')) continue;
     /* 交战同值敌人：起始玩家要从同值敌人里挑一个接战（面板按钮 data-encounter="tie"）。 */
-    { const tie = page.locator(PANEL + ' [data-encounter="tie"]:not([disabled])').first(); if (await tie.count()) { await tie.click(); await page.waitForTimeout(300); continue; } }
+    { let tie = page.locator(PANEL + ' [data-encounter="tie"]:not([disabled])').first(); if (!await tie.count()) { await openDecide(); tie = page.locator(PANEL + ' [data-encounter="tie"]:not([disabled])').first(); } if (await tie.count()) { await tie.click(); await page.waitForTimeout(300); continue; } }
     if (await clickBtn('结算此牌的关键词与效果')) continue;
     if (await clickBtn('翻开下一张遭遇牌')) continue;
     if (await clickBtn('结束探查')) continue;
@@ -298,6 +337,20 @@ let browser;
   note('images-load', report.failedImages.length === 0, { total: imgs.length, failed: report.failedImages.length });
 
   // ============ 4人 都尔哥多 @1920 + 长手牌 ============
+  /* 上面的循环可能在「确认派遣」对话框开着的状态下退出（最后一步才点开），
+     而 dialog 遮罩会拦住 HUD 的「重新选择剧本」——先把它兜掉再重开。
+     v0.15.81 浮层非模态不拦点击，唯一会拦的就是内层 dialog（top layer）。 */
+  for (let i = 0; i < 6 && await page.locator('dialog[open]').count(); i++) {
+    const d = page.locator('dialog[open]').last();
+    const cancel = d.locator('#plan-cancel, #cancel').first();
+    if (await cancel.count() && await cancel.isEnabled().catch(() => false)) { await cancel.click(); }
+    else { await page.keyboard.press('Escape').catch(() => {}); }
+    await page.waitForTimeout(200);
+    if (await page.locator('dialog[open]').count()) {
+      await page.evaluate(() => { document.querySelectorAll('dialog[open]').forEach(x => x.close()); });
+      await page.waitForTimeout(150);
+    }
+  }
   await page.setViewportSize({ width: 1920, height: 1080 });
   await page.locator('.game-hud button[data-action="desktop"][data-desktop="reset"]').click();
   await page.waitForTimeout(400);

@@ -140,8 +140,8 @@ function deploySection(s,pid){
    if(numCell)numCell.textContent=ids.length?`${ids.length} 名 · 意志 ${will}`:'';
    if(st){st.textContent=ids.length?'草稿':'未提交';st.className='st '+(ids.length?'st-draft':'st-none');}
   }
-  /* v0.15.80：勾选只做局部同步（不整页重绘），浮层的徽标/暂定意志/已选态也要跟着刷新。 */
-  syncPickBits(s);
+  /* v0.15.81：勾选只做局部同步（不整页重绘），触发条徽标与缩略图已选态也要跟着刷新。 */
+  syncPickBits(s,pid);
  }
  /* 牌桌角色卡与勾选双向同步：反向点卡本来就能同步，正向勾选以前只改摘要。 */
  function syncTableMarks(s,pid){
@@ -218,25 +218,15 @@ function focusActor(pid){
   const head=q.step==='commit'?`<div class="panel-title"><h2>阶段3 · ${steps[q.step]}</h2><strong>探查区威胁 ${ScenarioEngine.threat(s)}</strong></div>`:`<div class="panel-title"><h2>阶段3 · ${steps[q.step]}</h2><strong>投入意志 ${R.total(s)} ／ 探查区威胁 ${ScenarioEngine.threat(s)}</strong></div>`;
   return `<section class="panel questing-panel">${head}${q.result?`<p class="notice">本次结果：意志 ${q.result.willpower} − 威胁 ${q.result.threat} = ${q.result.delta}。${q.result.delta>0?'进度已自动分配':q.result.delta<0?'每位玩家威胁已增加'+(-q.result.delta):'平局，不放进度、不增加威胁'}。</p>`:''}${body}</section>`;
  }
- async function handle(b){const k=b.dataset.quest,pid=+b.dataset.player,id=+b.dataset.id;
+ async function handle(b){let k=b.dataset.quest;const pid=+b.dataset.player,id=+b.dataset.id;
   if(k==='back'){if(history.length){state=history.pop();save();render();}return;}
-  /* v0.15.80：浮层开合是纯视图操作，不走 mutate。开启把焦点交给浮层标题（tabindex=-1），
-     关闭交回触发按钮。 */
-  if(k==='pickToggle'||k==='pickClose'||k==='pickDismiss'){
-   if(k==='pickToggle')pickState.open=!pickState.open;
-   if(k==='pickClose')pickState.open=false;
-   if(k==='pickDismiss')pickState.confirm=false;
-   if(k!=='pickDismiss')pickState.confirm=false;
-   render();
-   if(pickState.open){const t=document.querySelector('.quest-pick h2');if(t&&typeof t.focus==='function')t.focus({preventScroll:true});}
-   else if(k!=='pickDismiss'){const tg=document.querySelector('.pick-trigger');if(tg&&typeof tg.focus==='function')tg.focus({preventScroll:true});}
-   return;
-  }
+  /* v0.15.81：浮层开合（toggle/close）改由 DecisionUI 统一处理（data-action="decide"），
+     这里不再有自己的 .pick-trigger / pickState。 */
   if(k==='withdraw'){
    const q=state?.questing,was=(q?.deploymentApprovals||[]).length;
    /* 改名单会 invalidateAgreement 清空全队确认——这是本面板唯一需要二次确认的次操作。 */
    if(was>0){const ok=await choose('修改名单 · '+(state.players[pid]?.name||''),`<p>修改名单会清除全队已完成的 <b>${was}</b> 次确认，所有人需要重新确认。继续？</p>`,()=>true);if(!ok)return;}
-   mutate(()=>{R.withdrawDeployment(state,pid);pickState.auto='withdraw';});
+   mutate(()=>{R.withdrawDeployment(state,pid);});
    if(was&&state?.questing&&!state.questing.deploymentLocked)say(`${nameOf(state,pid)} 改了名单，确认已重置，请重新确认`);
    return;
   }
@@ -256,9 +246,8 @@ function focusActor(pid){
      const next=liveOrder(state).find(x=>!q.deployments?.[x]?.confirmed);
      if(next!==undefined&&next!==handView){handView=next;handedTo=next;}
     }
-    /* v0.15.80：提交后自动交接（handView 已切给下一位未提交者）或全员交齐进入 C1 时，
-       浮层要跟着自动弹出/保持；放在 mutate 内部——fn 抛异常回滚时不会误开浮层。 */
-    pickState.auto='handover';
+    /* v0.15.81：浮层是开是关不再由这里标记——DecisionUI 用 (round,phase,kind,body 哈希)
+       这一把唯一钥匙决定自动开合，提交后交接/全员交齐都会改变它的 key，浮层自然自动弹出。 */
    });
    if(ok&&state?.questing){
     const q=state.questing,live=liveOrder(state);
@@ -274,17 +263,12 @@ function focusActor(pid){
    return;
   }
   if(k==='choice'){const sp=R.spec(state,id);if(!sp)return;let values=await choose(sp.message,sp.fields.map(f=>`<label>${esc(f.label)}<select id="quest-${f.key}">${f.options.map(o=>`<option value="${esc(o.value)}">${esc(o.label)}</option>`).join('')}</select></label>`).join('')+(sp.task.optional?'<p><label><input id="quest-skip" type="checkbox">放弃此响应</label></p>':''),d=>({...Object.fromEntries(sp.fields.map(f=>[f.key,d.querySelector('#quest-'+f.key).value])),skip:!!d.querySelector('#quest-skip')?.checked}));if(values)mutate(()=>R.choose(state,id,values));return;}
-  /* v0.15.80：C1 态浮层内的「确认派遣」（data-quest="pickApprove"）先翻转浮层内的
-     内联确认条（非原生 confirm），「就是现在」（data-quest="approveDeployment"）才真正
-     确认。内联面板的确认按钮不在 .quest-pick 内、照旧直接确认——验收脚本定位
-     [data-quest="approveDeployment"] 的 .first() 永远命中内联面板那颗，
-     「.decide-box 内绿色确认按钮只有一颗」的既有断言不受浮层影响。 */
-  if(k==='pickApprove'){
-   pickState.confirm=true;render();
-   const bar=document.querySelector('.pick-confirm .primary');
-   if(bar&&typeof bar.focus==='function')bar.focus({preventScroll:true});
-   return;
-  }
+  /* v0.15.81：`pickApprove` 退成**兼容别名**——v0.15.80 的两步内联确认（先翻确认条、
+     再点「就是现在」）已退役：它必然与 R2 的「确认派遣」形成两颗同义绿按钮，而硬约束要求
+     `.decide-box` 内 `[data-quest="approveDeployment"]` 恰好一颗、`.quest-deploy` 内
+     primary ≤1。防误触的说明改由 pickBar 的静态文案承担（「确认后尚未横置…可随时取消确认」）。
+     别名保留：老存档/外部脚本若还带着 data-quest="pickApprove"，行为与直接确认一致。 */
+  if(k==='pickApprove'){k='approveDeployment';}
   if(k==='approveDeployment'||k==='unapproveDeployment'){
    const name=state?.players[pid]?.name||('玩家'+(pid+1));
    const before=(state.questing?.deploymentApprovals||[]).length;
@@ -298,7 +282,6 @@ function focusActor(pid){
      const next=live.find(x=>!(q.deploymentApprovals||[]).includes(x));
      if(next!==undefined&&next!==handView){handView=next;switched=next;}
     }
-    pickState.auto='handover';
    });
    const q=state?.questing;
    if(q&&(q.deploymentApprovals||[]).length!==before){
@@ -337,44 +320,24 @@ function focusActor(pid){
  }
  /* 决策弹窗的标题直接用这里的中文步骤名，免得两处各写一份文案、改一处漏一处。 */
  function stepName(step){return steps[step]||'';}
- /* ── 投入角色浮层（v0.15.80）──────────────────────────────────────────
-    非模态浮层：作为 .decide-box 的 DOM 子节点向上弹出（锚点在玩家区，向下会盖手牌）。
-    开合状态以 (round, phase, step, handView) 为键存放在 pickState，render() 全量重绘时
-    由 syncPick() 恢复/收敛。缩略图与桌面角色卡、内联勾选共用同一份草稿（R3 双向同步，
-    syncTableMarks 机制现成），浮层缩略图点击直接走 DesktopUI 的 pick 路径。
-    自动弹出：进入 commit 且本人未提交（A）/ 提交后交接（handover）/ 全员交齐进入 C1 /
-    withdraw 退回 A。自动收起：deploymentLocked、step 离开 commit、手动切人（key 变化
-    且无 auto 标记）。auto 取值：'handover'（提交/确认后的接力）| 'withdraw'（退回草稿态）。 */
- let pickState={key:'',open:false,auto:'',prevStep:null,confirm:false};
- function pickActor(s){const live=liveOrder(s);return live.includes(handView)?handView:live[0];}
- function pickAvailable(s,pid){const q=s&&s.questing;return !!q&&s.phase===2&&q.step==='commit'&&!q.completed&&!q.deploymentLocked&&!R.spec(s)&&!P.choiceSpec(s)&&pid!==undefined&&pid!==null;}
- function syncPick(s){
-  const q=s&&s.questing,base={key:'',open:false,auto:'',prevStep:null,confirm:false};
-  if(!s||s.phase!==2||!q||q.completed){pickState=base;return;}
-  const live=liveOrder(s),pid=live.includes(handView)?handView:live[0];
-  const ph=q.step==='commit'&&pid!==undefined?stateOf(s,pid):null;
-  const avail=q.step==='commit'&&!q.deploymentLocked&&!R.spec(s)&&!P.choiceSpec(s)&&pid!==undefined;
-  const key=`${s.round}:${s.phase}:${q.step}:${handView}`;
-  if(!avail){pickState={...base,prevStep:q.step};return;}
-  if(key!==pickState.key){
-   const entering=pickState.prevStep!==null&&pickState.prevStep!=='commit';
-   const open=(pickState.auto==='handover'||entering)&&(ph==='A'||ph==='C1');
-   pickState={...base,key,open,prevStep:q.step};
-  }else{
-   /* v0.15.80 返工：handover 与 withdraw 同等对待。key 不变（最后一个提交者没有交接、
-     只是自己进了 C1）时，旧实现只认 withdraw，浮层保持关闭，须手动重开——
-     与「全员交齐进入本人 C1 自动弹出」的承诺矛盾。 */
-   if(pickState.auto==='withdraw'||pickState.auto==='handover')pickState.open=ph==='A'||ph==='C1';
-   pickState.prevStep=q.step;
-  }
-  pickState.auto='';
-  if(ph!=='C1')pickState.confirm=false;
-  if(q.deploymentLocked||ph==='D'||ph===null){pickState.open=false;pickState.confirm=false;}
- }
- function pickBadge(s,pid){const ids=draftPeek(s,pid),will=ids.reduce((a,uid)=>a+P.stats(s,uid).willpower,0);return `已选 ${ids.length} 名（意志 ${will}）`;}
- const qtk=(type,n)=>`<span class="tk tk-${type}"><img src="assets/tokens/${type}.png" alt=""><b>${n}</b></span>`;
- function pickInner(s,pid){
-  const ph=stateOf(s,pid),mine=P.chars(s).filter(c=>c.controller===pid),ids=draftPeek(s,pid);
+/* ── 探险 commit 的「选人」区（v0.15.81）──────────────────────────────
+   v0.15.80 的独立浮层（.quest-pick + 独立触发按钮 + 自成一套的开合状态机）已退役：
+   用户要求「全部阶段的决策面板统一为一行触发条 + 非模态浮层」，于是选人网格并入
+   DecisionUI 的统一浮层 `.decide-pop`（作为浮层体的一段，排在 deploySection 之前），
+   开合／自动弹出／Esc／点外部全部由 DecisionUI 统一管理（.decide-trigger + .decide-pop），
+   这里只负责**渲染**与**草稿**：
+     · drafts 按 pid 分槽（R4）——切人丢草稿的老账已还，保留；
+     · 缩略图与桌面角色卡、内联勾选共用同一份草稿（R3 双向同步），点击走 DesktopUI 的 pick 路径；
+     · 触发条上的「已选 N 名（意志 X）」徽标由 pickHint 提供（不再有第二条触发条）。
+   为什么不保留 pickState：状态一旦分散在两处，就会出现「同一时刻两个浮层」「Esc 关哪一个」
+   这种二义性——决策面板只能有一个开合真相。 */
+function pickBadge(s,pid){const ids=draftPeek(s,pid),will=ids.reduce((a,uid)=>a+P.stats(s,uid).willpower,0);return `已选 ${ids.length} 名（意志 ${will}）`;}
+const qtk=(type,n)=>`<span class="tk tk-${type}"><img src="assets/tokens/${type}.png" alt=""><b>${n}</b></span>`;
+ /* 选人网格：一卡 = 卡图（424/600 cover）+ 卡名（单行省略）+ 属性代币行 + 费用徽标 + 查看角标。
+    状态四态沿用 v0.15.80：is-selected 金边已选 / is-pending 绿态待确认 / is-exhausted 已横置 /
+    is-gone 已离场。后三类 + 非 A 态一律 aria-disabled（点击由 DesktopUI.pick 兜底给 toast）。 */
+ function pickGrid(s,pid,ph){
+  const mine=P.chars(s).filter(c=>c.controller===pid),ids=draftPeek(s,pid);
   const sub=ph!=='A'?(s.questing.deployments?.[pid]?.ids||[]):[];
   const card=c=>{
    const v=P.stats(s,c.uid),st=c.state||{};
@@ -385,85 +348,63 @@ function focusActor(pid){
    const flag=pending?'<span class="qp-flag ok-flag">待确认</span>':selected?'<span class="selection-mark">已选</span>':ex?'<span class="qp-flag ex-flag">已横置</span>':gone?'<span class="qp-flag gone-flag">已离场</span>':'';
    const blocked=gone||ex||pending||ph!=='A';
    const label=`${esc(c.meta.nameZh)}：意志 ${v.willpower||0} 攻击 ${v.attack||0} 防御 ${v.defense||0} 生命 ${v.health||0}，${blocked?'当前不能加入名单':selected?'点击移出名单':'点击加入名单'}`;
-   return `<div class="${cls}"><button class="card-face" data-action="desktop" data-desktop="pick" data-uid="${c.uid}" data-player="${pid}" data-focus-key="quest-pick-${c.uid}" aria-pressed="${selected}"${blocked?' aria-disabled="true"':''} aria-label="${label}">${img}${flag}</button><span class="qp-cost" title="费用 ${c.meta.cost??'—'}">${c.meta.cost??'—'}</span><button class="qp-view" data-action="images" data-image-action="open" data-code="${esc(c.meta.code)}" aria-label="查看${esc(c.meta.nameZh)}详情">查看</button><span class="qp-name" title="${esc(c.meta.nameZh)}">${esc(c.meta.nameZh)}</span><div class="card-tokens attr-tokens">${qtk('willpower',v.willpower||0)+qtk('attack',v.attack||0)+qtk('defense',v.defense||0)+qtk('hitPoints',v.health||0)}</div></div>`;
+   return `<div class="${cls}" data-card-uid="${c.uid}"><button class="card-face" data-action="desktop" data-desktop="pick" data-uid="${c.uid}" data-player="${pid}" data-focus-key="quest-pick-${c.uid}" aria-pressed="${selected}"${blocked?' aria-disabled="true"':''} aria-label="${label}">${img}${flag}</button><span class="qp-cost" title="费用 ${c.meta.cost??'—'}">${c.meta.cost??'—'}</span><button class="qp-view" data-action="images" data-image-action="open" data-code="${esc(c.meta.code)}" aria-label="查看${esc(c.meta.nameZh)}详情">查看</button><span class="qp-name" title="${esc(c.meta.nameZh)}">${esc(c.meta.nameZh)}</span><div class="card-tokens attr-tokens">${qtk('willpower',v.willpower||0)+qtk('attack',v.attack||0)+qtk('defense',v.defense||0)+qtk('hitPoints',v.health||0)}</div></div>`;
   };
   const group=(label,list)=>list.length?`<div class="pick-group"><div class="ng-chapter-head pick-group-head"><span>${label}</span><span class="pick-count">${list.length} 名</span></div><div class="pick-grid">${list.map(card).join('')}</div></div>`:'';
   const heroes=mine.filter(c=>c.kind==='hero'),allies=mine.filter(c=>c.kind!=='hero');
-  const body=mine.length?group('英雄',heroes)+group('盟友',allies):'<p class="pick-empty">本回合无可用角色</p>';
-  const head=`<div class="pick-head"><h2 tabindex="-1">投入角色 · ${esc(nameOf(s,pid))}</h2><button class="pick-close" data-action="quest" data-quest="pickClose" data-player="${pid}" aria-label="关闭选择面板">×</button></div>`;
-  const will=ids.reduce((a,uid)=>a+P.stats(s,uid).willpower,0);
-  const ghost=(label,kind,dis=false,aria='')=>`<button class="quest-ghost pick-ghost" data-action="quest" data-quest="${kind}" data-player="${pid}"${aria?` aria-label="${aria}"`:''}${dis?' disabled':''}>${esc(label)}</button>`;
-  let foot='';
-  if(ph==='A'){
-   const noEligible=R.eligible(s,pid).length===0,commitLabel=ids.length?'提交名单':'提交空名单';
-   const commitDis=!ids.length&&!noEligible;
-   foot=`<div class="pick-foot"><span class="pick-tally" aria-live="polite">暂定意志 ${will}</span>${ghost('重置选择','clear',!ids.length,'清空选择（重置当前名单草稿）')}<button class="primary" data-action="quest" data-quest="commit" data-player="${pid}" data-focus-key="quest-pick-submit"${commitDis?' disabled':''}>${esc(commitLabel)}</button></div>`;
-  }else if(ph==='B')foot=`<div class="pick-foot"><span class="pick-note">已提交名单，等待其他玩家</span>${ghost('修改名单','withdraw')}</div>`;
-  else if(ph==='C1')foot=`<div class="pick-foot"><button class="primary" data-action="quest" data-quest="pickApprove" data-player="${pid}" data-focus-key="quest-pick-approve">确认派遣</button>${ghost('修改名单','withdraw')}</div>${pickState.confirm?`<div class="pick-confirm"><span>确认后尚未横置，全员确认后才执行；可随时取消确认。</span><button class="quest-ghost" data-action="quest" data-quest="pickDismiss" data-player="${pid}">再想想</button><button class="primary" data-action="quest" data-quest="approveDeployment" data-player="${pid}" data-focus-key="quest-pick-confirm">就是现在</button></div>`:''}`;
-  else if(ph==='C2')foot=`<div class="pick-foot"><span class="pick-note">已确认，等待其他玩家确认</span></div>`;
-  else foot=`<div class="pick-foot"><span class="pick-note">名单已锁定</span></div>`;
-  return head+`<div class="pick-body">${body}</div>`+foot;
+  return mine.length?group('英雄',heroes)+group('盟友',allies):'<p class="pick-empty">本回合无可用角色</p>';
  }
- function pickHTML(s,pid){
-  if(typeof handView!=='number')return '';
-  syncPick(s);
-  const actor=pickActor(s);
-  if(actor===undefined||!pickAvailable(s,actor))return '';
-  const open=pickState.open;
-  return `<button class="pick-trigger" id="quest-pick-trigger" data-action="quest" data-quest="pickToggle" data-player="${actor}" data-focus-key="quest-pick-trigger" aria-expanded="${open}" aria-controls="quest-pick-panel">选择投入角色<span class="pick-badge" aria-live="polite">${esc(pickBadge(s,actor))}</span></button>${open?`<div class="quest-pick" id="quest-pick-panel" role="region" aria-label="投入角色选择">${pickInner(s,actor)}</div>`:''}`;
+ /* 选人区的小标题行：谁在选 + （A 态）重置选择 + （C1 态）确认语义说明。
+    「重置选择」只清草稿：主操作（提交／确认／修改）一律留在 .quest-deploy 的 R2，
+    避免同一件事出现两颗同名按钮——v0.15.80 的浮层脚部曾与 R2 各有一颗「提交名单」。*/
+ function pickBar(s,pid,ph){
+  const ids=draftPeek(s,pid);
+  const clear=ph==='A'?`<button class="quest-ghost pick-clear" data-action="quest" data-quest="clear" data-player="${pid}" aria-label="清空选择（重置当前名单草稿）"${ids.length?'':' disabled'}>重置选择</button>`:'';
+  const note=ph==='C1'?'<span class="pick-note">确认后尚未横置，全员确认后才执行；可随时取消确认。</span>':ph==='B'?'<span class="pick-note">已提交名单，等待其他玩家</span>':ph==='C2'?'<span class="pick-note">已确认，等待其他玩家确认</span>':'';
+  return `<div class="pick-bar"><span class="pick-bar-title">投入角色 · ${esc(nameOf(s,pid))}</span>${note}${clear}</div>`;
  }
- /* 勾选等局部同步路径（不整页重绘）刷新浮层内容；整页 render() 会全量重建，无需此函数。 */
- function syncPickBits(s){
+ /* 浮层体里的选人段（DecisionUI 在 commit 步骤把它拼到 .decide-body 的最前面）。
+    只有探险 commit 需要；有卡牌响应待结算（R.spec / P.choiceSpec）时不渲染——那时提交会被
+    引擎拒绝，先让人处理响应（与 QuestUI.panel 的判据一致）。D 态（名单已锁定）不再渲染网格：
+    角色正在被引擎横置，选人已无意义。 */
+ function popExtra(s,pid){
+  if(!s||s.phase!==2)return '';
+  const q=s.questing;
+  if(!q||q.completed||q.step!=='commit'||q.deploymentLocked)return '';
+  if(R.spec(s)||P.choiceSpec(s))return '';
+  const live=liveOrder(s),actor=live.includes(pid)?pid:live[0];
+  if(actor===undefined||actor===null)return '';
+  const ph=stateOf(s,actor);
+  return `<div class="pick-panel" role="group" aria-label="投入角色选择">${pickBar(s,actor,ph)}${pickGrid(s,actor,ph)}</div>`;
+ }
+ /* 触发条右侧的提示区：原 .pick-badge 的「已选 N 名（意志 X）」搬到这里（不再有第二条触发条）。
+     只在 A 态（草稿）给——B 之后名单已交给引擎，再写「已选」会与 R0 的「已提交」打架。 */
+ function pickHint(s,pid){
+  if(!s||s.phase!==2)return '';
+  const q=s.questing;
+  if(!q||q.completed||q.step!=='commit'||q.deploymentLocked)return '';
+  if(R.spec(s)||P.choiceSpec(s))return '';
+  const live=liveOrder(s),actor=live.includes(pid)?pid:live[0];
+  if(actor===undefined||actor===null||stateOf(s,actor)!=='A')return '';
+  return pickBadge(s,actor);
+ }
+ /* 勾选等局部同步路径（不整页重绘）刷新触发条徽标与缩略图已选态；整页 render() 会全量重建。 */
+ function syncPickBits(s,pid){
   if(typeof document==='undefined'||typeof document.querySelector!=='function')return;
-  const actor=pickActor(s);
-  if(actor===undefined||!pickAvailable(s,actor))return;
-  const trig=document.querySelector('.pick-trigger');
-  if(trig){const badge=trig.querySelector('.pick-badge');if(badge)badge.textContent=pickBadge(s,actor);}
-  const box=document.querySelector('.quest-pick');
-  if(box&&pickState.open)box.innerHTML=pickInner(s,actor);
+  const ids=draftPeek(s,pid);
+  const hint=document.querySelector('.decide-trigger .decide-hint');
+  if(hint)hint.textContent=pickHint(s,pid);
+  const clear=document.querySelector('.pick-panel [data-quest="clear"]');
+  if(clear)clear.disabled=!ids.length;
+  document.querySelectorAll('.pick-grid .qp-card').forEach(card=>{
+   const uid=Number(card.dataset&&card.dataset.cardUid),on=ids.includes(uid);
+   if(card.classList){if(on)card.classList.add('is-selected');else card.classList.remove('is-selected');}
+   const face=card.querySelector&&card.querySelector('.card-face');
+   if(face&&face.setAttribute)face.setAttribute('aria-pressed',on?'true':'false');
+   const mark=card.querySelector&&card.querySelector('.selection-mark');
+   if(on&&!mark&&typeof document.createElement==='function'&&face&&face.append){const sp=document.createElement('span');sp.className='selection-mark';sp.textContent='已选';face.append(sp);}
+   else if(!on&&mark&&mark.remove)mark.remove();
+  });
  }
- /* 关闭浮层（× 按钮 / Esc 共用）：纯视图操作，不走 mutate；焦点交回触发按钮。 */
- function closePick(){
-  pickState.open=false;pickState.confirm=false;render();
-  const tg=document.querySelector('.pick-trigger');
-  if(tg&&typeof tg.focus==='function')tg.focus({preventScroll:true});
- }
-/* 页面里是否开着内层模态 dialog（choose() 复核弹窗 / PlanningUI 表单）。
-   dialog 是模态层，其内的点击与 Esc 都不属于「操作桌面」——既不算点外部，也不抢 Esc。 */
-function dialogOpen(){
- try{return !!(typeof document!=='undefined'&&typeof document.querySelector==='function'&&document.querySelector('dialog[open]'));}catch(e){return false;}
-}
-/* 点外部关闭：target 不在浮层内且不在触发按钮内→收起。只摘除浮层节点（纯视图），
-   不触发 render——否则 pointerdown 里的整页重绘会吞掉同一次点击（抽牌浮层旧事故）。
-   dialog[open] 存在时整个忽略：点复核弹窗的「确认」若被当成点外部，浮层会在提交后
-   被收起，C1「全员交齐自动弹出」的感知就断了。 */
-function outsidePointer(ev){
- if(!pickState.open)return false;
- const box=document.querySelector('.quest-pick');if(!box)return false;
- const t=ev&&ev.target;
- if(box.contains&&box.contains(t))return false;
- const trig=document.querySelector('.pick-trigger');
- if(trig&&trig.contains&&trig.contains(t))return false;
- if(dialogOpen())return false;
- pickState.open=false;pickState.confirm=false;
- if(box.remove)box.remove();
- if(trig&&trig.setAttribute)trig.setAttribute('aria-expanded','false');
- return true;
-}
-/* Esc 关闭：与 × 同语义（配合 reduce-motion 无动画，直接收起）。有内层 dialog 时让 dialog
-   自己处理 Esc，浮层原样保留。 */
-function escClose(ev){
- if(!pickState.open)return false;
- if(ev&&ev.key!==undefined&&ev.key!=='Escape')return false;
- if(dialogOpen())return false;
- closePick();
- return true;
-}
-/* 两个监听只注册一次；outsidePointer/escClose 同时导出给回归测试直接调用
-   （假 DOM 没有 addEventListener，测试走纯函数入口）。 */
-if(typeof document!=='undefined'&&typeof document.addEventListener==='function'){
- document.addEventListener('pointerdown',outsidePointer,true);
- document.addEventListener('keydown',escClose,true);
-}
-return {panel,handle,bind,setDraft,draftFor,draftPeek,picker,revealCard,stepName,stateOf,liveOrder,pickHTML,escClose,outsidePointer};
+return {panel,handle,bind,setDraft,draftFor,draftPeek,picker,revealCard,stepName,stateOf,liveOrder,popExtra,pickHint,pickBadge};
 })();

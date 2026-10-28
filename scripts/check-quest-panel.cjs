@@ -1,5 +1,8 @@
 /* 阶段3 投入面板回归：进入 commit 后，玩家分段按钮组、角色勾选、唯一主按钮
    必须全部落在视口内且不需要滚动，否则第二个人无法提交名单。
+   v0.15.81：决策面板改成「一行触发条 + 非模态浮层」——面板内容（.decide-box .quest-deploy）
+   只存在于浮层里，浮层关闭态内容不渲染也不可点。凡是切人（点 .player-tabs）或点了桌面
+   之后要读面板，必须先点触发条把它打开（点外部/切人都会按「点外部」收起浮层）。
    v0.15.70：下拉框 + 并排徽章已换成 role=radiogroup 的玩家分段按钮组，
    面板就地渲染在手牌区「结束阶段」同一块（.decide-box）。
    v0.15.71：接着验五段结构本身——R0 单行不横跳、R2 提交后换只读行、
@@ -40,6 +43,9 @@ const EXE=CHROME.find(p=>fs.existsSync(p));
   return errs;
  };
  const p=await (await b.newContext({viewport:{width:1440,height:950}})).newPage();
+ /* v0.15.81：确保决策浮层是开着的（关闭态下 .quest-deploy/.quest-main-action 都不在 DOM 里）。
+    触发条就是唯一把手：aria-expanded="false" 时点一下。 */
+ const openDecide=async()=>{const t=p.locator('.decide-trigger[aria-expanded="false"]').first();if(await t.count()){await t.click();await p.waitForTimeout(200);return true;}return false;};
  const errs=await startAt(p);
  const g=await p.evaluate(()=>{
   const r=e=>{const b=e.getBoundingClientRect();return {y:Math.round(b.y),bottom:Math.round(b.bottom),w:Math.round(b.width)}};
@@ -89,6 +95,7 @@ const EXE=CHROME.find(p=>fs.existsSync(p));
  });
  const d0=await metrics();
  /* 勾一名角色：数字要立刻跟着变，且不整页重绘（焦点还在那颗 checkbox 上）。 */
+ await openDecide();
  await p.locator('.decide-box .quest-commit-list input[data-commit]:not([disabled])').first().check();
  await p.waitForTimeout(150);
  const d1=await metrics();
@@ -109,6 +116,7 @@ const EXE=CHROME.find(p=>fs.existsSync(p));
   if(await btn.count()){await btn.click();await p.locator('dialog #ok').click();await p.waitForTimeout(320);}
  }
  await p.locator('.player-tabs button').first().click();await p.waitForTimeout(320);
+ await openDecide();
  const d2=await metrics();
  checks.push(
   ['全员已交后进入 C1 待确认', d2.state==='C1', String(d2.state)],
@@ -128,7 +136,9 @@ const EXE=CHROME.find(p=>fs.existsSync(p));
     （deploymentApprovals 是二次确认名单；没确认过的人点修改不必打扰。） */
  await p.locator('.decide-box [data-quest="approveDeployment"]').first().click();await p.waitForTimeout(350);
  await p.locator('.player-tabs button').nth(1).click();await p.waitForTimeout(320);
+ await openDecide();
  const dPre=await metrics();
+ await openDecide();
  await p.locator('.decide-box [data-quest="withdraw"]').first().click();await p.waitForTimeout(300);
  const dlg=await p.locator('dialog').last().textContent().catch(()=>'');
  await p.locator('dialog #cancel').last().click();await p.waitForTimeout(280);
@@ -142,6 +152,7 @@ const EXE=CHROME.find(p=>fs.existsSync(p));
  /* 390px：R0 仍单行，文档不出横向滚动条。 */
  await p.setViewportSize({width:390,height:844});await p.waitForTimeout(380);
  /* 窄屏面板在手牌区里，滚到视野内再截，否则截到的是上半张牌桌。 */
+ await openDecide();
  await p.locator('.decide-box .quest-deploy').scrollIntoViewIfNeeded();await p.waitForTimeout(250);
  const m=await metrics();
  checks.push(
@@ -151,8 +162,10 @@ const EXE=CHROME.find(p=>fs.existsSync(p));
  await p.screenshot({path:path.join(ROOT,'docs/browser-acceptance/31-quest-panel-390.png')});
  /* D 态（deploymentLocked）：只读、无派遣按钮、仍保留规则折叠，纵向块数 ≤4。 */
  await p.setViewportSize({width:1440,height:950});await p.waitForTimeout(320);
+ await openDecide();
  const ap=p.locator('.decide-box [data-quest="approveDeployment"]:not([disabled])').first();
  if(await ap.count()){await ap.click();await p.waitForTimeout(520);}
+ await openDecide();
  const dD=await metrics();
  checks.push(
   ['锁定后进入 D 只读态', dD.state==='D', String(dD.state)],

@@ -690,17 +690,11 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
 .player-mat .bottom-deck>.zone-heading h2{font-size:12.5px}
 .player-mat .bottom-deck>.zone-heading .small{font-size:11px}
 .player-mat .own-characters{flex:1 1 auto;min-height:0;overflow:auto;align-items:flex-start}
-/* v0.15.79：决策面板下移到手牌区上方后，与角色行/手牌行同抢玩家区高度——
-   面板做成弹性块：内容少时自然高，内容多时被压到剩余空间并内部滚动，
-   角色卡与手牌始终钉在视口内（v0.15.74 的教训：整块内容被推出去=不可用）。 */
-.player-mat .decide-box{flex:1 1 auto;min-height:96px;display:flex;flex-direction:column;margin:0 0 10px}
-.player-mat .decide-box .decide-head{flex:0 0 auto}
-/* v0.15.80：浮层触发按钮（.pick-trigger）是 decide-box 的第三个 flex 子项，
-   会挤压 .decide-body 的可视窗。给 body 保底 44px（≥主按钮 38px + 余量）：
-   否则窗体比主按钮还矮时 scrollIntoView 的 'nearest' 只能对齐顶缘，
-   按钮底缘会探出视口（#8 在 390/761/320 实测超 6~10px）。挤压由
-   own-characters 行吸收（min-height:0 + overflow:auto，弹性让位）。 */
-.player-mat .decide-box .decide-body{flex:1 1 auto;min-height:44px;overflow-y:auto}
+/* v0.15.81：决策面板改成「一行触发条 + 非模态浮层」后，桌面上只剩 40px 的触发条，
+   不再与角色行/手牌行抢弹性高度（v0.15.79~80 曾给它 flex:1 + min-height:96px——
+   那 96px 就是用户看到的「阶段窗口」）。触发条自然高、不参与弹性分配；
+   浮层是 absolute 子节点，不占文档流，被 .bottom-deck/.player-mat 的裁剪问题见第 21 节。 */
+.player-mat .decide-box{flex:0 0 auto;min-height:0;margin:0 0 6px}
 /* v0.15.75：附属区独立成行（角色行上方）。无附属时不渲染该行、零占位。 */
 .player-mat .own-attachments{flex:0 0 auto;min-height:0;overflow:auto;align-items:flex-start}
 /* 三行并存时纵向预算紧张：附属卡用 72px 紧凑幅面（424/500 裁切），
@@ -1526,24 +1520,53 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
 .game-hud button[data-desktop=reset]{background:transparent;border-color:#647460;color:#e8b9a8;font-size:12.5px;padding:3px 10px}
 .game-hud button[data-desktop=reset]:hover{background:#46604c;color:#f6c8b4;border-color:#a17d6a}
 
-/* ── 18c. 待决定面板（v0.15.76）──────────────────────────────────────
-   弹窗退役：待决定内容内联在公共桌面顶部（.public-table 第一个子块），
-   常驻可见、随页面滚动，不再浮动遮挡任何牌桌元素——收起角标、Esc、
-   place() 定位随之全部移除。类名沿用 v0.15.73 的 .decide-box/.decide-body
-   （六个验收脚本的选择器与既有测试依赖它们）。
-   内层的 <dialog>（PlanningUI.form 的选目标/付资源）仍在浏览器 top layer，
-   永远高于普通元素——不会被面板盖住。 */
-.decide-box{
- position:relative;margin:0 0 14px;background:#fffdf6;border:1px solid #c9b98a;border-radius:12px;
- box-shadow:0 4px 14px #14291c26}
+/* ── 18c. 待决定面板：一行触发条 + 非模态浮层（v0.15.81）──────────────
+   形态：桌面上只留一行 .decide-trigger（圆点 + 标题 + 可选 hint + chevron，约 40px），
+   内容搬进 .decide-pop —— .decide-box 的 DOM 子节点，position:absolute 向上弹出
+   （锚点在玩家区，向下会盖手牌），头固定／体滚动。非模态：无全视口遮罩，
+   「点外部关闭 / Esc / ×」由 desktop-ui.js 的 DecisionUI 收口（全部阶段共用一套开合）。
+
+   为什么不再内联（v0.15.76~80）：内联块在桌面上常驻 96px，.decide-body 被 flex 压成 44px
+   内滚——用户看到的就是「阶段窗口还躺在桌面上」。
+   类名 .decide-box/.decide-head/.decide-body 保留（六个验收脚本与既有测试依赖它们）。
+   内层 <dialog>（PlanningUI.form 的选目标/付资源）仍在浏览器 top layer，
+   永远高于普通元素——不会被浮层盖住。 */
+.decide-box{position:relative;margin:0 0 8px}
+.decide-trigger{
+ display:flex;align-items:center;gap:10px;width:100%;min-height:40px;
+ padding:7px 12px;border:1px solid #c9b98a;border-radius:9px;background:#f8f5ea;
+ font-size:13.5px;font-weight:600;color:#2f4038;cursor:pointer;text-align:left;
+ transition:background .12s ease,border-color .12s ease}
+.decide-trigger:hover{background:#f1edda;border-color:#b9a679}
+.decide-trigger:focus-visible{outline:2px solid #4d6b53;outline-offset:1px}
+/* 状态圆点：有待办=金色（该你做决定了），纯资讯=灰（只是告诉你现在在干什么）。 */
+.decide-dot{flex:0 0 auto;width:9px;height:9px;border-radius:50%;background:#9aa39a;box-shadow:0 0 0 3px #9aa39a1f}
+.decide-trigger[data-tone="todo"] .decide-dot{background:#c08f2c;box-shadow:0 0 0 3px #c08f2c2e}
+.decide-title{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.decide-hint{margin-left:auto;flex:0 0 auto;font-size:12px;font-weight:600;color:#6b5a35;background:#f2e8cf;border:1px solid #d8c69a;border-radius:999px;padding:2px 10px;font-variant-numeric:tabular-nums}
+.decide-chevron{flex:0 0 auto;width:8px;height:8px;margin-left:2px;border-right:2px solid #6b7a6b;border-bottom:2px solid #6b7a6b;transform:rotate(45deg) translateY(-2px);transition:transform .12s ease}
+.decide-trigger[aria-expanded="true"] .decide-chevron{transform:rotate(-135deg) translateY(-2px)}
+/* 浮层本体：宽 min(880px, 100vw−48px)（比 v0.15.80 的 680px 更宽——一扇窗要同时装下
+   选人网格与派遣名单）；高 max-height:min(62vh,600px)，头固定/体滚动/窄屏抽屉。 */
+.decide-pop{
+ position:absolute;bottom:calc(100% + 8px);left:0;z-index:30;
+ width:min(880px,calc(100vw - 48px));max-height:min(62vh,600px);
+ display:flex;flex-direction:column;margin:0;
+ background:#fffdf6;border:1px solid #c9b98a;border-radius:12px;
+ box-shadow:0 14px 34px #14291c38;overflow:hidden;
+ animation:decideIn .13s cubic-bezier(.2,.8,.25,1)}
+@keyframes decideIn{from{transform:scale(.97);opacity:0}to{transform:scale(1);opacity:1}}
+@media (prefers-reduced-motion:reduce){.decide-pop{animation:none}}
 .decide-head{
- display:flex;align-items:center;gap:12px;padding:11px 16px;
- border-bottom:1px solid #e2e5d9;background:#f4f1e4;border-radius:12px 12px 0 0}
-.decide-head h2{font-size:16px;margin:0;flex:1 1 auto;min-width:0}
-.decide-body{padding:12px 16px 16px}
+ flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:10px 16px;
+ border-bottom:1px solid #e2e5d9;background:#f4f1e4}
+.decide-head h2{font-size:16px;margin:0;flex:1 1 auto;min-width:0;outline:none}
+.decide-close{flex:0 0 auto;padding:3px 12px;font-size:17px;line-height:1.2;border:1px solid #c9b98a;border-radius:7px;background:transparent;color:#5f6a58;cursor:pointer}
+.decide-close:hover{background:#e9e3cd;color:#365842}
+.decide-body{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:12px 16px 14px;display:grid;gap:12px;align-content:start}
 .decide-body .panel{border:0;background:transparent;padding:0;margin:0}
 .decide-body .panel-title{margin-bottom:10px}
-/* 弹窗框头已经写了阶段名，面板自己那条「阶段2 · 计划阶段」再写一遍就是重复。
+/* 浮层头已经写了阶段名，面板自己那条「阶段2 · 计划阶段」再写一遍就是重复。
    但面板标题里有时还带了状态值（如「投入意志 3 ／ 探查区威胁 2」），不能整条删——
    只把重复的阶段名那截藏掉，保留下来的 <strong> 仍在原位。 */
 .decide-body .panel-title h2{display:none}
@@ -1735,33 +1758,23 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
  .commit-hint>summary{min-height:44px}
 }
 
-/* ── 21. 探险阶段 · 投入角色浮层（v0.15.80）────────────────────────────
-   非模态浮层：.decide-box 的 DOM 子节点，position:absolute 向上弹出
-   （锚点在玩家区，向下会盖手牌）。三段结构：pick-head（固定，复用 .decide-head 规格）/
-   pick-body（滚动，overscroll-behavior:contain）/ pick-foot（固定）。
-   出现动效照抄 .card-hover-box（scale .97→1 + opacity，.13s），无全视口遮罩——
-   「点外部关闭」由 quest-ui.js 的 document pointerdown 监听承担。
-   缩略图网格：repeat(auto-fill,minmax(96px,1fr))；单卡 = 卡图（424/600 cover）+
-   卡名（11.5px 单行省略）+ 属性代币行（--tk:21px）+ 左上角费用徽标。
-   卡状态：is-selected 复用 .selected 金边；is-pending 绿态「待确认」；
-   is-exhausted 卡图旋转 90°+ 红字「已横置」；is-gone 灰阶+虚线「已离场」。
-   ≤760px 改全宽底部抽屉（bottom-sheet，仍非模态，R5）。 */
-.quest-pick{
- position:absolute;bottom:calc(100% + 8px);left:0;z-index:30;
- width:min(680px,calc(100vw - 32px));max-height:min(60vh,570px);
- display:flex;flex-direction:column;margin:0;
- background:#fffdf6;border:1px solid #c9b98a;border-radius:12px;
- box-shadow:0 14px 34px #14291c38;overflow:hidden;
- animation:qpIn .13s cubic-bezier(.2,.8,.25,1)}
-@keyframes qpIn{from{transform:scale(.97);opacity:0}to{transform:scale(1);opacity:1}}
-@media (prefers-reduced-motion:reduce){.quest-pick{animation:none}}
-.pick-head{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid #e2e5d9;background:#f4f1e4}
-.pick-head h2{font-size:16px;margin:0;flex:1 1 auto;min-width:0;outline:none}
-.pick-close{flex:0 0 auto;padding:3px 12px;font-size:17px;line-height:1.2;border-color:#c9b98a;background:transparent;color:#5f6a58}
-.pick-close:hover{background:#e9e3cd;color:#365842}
-.pick-body{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:12px 16px;display:grid;gap:14px;align-content:start}
-.pick-empty{margin:0;padding:10px;border:1px dashed var(--line);border-radius:6px;color:#5f6a58;font-size:12.5px;text-align:center}
-.pick-group-head{margin-bottom:10px}
+/* ── 21. 探险阶段 · 选人区（浮层体内的一段，v0.15.81）────────────────────
+   v0.15.80 的独立浮层 .quest-pick 已并入 DecisionUI 的统一浮层 .decide-pop
+   （见第 18c 节）：同一时刻只允许一个浮层，否则 Esc/点外部该关谁就说不清。
+   这里只剩「浮层体内那一段选人区」的样式：
+     · .pick-bar 小标题行（谁在选 + 重置选择 / C1 说明）
+     · .pick-group + .pick-group-head（英雄／盟友分组）
+     · .pick-grid 缩略图网格 repeat(auto-fill,minmax(96px,1fr))
+     · .qp-card 单卡 = 卡图（424/600 cover）+ 卡名（11.5px 单行省略）+ 属性代币行 + 费用徽标
+   卡状态：is-selected 金边、is-pending 绿态「待确认」、is-exhausted 卡图旋转 90°、
+   is-gone 灰阶虚线。 */
+.pick-panel{display:grid;gap:8px;min-width:0;padding-bottom:2px;border-bottom:1px dashed #e2e5d9}
+.pick-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-width:0}
+.pick-bar-title{font-size:13px;font-weight:600;color:#2f4038}
+.pick-note{margin-right:auto;font-size:12px;color:#5f6a58}
+.pick-bar .pick-clear{margin-left:auto;min-height:28px;padding:0 12px;font-size:12.5px}
+.pick-empty{margin:0;padding:10px;border:1px dashed #d8dcd0;border-radius:6px;color:#5f6a58;font-size:12.5px;text-align:center;grid-column:1/-1}
+.pick-group-head{margin-bottom:8px}
 .pick-count{font-variant-numeric:tabular-nums}
 .pick-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:12px 10px}
 .qp-card{position:relative;display:flex;flex-direction:column;gap:3px;min-width:0}
@@ -1773,35 +1786,26 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
 .qp-card.is-gone{opacity:.4}
 .qp-card.is-gone .card-face{border-style:dashed;border-color:#8b968f}
 .qp-card.is-gone .card-face img{filter:grayscale(1)}
-.qp-card .card-face:not([aria-disabled]):hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 6px 16px #24392f1f}
+.qp-card .card-face:not([aria-disabled]):hover{border-color:#ad8b4b;transform:translateY(-2px);box-shadow:0 6px 16px #24392f1f}
 .qp-noart{display:block;padding:26px 6px;color:#b6c4ce;font-size:12px;text-align:center}
 .qp-cost{position:absolute;top:3px;left:3px;z-index:2;font-size:11px;font-weight:700;line-height:1.4;padding:1px 6px;border-radius:4px;background:#233b2e;color:#fffdf6;font-variant-numeric:tabular-nums}
 .qp-view{position:absolute;top:3px;right:3px;z-index:2;font-size:11px;line-height:1.5;padding:1px 7px;border-radius:4px;border:1px solid #c9b98a;background:#fffdf6;color:#5a5340;cursor:pointer}
 .qp-view:hover{background:#f1edda;color:#365842}
 .qp-name{font-size:11.5px;line-height:1.4;color:#3f5047;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.quest-pick .card-tokens.attr-tokens{--tk:21px;position:static;transform:none;top:auto;left:auto;padding:0;justify-content:flex-start}
+.decide-pop .card-tokens.attr-tokens{--tk:21px;position:static;transform:none;top:auto;left:auto;padding:0;justify-content:flex-start}
 .qp-flag{position:absolute;bottom:5px;left:5px;z-index:2;border-radius:4px;padding:1px 7px;font-size:11.5px;font-weight:700}
 .qp-flag.ok-flag{background:#eef4e9;border:1px solid #a8c2a1;color:#3f6a48}
 .qp-flag.ex-flag{background:#fffdf6;border:1px solid #c07a6a;color:#a03d2e}
 .qp-flag.gone-flag{background:#f2f1e7;border:1px dashed #8b968f;color:#5f6a58}
-.pick-foot{flex:0 0 auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 16px;border-top:1px solid #e2e5d9;background:#f4f1e4;border-radius:0 0 12px 12px}
-.pick-tally{margin-right:auto;font-size:12.5px;font-weight:600;color:#5f6a58;font-variant-numeric:tabular-nums}
-.pick-note{margin-right:auto;font-size:12.5px;color:#5f6a58}
-.pick-foot .primary{min-height:34px;padding:0 18px;border-radius:6px;font-size:14px;font-weight:600;background:var(--green);color:#fff8e6;border-color:var(--green)}
-.pick-ghost{min-height:34px}
-.pick-confirm{flex:0 0 auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 16px;border-top:1px solid #c9b98a;background:#f7f1e0;font-size:12.5px;color:#6b5a35}
-.pick-confirm span{flex:1 1 auto;min-width:0}
-.pick-confirm .primary{min-height:32px;padding:0 14px;border-radius:6px;font-size:13px;font-weight:600;background:var(--green);color:#fff8e6;border-color:var(--green)}
-.pick-trigger{display:flex;align-items:center;gap:8px;width:100%;padding:9px 14px;border:0;border-top:1px solid #e2e5d9;background:#f8f5ea;border-radius:0 0 12px 12px;font-size:13.5px;font-weight:600;color:#365842;cursor:pointer;text-align:left}
-.pick-trigger:hover{background:#f1edda}
-.pick-badge{margin-left:auto;flex:0 0 auto;font-size:12px;font-weight:600;color:#6b5a35;background:#f2e8cf;border:1px solid #d8c69a;border-radius:999px;padding:2px 10px;font-variant-numeric:tabular-nums}
+/* 窄屏（≤760px）：浮层改全宽底部抽屉（仍非模态、无遮罩，R5）。触发条按 44px 触摸目标。 */
 @media(max-width:760px){
- .quest-pick{position:fixed;left:12px;right:12px;bottom:12px;width:auto;max-height:min(68vh,570px)}
- .pick-trigger{min-height:44px}
+ .decide-pop{position:fixed;left:12px;right:12px;bottom:12px;width:auto;max-height:min(68vh,570px)}
+ .decide-trigger{min-height:44px}
 }
 /* 浮层开启时解除祖先裁剪：.bottom-deck（overflow:hidden，v0.15.79 弹性分配）与
    .player-mat（overflow-y:auto 兜底）都会把向上弹出的浮层切掉——被切掉的上半截
    缩略图点不到（命中测试穿透到下层标题），浮层也显示不全。开启期间两处放行；
-   玩家区在 commit 步骤由 flex 约束高度，内容不会因 overflow:visible 外溢。 */
-.player-mat .bottom-deck:has(.quest-pick){overflow:visible}
-.player-mat:has(.quest-pick){overflow:visible}
+   玩家区在 commit 步骤由 flex 约束高度，内容不会因 overflow:visible 外溢。
+   v0.15.81：选择器从 .quest-pick 改为 .decide-pop（浮层统一后只有一个类名）。 */
+.player-mat .bottom-deck:has(.decide-pop){overflow:visible}
+.player-mat:has(.decide-pop){overflow:visible}

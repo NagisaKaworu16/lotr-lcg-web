@@ -14,6 +14,12 @@ let state=null,history=[],tab='table',handView=0;
    不要为了让它也可见改回去滚整个容器。 */
 let lastScrolledStep=null;
 function scrollMainActionIntoView(){
+ /* v0.15.81：先保证「锚点」在视口内——决策面板现在是 .decide-box 里向上弹出的浮层，
+    浮层底缘 = 触发条顶缘 − 8px。触发条本身在折线下方时，浮层底缘连同一整块面板都被
+    切在视口外（761×600 实测主按钮底缘超 5px）。滚动容器是页面（≤760 时是底部抽屉，
+    本身 fixed 不动），所以这一下只滚窗口，不碰浮层内部滚动位置。 */
+ const box=document.querySelector('#app .decide-box');
+ if(box&&typeof box.scrollIntoView==='function')box.scrollIntoView({block:'nearest'});
  const row=document.querySelector('#app .quest-main-action');
  if(!row)return;
  /* 主按钮优先；只有 ghost 的态（C2 取消确认、D 只读）退到操作行本身，别让可点的东西留在屏外。 */
@@ -370,7 +376,7 @@ function showDrawToast(){
  const timer=setTimeout(close,4000);
  d.onclick=ev=>{if(ev.target===d||ev.target.id==='draw-close')close();};}
 
-function render(){captureSetup();document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));const navBtn=$('#'+({table:'tableTab',decks:'decksTab',catalog:'catalogTab',help:'helpTab'}[tab]));if(navBtn)navBtn.classList.add('active');/* v0.15.76：决策面板内联公共桌面，无开合状态——render 每次直接画，不再需要 sync/reset。 */
+function render(){captureSetup();document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));const navBtn=$('#'+({table:'tableTab',decks:'decksTab',catalog:'catalogTab',help:'helpTab'}[tab]));if(navBtn)navBtn.classList.add('active');/* v0.15.81：决策面板是「一行触发条 + 非模态浮层」，开合状态由 DecisionUI 自己按 (round,phase,kind,body 哈希) 收敛，render 每次直接画。 */
  /* v0.15.70：整页 innerHTML 重绘会把焦点扔回 body，键盘玩家每点一次就被弹到页首。
     重绘前记住带 data-focus-key 的活动元素，重绘后按同一个键把焦点放回去（不滚动）。
     派遣面板输出的键：quest-actor-<pid> / quest-commit-<uid> / quest-submit /
@@ -397,6 +403,9 @@ async function handleAction(ev){const b=ev.target.closest('[data-action]');if(!b
  if(a==='encounterFlow'){await EncounterUI.handle(b);return;}
  if(a==='travelFlow'){await TravelUI.handle(b);return;}
  if(a==='quest'){await QuestUI.handle(b);return;}
+ /* v0.15.81：决策浮层的开合（触发条 toggle / 头部 × close）是纯视图操作，由 DecisionUI 收口——
+     全部阶段的决策面板共用同一个开合真相，避免「两个浮层同时开、Esc 该关谁」这种二义性。 */
+ if(a==='decide'){DecisionUI.handle(b);return;}
  if(a==='planning'){await PlanningUI.handle(b);return;}
  if(a==='images'){ImageLibrary.handle(b);return;}
  if(a==='catSide'){catalogSide=b.dataset.value;render();return;}

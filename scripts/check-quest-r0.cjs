@@ -84,6 +84,10 @@ async function reachCommit(p){
   const got=[];
   for(const st of STATES){
    await page.evaluate(st.js);await page.waitForTimeout(200);
+   /* v0.15.81：面板内容只存在于非模态浮层里，纯资讯的态（如名单锁定且无待结算响应）会被
+      自动收起——量之前先确保浮层是开的（触发条就是唯一把手）。 */
+   await page.evaluate(()=>{const t=document.querySelector('.decide-trigger[aria-expanded="false"]');if(t)t.click();});
+   await page.waitForTimeout(150);
    const m=await page.evaluate(measure);
    if(!m||m.state!==st.tag){console.log(`FAIL ${w}x${h} ${st.tag} 态未渲染（实测 ${m&&m.state}）`);failed++;continue;}
    got.push({tag:st.tag,...m});

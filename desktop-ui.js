@@ -1,10 +1,13 @@
 /* Tabletop view: UI drafts never pay, exhaust, reveal, or bypass phase validation. */
 /* 界面版本徽标唯一来源：须与 CHANGELOG.md 最新条目标题一致（planning-dom-tests 有校验）。 */
-const APP_VERSION='v0.15.80';
-/* ── 决策面板（v0.15.62 弹窗 → v0.15.76 内联公共桌面）─────────────────
-   需要玩家拍板的事不再用浮动弹窗（v0.15.73 的 .decide-layer/收起角标/Esc 全部退役）：
-   内容整块内联在手牌区上方（v0.15.79 起，与开局保留/调度按钮同一位置——所有阶段的
-   决策控件都集中到自己手牌旁边），常驻可见，玩家在桌面上直接看到并处理当前事项。
+const APP_VERSION='v0.15.81';
+/* ── 决策面板：一行触发条 + 非模态浮层（v0.15.81）─────────────────────
+   形态演进：v0.15.62 浮动弹窗 → v0.15.76/79 内联公共桌面（常驻 96px 内容块）→ v0.15.81
+   「一行触发条 + 非模态浮层」。用户报障「阶段窗口还在桌面上」：内联块把 .decide-box 撑到
+   963×96，.decide-body 被 flex 压成 44px 内滚，桌面上永远躺着一扇窗。
+   现在桌面上只剩一行 .decide-trigger（圆点 + 标题 + 可选 hint + chevron，约 40px），
+   内容搬进非模态浮层 .decide-pop（DOM 子节点，absolute 向上弹出，头固定／体滚动），
+   需要玩家操作时自动弹出、不需要时自动收起。
 
    判据沿用 ArkhamHorror 的那条线，不是凭感觉分的：
      · 规则书写 must（强制结算、自动抽牌加资源）→ 引擎算完，只在日志留一句，绝不显示面板；
@@ -14,7 +17,7 @@ const APP_VERSION='v0.15.80';
    为什么不用 dialog.showModal()：PlanningUI.form() 内层已经占了一个 <dialog>，
    两层 showModal 叠在一起时，后开的会抢焦点、关掉时把前一层的 backdrop 也带走。
    面板是普通文档流元素，内层 dialog 照常浮在它上面（z-index 见 CSS）。
-   类名沿用 .decide-box/.decide-body：六个验收脚本的选择器与既有测试依赖它们。 */
+   类名沿用 .decide-box/.decide-head/.decide-body：六个验收脚本的选择器与既有测试依赖它们。 */
 const DecisionUI=(()=>{
  /* 本模块独立于 DesktopUI 的闭包，所以依赖在这里自取，不靠外层作用域。
     早期版本直接写 esc()/setupPendingReveal()，一移出闭包就在 render() 里炸「not defined」——
@@ -119,21 +122,98 @@ const DecisionUI=(()=>{
   }
   return null;
  }
- /* v0.15.76 起：待决定内容渲染为内联面板；v0.15.79 位置移到手牌区上方。
-   没有要决定的事就返回空串，不占任何高度。没有开合状态、没有收起角标、
-   没有 Esc 与 place() 定位——面板在文档流里，随页面滚动，永不遮挡牌桌。 */
- function html(s,pid){
-  const d=pending(s,pid);if(!d)return '';
-  /* v0.15.80：探险 commit 步骤的「投入角色」浮层与触发按钮渲染为 .decide-box 的
-     DOM 子节点（position:absolute 向上弹出，见 style.css 第 21 节）；
-     非 commit 语境 pickHTML 返回空串，decide-box 保持原样。 */
-  const pick=typeof QuestUI!=='undefined'&&QuestUI.pickHTML?QuestUI.pickHTML(s,pid):'';
-  return `<section class="decide-box" role="region" aria-label="${esc(d.title)}">
-   <div class="decide-head"><h2>${esc(d.title)}</h2></div>
-   <div class="decide-body">${d.body}</div>${pick}
-  </section>`;
+ /* ── 浮层开合：唯一一把钥匙 (round, phase, kind, body 哈希) ──────────────
+     · key 变化 + 体里有**未 disabled 的 button** → 自动打开（需要玩家操作时自动弹出）；
+     · key 变化 + 体里没有可点按钮（纯资讯，如名单锁定态）→ 自动收起只留触发条；
+     · 用户手动关掉后，同一 key 不再自动打开，直到 key 变化。
+    哈希前先抹掉与决策无关的易变片段：R0 的草稿数字、勾选态、主按钮文案、折叠区明细。
+    不抹的话「关掉浮层 → 在桌面上点一张角色卡」会让 key 变一次，浮层被自己那次勾选弹回来，
+    正好盖住玩家要点的下一张卡（草稿变化不是新决策）。 */
+ let pop={key:'',open:false};
+ function bodyHash(str){let h=5381;const s=String(str||'');for(let i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return (h>>>0).toString(36);}
+ function stableBody(body){
+  return String(body||'')
+   .replace(/<details[\s\S]*?<\/details>/g,'')
+   /* R0 的数字在 .r0-num 里（「暂定」是另一个 span），所以按数字串本身归一，
+      不能写成「暂定 \d+ 名…」——那一条永远匹配不上，草稿一勾 key 就变。 */
+   .replace(/\d+ 名 · 意志 \d+/g,'N 名 · 意志 M')
+   .replace(/\bchecked\b/g,'')
+   .replace(/data-state="on"/g,'data-state=""')
+   .replace(/提交空名单/g,'提交名单');
  }
- return {pending,html};
+ /* 「玩家真的能点」的按钮：<button> 且不带 disabled。缩略图的 aria-disabled 不算——
+    那是「这张卡此刻不能选」，不是「这一步没有要做的事」。 */
+ function actionable(body){return /<button\b(?![^>]*\sdisabled\b)/i.test(String(body||''));}
+ function syncKey(s,d){
+  const key=`${s.round}:${s.phase}:${d.kind}:${bodyHash(stableBody(d.body))}`;
+  if(key!==pop.key)pop={key,open:actionable(d.body)};
+  return key;
+ }
+ function focusSel(sel){
+  try{const el=document.querySelector(sel);if(el&&typeof el.focus==='function')el.focus({preventScroll:true});}catch(e){}
+ }
+ function triggerHTML(d,tone,hint,open){
+  return `<button class="decide-trigger" type="button" data-action="decide" data-decide="toggle" data-tone="${tone}" data-focus-key="decide-trigger" aria-expanded="${open}" aria-controls="decide-pop" aria-label="${esc(d.title)}${hint?'，'+esc(hint):''}"><span class="decide-dot" aria-hidden="true"></span><span class="decide-title">${esc(d.title)}</span>${hint?`<span class="decide-hint" aria-live="polite">${esc(hint)}</span>`:''}<span class="decide-chevron" aria-hidden="true"></span></button>`;
+ }
+ function popHTML(d,extra){
+  return `<div class="decide-pop" id="decide-pop" role="group" aria-label="${esc(d.title)} · 详情"><div class="decide-head"><h2 tabindex="-1">${esc(d.title)}</h2><button class="decide-close" type="button" data-action="decide" data-decide="close" aria-label="关闭「${esc(d.title)}」浮层">×</button></div><div class="decide-body">${extra}${d.body}</div></div>`;
+ }
+ /* 待决定内容：一行触发条 + （展开时）非模态浮层。没有要决定的事就返回空串，不占任何高度。
+    commit 步骤的选人网格（QuestUI.popExtra）拼在浮层体的最前面——一扇窗只装一件决策，
+    同一时刻只允许一个浮层（v0.15.80 的 .quest-pick 与 .decide-pop 曾会撞车）。 */
+ function html(s,pid){
+  const d=pending(s,pid);
+  if(!d){pop={key:'',open:false};return '';}
+  syncKey(s,d);
+  const extra=typeof QuestUI!=='undefined'&&QuestUI.popExtra?QuestUI.popExtra(s,pid):'';
+  const hint=typeof QuestUI!=='undefined'&&QuestUI.pickHint?QuestUI.pickHint(s,pid):'';
+  const open=!!pop.open;
+  return `<section class="decide-box" role="region" aria-label="${esc(d.title)}">${triggerHTML(d,actionable(d.body)?'todo':'info',hint,open)}${open?popHTML(d,extra):''}</section>`;
+ }
+ /* 开合是纯视图操作：不 mutate、不入撤销历史。开启把焦点交给浮层标题（tabindex=-1），
+    关闭交回触发条——键盘玩家关掉之后不该被扔回页首。 */
+ function handle(b){
+  const k=b&&b.dataset?b.dataset.decide:'';
+  if(k==='toggle'){pop.open=!pop.open;render();focusSel(pop.open?'.decide-pop h2':'.decide-trigger');return;}
+  if(k==='close'){pop.open=false;render();focusSel('.decide-trigger');return;}
+ }
+ /* 页面里是否开着内层模态 dialog（choose() 复核弹窗 / PlanningUI 表单）。
+    dialog 是模态层，其内的点击与 Esc 都不属于「操作桌面」——既不算点外部，也不抢 Esc。 */
+ function dialogOpen(){
+  try{return !!(typeof document!=='undefined'&&typeof document.querySelector==='function'&&document.querySelector('dialog[open]'));}catch(e){return false;}
+ }
+ /* 只摘浮层节点、不 render：pointerdown 里整页重绘会吞掉同一次点击（抽牌浮层旧事故）。
+    节点的离场与状态同源——下一次 render 会按 pop.open 重新决定渲不渲染。 */
+ function closeQuiet(){
+  pop.open=false;
+  const el=document.querySelector('.decide-pop');if(el&&el.remove)el.remove();
+  const tg=document.querySelector('.decide-trigger');if(tg&&tg.setAttribute)tg.setAttribute('aria-expanded','false');
+ }
+ function outsidePointer(ev){
+  if(!pop.open||typeof document==='undefined')return false;
+  const box=document.querySelector('.decide-pop');if(!box)return false;
+  const t=ev&&ev.target;
+  if(box.contains&&box.contains(t))return false;
+  const tg=document.querySelector('.decide-trigger');
+  if(tg&&tg.contains&&tg.contains(t))return false;
+  if(dialogOpen())return false;
+  closeQuiet();
+  return true;
+ }
+ function escClose(ev){
+  if(!pop.open)return false;
+  if(ev&&ev.key!==undefined&&ev.key!=='Escape')return false;
+  if(dialogOpen())return false;
+  pop.open=false;render();focusSel('.decide-trigger');
+  return true;
+ }
+ /* 两个监听只注册一次；outsidePointer/escClose/closeQuiet 同时导出给回归测试直接调用
+    （假 DOM 没有 addEventListener，测试走纯函数入口）。 */
+ if(typeof document!=='undefined'&&typeof document.addEventListener==='function'){
+  document.addEventListener('pointerdown',outsidePointer,true);
+  document.addEventListener('keydown',escClose,true);
+ }
+ return {pending,html,handle,outsidePointer,escClose,actionable};
 })();
 const DesktopUI=(()=>{
  const E=ScenarioEngine,R=E.planning,Q=E.questing,C=E.combat,esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

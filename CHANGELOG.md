@@ -1,3 +1,13 @@
+# v0.15.81 · 决策面板统一为「一行触发条 + 非模态浮层」：全部阶段需要玩家操作时自动弹出（2026-10-27）
+
+- **用户报障**：「为什么阶段窗口还在桌面上，之前的要求不是作为弹窗显示吗」。实测 1440×950 探险 beforeCommit：`.decide-box` = 963×96px，`.decide-body` 被 flex 压到 44px 内滚——v0.15.79 把整块面板内联到手牌区上方后，桌面上永远躺着一扇 96px 的窗。
+- **形态**：`.decide-box` 只剩两样东西——一行触发条 `.decide-trigger`（状态圆点［有待办=金色／纯资讯=灰］+ 标题 + 可选 hint + chevron，min-height:40px，占满宽）与非模态浮层 `.decide-pop`（`.decide-box` 的 DOM 子节点，`position:absolute; bottom:calc(100% + 8px)`，宽 `min(880px, calc(100vw − 48px))`，高 `max-height:min(62vh,600px)`，头固定／体滚动；≤760px 改全宽底部抽屉）。类名 `.decide-head`/`.decide-body` 原样保留（验收脚本与既有测试依赖）。
+- **开合只有一把钥匙**：`(round, phase, kind, body 内容哈希)`。key 变化且体里存在**未 disabled 的 button** → 自动打开（「需要玩家操作时自动弹出」）；key 变化但体里没有可点按钮（纯资讯，如名单锁定的 D 态）→ 自动收起只留触发条；用户手动关掉后同一 key 不再自动打开，直到 key 变化。哈希前先抹掉三处**与决策无关的易变片段**（R0 草稿数字「暂定 N 名·意志 M」、勾选 `checked`/`data-state="on"`、主按钮「提交空名单」）与折叠区明细——否则「关掉浮层 → 在桌面上点一张角色卡」会让 key 变一次，浮层被自己那次勾选弹回来、正好盖住下一张卡。
+- **关闭途径**：头部 × 、Esc、点浮层外部。`dialog[open]` 存在时 Esc 让位给内层 dialog、pointerdown 不算点外部（复核弹窗与 PlanningUI 表单期间的点击不误关）。点外部只摘浮层节点不 render（pointerdown 里整页重绘会吞掉同一次点击），焦点关闭后回触发条、开启时进浮层标题。
+- **合并重复浮层**：v0.15.80 的 `.quest-pick`（选人缩略图网格）与新的 `.decide-pop` 会撞车，现合并成**唯一浮层**——`QuestUI.popExtra()` 把缩略图网格（`.pick-panel`，含 `.pick-bar` 的重置选择与 C1 说明）内联到浮层体最前面（deploySection 之前），`QuestUI.pickHint()` 把「已选 N 名（意志 X）」搬到 `.decide-trigger` 的 hint 区，`.pick-trigger` 的第二条触发条消失。**去重**：删掉 v0.15.80 浮层脚部的第二颗「提交名单」（`.quest-deploy` R2 已有一颗，`data-quest="commit"` 全页唯一）与 C1 两步内联确认（`pickApprove`/`pickDismiss` 会与 R2 的「确认派遣」形成两颗同义绿按钮，与 `.decide-box` 内 `[data-quest="approveDeployment"]` 恰好一颗、`.quest-deploy` 内 primary ≤1 两条硬约束冲突）；`data-quest="pickApprove"` 退成兼容别名（等同直接确认），防误触说明改由 `.pick-note` 静态文案承担。**删除 pickState 开合状态机**（key/open/auto/prevStep/confirm 全部退役），Esc／点外部／自动弹出统一到 DecisionUI；`draftFor`/`draftPeek`/`setDraft`（R4 分槽）与 R1–R5 增强、`syncTableMarks`/`syncDraftBits` 双向同步全部保留。
+- **脚本兼容**：`.player-mat .bottom-deck:has(.quest-pick)` / `.player-mat:has(.quest-pick)` 两条祖先放行改为 `.decide-pop`（否则浮层被 overflow:hidden 裁掉、命中测试穿透）。`check-taskbar`/`browser-check` 的收起浮层由点 `.pick-trigger` 改为点 `.decide-trigger[aria-expanded="true"]`，`browser-check` 的缩略图选择器改 `.decide-pop .qp-card`；`check-quest-panel` 的 D 态与 `check-quest-r0` 的五态在浮层被自动收起后先点触发条再量（关闭态内容不可量也不可点，这是新形态的既定语义）。
+- **测试**：`quest-overlay-tests.cjs` 整份改写为 11 项 DecisionUI 版本（自动打开＋触发条 hint、只有一个 `id="decide-pop"`、选人网格排在 `.quest-deploy` 之前、开→关→重开草稿保留＋R4 分槽、eligible 空「提交空名单」、重置只清草稿、C1 单颗确认→C2 翻转、D 态零派遣控件、`actionable()` 四例、Esc 关闭且 dialog 打开时让位、dialog 内 pointerdown 不误关、最后提交者进 C1 自动弹出、手动关闭后草稿点击不重新弹开）。CI 489 项全绿。
+
 # v0.15.80 · 探险阶段·投入角色：非模态缩略图浮层（decide-box 子节点向上弹出）（2026-10-27）
 
 - **用户指令**：为探险阶段「投入角色」实现非模态浮层——作为 `.decide-box` 的 DOM 子节点向上弹出（锚点在玩家区，向下会盖手牌），缩略图网格选人，替代/补充原有的内联勾选面板；含 R1–R5 五项增强。
