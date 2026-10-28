@@ -1829,3 +1829,58 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
    v0.15.81：选择器从 .quest-pick 改为 .decide-pop（浮层统一后只有一个类名）。 */
 .player-mat .bottom-deck:has(.decide-pop){overflow:visible}
 .player-mat:has(.decide-pop){overflow:visible}
+
+/* ── 21b. 浮层内的图形化表达（v0.15.86）───────────────────────────────
+   用户反馈「弹窗内能以图形化显示的，最好不要用文字」。这里集中三样：
+     · .pick-void   空态卡（图标 + 一句结论 + 一句出路），取代一行灰字
+     · .pick-steps  步骤条（编号圆点 + 连线 + 状态色），取代「第一步 · …」纯文字标题
+     · .draft-*     草稿数值的代币化摘要（代币素材 + 大字数字 + 徽章），取代一条长句
+   状态色沿用羊皮纸主调：灰＝未开始，绿＝已完成，金＝当前。 */
+.pick-void{grid-column:1/-1;display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px dashed #d3d7c8;border-radius:8px;background:linear-gradient(180deg,#fbfaf2,#f3f2e6)}
+.pick-void-ico{flex:0 0 auto;display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:#efeee1;color:#98a08f;box-shadow:inset 0 0 0 1px #dedccb}
+.pick-void-ico svg{display:block;width:22px;height:22px}
+.pick-void-copy{display:grid;gap:3px;min-width:0}
+.pick-void-copy b{font-size:13.5px;line-height:1.4;font-weight:600;color:#3f4a40}
+.pick-void-copy em{font-style:normal;font-size:12px;line-height:1.45;color:#7d8578}
+/* 攻击选择的两栏：左「1 攻击目标」右「2 参与角色」。上下堆叠时目标行+角色行+摘要卡会把浮层
+   顶到 62vh 上限并内部滚动，提交按钮被挤出可视区；并排后高度减半，顺序也变成左右关系。 */
+.pick-cols{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:16px;align-items:start}
+.pick-col{display:grid;gap:8px;min-width:0}
+/* 左栏与右栏之间补一道竖虚线：只靠 16px 间距，敌人卡与第一张角色卡会看成一排。 */
+.pick-col-target{padding-right:14px;border-right:1px dashed #e4e6da}
+.pick-col-head{display:flex;align-items:center;gap:6px;min-height:20px;font-size:12.5px;font-weight:600;color:#3f4a40}
+.pick-col-label{font-weight:600}
+.pick-grid-target{grid-template-columns:repeat(auto-fit,minmax(88px,88px))}
+/* 步骤圆点：已完成为绿勾、当前为金圈、未开始为灰底编号。 */
+.pick-step-dot{flex:0 0 auto;display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;border:1.5px solid #cfd3c6;background:#f7f6ee;font-size:11.5px;font-weight:700;line-height:1;color:#8a9184;font-variant-numeric:tabular-nums}
+.pick-step-dot svg{display:block;width:12px;height:12px}
+.pick-step-dot.is-done{border-color:#8aa889;background:#e9f1e4;color:#3f6a48}
+.pick-step-dot.is-active{border-color:#c9a24e;background:#f7e8bd;color:#6b4f11;box-shadow:0 0 0 3px #e8c4732e}
+.pick-step-count{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:#233b2e;color:#fffdf6;font-size:11px;line-height:1;font-variant-numeric:tabular-nums}
+/* 草稿摘要：浮层里的 .table-selection 之前没有专属样式（.operation-content 那条在浮层里不命中），
+   所以一直是裸文本块。这里做成一张浅色卡：玩家徽章 → 代币数值 → 已选徽章 → 说明 → 按钮。 */
+.decide-body .table-selection{display:grid;gap:10px;margin:0;padding:12px 14px;background:#fbfaf3;border:1px solid #e2dfcc;border-radius:8px}
+.draft-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
+.player-chip{display:inline-flex;align-items:center;gap:6px;padding:2px 9px 2px 8px;border-radius:11px;background:#eef1e4;font-size:12px;font-weight:600;color:#3d4b3e}
+.player-chip::before{content:'';flex:0 0 auto;width:7px;height:7px;border-radius:50%;background:#7f9a80}
+.draft-hint{font-size:12.5px;line-height:1.4;color:#5f6a58;min-width:0}
+.draft-stats{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.draft-chip{display:inline-flex;align-items:center;gap:7px;padding:3px 11px 3px 3px;border-radius:14px;background:#f2f0e0;border:1px solid #e6e3cf;font-size:12.5px;color:#4a5449}
+.draft-chip-ico{display:block;width:22px;height:22px;border-radius:50%}
+.draft-num{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;color:#2f4038}
+.draft-count{display:inline-flex;align-items:center;padding:4px 11px;border-radius:12px;background:#233b2e;color:#fffdf6;font-size:12px;font-weight:600;font-variant-numeric:tabular-nums}
+.draft-note{margin:0;font-size:11.5px;line-height:1.5;color:#7d8578}
+/* 步骤圆点与右侧提示之间加一道细分隔：不加的话「② 参与角色 点角色卡加入名单」会被读成一句话。 */
+.pick-bar .pick-note{padding-left:10px;border-left:1px solid #e1e3d7}
+/* 提交按钮加一枚勾选图标：文字仍是「提交暂定防御名单」，但按钮意图一眼可辨。
+   用 mask 而不是 ::before 背景图，图标会跟随按钮文字色（禁用态自动同步变灰）。 */
+.decide-body .table-selection .actions button[data-desktop="submit"]::before{content:'';display:inline-block;width:13px;height:13px;margin-right:6px;vertical-align:-2px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='m3.4 8.4 3.1 3.1L12.6 4.4' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='m3.4 8.4 3.1 3.1L12.6 4.4' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat}
+@media(max-width:760px){
+ .pick-cols{grid-template-columns:minmax(0,1fr)}
+ .pick-col-target{padding-right:0;border-right:0;padding-bottom:10px;border-bottom:1px dashed #e4e6da}
+ .pick-grid-target{grid-template-columns:repeat(auto-fill,88px)}
+ .pick-void{flex-direction:column;text-align:center;gap:8px;padding:14px 12px}
+ .pick-void-copy{justify-items:center}
+ .draft-stats{gap:6px}
+ .draft-chip{padding:3px 9px 3px 3px}
+}

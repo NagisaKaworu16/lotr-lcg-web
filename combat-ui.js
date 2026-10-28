@@ -2,6 +2,27 @@ const CombatUI=(()=>{
  const E=ScenarioEngine,T=E.combat,R=E.planning,Q=E.questing,esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const b=(label,kind,args='',disabled=false)=>`<button data-action="combatFlow" data-combat="${kind}" ${args} ${disabled?'disabled':''}>${esc(label)}</button>`;
  const names=(s,ids)=>ids.map(uid=>R.find(s,uid)?.meta.nameZh||'#'+uid).join('、')||'无人防御';
+ /* ── 图形化空态与步骤条（v0.15.86）─────────────────────────────────────
+    用户反馈：浮层里「没有合法攻击目标」「该目标没有可派出的角色」只是一行灰字，
+    读起来像报错，也分不清「这一步本来就没事可做」和「我操作错了」。
+    改成「图标 + 结论 + 出路」的空态卡：结论一眼可辨（斜杠靶心＝没有目标、斜杠卡牌＝没有角色），
+    出路写清下一步该点哪里。图标全部内联 SVG：不额外请求、跟随文字色、缩放不失真。 */
+ const VOID_ICON={
+  none:'<circle cx="12" cy="12" r="6.8"/><circle cx="12" cy="12" r="2.2"/><path d="M5.6 18.4 18.4 5.6"/>',
+  card:'<rect x="7.6" y="3.6" width="8.8" height="16.8" rx="1.6"/><path d="M7.6 9h8.8M7.6 15h8.8"/><path d="M4.2 19.8 19.8 4.2"/>',
+  aim:'<path d="M12 3.4v6"/><path d="m9.2 6.8 2.8 2.8 2.8-2.8"/><rect x="7.6" y="12.6" width="8.8" height="8" rx="1.6"/><path d="M10.4 16.6h3.2"/>',
+ };
+ function voidCard(icon,title,why){
+  return `<div class="pick-void" role="note"><span class="pick-void-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${VOID_ICON[icon]||VOID_ICON.none}</svg></span><span class="pick-void-copy"><b>${esc(title)}</b><em>${esc(why)}</em></span></div>`;
+ }
+ /* 步骤圆点：编号 + 状态色（已完成绿勾／当前金圈／未开始灰）。
+    攻击选择改成左右两栏后，它同时充当列头——「左 1 选打谁、右 2 选谁去打」，
+    顺序与进度都在图上一眼可见，不再需要「第一步 · 选择攻击目标」这类纯文字小标题。 */
+ const CHECK='<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3.6 8.4 3 3 5.8-6.4"/></svg>';
+ function dotHTML(n,done,active){return `<span class="pick-step-dot${done?' is-done':''}${active?' is-active':''}">${done?CHECK:n}</span>`;}
+ function colHead(n,label,done,active,count){
+  return `<div class="pick-col-head"${active?' data-current="step"':''}>${dotHTML(n,done,active)}<span class="pick-col-label">${esc(label)}</span>${count?`<b class="pick-step-count">${count}</b>`:''}</div>`;
+ }
  /* ── 防御／攻击的选人网格（v0.15.83）────────────────────────────────
     病灶：v0.15.81 起决策面板是覆盖桌面的非模态浮层，而 defense/attack 的选人方式
     仍是「点桌面上的角色卡」——浮层一开，角色卡全被盖住，玩家只看到一句
@@ -33,15 +54,24 @@ const CombatUI=(()=>{
   if(m.kind==='defense'){
    const list=T.defenders(s);
    const head=`<div class="pick-bar"><span class="pick-bar-title">选择防御者 · ${esc(s.players[m.player].name)}</span><span class="pick-note">不选表示无人防御；普通防御至多 1 名</span></div>`;
-   const grid=list.length?`<div class="pick-grid">${list.map(c=>thumb(s,c,m,'防御者 ')).join('')}</div>`:'<p class="pick-empty">没有可防御的角色（可能都已横置或离场）</p>';
+   const grid=list.length?`<div class="pick-grid">${list.map(c=>thumb(s,c,m,'防御者 ')).join('')}</div>`:voidCard('card','没有可防御的角色','角色都已横置或已离场，这一击只能直接结算伤害');
    return `<div class="pick-panel combat-pick" role="group" aria-label="选择防御者">${head}${grid}</div>`;
   }
   const targets=T.attackTargets(s,m.player);
-  let body=`<div class="pick-bar"><span class="pick-bar-title">第一步 · 选择攻击目标</span></div>`+(targets.length?`<div class="pick-grid">${targets.map(e=>targetThumb(s,e,m)).join('')}</div>`:'<p class="pick-empty">没有合法攻击目标</p>');
-  if(d.target===null)body+=`<div class="pick-bar"><span class="pick-bar-title">第二步 · 选择参与攻击的角色</span></div><p class="pick-empty">先选目标敌人，再选攻击角色</p>`;
-  else{const list=T.attackers(s,m.player,d.target);
-   body+=`<div class="pick-bar"><span class="pick-bar-title">第二步 · 选择参与攻击的角色</span><span class="pick-note">已选 ${d.ids.length} 名</span></div>`+(list.length?`<div class="pick-grid">${list.map(c=>thumb(s,c,m,'攻击者 ')).join('')}</div>`:'<p class="pick-empty">该目标没有可派出的角色</p>');}
-  return `<div class="pick-panel combat-pick" role="group" aria-label="选择攻击目标与角色">${body}</div>`;
+  const hasTarget=d.target!==null,list=hasTarget?T.attackers(s,m.player,d.target):[];
+  /* 攻击选择做成左右两栏：左栏选打谁（1），右栏选谁去打（2）。
+     上下堆叠时目标行 + 角色行 + 摘要卡会把浮层顶到 62vh 上限并内部滚动，
+     「提交暂定攻击名单」被挤到可视区之外；并排后高度减半，顺序也变成左右关系，更直观。 */
+  const targetBody=targets.length?`<div class="pick-grid pick-grid-target">${targets.map(e=>targetThumb(s,e,m)).join('')}</div>`:voidCard('none','没有可攻击的敌人','敌人已离场，或本回合已经攻击过它；可选「暂定结束我的攻击」');
+  /* 一个目标都没有时不再摆出「参与角色」栏——那栏永远填不满，只会多一块自相矛盾的提示。 */
+  if(!targets.length)return `<div class="pick-panel combat-pick" role="group" aria-label="选择攻击目标"><div class="pick-col">${colHead(1,'攻击目标',false,true,0)}${targetBody}</div></div>`;
+  const actorBody=!hasTarget
+   ?voidCard('aim','先选目标敌人','左栏点一张敌人卡，这里才会列出这个敌人能派出的角色')
+   :list.length?`<div class="pick-grid">${list.map(c=>thumb(s,c,m,'攻击者 ')).join('')}</div>`:voidCard('card','该目标没有可派出的角色','角色都已横置，或不在这个敌人的攻击范围内');
+  return `<div class="pick-panel combat-pick" role="group" aria-label="选择攻击目标与角色"><div class="pick-cols">
+   <div class="pick-col pick-col-target">${colHead(1,'攻击目标',hasTarget,!hasTarget&&targets.length>0,targets.length>1?targets.length:0)}${targetBody}</div>
+   <div class="pick-col pick-col-actor">${colHead(2,'参与角色',hasTarget&&d.ids.length>0,hasTarget,d.ids.length)}${actorBody}</div>
+  </div></div>`;
  }
  function panel(s,pid){if(s.phase!==5||!s.combat)return '';const x=s.combat,ps=s.players.filter(p=>!p.eliminated),actor=ps.some(p=>p.id===pid)?pid:ps[0]?.id,sp=R.choiceSpec(s),task=T.spec(s),a=x.attack;let body='';
   if(x.completed)return '<section class="panel deck-valid"><h2>阶段6 · 战斗阶段验收完成</h2><p>暗影与阶段结束效果已处理，角色保持横置与伤害状态。可进入第七阶段刷新。</p></section>';

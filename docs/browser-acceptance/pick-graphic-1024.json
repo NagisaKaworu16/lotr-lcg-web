@@ -1,0 +1,499 @@
+{
+  "ok": true,
+  "width": 1024,
+  "s1": {
+    "title": "战斗 · 选择攻击目标与角色",
+    "pop": {
+      "x": 34,
+      "y": 610.9,
+      "w": 880,
+      "h": 484.5
+    },
+    "body": {
+      "x": 35,
+      "y": 661.3,
+      "w": 878,
+      "h": 433.1
+    },
+    "bodyScrollW": 878,
+    "bodyClientW": 878,
+    "bodyScrollH": 433,
+    "voids": [
+      {
+        "box": {
+          "x": 170,
+          "y": 702.6,
+          "w": 727,
+          "h": 68
+        },
+        "ico": {
+          "x": 185,
+          "y": 715.6,
+          "w": 42,
+          "h": 42
+        },
+        "svg": {
+          "x": 195,
+          "y": 725.6,
+          "w": 22,
+          "h": 22
+        },
+        "title": "先选目标敌人",
+        "why": "左栏点一张敌人卡，这里才会列出这个敌人能派出的角色"
+      }
+    ],
+    "steps": [
+      {
+        "box": {
+          "x": 51,
+          "y": 673.3,
+          "w": 88,
+          "h": 21.3
+        },
+        "label": "攻击目标",
+        "done": false,
+        "active": true,
+        "dotBorder": "rgb(201, 162, 78)",
+        "check": false,
+        "count": null
+      },
+      {
+        "box": {
+          "x": 170,
+          "y": 673.3,
+          "w": 727,
+          "h": 21.3
+        },
+        "label": "参与角色",
+        "done": false,
+        "active": false,
+        "dotBorder": "rgb(207, 211, 198)",
+        "check": false,
+        "count": null
+      }
+    ],
+    "cols": [
+      {
+        "x": 51,
+        "y": 673.3,
+        "w": 103,
+        "h": 196
+      },
+      {
+        "x": 170,
+        "y": 673.3,
+        "w": 727,
+        "h": 97.3
+      }
+    ],
+    "chips": [],
+    "counts": [],
+    "notes": [
+      "先选目标敌人；特殊能力以正式结算为准"
+    ],
+    "submitBeforeW": "13px",
+    "thumbs": 1,
+    "pickEmpty": 0,
+    "vh": 950
+  },
+  "s2": {
+    "title": "战斗 · 选择攻击目标与角色",
+    "pop": {
+      "x": 34,
+      "y": 388.3,
+      "w": 880,
+      "h": 563.1
+    },
+    "body": {
+      "x": 35,
+      "y": 438.7,
+      "w": 878,
+      "h": 511.7
+    },
+    "bodyScrollW": 878,
+    "bodyClientW": 878,
+    "bodyScrollH": 512,
+    "voids": [],
+    "steps": [
+      {
+        "box": {
+          "x": 51,
+          "y": 450.7,
+          "w": 88,
+          "h": 21.3
+        },
+        "label": "攻击目标",
+        "done": true,
+        "active": false,
+        "dotBorder": "rgb(138, 168, 137)",
+        "check": true,
+        "count": null
+      },
+      {
+        "box": {
+          "x": 170,
+          "y": 450.7,
+          "w": 727,
+          "h": 21.3
+        },
+        "label": "参与角色",
+        "done": false,
+        "active": true,
+        "dotBorder": "rgb(201, 162, 78)",
+        "check": false,
+        "count": null
+      }
+    ],
+    "cols": [
+      {
+        "x": 51,
+        "y": 450.7,
+        "w": 103,
+        "h": 195.2
+      },
+      {
+        "x": 170,
+        "y": 450.7,
+        "w": 727,
+        "h": 231.2
+      }
+    ],
+    "chips": [
+      {
+        "box": {
+          "x": 66,
+          "y": 744.3,
+          "w": 133.4,
+          "h": 33.5
+        },
+        "ico": {
+          "w": 146,
+          "display": "block",
+          "box": {
+            "x": 70,
+            "y": 750,
+            "w": 22,
+            "h": 22
+          }
+        },
+        "num": {
+          "x": 178.4,
+          "y": 751.3,
+          "w": 9,
+          "h": 19
+        },
+        "numSize": 15,
+        "text": "暂定基础攻击 0"
+      },
+      {
+        "box": {
+          "x": 207.4,
+          "y": 744.3,
+          "w": 108.4,
+          "h": 33.5
+        },
+        "ico": {
+          "w": 146,
+          "display": "block",
+          "box": {
+            "x": 211.4,
+            "y": 750,
+            "w": 22,
+            "h": 22
+          }
+        },
+        "num": {
+          "x": 294.8,
+          "y": 751.3,
+          "w": 9,
+          "h": 19
+        },
+        "numSize": 15,
+        "text": "目标防御 1"
+      },
+      {
+        "box": {
+          "x": 323.8,
+          "y": 744.3,
+          "w": 133.4,
+          "h": 33.5
+        },
+        "ico": {
+          "w": 146,
+          "display": "block",
+          "box": {
+            "x": 327.8,
+            "y": 750,
+            "w": 22,
+            "h": 22
+          }
+        },
+        "num": {
+          "x": 436.1,
+          "y": 751.3,
+          "w": 9,
+          "h": 19
+        },
+        "numSize": 15,
+        "text": "基础伤害预估 0"
+      }
+    ],
+    "counts": [
+      "已选 0 名"
+    ],
+    "notes": [
+      "特殊能力以正式结算为准"
+    ],
+    "submitBeforeW": "13px",
+    "thumbs": 5,
+    "pickEmpty": 0,
+    "vh": 950
+  },
+  "s3": {
+    "title": "战斗 · 选择攻击目标与角色",
+    "pop": {
+      "x": 34,
+      "y": 565.7,
+      "w": 880,
+      "h": 385.7
+    },
+    "body": {
+      "x": 35,
+      "y": 616.1,
+      "w": 878,
+      "h": 334.3
+    },
+    "bodyScrollW": 878,
+    "bodyClientW": 878,
+    "bodyScrollH": 334,
+    "voids": [
+      {
+        "box": {
+          "x": 51,
+          "y": 657.4,
+          "w": 846,
+          "h": 68
+        },
+        "ico": {
+          "x": 66,
+          "y": 670.4,
+          "w": 42,
+          "h": 42
+        },
+        "svg": {
+          "x": 76,
+          "y": 680.4,
+          "w": 22,
+          "h": 22
+        },
+        "title": "没有可攻击的敌人",
+        "why": "敌人已离场，或本回合已经攻击过它；可选「暂定结束我的攻击」"
+      }
+    ],
+    "steps": [
+      {
+        "box": {
+          "x": 51,
+          "y": 628.1,
+          "w": 846,
+          "h": 21.3
+        },
+        "label": "攻击目标",
+        "done": false,
+        "active": true,
+        "dotBorder": "rgb(201, 162, 78)",
+        "check": false,
+        "count": null
+      }
+    ],
+    "cols": [
+      {
+        "x": 51,
+        "y": 628.1,
+        "w": 846,
+        "h": 97.3
+      }
+    ],
+    "chips": [],
+    "counts": [],
+    "notes": [
+      "不消耗任何资源，也不会横置角色；点「暂定结束我的攻击」即可继续。"
+    ],
+    "submitBeforeW": "13px",
+    "thumbs": 0,
+    "pickEmpty": 0,
+    "vh": 950
+  },
+  "shots": [
+    "C:\\Users\\Administrator\\WorkBuddy\\魔戒LCG\\docs\\browser-acceptance\\pick-graphic-aim-1024.png",
+    "C:\\Users\\Administrator\\WorkBuddy\\魔戒LCG\\docs\\browser-acceptance\\pick-graphic-target-1024.png",
+    "C:\\Users\\Administrator\\WorkBuddy\\魔戒LCG\\docs\\browser-acceptance\\pick-graphic-empty-1024.png"
+  ],
+  "checks": [
+    {
+      "name": "对局已开始（有 state）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "浮层已打开且是攻击选择",
+      "ok": true,
+      "detail": "战斗 · 选择攻击目标与角色"
+    },
+    {
+      "name": "空态不再是裸文字条（.pick-empty 已清零）",
+      "ok": true,
+      "detail": "剩 0 条"
+    },
+    {
+      "name": "未选目标时给出图形化引导空态",
+      "ok": true,
+      "detail": "先选目标敌人"
+    },
+    {
+      "name": "空态含图标（22px 线稿 + 42px 圆底）",
+      "ok": true,
+      "detail": "图标 22px / 圆底 42px"
+    },
+    {
+      "name": "空态高度受控（52–150px，不再是一行 38px 灰字）",
+      "ok": true,
+      "detail": "727×68px"
+    },
+    {
+      "name": "步骤条两步俱在",
+      "ok": true,
+      "detail": "攻击目标 → 参与角色"
+    },
+    {
+      "name": "第一步为当前步（金字金圈），第二步未开始",
+      "ok": true,
+      "detail": "攻击目标:active 参与角色:wait"
+    },
+    {
+      "name": "当前步圆点有金圈（不是灰底默认态）",
+      "ok": true,
+      "detail": "rgb(201, 162, 78)"
+    },
+    {
+      "name": "选完目标后第一步打勾（done 态 + 勾图标）",
+      "ok": true,
+      "detail": "done=true check=true"
+    },
+    {
+      "name": "第二步转为当前步",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "未选角色时步骤条不挂 0 徽章",
+      "ok": true,
+      "detail": "count=null"
+    },
+    {
+      "name": "角色缩略图网格照常给出",
+      "ok": true,
+      "detail": "5 张"
+    },
+    {
+      "name": "草稿摘要用代币 chip 呈现",
+      "ok": true,
+      "detail": "暂定基础攻击 0 | 目标防御 1 | 基础伤害预估 0"
+    },
+    {
+      "name": "代币图标真的加载成功（naturalWidth > 0）",
+      "ok": true,
+      "detail": "146,146,146"
+    },
+    {
+      "name": "数字比正文大（≥14px）",
+      "ok": true,
+      "detail": "15,15,15"
+    },
+    {
+      "name": "「已选 N 名」仍在（供读屏与测试定位）",
+      "ok": true,
+      "detail": "已选 0 名"
+    },
+    {
+      "name": "提交按钮带勾选图标",
+      "ok": true,
+      "detail": "::before 宽 13px"
+    },
+    {
+      "name": "没有合法目标时给出斜杠靶心空态",
+      "ok": true,
+      "detail": "没有可攻击的敌人"
+    },
+    {
+      "name": "空态写出路（不只说「没有」）",
+      "ok": true,
+      "detail": "敌人已离场，或本回合已经攻击过它；可选「暂定结束我的攻击」"
+    },
+    {
+      "name": "草稿 target 已归零（与「没有可攻击的敌人」一致）",
+      "ok": true,
+      "detail": "target=null"
+    },
+    {
+      "name": "① 浮层无横向溢出",
+      "ok": true,
+      "detail": "878 ≤ 878"
+    },
+    {
+      "name": "① 浮层未触 62vh 高度上限",
+      "ok": true,
+      "detail": "484.5px / 589px"
+    },
+    {
+      "name": "① 浮层体内无滚动（提交按钮不用滚就能看见）",
+      "ok": true,
+      "detail": "内容 433px / 容器 433.1px"
+    },
+    {
+      "name": "① 目标与角色两栏并排（左 1 右 2）",
+      "ok": true,
+      "detail": "左栏右缘 154 ≤ 右栏左缘 170"
+    },
+    {
+      "name": "② 浮层无横向溢出",
+      "ok": true,
+      "detail": "878 ≤ 878"
+    },
+    {
+      "name": "② 浮层未触 62vh 高度上限",
+      "ok": true,
+      "detail": "563.1px / 589px"
+    },
+    {
+      "name": "② 浮层体内无滚动（提交按钮不用滚就能看见）",
+      "ok": true,
+      "detail": "内容 512px / 容器 511.7px"
+    },
+    {
+      "name": "② 目标与角色两栏并排（左 1 右 2）",
+      "ok": true,
+      "detail": "左栏右缘 154 ≤ 右栏左缘 170"
+    },
+    {
+      "name": "③ 浮层无横向溢出",
+      "ok": true,
+      "detail": "878 ≤ 878"
+    },
+    {
+      "name": "③ 浮层未触 62vh 高度上限",
+      "ok": true,
+      "detail": "385.7px / 589px"
+    },
+    {
+      "name": "③ 浮层体内无滚动（提交按钮不用滚就能看见）",
+      "ok": true,
+      "detail": "内容 334px / 容器 334.3px"
+    },
+    {
+      "name": "无脚本错误",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}

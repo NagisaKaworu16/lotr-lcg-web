@@ -352,7 +352,10 @@ const qtk=(type,n)=>`<span class="tk tk-${type}"><img src="assets/tokens/${type}
   };
   const group=(label,list)=>list.length?`<div class="pick-group"><div class="ng-chapter-head pick-group-head"><span>${label}</span><span class="pick-count">${list.length} 名</span></div><div class="pick-grid">${list.map(card).join('')}</div></div>`:'';
   const heroes=mine.filter(c=>c.kind==='hero'),allies=mine.filter(c=>c.kind!=='hero');
-  return mine.length?group('英雄',heroes)+group('盟友',allies):'<p class="pick-empty">本回合无可用角色</p>';
+  /* v0.15.86：空态改图形化（与 combat-ui 的 .pick-void 同一套视觉）——斜杠卡牌一眼说明
+     「不是你没选，是这会儿真没人可选」，比一行灰字「本回合无可用角色」好读。 */
+  if(!mine.length)return `<div class="pick-void" role="note"><span class="pick-void-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="7.6" y="3.6" width="8.8" height="16.8" rx="1.6"/><path d="M7.6 9h8.8M7.6 15h8.8"/><path d="M4.2 19.8 19.8 4.2"/></svg></span><span class="pick-void-copy"><b>本回合无可用角色</b><em>英雄与盟友都已横置或已离场，先把场上状态处理完再回来投入</em></span></div>`;
+  return group('英雄',heroes)+group('盟友',allies);
  }
  /* 选人区的小标题行：谁在选 + （A 态）重置选择 + （C1 态）确认语义说明。
     「重置选择」只清草稿：主操作（提交／确认／修改）一律留在 .quest-deploy 的 R2，

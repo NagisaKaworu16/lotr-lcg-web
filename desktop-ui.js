@@ -1,6 +1,6 @@
 /* Tabletop view: UI drafts never pay, exhaust, reveal, or bypass phase validation. */
 /* 界面版本徽标唯一来源：须与 CHANGELOG.md 最新条目标题一致（planning-dom-tests 有校验）。 */
-const APP_VERSION='v0.15.85';
+const APP_VERSION='v0.15.86';
 /* ── 决策面板：一行触发条 + 非模态浮层（v0.15.81）─────────────────────
    形态演进：v0.15.62 浮动弹窗 → v0.15.76/79 内联公共桌面（常驻 96px 内容块）→ v0.15.81
    「一行触发条 + 非模态浮层」。用户报障「阶段窗口还在桌面上」：内联块把 .decide-box 撑到
@@ -153,6 +153,9 @@ const DecisionUI=(()=>{
    .replace(/敌人当前攻击 \d+/g,'敌人当前攻击 N')
    .replace(/目标防御 \d+/g,'目标防御 N')
    .replace(/基础伤害预估 \d+/g,'基础伤害预估 N')
+   /* v0.15.86：数值改成「标签 + <b class="draft-num">数字</b>」后，上面几条按纯文本写的
+      正则不再命中（中间隔着标签）。这一条兜住全部草稿数字，语义同样是「数字变化不是新决策」。 */
+   .replace(/<b class="draft-num">\d+<\/b>/g,'<b class="draft-num">N</b>')
    .replace(/已选 \d+ 名/g,'已选 N 名');
  }
  /* 「玩家真的能点」的按钮：<button> 且不带 disabled。缩略图的 aria-disabled 不算——
@@ -255,7 +258,12 @@ const DesktopUI=(()=>{
   if(s.phase===2&&s.questing?.step==='commit'&&!s.questing.deploymentLocked&&!s.questing.deployments?.[pid]?.confirmed)return {kind:'quest',player:pid,eligible:Q.eligible(s,pid).map(c=>c.uid)};
   if(s.phase===5&&s.combat&&!s.combat.proposal){if(s.combat.step==='defenseChoice')return {kind:'defense',player:s.combat.attack.player,eligible:C.defenders(s).map(c=>c.uid)};if(s.combat.step==='attackChoice')return {kind:'attack',player:C.activePlayer(s),eligible:[]};}return null;
  }
- function draft(s,m){const k=`${s.round}:${s.phase}:${s.combat?.step}:${m?.player}:${s.combat?.attack?.uid}`;if(draftState!==s||combatDraft.key!==k){draftState=s;combatDraft={key:k,target:null,ids:[]};}return combatDraft;}
+ function draft(s,m){const k=`${s.round}:${s.phase}:${s.combat?.step}:${m?.player}:${s.combat?.attack?.uid}`;if(draftState!==s||combatDraft.key!==k){draftState=s;combatDraft={key:k,target:null,ids:[]};}
+  /* v0.15.86：目标已不再合法（本回合攻击过它、敌人离场、己方角色全横置）时草稿自己清空。
+     否则同一屏会同时出现「没有可攻击的敌人」和「已选 2 名 · 暂定基础攻击 3」（用户截图），
+     玩家会以为界面在骗人。key 只看 round/phase/step/player/attack.uid，doneAttacks 变了它不变。 */
+  if(m?.kind==='attack'&&combatDraft.target!==null&&!C.attackTargets(s,m.player).some(e=>e.uid===combatDraft.target))combatDraft={key:k,target:null,ids:[]};
+  return combatDraft;}
  function ids(s,m){return m?.kind==='quest'?QuestUI.draftFor(s,m.player):draft(s,m).ids;}
  function eligible(s,m,uid){if(!m)return false;if(m.kind==='attack'){const d=draft(s,m);return d.target!==null&&C.attackers(s,m.player,d.target).some(c=>c.uid===uid);}return m.eligible.includes(uid);}
  function art(code){const rec=ImageLibrary.by[code],url=ImageLibrary.safeUrl(rec?.faces?.B||rec?.imageUrl);return url?`<img src="${esc(url)}" alt="${esc(rec.nameZhCard||rec.name||code)}" loading="lazy" referrerpolicy="no-referrer">`:'<span class="table-card-fallback">卡图暂缺<br>请查看牌名与数值</span>';}
@@ -275,15 +283,37 @@ const DesktopUI=(()=>{
   return `<article class="table-card encounter-card ${legal?'selectable':''} ${selected?'selected':''}" data-card-uid="${c.uid}"><button class="card-face" ${attrs} data-uid="${c.uid}" ${legal?'':'disabled'} aria-label="${esc(c.name)}" aria-pressed="${selected}">${art('enc-'+c.id)}${selected?'<span class="selection-mark">目标</span>':''}</button><div class="table-card-caption"><b>${esc(c.name)}</b><span>${stats}</span>${c.shadows?`<span>暗影 ${c.shadows.length} · 已翻开 ${c.shadows.filter(x=>x.revealed||c.shadowRevealed).length}</span>`:''}</div>${tokenRow('state-tokens',c.type==='Enemy'?tk('damage',c.damage||0):c.type==='Location'?tk('progress',c.progress||0):'')}${inspect('enc-'+c.id)}${zone==='objective'&&!c.holder&&!c.guard?`<button data-action="claim" data-uid="${c.uid}" ${R.window(s).kind==='action'?'':'disabled'}>领取目标</button>`:''}<details><summary>牌文</summary><p>${esc(c.rule)}</p></details></article>`;
  }
  const row=(label,body,extra='')=>`<section class="table-zone ${extra}"><div class="zone-heading"><h2>${label}</h2></div><div class="table-card-row">${body||'<span class="zone-empty">暂无卡牌</span>'}</div></section>`;
- function selection(s,m){if(!m)return '';const selected=ids(s,m).map(uid=>R.find(s,uid)).filter(Boolean),d=draft(s,m);let preview='';
-  if(m.kind==='defense'){const defense=selected.reduce((n,c)=>n+R.stats(s,c.uid).defense,0),atk=R.find(s,s.combat.attack.uid);preview=`暂定防御 ${defense} · 敌人当前攻击 ${(atk?R.stats(s,atk.uid).attack:0)+(s.combat.attack.bonus||0)}（暗影与后续效果仍可能改变）`;}
-  if(m.kind==='attack'){const attack=selected.reduce((n,c)=>n+R.stats(s,c.uid).attack,0),target=d.target?R.find(s,d.target):null;preview=`暂定基础攻击 ${attack}${target?' · 目标防御 '+R.stats(s,target.uid).defense+' · 基础伤害预估 '+Math.max(0,attack-R.stats(s,target.uid).defense):' · 请先点选目标敌人'}（特殊能力以正式结算为准）`;}
+ function selection(s,m){if(!m)return '';const selected=ids(s,m).map(uid=>R.find(s,uid)).filter(Boolean),d=draft(s,m);
+  /* v0.15.86：草稿数值从「一条长句」改成「代币 + 大字」。攻击力／防御／伤害本来就是代币语言，
+     这里直接沿用牌桌同一套 assets/tokens 素材，读句子时不用再做心算（用户要求「能图形化就别用文字」）。 */
+  const stat=(icon,label,value)=>`<span class="draft-chip"><img class="draft-chip-ico" src="assets/tokens/${icon}.png" alt=""><span>${esc(label)} <b class="draft-num">${value}</b></span></span>`;
+  let stats='',tail='',hint='先选目标敌人，再选参与攻击的角色';
+  if(m.kind==='defense'){const defense=selected.reduce((n,c)=>n+R.stats(s,c.uid).defense,0),atk=R.find(s,s.combat.attack.uid);
+   hint='在浮层内点选角色暂定防御；不选表示无人防御';
+   stats=stat('defense','暂定防御',defense)+stat('attack','敌人当前攻击',(atk?R.stats(s,atk.uid).attack:0)+(s.combat.attack.bonus||0));
+   tail='暗影与后续效果仍可能改变数值';}
+  if(m.kind==='attack'){
+   const targets=C.attackTargets(s,m.player),attack=selected.reduce((n,c)=>n+R.stats(s,c.uid).attack,0),target=d.target?R.find(s,d.target):null;
+   /* 一个合法目标都没有时，别再说「先选目标敌人」——浮层上方那张空态已经说清了，
+     这里再叫人去选一个不存在的敌人，等于自己打自己的脸。整块摘要也让位给出路。 */
+   if(!targets.length){hint='这次攻击可以直接放弃';tail='不消耗任何资源，也不会横置角色；点「暂定结束我的攻击」即可继续。';}
+   else{
+    /* 还没选目标时攻击力／伤害都无从算起，别摆一排 0——看着像「已经算过了，结果是 0」。 */
+    if(target){
+     stats=stat('attack','暂定基础攻击',attack)+stat('defense','目标防御',R.stats(s,target.uid).defense)+stat('hitPoints','基础伤害预估',Math.max(0,attack-R.stats(s,target.uid).defense));
+     tail='特殊能力以正式结算为准';
+    } else stats='',tail='先选目标敌人；特殊能力以正式结算为准';
+   }
+  }
+  const head=`<div class="draft-head"><span class="player-chip">${esc(s.players[m.player].name)}</span><span class="draft-hint">${esc(hint)}</span></div>`;
   /* v0.15.70：探险阶段的提交入口收敛到底部派遣面板那颗唯一的主按钮，意志总数也只在那里出现一处。
      quest 分支因此只剩「本人已选 N 名」这一句只读摘要 + 「清空选择」橡皮擦；
-     defense/attack 的 preview 与提交按钮保持原样，不受影响。 */
-  if(m.kind==='quest')return `<div class="table-selection"><b>${esc(s.players[m.player].name)} · 点击角色暂定投入</b><p>${selected.length?'本人已选 '+selected.length+' 名':'本人未选角色'}</p><div class="actions">${b('清空选择','clear')}</div></div>`;
+     defense/attack 的数值摘要与提交按钮保持原样，不受影响。 */
+  if(m.kind==='quest')return `<div class="table-selection">${head}<div class="draft-stats"><span class="draft-count">${selected.length?'本人已选 '+selected.length+' 名':'本人未选角色'}</span></div><div class="actions">${b('清空选择','clear')}</div></div>`;
+  const count=stats?`<span class="draft-count">已选 ${selected.length} 名</span>`:'';
   const submit=b(m.kind==='defense'?'提交暂定防御名单':'提交暂定攻击名单','submit','',m.kind==='attack'&&(!d.target||!selected.length));
-  return `<div class="table-selection"><b>${esc(s.players[m.player].name)} · ${m.kind==='defense'?'在浮层内点选角色暂定防御；不选表示无人防御':'先选目标敌人，再选参与攻击的角色'}</b><p aria-live="polite">${esc(preview)} · 已选 ${selected.length} 名</p><div class="actions">${submit}${b('清空选择','clear')}${m.kind==='attack'?`<button data-action="combatFlow" data-combat="endAttacks" data-player="${m.player}">暂定结束我的攻击</button>`:''}</div><p class="small muted">这里只暂定名单。全员二次确认后才横置、支付并执行。</p></div>`;
+  const amount=`${stats}${count}`;
+  return `<div class="table-selection">${head}${amount?`<div class="draft-stats" aria-live="polite">${amount}</div>`:''}<p class="draft-note">${esc(tail)}</p><div class="actions">${submit}${b('清空选择','clear')}${m.kind==='attack'?`<button data-action="combatFlow" data-combat="endAttacks" data-player="${m.player}">暂定结束我的攻击</button>`:''}</div><p class="small muted">这里只暂定名单。全员二次确认后才横置、支付并执行。</p></div>`;
  }
  function next(s){const x=R.context(s),done=x?.completed;let label='',disabled=false;
  if(s.status==='won'||s.status==='lost')return `<span class="badge">${s.status==='won'?'剧本已结束 · 见上方结算':'远征已结束 · 见上方结算'}</span>`;
