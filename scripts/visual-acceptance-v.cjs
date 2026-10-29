@@ -23,7 +23,7 @@ const { chromium } = require('playwright-core');
 const root = path.resolve(__dirname, '..');
 const outDir = path.join(root, 'docs', 'browser-acceptance', 'vaccept');
 const pageUrl = 'file:///' + path.join(root, 'index.html').replace(/\\/g, '/');
-const GREENS = ['rgb(54, 88, 66)', 'rgb(63, 106, 72)'];
+const GREENS = ['rgb(47, 74, 59)', 'rgb(58, 90, 72)'];
 const cands = [
   process.env.CHROME_PATH,
   'C:/Program Files/Google/Chrome/Application/chrome.exe',
@@ -44,7 +44,7 @@ const only = process.argv[2] || '';
 
 /* ── 页面内采集 ─────────────────────────────────────────────────────── */
 function collect(tag) {
-  const G = ['rgb(54, 88, 66)', 'rgb(63, 106, 72)'];
+  const G = ['rgb(47, 74, 59)', 'rgb(58, 90, 72)'];
   const box = document.querySelector('.decide-box');
   const body = document.querySelector('.decide-body');
   const dep = box && box.querySelector('.quest-deploy');

@@ -42,7 +42,12 @@ test('review confirmation commits exactly the selected draft; local back restore
 test('stale deployment review is rejected without committing or discarding later state',async()=>{const e=environment();await commitScreen(e);const uid=e.run('state.players[0].heroStates[0].uid');e.run(`QuestUI.setDraft(state,0,[${uid}]);`);const result=e.click({action:'quest',quest:'commit',player:'0'});e.run('state.players[0].heroStates[0].resources++;');const changed=e.run('JSON.stringify(state)');e.dialogs.at(-1).querySelector('#ok').click();await result;assert.equal(e.run('JSON.stringify(state)'),changed);assert(e.base.get('toast').textContent.includes('桌面已变化'));});
 
 test('multiplayer UI exposes cancel confirmation until final player submits, then locks and applies the revised selection',async()=>{const e=environment();e.run(`{const cfg=['leadership','spirit'].map(sp=>PlayerCards.config(PlayerCards.starter(PlayerUI.getSnapshot(),sp),PlayerUI.getSnapshot()));state=E.create('mirkwood',2,12345,cfg,{deferSetup:true});E.openingChoice(state,0);E.openingChoice(state,1);E.startScenario(state);E.nextPhase(state);E.planning.endTurn(state,0);E.planning.endTurn(state,1);E.planning.passAction(state,0);E.planning.passAction(state,1);E.nextPhase(state);E.nextPhase(state);E.questing.pass(state,0);E.questing.pass(state,1);E.questing.move(state);handView=0;QuestUI.setDraft(state,0,[state.players[0].heroStates[0].uid]);render();}`);let action=e.click({action:'quest',quest:'commit',player:'0'});e.dialogs.at(-1).querySelector('#ok').click();await action;/* 提交后 UI 自动把视角切到未提交的玩家1，这里切回玩家0 再断言其面板 */
-e.run('handView=0;render();');assert(seen(e,'data-quest="withdraw"'));assert.equal(e.run('state.players[0].heroStates[0].exhausted'),false);await e.click({action:'quest',quest:'withdraw',player:'0'});assert(!e.run('state.questing.deployments[0].confirmed'));e.run('QuestUI.setDraft(state,0,[]);');action=e.click({action:'quest',quest:'commit',player:'0'});e.dialogs.at(-1).querySelector('#ok').click();await action;e.run('handView=1;render();');/* v0.15.62 起提交状态改为操作条 chip：「玩家1 · 已提交」 */
+e.run('handView=0;render();');
+/* v0.15.93+：名单已提交、还在等别人时，触发条只闪点、浮层不自动展开（WINDOWS.md R5），
+   所以先手动点开触发条再断言——「提交方仍能撤回」这条语义没有变，只是入口从自动展开
+   变成了「点一下触发条」。 */
+await e.click({action:'decide',decide:'toggle'});
+assert(seen(e,'data-quest="withdraw"'));assert.equal(e.run('state.players[0].heroStates[0].exhausted'),false);await e.click({action:'quest',quest:'withdraw',player:'0'});assert(!e.run('state.questing.deployments[0].confirmed'));e.run('QuestUI.setDraft(state,0,[]);');action=e.click({action:'quest',quest:'commit',player:'0'});e.dialogs.at(-1).querySelector('#ok').click();await action;e.run('handView=1;render();');/* v0.15.62 起提交状态改为操作条 chip：「玩家1 · 已提交」 */
 assert(seen(e,'玩家1 · 已提交'));action=e.click({action:'quest',quest:'commit',player:'1'});e.dialogs.at(-1).querySelector('#ok').click();await action;/* v0.15.62 二次确认流程：全员提交后还需各自「二次确认派遣」才锁定并正式投入 */
 assert.equal(e.run('state.questing.deploymentLocked'),undefined,'仅提交尚未二次确认时不得锁定');for(const p of ['0','1'])await e.click({action:'quest',quest:'approveDeployment',player:p});assert.equal(e.run('state.questing.deploymentLocked'),true);assert.equal(e.run('state.questing.step'),'afterCommit');assert(e.run('state.players.every(p=>p.heroStates.every(h=>!h.committed))'),'本测试双方名单为空，不应有角色被投入');assert(!seen(e,'data-quest="withdraw"'));});
 
@@ -583,8 +588,14 @@ test('rail shows all seven phases and every window at once',()=>{
  const withSet=e.run('PhaseLog.rail({phase:0},new Set([5]))');
  assert.equal((withSet.match(/rail-fold/g)||[]).length,0,'openSet 不再引起折叠');
  assert.equal((withSet.match(/rail-win-no/g)||[]).length,20,'窗口仍全部列出');
- /* 全部展开：每个阶段头的 aria-expanded 都是 true */
- for(let i=0;i<7;i++)assert(r.includes(`data-action="railPhase" data-phase="${i}" aria-expanded="true"`),`阶段${i} aria-expanded 须为 true`);});
+ /* v0.15.94：阶段色块头改成不可交互的 <div>。理由：折叠功能早已退役、全仓没有
+    railPhase 分发分支，原来那句 `aria-expanded="true"` 是向屏幕阅读器谎称
+    「这里有一个可展开/收起的控件」。断言随之改为「存在，且**不带** data-action」，
+    验的仍是同一件事（7 个头都在、且不再假装可交互），不是删断言过关。 */
+ assert.equal((r.match(/class="rail-head"/g)||[]).length,7,'7 个阶段色块头都要渲染');
+ assert(!/class="rail-head"[^>]*data-action=/.test(r),'阶段色块头不再可点，不得带 data-action');
+ assert(!/class="rail-head"[^>]*aria-expanded/.test(r),'阶段色块头不得再声称 aria-expanded');
+ assert(!/data-action="railPhase"/.test(r),'railPhase 这个没有分发分支的 action 必须绝迹');});
 
 test('phase door sits under the character area and reports the real checklist',async()=>{
  const e=environment();await opening(e);
@@ -730,4 +741,91 @@ test('game HUD renders without internal references breaking the opening flow',as
  assert(hud.includes('tab-stats'),'HUD 应有玩家状态汇总');
  assert(hud.includes('data-desktop="reset"'),'HUD 应有重新选择剧本入口');
  assert(hud.includes('data-desktop="view"'),'HUD 应有玩家页签');
+});
+
+/* ── 决策窗口规则（WINDOWS.md §13 / 3-A）：计划阶段 strip 的两条路 + 渲染守卫 ──
+   这三条都是**直接单测渲染/交互函数**，不靠 browser-check 那种端到端兜：
+     · 端到端只证明「这条路径今天能走通」，抓不到「模板被改坏但恰好没走到」；
+     · 这里的 strip()/handle() 是纯函数，输入可控，断言能钉在「按钮有几颗、类名是什么、
+       交给引擎的实参是什么」这一层。 */
+test('可选响应在计划阶段给出两颗按钮：选择响应 + 不使用响应（ghost），点后者把 skip 交给引擎且任务真的离队',async()=>{
+ const e=environment();await opening(e);
+ /* 01016「阿尔诺之子」的入场响应是可选的（queue 的 optional 默认 true）。 */
+ e.run(`{const p=state.players[0];if(!p.hand.some(c=>c.code==='01016')){const i=p.playerDeck.findIndex(c=>c.code==='01016');p.hand.push(p.playerDeck.splice(i,1)[0]);}render();}`);
+ const uid=e.run("state.players[0].hand.find(c=>c.code==='01016').uid");
+ const act=e.click({action:'planning',plan:'play',player:'0',uid:String(uid)});
+ e.dialogs.at(-1).querySelector('#plan-confirm').click();await act;
+ assert.equal(e.run('state.planning.queue[0].kind'),'entry');
+ assert.equal(e.run('state.planning.queue[0].optional'),true,'入场响应必须是可选任务，否则这条测试测的不是可选路径');
+ const id=e.run('state.planning.queue[0].id'),before=e.run('state.planning.queue.length');
+ const html=e.base.get('app').innerHTML;
+ const tags=[...html.matchAll(/<button[^>]*data-plan="(choice|choiceSkip)"[^>]*>[^<]*<\/button>/g)].map(m=>m[0]);
+ const pick=tags.find(t=>/data-plan="choice"/.test(t)),skip=tags.find(t=>/data-plan="choiceSkip"/.test(t));
+ assert(pick,'可选响应必须给「选择响应」按钮');
+ assert(skip,'可选响应必须同时给「不使用响应」按钮（只留一颗打开弹窗的按钮时，玩家找不到「我不用」这条路）');
+ assert(/class="btn-ghost"/.test(skip),'「不使用响应」是可逆的减损动作，必须是 ghost，不能长得像主操作');
+ assert(!/class="btn-ghost"/.test(pick),'「选择响应」不是 ghost');
+ assert(skip.includes('不使用响应')&&pick.includes('选择响应'),'两颗按钮的文案必须是「选择响应」/「不使用响应」');
+ /* 真的点一次：走 UI 的 click → handle → mutate → 引擎，而不是直接调引擎。 */
+ e.base.get('toast').textContent='';
+ await e.click({action:'planning',plan:'choiceSkip',id:String(id)});
+ assert.equal(e.run(`state.planning.queue.some(t=>t.id===${id})`),false,'被放弃的任务必须离队');
+ assert.equal(e.run('state.planning.queue.length'),before-1,'只该少这一条');
+ assert(!e.base.get('toast').textContent.includes('强制效果不能跳过'),'可选响应跳过不该报错');
+ assert(e.run(`state.players[0].allies.some(a=>a.uid===${uid})`),'放弃响应不等于撤销打出：盟友仍在场');
+});
+test('计划阶段的强制效果只给一颗「处理强制效果」，带方块点与说明行，且没有「不使用响应」',async()=>{
+ const e=environment();await opening(e);
+ /* 强制任务的真实局面（3 张受限附属、查看牌库顶）构造代价高，这里只测 **strip 的渲染分支**：
+    strip() 是纯函数，任务对象的形状就是它消费的全部输入。 */
+ e.run(`{state.planning.queue.push({id:999001,kind:'peek',actor:0,optional:false,payload:{uid:state.deck[0].uid}});render();}`);
+ const html=e.base.get('app').innerHTML;
+ assert(/data-plan="choice"/.test(html),'强制效果仍然要有「处理强制效果」入口');
+ assert(!/data-plan="choiceSkip"/.test(html),'强制效果不能给「不使用响应」——引擎也会拒绝，但界面根本不该露出来');
+ assert(/planning-forced-note/.test(html),'强制效果旁边要有一行说明（必须先处理，否则不能结束计划阶段）');
+ assert(/必须先处理，否则不能结束计划阶段/.test(html),'说明行的文案要对得上 §13');
+ assert(/class="decide-dot" data-tone="forced"/.test(html),'强制效果要有 forced 方块点（与阶段竖轴同源的形状通道）');
+ assert(/class="btn-primary"/.test(html),'强制效果的处理入口是主操作（primary）');
+});
+test('渲染出的 data-action 必须非空且命中派发白名单（按钮被撕成空串后会静默失效）',async()=>{
+ /* 为什么单独守这一条：data-action 被写成空串时，按钮还在、还能点，但 handleAction 里
+    `const a=b.dataset.action` 拿到 ''，所有 if 分支都不命中 —— 点了完全没反应，连 toast
+    都不弹。本轮真实发生过：批量给 b() 加 cls 形参时把 data-action="travelFlow" 撕成了
+    data-action=""travelFlow"，四个流程模块的按钮集体失效，而单元测试全绿。 */
+ const files=fs.readdirSync(__dirname).filter(f=>f.endsWith('.js'));
+ const dispatch=new Set();
+ for(const f of files){
+  const src=fs.readFileSync(__dirname+'/'+f,'utf8');
+  /* 白名单 = 真实分发点（handleAction/handle* 里的 `a==='…'`），不手抄：
+     手抄会漏、会过期，而且抓不到拼错——拼错的 action 两边都不匹配，正好红出来。 */
+  for(const m of src.matchAll(/\ba===['"]([A-Za-z0-9_]+)['"]/g))dispatch.add(m[1]);
+  /* app.js 还有第二张分发表：`const handlers={next:()=>…,stage:()=>…}` 走 `if(handlers[a])`。 */
+  for(const m of src.matchAll(/[,{]\s*([A-Za-z0-9_]+)\s*:\s*(?:async\s*)?\(\s*\)\s*=>/g))dispatch.add(m[1]);
+  assert(!/data-action=""/.test(src),`${f}: 出现了空的 data-action（属性被撕坏的精确指纹）`);
+ }
+ assert(dispatch.size>40,`派发白名单只有 ${dispatch.size} 条，太少：正则可能失效，后面的断言会变成空转（假绿）`);
+ for(const a of ['windowFlow','planning','travelFlow','encounterFlow','combatFlow','refreshFlow','desktop','decide','endPhase','quest'])assert(dispatch.has(a),'白名单缺少核心 action：'+a);
+ /* 已知的「渲染了但没有分发点」的 action：**当前为空集**。
+     曾挂过的唯一一条 railPhase 已在 v0.15.94 修掉——phase-log.js 的阶段色块头由
+     <button data-action="railPhase" aria-expanded="true"> 改成不可交互的 <div>，
+     既去掉了点击无反应的死按钮，也修掉了「声称可展开」的 a11y 谎言。
+     这道白名单现在是严格的空集：任何新出现的未注册 action 都必须当场变红，
+     而不是先塞进这里。新加条目必须先确认是既有缺陷，并给出修复计划。 */
+ const KNOWN_DEAD=new Set();
+ const scan=(html,where)=>{
+  const found=[...html.matchAll(/data-action="([^"]*)"/g)].map(m=>m[1]);
+  const bad=[...new Set(found.filter(a=>!a||(!dispatch.has(a)&&!KNOWN_DEAD.has(a))))];
+  assert.equal(bad.length,0,`${where}：出现空值或未注册的 data-action ${JSON.stringify(bad)}（点了不会有任何反应）`);
+  return found.length;
+ };
+ let total=0;
+ {const x=environment();await opening(x);total+=scan(x.base.get('app').innerHTML,'计划阶段');}
+ {const x=environment();await opening(x);await x.click({action:'planning',plan:'endTurn',player:'0'});await x.click({action:'planning',plan:'pass',player:'0'});await x.click({action:'next'});await x.click({action:'next'});total+=scan(x.base.get('app').innerHTML,'探险阶段');}
+ {const x=environment();encounterScreen(x);total+=scan(x.base.get('app').innerHTML,'遭遇阶段');}
+ {const x=environment();await combatScreen(x);total+=scan(x.base.get('app').innerHTML,'战斗阶段');}
+ {const x=environment();refreshScreen(x);total+=scan(x.base.get('app').innerHTML,'刷新阶段');}
+ /* 旅行阶段的面板没在这里扫渲染产物（构造 phase-3 局面要串十几步点击，收益不抵成本）；
+     它的四个按钮形状与其它四个模块共用同一个 b() 模板，源码指纹那条已经把「空属性」这种
+     整类故障挡住了。 */
+ assert(total>100,`只扫到 ${total} 个 data-action，太少了：渲染路径可能整体变了，这条守卫会变成空转`);
 });

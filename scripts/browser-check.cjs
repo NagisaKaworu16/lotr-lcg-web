@@ -76,6 +76,21 @@ let browser;
     }
     return false;
   };
+  /* 各阶段面板的**主推进按钮**统一走 data-* 键：文案改成「结算「<步名>」→」之后
+     （步名随窗口变化），按文字已经点不稳，而 data-combat/encounter/travel/refresh/quest
+     这些键是各 UI 模块的对外契约，不会因文案改动而变。
+     为什么必须显式点它：强制窗口（如 6.1 敌人攻击）**没有**窗口级「全队跳过」，
+     只有这一颗「结算本步」；不点它，兜底的 windowOption 会去点「玩家N：取消放弃」
+     这种可逆开关，于是「放弃→取消放弃→放弃」原地打转（idle 一直被重置，连 stall 都报不出来）。 */
+  const advance = async () => {
+    for (const sel of ['[data-combat="move"]', '[data-encounter="checks"]', '[data-encounter="finish"]',
+      '[data-travel="finish"]', '[data-refresh="move"]', '[data-quest="move"]']) {
+      const el = await findIn(`${sel}:not([disabled])`);
+      if (!el) continue;
+      await el.click(); idle = 0; await page.waitForTimeout(320); return true;
+    }
+    return false;
+  };
   const clickNext = async () => {
     const el = page.locator('.operation-title button.primary:not([disabled])').first();
     if (!await el.count()) return false;
@@ -171,7 +186,7 @@ let browser;
   for (let i = 0; i < 12; i++) {
     if (await page.evaluate(() => state.phase === 2 && state.questing?.step === 'commit')) break;
     if (await clickBtn('结束我的盟友／附属出牌步骤')) continue;
-    if (await clickBtn('继续到下一决策点')) continue;
+    if (await clickBtn('全队跳过本窗口')) continue;
     if (await clickBtn('：放弃剩余行动')) continue;
     await clickNext();
   }
@@ -213,8 +228,8 @@ let browser;
     draftOk.stateUnchanged = after.log === before.log && after.exhausted === before.exhausted;
     draftOk.marked = after.selected > 0;
     await shot('03-2p-quest-pick-1440');
-    /* v0.15.80：浮层脚部的橡皮擦可见文案改为「重置选择」（aria-label 仍含「清空选择」）。 */
-    await clickBtn('重置选择');
+    /* 浮层脚部的橡皮擦可见文案统一为「清空选择」（aria-label 同为「清空选择…」）。 */
+    await clickBtn('清空选择');
   }
   note('pick-is-draft-only', draftOk.stateUnchanged === true && draftOk.marked === true, draftOk);
 
@@ -291,9 +306,13 @@ let browser;
         if (await clickPop('[data-combat="endAttacks"]')) continue;
       }
     }
-    if (await clickBtn('处理强制选择')) continue;
-    if (await clickBtn('处理响应／选择')) continue;
-    if (await clickBtn('处理卡牌响应')) continue;
+    /* 文案统一后（WINDOWS.md §8.2）：「处理卡牌响应 / 处理响应／选择 / 处理强制选择」
+       合并成两类 —— 强制「处理强制效果：「卡名」」与可选「选择响应：「卡名」」。
+       两者打开的都是「当前待结算任务」的同一个 choose() 对话框，先撞上哪个都行。 */
+    /* 主推进按钮优先：它的文案随窗口变化（「结算「敌人攻击」→」），只能靠 data 键定位。 */
+    if (await advance()) continue;
+    if (await clickBtn('处理强制效果')) continue;
+    if (await clickBtn('选择响应')) continue;
     if (await clickBtn('结算本张暗影／继续')) continue;
     if (await clickBtn('二次确认旅行')) continue;
     if (await clickBtn('暂定本次不旅行')) continue;
@@ -303,7 +322,7 @@ let browser;
     /* 交战同值敌人：起始玩家要从同值敌人里挑一个接战（面板按钮 data-encounter="tie"）。 */
     { let tie = page.locator(PANEL + ' [data-encounter="tie"]:not([disabled])').first(); if (!await tie.count()) { await openDecide(); tie = page.locator(PANEL + ' [data-encounter="tie"]:not([disabled])').first(); } if (await tie.count()) { await tie.click(); await page.waitForTimeout(300); continue; } }
     if (await clickBtn('结算此牌的关键词与效果')) continue;
-    if (await clickBtn('翻开下一张遭遇牌')) continue;
+    if (await clickBtn('翻开下一张')) continue;
     if (await clickBtn('结束探查')) continue;
     if (await clickBtn('自动结算探险')) continue;
     if (await clickBtn('开始探查')) continue;
@@ -313,7 +332,7 @@ let browser;
     if (await clickBtn('推进探险')) continue;
     if (await clickBtn('结束我的盟友／附属出牌步骤')) continue;
     if (await clickBtn('：放弃剩余行动')) continue;
-    if (await clickBtn('继续到下一决策点')) { idle = 0; continue; }
+    if (await clickBtn('全队跳过本窗口')) { idle = 0; continue; }
     if (await clickNext()) continue;
     if (await windowOption()) continue;
     if (++idle > 3) {

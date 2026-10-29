@@ -1,3 +1,36 @@
+/* 待结算的牌 / 响应，按钮文案只有两条语义（WINDOWS.md §8.2）：
+     forced   → 处理强制效果：「卡名」   —— 必须处理，否则不能前进
+     optional → 选择响应：「卡名」       —— 可以不用
+   以前五个面板各写一套（处理卡牌响应 / 处理响应／选择 / 处理强制选择 / 处理强制效果／卡牌响应），
+   同一颗按钮在不同阶段说法不同，玩家看不出它们其实是一回事。
+   放在 planning-ui.js 里是因为它是第一个加载的 UI 模块，后面五个 *-ui 都能直接用。 */
+const ChoiceUI=(()=>{
+ const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ /* 卡名：任务的 payload 形状按 kind 不同（uid / card / target），按顺序试一遍，
+    取不到就退回不带名字的文案——宁可少一个卡名，也不要编一个错的。 */
+ function cardName(s,task){
+  try{
+   const d=(task&&task.payload)||{};
+   const uid=[d.uid,d.card,d.target].find(x=>x!==undefined&&x!==null);
+   if(uid===undefined)return '';
+   const c=ScenarioEngine.planning.find(s,uid);
+   const m=c&&(c.meta||c);
+   return (m&&(m.nameZh||m.name))||'';
+  }catch(e){return '';}
+ }
+ function label(s,task){const n=cardName(s,task);return (task&&task.optional?'选择响应':'处理强制效果')+(n?'：「'+n+'」':'');}
+ /* attrs 由调用方给（各阶段的 data-action 不同），这里只管文字与层级。 */
+ function button(s,task,attrs='',disabled=false,cls=''){
+  return `<button${cls?` class="${cls}"`:''} ${attrs} ${disabled?'disabled':''}>${esc(label(s,task))}</button>`;
+ }
+ return {label,button,cardName};
+})();
+/* 主动作按钮统一写「结算〈本步名〉 →」，步名取 phase-log 的窗口 label（decision-ui 派生），
+   不在这里另起名字。窗口判定只存在于 desktop-ui.js，而它在本文件之后加载，
+   但调用发生在 render 期间（那时全部脚本已就绪）；取不到时降级成「结算本步 →」。 */
+const settleLabel=s=>{try{
+ if(typeof DecisionUI!=='undefined'&&DecisionUI.settleLabel)return DecisionUI.settleLabel(s);
+}catch(e){}return '结算本步 →';};
 const PlanningUI=(()=>{
  const R=ScenarioEngine.planning,esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  function button(text,kind,attrs='',disabled=false){return `<button data-action="planning" data-plan="${kind}" ${attrs} ${disabled?'disabled':''}>${text}</button>`;}
@@ -10,10 +43,25 @@ const PlanningUI=(()=>{
  function strip(s,pid){
   if(s.phase!==1||!s.planning||s.planning.completed)return '';
   const pl=s.planning,ch=R.choiceSpec(s),solo=s.players.filter(p=>!p.eliminated).length===1;
-  const btn=(label,kind,args='',disabled=false)=>`<button data-action="planning" data-plan="${kind}" ${args} ${disabled?'disabled':''}>${esc(label)}</button>`;
+  /* 第 4 个参数是 disabled、第 5 个是语义层级类名（btn-ghost 等）。
+     少了 cls 这个形参时，调用方多传的 'btn-ghost' 会被静默丢弃——按钮看起来是主操作，
+     而它的语义是「我不用」（WINDOWS.md §8.1 把可逆的减损动作定为 ghost）。 */
+  const btn=(label,kind,args='',disabled=false,cls='')=>`<button${cls?` class="${cls}"`:''} data-action="planning" data-plan="${kind}" ${args} ${disabled?'disabled':''}>${esc(label)}</button>`;
   const parts=[];
   if(pl.halted)parts.push(`<span class="small planning-halt">${esc(pl.halted)}</span>`);
-  if(ch)parts.push(`<b class="planning-choice-hint">${esc(ch.message)}</b>`,btn(ch.task.optional?'选择响应／放弃':'处理强制选择','choice',`data-id="${ch.task.id}"`));
+  /* §8.2 / 拍板裁决②：计划阶段仍然豁免触发条（不把决策条搬回桌面），
+     但**强制**效果必须可辨：按钮旁边给一颗 data-tone="forced" 的方块点 + 一行说明。
+     可选响应拆成两颗：选择响应（secondary）+ 不使用响应（ghost）——
+     只留一颗只能「打开弹窗」的按钮时，玩家找不到「我不用」这条路。 */
+  if(ch){
+   const attrs=`data-action="planning" data-plan="choice" data-id="${ch.task.id}"`;
+   parts.push(`<b class="planning-choice-hint">${esc(ch.message)}</b>`);
+   if(ch.task.optional){
+    parts.push(ChoiceUI.button(s,ch.task,attrs,false,''),btn('不使用响应','choiceSkip',`data-id="${ch.task.id}"`,false,'btn-ghost'));
+   }else{
+    parts.push(`${ChoiceUI.button(s,ch.task,attrs,false,'btn-primary')}<span class="small planning-forced-note"><span class="decide-dot" data-tone="forced" aria-hidden="true"></span>必须先处理，否则不能结束计划阶段</span>`);
+   }
+  }
   if(solo)parts.push(btn('结束计划阶段','finish','',!!ch||pl.closing));
   else if(R.active(s)!==null)parts.push(btn('结束我的盟友／附属出牌步骤','endTurn',`data-player="${R.active(s)}"`,!!ch||pl.closing));
   else parts.push(...pl.order.filter(id=>!s.players[id].eliminated).map(id=>btn(s.players[id].name+(pl.finalPasses.includes(id)?' 已放弃剩余行动':'：放弃剩余行动'),'pass',`data-player="${id}"`,pl.finalPasses.includes(id)||!!ch||pl.closing)));
@@ -42,7 +90,11 @@ const PlanningUI=(()=>{
   d.oncancel=()=>{d.remove();resolve(null);};refresh();d.showModal();
  });}
  function numEq(a,b){return Number(a)===Number(b);}
- async function handle(b){const kind=b.dataset.plan,pid=Number(b.dataset.player),uid=Number(b.dataset.uid);if(kind==='finish'){mutate(()=>{
+ async function handle(b){const kind=b.dataset.plan,pid=Number(b.dataset.player),uid=Number(b.dataset.uid);
+ /* 「不使用响应」：可选任务可以直接放弃（引擎的 resolveChoice({skip:true}) 就是这条路，
+    强制任务会被引擎拒绝，所以这颗按钮只在 ch.task.optional 时渲染）。 */
+ if(kind==='choiceSkip'){mutate(()=>R.resolveChoice(state,Number(b.dataset.id),{skip:true}));return;}
+ if(kind==='finish'){mutate(()=>{
    /* v0.15.68：单人时出牌步骤与放弃行动没有决策点，一次点击完成；引擎断言保持严格，
       autoAdvance 仍会在计划阶段停手让玩家出牌。 */
    if(state.players.filter(p=>!p.eliminated).length===1){const solo=state.players.find(p=>!p.eliminated).id;

@@ -71,3 +71,23 @@ test('all 28 Core events have explicit timing matching their printed trigger',()
 test('phase restricted and response events cannot be played from the planning action window, even by direct engine calls',()=>{for(const code of ['01034','01065','01066','01024','01037','01047','01048','01050']){const s=make(['leadership']);const x=take(s,0,code);assert.equal(R.window(s).kind,'action');sameAfterError(s,()=>R.play(s,0,x.uid,{}),/窗口|阶段/);}});
 test('an unresolved effect blocks ordinary events and a closed response cannot be replayed',()=>{const s=make();play(s,0,'01073');const x=take(s,0,'01022');assert.equal(R.window(s).kind,'resolution');sameAfterError(s,()=>R.play(s,0,x.uid,{}),/响应/);const id=s.planning.queue[0].id;R.resolveChoice(s,id,{skip:true});assert.equal(R.window(s).kind,'action');sameAfterError(s,()=>R.resolveChoice(s,id,{}),/过期/);});
 test('phase completion closes every event entry point',()=>{const s=make(),x=take(s,0,'01022');finish(s);assert.equal(R.window(s).kind,'closed');sameAfterError(s,()=>R.play(s,0,x.uid,{}),/完成/);});
+
+/* 3-A：可选响应的「不使用」必须真的把任务从队列里拿掉；强制效果必须按同一条引擎规则被拒。
+   （强制那一半在「third Restricted attachment」里已有 /不能跳过/ 的宽松断言，
+     这里把文案钉死成「强制效果不能跳过」，并补上可选任务离队的断言。） */
+test('skip only applies to optional tasks: declining removes exactly that task, forced effects are rejected',()=>{
+ let s=make(['spirit']);
+ play(s,0,'01073');
+ const opt=s.planning.queue[0];
+ assert.equal(opt.optional,true,'Gandalf entry response is optional');
+ const n=s.planning.queue.length;
+ R.resolveChoice(s,opt.id,{skip:true});
+ assert(!s.planning.queue.some(t=>t.id===opt.id),'declined optional task must leave the queue');
+ assert.equal(s.planning.queue.length,n-1,'exactly one task is removed');
+ let t=make(['tactics']),h=t.players[0].heroStates[0];
+ play(t,0,'01039',{target:h.uid});play(t,0,'01041',{target:h.uid});play(t,0,'01042',{target:h.uid});
+ const force=t.planning.queue[0];
+ assert.equal(force.optional,false);
+ sameAfterError(t,()=>R.resolveChoice(t,force.id,{skip:true}),/强制效果不能跳过/);
+ assert.equal(t.planning.queue.length,1,'rejected skip must not consume the task');
+});

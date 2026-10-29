@@ -1,6 +1,6 @@
 {
-  "startedAt": "2026-10-27T04:49:51.920Z",
-  "buildMd5": "79dd75642807b4a25ad692fb9e0aa918",
+  "startedAt": "2026-10-29T09:25:49.259Z",
+  "buildMd5": "04515b18157f9d3391f3c27476c4fdf4",
   "executablePath": "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe",
   "note": [
     "V10 只看 .r0-num 自身（未截断/未折行/贴右）。跨态比 left 恒假、比 right 恒真，两种都已撤。",
@@ -10,6 +10,4200 @@
   ],
   "viewports": [
     {
+      "viewport": "1440x900",
+      "spot": false,
+      "states": [
+        {
+          "tag": "A",
+          "deployState": "A",
+          "blocks": 4,
+          "rHead": {
+            "lines": 2,
+            "layout": [
+              [
+                "r0:草稿暂定0 名 · 意志"
+              ],
+              [
+                "quest-actors:玩家1玩家2"
+              ]
+            ]
+          },
+          "panelTop": 475.38,
+          "panelH": 26,
+          "primaryTop": 418.38,
+          "r0h": 18.38
+        },
+        {
+          "tag": "B",
+          "deployState": null,
+          "blocks": 0,
+          "rHead": null,
+          "panelTop": 475.38,
+          "panelH": 26,
+          "primaryTop": null,
+          "r0h": null
+        },
+        {
+          "tag": "C1",
+          "deployState": "C1",
+          "blocks": 4,
+          "rHead": {
+            "lines": 2,
+            "layout": [
+              [
+                "r0:待确认暂定2 名 · 意",
+                "action-note:尚未横置角色"
+              ],
+              [
+                "quest-actors:玩家1玩家2"
+              ]
+            ]
+          },
+          "panelTop": 475.38,
+          "panelH": 26,
+          "primaryTop": 400.28,
+          "r0h": 18.38
+        },
+        {
+          "tag": "C2",
+          "deployState": "C2",
+          "blocks": 4,
+          "rHead": {
+            "lines": 2,
+            "layout": [
+              [
+                "r0:已确认 1/2暂定2 名",
+                "action-note:还差 玩家2 确认"
+              ],
+              [
+                "quest-actors:玩家1玩家2"
+              ]
+            ]
+          },
+          "panelTop": 475.38,
+          "panelH": 26,
+          "primaryTop": null,
+          "r0h": 18.38
+        },
+        {
+          "tag": "D",
+          "deployState": "D",
+          "blocks": 3,
+          "rHead": {
+            "lines": 1,
+            "layout": [
+              [
+                "r0:执行中实际2 名 · 意"
+              ]
+            ]
+          },
+          "panelTop": 475.38,
+          "panelH": 26,
+          "primaryTop": null,
+          "r0h": 18.38
+        }
+      ],
+      "verdicts": {
+        "V01@A": {
+          "ok": true,
+          "measured": {
+            "禁用文案": false,
+            "块数": 4,
+            "块": [
+              "r-head",
+              "quest-commit-list",
+              "quest-main-action",
+              "commit-hint quest-rules"
+            ]
+          },
+          "expect": "无「派遣交流与缓冲期」且块数 ∈{3,4}",
+          "tag": "A"
+        },
+        "V02@A": {
+          "ok": true,
+          "measured": {
+            "实心": 1,
+            "文本": [
+              "提交空名单（本次不投入）"
+            ],
+            "ghost": 1,
+            "装饰": [
+              "underline|dotted"
+            ]
+          },
+          "expect": "实心 ≤1；ghost dotted underline",
+          "tag": "A"
+        },
+        "V03@A": {
+          "ok": true,
+          "measured": {
+            "checkbox": 3
+          },
+          "expect": "A 态 checkbox > 0",
+          "tag": "A"
+        },
+        "V04@A": {
+          "ok": true,
+          "measured": {
+            "select": 0,
+            "radiogroup": 1,
+            "badge": 0
+          },
+          "expect": "select+radiogroup=1 且 badge=0",
+          "tag": "A"
+        },
+        "V05@A": {
+          "ok": true,
+          "measured": {
+            "态": "A",
+            "已投入：": 0
+          },
+          "expect": "= 0",
+          "tag": "A"
+        },
+        "V06@A": {
+          "ok": true,
+          "measured": {
+            "命中": false
+          },
+          "expect": "不含「暂定意志」",
+          "tag": "A"
+        },
+        "V07@A": {
+          "ok": true,
+          "measured": {
+            "details": 1,
+            "正文字数": 76,
+            "外部p字数": 0,
+            "外部p": ""
+          },
+          "expect": "≥1 且 ≥20 字；外部 <p> ≤12 字",
+          "tag": "A"
+        },
+        "V08@A": {
+          "ok": true,
+          "measured": {
+            "绿钮": 1,
+            "清单": [
+              "primary:提交空名单（本次不投入）"
+            ]
+          },
+          "expect": "≤1 且非禁用（禁用绿钮也算多一颗）",
+          "tag": "A"
+        },
+        "V09@A": {
+          "ok": true,
+          "measured": {
+            "disabled": true,
+            "bg": "rgb(236, 234, 224)",
+            "opacity": "1"
+          },
+          "expect": "disabled 时 bg ≠ 绿系（期望 rgb(236,234,224)）",
+          "tag": "A"
+        },
+        "V10@A": {
+          "ok": true,
+          "measured": {
+            "文本": "0 名 · 意志 0",
+            "文本右缘": 536.56,
+            "面板内容右": 996,
+            "右越界": -459.44,
+            "左越界": -147.16,
+            "num右": 536.56,
+            "r0右": 536.56,
+            "文本行数": 1,
+            "num宽": 71,
+            "旧口径_overflow": 0,
+            "旧口径_行盒": 1
+          },
+          "expect": "文本矩形 ⊂ 面板内容盒（左右各 ≤1px）；num.right ≤ r0.right+1；文本单行",
+          "tag": "A"
+        },
+        "V11-1@A": {
+          "ok": true,
+          "measured": {
+            "box": {
+              "sw": 284,
+              "cw": 284
+            },
+            "body": {
+              "sw": 678,
+              "cw": 678
+            }
+          },
+          "expect": "box/body 均无横向滚动（min-width:0 时恒真，不可作 R0 判据）",
+          "tag": "A"
+        },
+        "V11-2@A": {
+          "ok": true,
+          "measured": {
+            "r0高": 18.38,
+            "pill高": 18.38,
+            "label高": 15,
+            "num高": 15
+          },
+          "expect": "h ≤ 26（预期 23~24，由 .state-pill 撑高；22 只是标签行高）",
+          "tag": "A"
+        },
+        "V11-3@A": {
+          "ok": true,
+          "measured": {
+            "pillLeft": 348,
+            "r0Left": 348,
+            "numRight": 536.56,
+            "r0Right": 536.56
+          },
+          "expect": "pill.left ≥ r0.left−1 且 num.right ≤ r0.right+1（对内部截断是盲的）",
+          "tag": "A"
+        },
+        "V01@B": {
+          "ok": false,
+          "measured": {
+            "禁用文案": false,
+            "块数": 0,
+            "块": []
+          },
+          "expect": "无「派遣交流与缓冲期」且块数 ∈{3,4}",
+          "tag": "B"
+        },
+        "V02@B": {
+          "ok": true,
+          "measured": {
+            "实心": 0,
+            "文本": [],
+            "ghost": 0,
+            "装饰": []
+          },
+          "expect": "实心 ≤1；ghost dotted underline",
+          "tag": "B"
+        },
+        "V03@B": {
+          "ok": false,
+          "measured": {
+            "checkbox": 0,
+            "已提交": 0
+          },
+          "expect": "=0 且「已提交：」≥1",
+          "tag": "B"
+        },
+        "V04@B": {
+          "ok": false,
+          "measured": {
+            "select": 0,
+            "radiogroup": 0,
+            "badge": 0
+          },
+          "expect": "select+radiogroup=1 且 badge=0",
+          "tag": "B"
+        },
+        "V05@B": {
+          "ok": true,
+          "measured": {
+            "态": "B",
+            "已投入：": 0
+          },
+          "expect": "= 0",
+          "tag": "B"
+        },
+        "V06@B": {
+          "ok": true,
+          "measured": {
+            "命中": false
+          },
+          "expect": "不含「暂定意志」",
+          "tag": "B"
+        },
+        "V07@B": {
+          "ok": false,
+          "measured": {
+            "details": 0,
+            "正文字数": 0,
+            "外部p字数": 0,
+            "外部p": ""
+          },
+          "expect": "≥1 且 ≥20 字；外部 <p> ≤12 字",
+          "tag": "B"
+        },
+        "V08@B": {
+          "ok": true,
+          "measured": {
+            "绿钮": 0,
+            "清单": []
+          },
+          "expect": "≤1 且非禁用（禁用绿钮也算多一颗）",
+          "tag": "B"
+        },
+        "V09@B": {
+          "ok": true,
+          "measured": {
+            "disabled": true,
+            "bg": "rgb(236, 234, 224)",
+            "opacity": "1"
+          },
+          "expect": "disabled 时 bg ≠ 绿系（期望 rgb(236,234,224)）",
+          "tag": "B"
+        },
+        "V10@B": {
+          "ok": false,
+          "measured": "无 .r0 或 .r0-num",
+          "expect": "存在 .r0-num",
+          "tag": "B"
+        },
+        "V11-1@B": {
+          "ok": false,
+          "measured": {
+            "box": {
+              "sw": 170,
+              "cw": 170
+            },
+            "body": null
+          },
+          "expect": "box/body 均无横向滚动（min-width:0 时恒真，不可作 R0 判据）",
+          "tag": "B"
+        },
+        "V11-2@B": {
+          "ok": false,
+          "measured": {
+            "r0高": null,
+            "pill高": null,
+            "label高": null,
+            "num高": null
+          },
+          "expect": "h ≤ 26（预期 23~24，由 .state-pill 撑高；22 只是标签行高）",
+          "tag": "B"
+        },
+        "V11-3@B": {
+          "ok": false,
+          "measured": {
+            "pillLeft": null,
+            "r0Left": null,
+            "numRight": null,
+            "r0Right": null
+          },
+          "expect": "pill.left ≥ r0.left−1 且 num.right ≤ r0.right+1（对内部截断是盲的）",
+          "tag": "B"
+        },
+        "V01@C1": {
+          "ok": true,
+          "measured": {
+            "禁用文案": false,
+            "块数": 4,
+            "块": [
+              "r-head",
+              "quest-submitted",
+              "quest-main-action",
+              "commit-hint quest-rules"
+            ]
+          },
+          "expect": "无「派遣交流与缓冲期」且块数 ∈{3,4}",
+          "tag": "C1"
+        },
+        "V02@C1": {
+          "ok": true,
+          "measured": {
+            "实心": 1,
+            "文本": [
+              "确认派遣名单"
+            ],
+            "ghost": 1,
+            "装饰": [
+              "underline|dotted"
+            ]
+          },
+          "expect": "实心 ≤1；ghost dotted underline",
+          "tag": "C1"
+        },
+        "V03@C1": {
+          "ok": true,
+          "measured": {
+            "checkbox": 0,
+            "已提交": 1
+          },
+          "expect": "=0 且「已提交：」≥1",
+          "tag": "C1"
+        },
+        "V04@C1": {
+          "ok": true,
+          "measured": {
+            "select": 0,
+            "radiogroup": 1,
+            "badge": 0
+          },
+          "expect": "select+radiogroup=1 且 badge=0",
+          "tag": "C1"
+        },
+        "V05@C1": {
+          "ok": true,
+          "measured": {
+            "态": "C1",
+            "已投入：": 0
+          },
+          "expect": "= 0",
+          "tag": "C1"
+        },
+        "V06@C1": {
+          "ok": true,
+          "measured": {
+            "命中": false
+          },
+          "expect": "不含「暂定意志」",
+          "tag": "C1"
+        },
+        "V07@C1": {
+          "ok": true,
+          "measured": {
+            "details": 1,
+            "正文字数": 96,
+            "外部p字数": 0,
+            "外部p": ""
+          },
+          "expect": "≥1 且 ≥20 字；外部 <p> ≤12 字",
+          "tag": "C1"
+        },
+        "V08@C1": {
+          "ok": true,
+          "measured": {
+            "绿钮": 1,
+            "清单": [
+              "primary:确认派遣名单"
+            ]
+          },
+          "expect": "≤1 且非禁用（禁用绿钮也算多一颗）",
+          "tag": "C1"
+        },
+        "V09@C1": {
+          "ok": true,
+          "measured": {
+            "disabled": true,
+            "bg": "rgb(236, 234, 224)",
+            "opacity": "1"
+          },
+          "expect": "disabled 时 bg ≠ 绿系（期望 rgb(236,234,224)）",
+          "tag": "C1"
+        },
+        "V10@C1": {
+          "ok": true,
+          "measured": {
+            "文本": "2 名 · 意志 4",
+            "文本右缘": 536.56,
+            "面板内容右": 996,
+            "右越界": -459.44,
+            "左越界": -147.16,
+            "num右": 536.56,
+            "r0右": 536.56,
+            "文本行数": 1,
+            "num宽": 71,
+            "旧口径_overflow": 0,
+            "旧口径_行盒": 1
+          },
+          "expect": "文本矩形 ⊂ 面板内容盒（左右各 ≤1px）；num.right ≤ r0.right+1；文本单行",
+          "tag": "C1"
+        },
+        "V11-1@C1": {
+          "ok": true,
+          "measured": {
+            "box": {
+              "sw": 159,
+              "cw": 159
+            },
+            "body": {
+              "sw": 678,
+              "cw": 678
+            }
+          },
+          "expect": "box/body 均无横向滚动（min-width:0 时恒真，不可作 R0 判据）",
+          "tag": "C1"
+        },
+        "V11-2@C1": {
+          "ok": true,
+          "measured": {
+            "r0高": 18.38,
+            "pill高": 18.38,
+            "label高": 15,
+            "num高": 15
+          },
+          "expect": "h ≤ 26（预期 23~24，由 .state-pill 撑高；22 只是标签行高）",
+          "tag": "C1"
+        },
+        "V11-3@C1": {
+          "ok": true,
+          "measured": {
+            "pillLeft": 348,
+            "r0Left": 348,
+            "numRight": 536.56,
+            "r0Right": 536.56
+          },
+          "expect": "pill.left ≥ r0.left−1 且 num.right ≤ r0.right+1（对内部截断是盲的）",
+          "tag": "C1"
+        },
+        "V01@C2": {
+          "ok": true,
+          "measured": {
+            "禁用文案": false,
+            "块数": 4,
+            "块": [
+              "r-head",
+              "quest-submitted",
+              "quest-main-action",
+              "commit-hint quest-rules"
+            ]
+          },
+          "expect": "无「派遣交流与缓冲期」且块数 ∈{3,4}",
+          "tag": "C2"
+        },
+        "V02@C2": {
+          "ok": true,
+          "measured": {
+            "实心": 0,
+            "文本": [],
+            "ghost": 1,
+            "装饰": [
+              "underline|dotted"
+            ]
+          },
+          "expect": "实心 ≤1；ghost dotted underline",
+          "tag": "C2"
+        },
+        "V03@C2": {
+          "ok": true,
+          "measured": {
+            "checkbox": 0,
+            "已提交": 1
+          },
+          "expect": "=0 且「已提交：」≥1",
+          "tag": "C2"
+        },
+        "V04@C2": {
+          "ok": true,
+          "measured": {
+            "select": 0,
+            "radiogroup": 1,
+            "badge": 0
+          },
+          "expect": "select+radiogroup=1 且 badge=0",
+          "tag": "C2"
+        },
+        "V05@C2": {
+          "ok": true,
+          "measured": {
+            "态": "C2",
+            "已投入：": 0
+          },
+          "expect": "= 0",
+          "tag": "C2"
+        },
+        "V06@C2": {
+          "ok": true,
+          "measured": {
+            "命中": false
+          },
+          "expect": "不含「暂定意志」",
+          "tag": "C2"
+        },
+        "V07@C2": {
+          "ok": true,
+          "measured": {
+            "details": 1,
+            "正文字数": 96,
+            "外部p字数": 0,
+            "外部p": ""
+          },
+          "expect": "≥1 且 ≥20 字；外部 <p> ≤12 字",
+          "tag": "C2"
+        },
+        "V08@C2": {
+          "ok": true,
+          "measured": {
+            "绿钮": 0,
+            "清单": []
+          },
+          "expect": "≤1 且非禁用（禁用绿钮也算多一颗）",
+          "tag": "C2"
+        },
+        "V09@C2": {
+          "ok": true,
+          "measured": {
+            "disabled": true,
+            "bg": "rgb(236, 234, 224)",
+            "opacity": "1"
+          },
+          "expect": "disabled 时 bg ≠ 绿系（期望 rgb(236,234,224)）",
+          "tag": "C2"
+        },
+        "V10@C2": {
+          "ok": true,
+          "measured": {
+            "文本": "2 名 · 意志 4",
+            "文本右缘": 536.56,
+            "面板内容右": 996,
+            "右越界": -459.44,
+            "左越界": -147.16,
+            "num右": 536.56,
+            "r0右": 536.56,
+            "文本行数": 1,
+            "num宽": 71,
+            "旧口径_overflow": 0,
+            "旧口径_行盒": 1
+          },
+          "expect": "文本矩形 ⊂ 面板内容盒（左右各 ≤1px）；num.right ≤ r0.right+1；文本单行",
+          "tag": "C2"
+        },
+        "V11-1@C2": {
+          "ok": true,
+          "measured": {
+            "box": {
+              "sw": 159,
+              "cw": 159
+            },
+            "body": {
+              "sw": 678,
+              "cw": 678
+            }
+          },
+          "expect": "box/body 均无横向滚动（min-width:0 时恒真，不可作 R0 判据）",
+          "tag": "C2"
+        },
+        "V11-2@C2": {
+          "ok": true,
+          "measured": {
+            "r0高": 18.38,
+            "pill高": 18.38,
+            "label高": 15,
+            "num高": 15
+          },
+          "expect": "h ≤ 26（预期 23~24，由 .state-pill 撑高；22 只是标签行高）",
+          "tag": "C2"
+        },
+        "V11-3@C2": {
+          "ok": true,
+          "measured": {
+            "pillLeft": 348,
+            "r0Left": 348,
+            "numRight": 536.56,
+            "r0Right": 536.56
+          },
+          "expect": "pill.left ≥ r0.left−1 且 num.right ≤ r0.right+1（对内部截断是盲的）",
+          "tag": "C2"
+        },
+        "V01@D": {
+          "ok": true,
+          "measured": {
+            "禁用文案": false,
+            "块数": 3,
+            "块": [
+              "r-head",
+              "quest-committed",
+              "commit-hint quest-rules"
+            ]
+          },
+          "expect": "无「派遣交流与缓冲期」且块数 ∈{3,4}",
+          "tag": "D"
+        },
+        "V02@D": {
+          "ok": true,
+          "measured": {
+            "实心": 0,
+            "文本": [],
+            "ghost": 0,
+            "装饰": []
+          },
+          "expect": "实心 ≤1；ghost dotted underline",
+          "tag": "D"
+        },
+        "V03@D": {
+          "ok": true,
+          "measured": {
+            "态": "D",
+            "说明": "D 态不适用"
+          },
+          "expect": "N/A",
+          "tag": "D"
+        },
+        "V04@D": {
+          "ok": false,
+          "measured": {
+            "select": 0,
+            "radiogroup": 0,
+            "data-quest": 1,
+            "badge": 0
+          },
+          "expect": "D 态 0/0/0",
+          "tag": "D"
+        },
+        "V05@D": {
+          "ok": true,
+          "measured": {
+            "态": "D",
+            "已投入：": 1
+          },
+          "expect": "= 1",
+          "tag": "D"
+        },
+        "V06@D": {
+          "ok": true,
+          "measured": {
+            "命中": false
+          },
+          "expect": "不含「暂定意志」",
+          "tag": "D"
+        },
+        "V07@D": {
+          "ok": false,
+          "measured": {
+            "details": 1
+          },
+          "expect": "D 态 details = 0",
+          "tag": "D"
+        },
+        "V08@D": {
+          "ok": true,
+          "measured": {
+            "绿钮": 1,
+            "清单": [
+              "primary door-go:结束阶段"
+            ]
+          },
+          "expect": "≤1 且非禁用（禁用绿钮也算多一颗）",
+          "tag": "D"
+        },
+        "V09@D": {
+          "ok": true,
+          "measured": {
+            "disabled": false,
+            "bg": "rgb(47, 74, 59)",
+            "opacity": "1"
+          },
+          "expect": "disabled 时 bg ≠ 绿系（期望 rgb(236,234,224)）",
+          "tag": "D"
+        },
+        "V10@D": {
+          "ok": true,
+          "measured": {
+            "文本": "2 名 · 意志 4",
+            "文本右缘": 536.56,
+            "面板内容右": 996,
+            "右越界": -459.44,
+            "左越界": -147.16,
+            "num右": 536.56,
+            "r0右": 536.56,
+            "文本行数": 1,
+            "num宽": 71,
+            "旧口径_overflow": 0,
+            "旧口径_行盒": 1
+          },
+          "expect": "文本矩形 ⊂ 面板内容盒（左右各 ≤1px）；num.right ≤ r0.right+1；文本单行",
+          "tag": "D"
+        },
+        "V11-1@D": {
+          "ok": true,
+          "measured": {
+            "box": {
+              "sw": 159,
+              "cw": 159
+            },
+            "body": {
+              "sw": 678,
+              "cw": 678
+            }
+          },
+          "expect": "box/body 均无横向滚动（min-width:0 时恒真，不可作 R0 判据）",
+          "tag": "D"
+        },
+        "V11-2@D": {
+          "ok": true,
+          "measured": {
+            "r0高": 18.38,
+            "pill高": 18.38,
+            "label高": 15,
+            "num高": 15
+          },
+          "expect": "h ≤ 26（预期 23~24，由 .state-pill 撑高；22 只是标签行高）",
+          "tag": "D"
+        },
+        "V11-3@D": {
+          "ok": true,
+          "measured": {
+            "pillLeft": 348,
+            "r0Left": 348,
+            "numRight": 536.56,
+            "r0Right": 536.56
+          },
+          "expect": "pill.left ≥ r0.left−1 且 num.right ≤ r0.right+1（对内部截断是盲的）",
+          "tag": "D"
+        }
+      },
+      "errors": [],
+      "ok": true
+    },
+    {
+      "viewport": "1280x800",
+      "spot": false,
+      "states": [
+        {
+          "tag": "A",
+          "deployState": "A",
+          "blocks": 4,
+          "rHead": {
+            "lines": 2,
+            "layout": [
+              [
+                "r0:草稿暂定0 名 · 意志"
+              ],
+              [
+                "quest-actors:玩家1玩家2"
+              ]
+            ]
+          },
+          "panelTop": 451.38,
+          "panelH": 26,
+          "primaryTop": 394.38,
+          "r0h": 18.38
+        },
+        {
+          "tag": "B",
+          "deployState": null,
+          "blocks": 0,
+          "rHead": null,
+          "panelTop": 451.38,
+          "panelH": 26,
+          "primaryTop": null,
+          "r0h": null
+        },
+        {
+          "tag": "C1",
+          "deployState": "C1",
+          "blocks": 4,
+          "rHead": {
+            "lines": 2,
+            "layout": [
+              [
+                "r0:待确认暂定2 名 · 意",
+                "action-note:尚未横置角色"
+              ],
+              [
+                "quest-actors:玩家1玩家2"
+              ]
+            ]
+          },
+          "panelTop": 451.38,
+          "panelH": 26,
+          "primaryTop": 394.38,
+          "r0h": 18.38
+        },
+        {
+          "tag": "C2",
+          "deployState": "C2",
+          "blocks": 4,
+          "rHead": {
+            "lines": 2,
+            "layout": [
+              [
+                "r0:已确认 1/2暂定2 名",
+                "action-note:还差 玩家2 确认"
+              ],
+              [
+                "quest-actors:玩家1玩家2"
+              ]
+            ]
+          },
+          "panelTop": 451.38,
+          "panelH": 26,
+          "primaryTop": null,
+          "r0h": 18.38
+        },
+        {
+          "tag": "D",
+          "deployState": "D",
+          "blocks": 3,
+          "rHead": {
+            "lines": 1,
+            "layout": [
+              [
+                "r0:执行中实际2 名 · 意"
+              ]
+            ]
+          },
+          "panelTop": 451.38,
+          "panelH": 26,
+          "primaryTop": null,
+          "r0h": 18.38
+        }
+      ],
+      "verdicts": {
+        "V01@A": {
+          "ok": true,
+          "measured": {
+            "禁用文案": false,
+            "块数": 4,
+            "块": [
+              "r-head",
+              "quest-commit-list",
+              "quest-main-action",
+              "commit-hint quest-rules"
+            ]
+          },
+          "expect": "无「派遣交流与缓冲期」且块数 ∈{3,4}",
+          "tag": "A"
+        },
+        "V02@A": {
+          "ok": true,
+          "measured": {
+            "实心": 1,
+            "文本": [
+              "提交空名单（本次不投入）"
+            ],
+            "ghost": 1,
+            "装饰": [
+              "underline|dotted"
+            ]
+          },
+          "expect": "实心 ≤1；ghost dotted underline",
+          "tag": "A"
+        },
+        "V03@A": {
+          "ok": true,
+          "measured": {
+            "checkbox": 3
+          },
+          "expect": "A 态 checkbox > 0",
+          "tag": "A"
+        },
+        "V04@A": {
+          "ok": true,
+          "measured": {
+            "select": 0,
+            "radiogroup": 1,
+            "badge": 0
+          },
+          "expect": "select+radiogroup=1 且 badge=0",
+          "tag": "A"
+        },
+        "V05@A": {
+          "ok": true,
+          "measured": {
+            "态": "A",
+            "已投入：": 0
+          },
+          "expect": "= 0",
+          "tag": "A"
+        },
+        "V06@A": {
+          "ok": true,
+          "measured": {
+            "命中": false
+          },
+          "expect": "不含「暂定意志」",
+          "tag": "A"
+        },
+        "V07@A": {
+          "ok": true,
+          "measured": {
+            "details": 1,
+            "正文字数": 76,
+            "外部p字数": 0,
+            "外部p": ""
+          },
+          "expect": "≥1 且 ≥20 字；外部 <p> ≤12 字",
+          "tag": "A"
+        },
+        "V08@A": {
+          "ok": true,
+          "measured": {
+            "绿钮": 1,
+            "清单": [
+              "primary:提交空名单（本次不投入）"
+            ]
+          },
+          "expect": "≤1 且非禁用（禁用绿钮也算多一颗）",
+          "tag": "A"
+        },
+        "V09@A": {
+          "ok": true,
+          "measured": {
+            "disabled": true,
+            "bg": "rgb(236, 234, 224)",
+            "opacity": "1"
+          },
+          "expect": "disabled 时 bg ≠ 绿系（期望 rgb(236,234,224)）",
+          "tag": "A"
+        },
+        "V10@A": {
+          "ok": true,
+          "measured": {
+            "文本": "0 名 · 意志 0",
+            "文本右缘": 377.56,
+            "面板内容右": 837,
+            "右越界": -459.44,
+            "左越界": -147.16,
+            "num右": 377.56,
+            "r0右": 377.56,
+            "文本行数": 1,
+            "num宽": 71,
+            "旧口径_overflow": 0,
+            "旧口径_行盒": 1
+          },
+          "expect": "文本矩形 ⊂ 面板内容盒（左右各 ≤1px）；num.right ≤ r0.right+1；文本单行",
+          "tag": "A"
+        },
+        "V11-1@A": {
+          "ok": true,
+          "measured": {
+            "box": {
+              "sw": 284,
+              "cw": 284
+            },
+            "body": {
+              "sw": 678,
+              "cw": 678
+            }
+          },
+          "expect": "box/body 均无横向滚动（min-width:0 时恒真，不可作 R0 判据）",
+          "tag": "A"
+        },
+        "V11-2@A": {
+          "ok": true,
+          "measured": {
+            "r0高": 18.38,
+            "pill高": 18.38,
+            "label高": 15,
+            "num高": 15
+          },
+          "expect": "h ≤ 26（预期 23~24，由 .state-pill 撑高；22 只是标签行高）",
+          "tag": "A"
+        },
+        "V11-3@A": {
+          "ok": true,
+          "measured": {
+            "pillLeft": 189,
+            "r0Left": 189,
+            "numRight": 377.56,
+            "r0Right": 377.56
+          },
+          "expect": "pill.left ≥ r0.left−1 且 num.right ≤ r0.right+1（对内部截断是盲的）",
+          "tag": "A"
+        },
+        "V01@B": {
+          "ok": false,
+          "measured": {
+            "禁用文案": false,
+            "块数": 0,
+            "块": []
+          },
+          "expect": "无「派遣交流与缓冲期」且块数 ∈{3,4}",
+          "tag": "B"
+        },
+        "V02@B": {
+          "ok": true,
+          "measured": {
+            "实心": 0,
+            "文本": [],
+            "ghost": 0,
+            "装饰": []
+          },
+          "expect": "实心 ≤1；ghost dotted underline",
+          "tag": "B"
+        },
+        "V03@B": {
+          "ok": false,
+          "measured": {
+            "checkbox": 0,
+            "已提交": 0
+          },
+          "expect": "=0 且「已提交：」≥1",
+          "tag": "B"
+        },
+        "V04@B": {
+          "ok": false,
+          "measured": {
+            "select": 0,
+            "radiogroup": 0,
+            "badge": 0
+          },
+          "expect": "select+radiogroup=1 且 badge=0",
+          "tag": "B"
+        },
+        "V05@B": {
+          "ok": true,
+          "measured": {
+            "态": "B",
+            "已投入：": 0
+          },
+          "expect": "= 0",
+          "tag": "B"
+        },
+        "V06@B": {
+          "ok": true,
+          "measured": {
+            "命中": false
+          },
+          "expect": "不含「暂定意志」",
+          "tag": "B"
+        },
+        "V07@B": {
+          "ok": false,
+          "measured": {
+            "details": 0,
+            "正文字数": 0,
+            "外部p字数": 0,
+            "外部p": ""
+          },
+          "expect": "≥1 且 ≥20 字；外部 <p> ≤12 字",
+          "tag": "B"
+        },
+        "V08@B": {
+          "ok": true,
+          "measured": {
+            "绿钮": 0,
+            "清单": []
+          },
+          "expect": "≤1 且非禁用（禁用绿钮也算多一颗）",
+          "tag": "B"
+        },
+        "V09@B": {
+          "ok": true,
+          "measured": {
+            "disabled": true,
+            "bg": "rgb(236, 234, 224)",
+            "opacity": "1"
+          },
+          "expect": "disabled 时 bg ≠ 绿系（期望 rgb(236,234,224)）",
+          "tag": "B"
+        },
+        "V10@B": {
+          "ok": false,
+          "measured": "无 .r0 或 .r0-num",
+          "expect": "存在 .r0-num",
+          "tag": "B"
+        },
+        "V11-1@B": {
+          "ok": false,
+          "measured": {
+            "box": {
+              "sw": 170,
+              "cw": 170
+            },
+            "body": null
+          },
+          "expect": "box/body 均无横向滚动（min-width:0 时恒真，不可作 R0 判据）",
+          "tag": "B"
+        },
+        "V11-2@B": {
+          "ok": false,
+          "measured": {
+            "r0高": null,
+            "pill高": null,
+            "label高": null,
+            "num高": null
+          },
+          "expect": "h ≤ 26（预期 23~24，由 .state-pill 撑高；22 只是标签行高）",
+          "tag": "B"
+        },
+        "V11-3@B": {
+          "ok": false,
+          "measured": {
+            "pillLeft": null,
+            "r0Left": null,
+            "numRight": null,
+            "r0Right": null
+          },
+          "expect": "pill.left ≥ r0.left−1 且 num.right ≤ r0.right+1（对内部截断是盲的）",
+          "tag": "B"
+        },
+        "V01@C1": {
+          "ok": true,
+          "measured": {
+            "禁用文案": false,
+            "块数": 4,
+            "块": [
+              "r-head",
+              "quest-submitted",
+              "quest-main-action",
+              "commit-hint quest-rules"
+            ]
+          },
+          "expect": "无「派遣交流与缓冲期」且块数 ∈{3,4}",
+          "tag": "C1"
+        },
+        "V02@C1": {
+          "ok": true,
+          "measured": {
+            "实心": 1,
+            "文本": [
+              "确认派遣名单"
+            ],
+            "ghost": 1,
+            "装饰": [
+              "underline|dotted"
+            ]
+          },
+          "expect": "实心 ≤1；ghost dotted underline",
+          "tag": "C1"
+        },
+        "V03@C1": {
+          "ok": true,
+          "measured": {
+            "checkbox": 0,
+            "已提交": 1
+          },
+          "expect": "=0 且「已提交：」≥1",
+          "tag": "C1"
+        },
+        "V04@C1": {
+          "ok": true,
+          "measured": {
+            "select": 0,
+            "radiogroup": 1,
+            "badge": 0
+          },
+          "expect": "select+radiogroup=1 且 badge=0",
+          "tag": "C1"
+        },
+        "V05@C1": {
+          "ok": true,
+          "measured": {
+            "态": "C1",
+            "已投入：": 0
+          },
+          "expect": "= 0",
+          "tag": "C1"
+        },
+        "V06@C1": {
+          "ok": true,
+          "measured": {
+            "命中": false
+          },
+          "expect": "不含「暂定意志」",
+          "tag": "C1"
+        },
+        "V07@C1": {
+          "ok": true,
+          "measured": {
+            "details": 1,
+            "正文字数": 96,
+            "外部p字数": 0,
+            "外部p": ""
+          },
+          "expect": "≥1 且 ≥20 字；外部 <p> ≤12 字",
+          "tag": "C1"
+        },
+        "V08@C1": {
+          "ok": true,
+          "measured": {
+            "绿钮": 1,
+            "清单": [
+              "primary:确认派遣名单"
+            ]
+          },
+          "expect": "≤1 且非禁用（禁用绿钮也算多一颗）",
+          "tag": "C1"
+        },
+        "V09@C1": {
+          "ok": true,
+          "measured": {
+            "disabled": true,
+            "bg": "rgb(236, 234, 224)",
+            "opacity": "1"
+          },
+          "expect": "disabled 时 bg ≠ 绿系（期望 rgb(236,234,224)）",
+          "tag": "C1"
+        },
+        "V10@C1": {
+          "ok": true,
+          "measured": {
+            "文本": "2 名 · 意志 4",
+            "文本右缘": 377.56,
+            "面板内容右": 837,
+            "右越界": -459.44,
+            "左越界": -147.16,
+            "num右": 377.56,
+            "r0右": 377.56,
+            "文本行数": 1,
+            "num宽": 71,
+            "旧口径_overflow": 0,
+            "旧口径_行盒": 1
+          },
+          "expect": "文本矩形 ⊂ 面板内容盒（左右各 ≤1px）；num.right ≤ r0.right+1；文本单行",
+          "tag": "C1"
+        },
+        "V11-1@C1": {
+          "ok": true,
+          "measured": {
+            "box": {
+              "sw": 159,
+              "cw": 159
+            },
+            "body": {
+              "sw": 678,
+              "cw": 678
+            }
+          },
+          "expect": "box/body 均无横向滚动（min-width:0 时恒真，不可作 R0 判据）",
+          "tag": "C1"
+        },
+        "V11-2@C1": {
+          "ok": true,
+          "measured": {
+            "r0高": 18.38,
+            "pill高": 18.38,
+            "label高": 15,
+            "num高": 15
+          },
+          "expect": "h ≤ 26（预期 23~24，由 .state-pill 撑高；22 只是标签行高）",
+          "tag": "C1"
+        },
+        "V11-3@C1": {
+          "ok": true,
+          "measured": {
+            "pillLeft": 189,
+            "r0Left": 189,
+            "numRight": 377.56,
+            "r0Right": 377.56
+          },
+          "expect": "pill.left ≥ r0.left−1 且 num.right ≤ r0.right+1（对内部截断是盲的）",
+          "tag": "C1"
+        },
+        "V01@C2": {
+          "ok": true,
+          "measured": {
+            "禁用文案": false,
+            "块数": 4,
+            "块": [
+              "r-head",
+              "quest-submitted",
+              "quest-main-action",
+              "commit-hint quest-rules"
+            ]
+          },
+          "expect": "无「派遣交流与缓冲期」且块数 ∈{3,4}",
+          "tag": "C2"
+        },
+        "V02@C2": {
+          "ok": true,
+          "measured": {
+            "实心": 0,
+            "文本": [],
+            "ghost": 1,
+            "装饰": [
+              "underline|dotted"
+            ]
+          },
+          "expect": "实心 ≤1；ghost dotted underline",
+          "tag": "C2"
+        },
+        "V03@C2": {
+          "ok": true,
+          "measured": {
+            "checkbox": 0,
+            "已提交": 1
+          },
+          "expect": "=0 且「已提交：」≥1",
+          "tag": "C2"
+        },
+        "V04@C2": {
+          "ok": true,
+          "measured": {
+            "select": 0,
+            "radiogroup": 1,
+            "badge": 0
+          },
+          "expect": "select+radiogroup=1 且 badge=0",
+          "tag": "C2"
+        },
+        "V05@C2": {
+          "ok": true,
+          "measured": {
+            "态": "C2",
+            "已投入：": 0
+          },
+          "expect": "= 0",
+          "tag": "C2"
+        },
+        "V06@C2": {
+          "ok": true,
+          "measured": {
+            "命中": false
+          },
+          "expect": "不含「暂定意志」",
+          "tag": "C2"
+        },
+        "V07@C2": {
+          "ok": true,
+          "measured": {
+            "details": 1,
+            "正文字数": 96,
+            "外部p字数": 0,
+            "外部p": ""
+          },
+          "expect": "≥1 且 ≥20 字；外部 <p> ≤12 字",
+          "tag": "C2"
+        },
+        "V08@C2": {
+          "ok": true,
+          "measured": {
+            "绿钮": 0,
+            "清单": []
+          },
+          "expect": "≤1 且非禁用（禁用绿钮也算多一颗）",
+          "tag": "C2"
+        },
+        "V09@C2": {
+          "ok": true,
+          "measured": {
+            "disabled": true,
+            "bg": "rgb(236, 234, 224)",
+            "opacity": "1"
+          },
+          "expect": "disabled 时 bg ≠ 绿系（期望 rgb(236,234,224)）",
+          "tag": "C2"
+        },
+        "V10@C2": {
+          "ok": true,
+          "measured": {
+            "文本": "2 名 · 意志 4",
+            "文本右缘": 377.56,
+            "面板内容右": 837,
+            "右越界": -459.44,
+            "左越界": -147.16,
+            "num右": 377.56,
+            "r0右": 377.56,
+            "文本行数": 1,
+            "num宽": 71,
+            "旧口径_overflow": 0,
+            "旧口径_行盒": 1
+          },
+          "expect": "文本矩形 ⊂ 面板内容盒（左右各 ≤1px）；num.right ≤ r0.right+1；文本单行",
+          "tag": "C2"
+        },
+        "V11-1@C2": {
+          "ok": true,
+          "measured": {
+            "box": {
+              "sw": 159,
+              "cw": 159
+            },
+            "body": {
+              "sw": 678,
+              "cw": 678
+            }
+          },
+          "expect": "box/body 均无横向滚动（min-width:0 时恒真，不可作 R0 判据）",
+          "tag": "C2"
+        },
+        "V11-2@C2": {
+          "ok": true,
+          "measured": {
+            "r0高": 18.38,
+            "pill高": 18.38,
+            "label高": 15,
+            "num高": 15
+          },
+          "expect": "h ≤ 26（预期 23~24，由 .state-pill 撑高；22 只是标签行高）",
+          "tag": "C2"
+        },
+        "V11-3@C2": {
+          "ok": true,
+          "measured": {
+            "pillLeft": 189,
+            "r0Left": 189,
+            "numRight": 377.56,
+            "r0Right": 377.56
+          },
+          "expect": "pill.left ≥ r0.left−1 且 num.right ≤ r0.right+1（对内部截断是盲的）",
+          "tag": "C2"
+        },
+        "V01@D": {
+          "ok": true,
+          "measured": {
+            "禁用文案": false,
+            "块数": 3,
+            "块": [
+              "r-head",
+              "quest-committed",
+              "commit-hint quest-rules"
+            ]
+          },
+          "expect": "无「派遣交流与缓冲期」且块数 ∈{3,4}",
+          "tag": "D"
+        },
+        "V02@D": {
+          "ok": true,
+          "measured": {
+            "实心": 0,
+            "文本": [],
+            "ghost": 0,
+            "装饰": []
+          },
+          "expect": "实心 ≤1；ghost dotted underline",
+          "tag": "D"
+        },
+        "V03@D": {
+          "ok": true,
+          "measured": {
+            "态": "D",
+            "说明": "D 态不适用"
+          },
+          "expect": "N/A",
+          "tag": "D"
+        },
+        "V04@D": {
+          "ok": false,
+          "measured": {
+            "select": 0,
+            "radiogroup": 0,
+            "data-quest": 1,
+            "badge": 0
+          },
+          "expect": "D 态 0/0/0",
+          "tag": "D"
+        },
+        "V05@D": {
+          "ok": true,
+          "measured": {
+            "态": "D",
+            "已投入：": 1
+          },
+          "expect": "= 1",
+          "tag": "D"
+        },
+        "V06@D": {
+          "ok": true,
+          "measured": {
+            "命中": false
+          },
+          "expect": "不含「暂定意志」",
+          "tag": "D"
+        },
+        "V07@D": {
+          "ok": false,
+          "measured": {
+            "details": 1
+          },
+          "expect": "D 态 details = 0",
+          "tag": "D"
+        },
+        "V08@D": {
+          "ok": true,
+          "measured": {
+            "绿钮": 1,
+            "清单": [
+              "primary door-go:结束阶段"
+            ]
+          },
+          "expect": "≤1 且非禁用（禁用绿钮也算多一颗）",
+          "tag": "D"
+        },
+        "V09@D": {
+          "ok": true,
+          "measured": {
+            "disabled": false,
+            "bg": "rgb(47, 74, 59)",
+            "opacity": "1"
+          },
+          "expect": "disabled 时 bg ≠ 绿系（期望 rgb(236,234,224)）",
+          "tag": "D"
+        },
+        "V10@D": {
+          "ok": true,
+          "measured": {
+            "文本": "2 名 · 意志 4",
+            "文本右缘": 377.56,
+            "面板内容右": 837,
+            "右越界": -459.44,
+            "左越界": -147.16,
+            "num右": 377.56,
+            "r0右": 377.56,
+            "文本行数": 1,
+            "num宽": 71,
+            "旧口径_overflow": 0,
+            "旧口径_行盒": 1
+          },
+          "expect": "文本矩形 ⊂ 面板内容盒（左右各 ≤1px）；num.right ≤ r0.right+1；文本单行",
+          "tag": "D"
+        },
+        "V11-1@D": {
+          "ok": true,
+          "measured": {
+            "box": {
+              "sw": 159,
+              "cw": 159
+            },
+            "body": {
+              "sw": 678,
+              "cw": 678
+            }
+          },
+          "expect": "box/body 均无横向滚动（min-width:0 时恒真，不可作 R0 判据）",
+          "tag": "D"
+        },
+        "V11-2@D": {
+          "ok": true,
+          "measured": {
+            "r0高": 18.38,
+            "pill高": 18.38,
+            "label高": 15,
+            "num高": 15
+          },
+          "expect": "h ≤ 26（预期 23~24，由 .state-pill 撑高；22 只是标签行高）",
+          "tag": "D"
+        },
+        "V11-3@D": {
+          "ok": true,
+          "measured": {
+            "pillLeft": 189,
+            "r0Left": 189,
+            "numRight": 377.56,
+            "r0Right": 377.56
+          },
+          "expect": "pill.left ≥ r0.left−1 且 num.right ≤ r0.right+1（对内部截断是盲的）",
+          "tag": "D"
+        }
+      },
+      "errors": [],
+      "ok": true
+    },
+    {
+      "viewport": "390x844",
+      "spot": false,
+      "states": [
+        {
+          "tag": "A",
+          "deployState": "A",
+          "blocks": 4,
+          "rHead": {
+            "lines": 2,
+            "layout": [
+              [
+                "r0:草稿暂定0 名 · 意志"
+              ],
+              [
+                "quest-actors:玩家1玩家2"
+              ]
+            ]
+          },
+          "panelTop": 629.64,
+          "panelH": 44,
+          "primaryTop": 756.8,
+          "r0h": 18.38
+        },
+        {
+          "tag": "B",
+          "deployState": null,
+          "blocks": 0,
+          "rHead": null,
+          "panelTop": 629.64,
+          "panelH": 44,
+          "primaryTop": null,
+          "r0h": null
+        },
+        {
+          "tag": "C1",
+          "deployState": "C1",
+          "blocks": 4,
+          "rHead": {
+            "lines": 3,
+            "layout": [
+              [
+                "r0:待确认暂定2 名 · 意"
+              ],
+              [
+                "quest-actors:玩家1玩家2"
+              ],
+              [
+                "action-note:尚未横置角色"
+              ]
+            ]
+          },
+          "panelTop": 629.64,
+          "panelH": 44,
+          "primaryTop": 731.23,
+          "r0h": 18.38
+        },
+        {
+          "tag": "C2",
+          "deployState": "C2",
+          "blocks": 4,
+          "rHead": {
+            "lines": 3,
+            "layout": [
+              [
+                "r0:已确认 1/2暂定2 名"
+              ],
+              [
+                "quest-actors:玩家1玩家2"
+              ],
+              [
+                "action-note:还差 玩家2 确认"
+              ]
+            ]
+          },
+          "panelTop": 629.64,
+          "panelH": 44,
+          "primaryTop": null,
+          "r0h": 18.38
+        },
+        {
+          "tag": "D",
+          "deployState": "D",
+          "blocks": 3,
+          "rHead": {
+            "lines": 1,
+            "layout": [
+              [
+                "r0:执行中实际2 名 · 意"
+              ]
+            ]
+          },
+          "panelTop": 602.84,
+          "panelH": 44,
+          "primaryTop": null,
+          "r0h": 18.38
+        }
+      ],
+      "verdicts": {
+        "V01@A": {
+          "ok": true,
+          "measured": {
+            "禁用文案": false,
+            "块数": 4,
+            "块": [
+              "r-head",
+              "quest-commit-list",
+              "quest-main-action",
+              "commit-hint quest-rules"
+            ]
+          },
+          "expect": "无「派遣交流与缓冲期」且块数 ∈{3,4}",
+          "tag": "A"
+        },
+        "V02@A": {
+          "ok": true,
+          "measured": {
+            "实心": 1,
+            "文本": [
+              "提交空名单（本次不投入）"
+            ],
+            "ghost": 1,
+            "装饰": [
+              "underline|dotted"
+            ]
+          },
+          "expect": "实心 ≤1；ghost dotted underline",
+          "tag": "A"
+        },
+        "V03@A": {
+          "ok": true,
+          "measured": {
+            "checkbox": 3
+          },
+          "expect": "A 态 checkbox > 0",
+          "tag": "A"
+        },
+        "V04@A": {
+          "ok": true,
+          "measured": {
+            "select": 0,
+            "radiogroup": 1,
+            "badge": 0
+          },
+          "expect": "select+radiogroup=1 且 badge=0",
+          "tag": "A"
+        },
+        "V05@A": {
+          "ok": true,
+          "measured": {
+            "态": "A",
+            "已投入：": 0
+          },
+          "expect": "= 0",
+          "tag": "A"
+        },
+        "V06@A": {
+          "ok": true,
+          "measured": {
+            "命中": false
+          },
+          "expect": "不含「暂定意志」",
+          "tag": "A"
+        },
+        "V07@A": {
+          "ok": true,
+          "measured": {
+            "details": 1,
+            "正文字数": 76,
+            "外部p字数": 0,
+            "外部p": ""
+          },
+          "expect": "≥1 且 ≥20 字；外部 <p> ≤12 字",
+          "tag": "A"
+        },
+        "V08@A": {
+          "ok": true,
+          "measured": {
+            "绿钮": 1,
+            "清单": [
+              "primary:提交空名单（本次不投入）"
+            ]
+          },
+          "expect": "≤1 且非禁用（禁用绿钮也算多一颗）",
+          "tag": "A"
+        },
+        "V09@A": {
+          "ok": true,
+          "measured": {
+            "disabled": true,
+            "bg": "rgb(236, 234, 224)",
+            "opacity": "1"
+          },
+          "expect": "disabled 时 bg ≠ 绿系（期望 rgb(236,234,224)）",
+          "tag": "A"
+        },
+        "V10@A": {
+          "ok": true,
+          "measured": {
+            "文本": "0 名 · 意志 0",
+            "文本右缘": 189.56,
+            "面板内容右": 377,
+            "右越界": -187.44,
+            "左越界": -105.16,
+            "num右": 189.56,
+            "r0右": 189.56,
+            "文本行数": 1,
+            "num宽": 71,
+            "旧口径_overflow": 0,
+            "旧口径_行盒": 1
+          },
+          "expect": "文本矩形 ⊂ 面板内容盒（左右各 ≤1px）；num.right ≤ r0.right+1；文本单行",
+          "tag": "A"
+        },
+        "V11-1@A": {
+          "ok": true,
+          "measured": {
+            "box": {
+              "sw": 322,
+              "cw": 322
+            },
+            "body": {
+              "sw": 364,
+              "cw": 364
+            }
+          },
+          "expect": "box/body 均无横向滚动（min-width:0 时恒真，不可作 R0 判据）",
+          "tag": "A"
+        },
+        "V11-2@A": {
+          "ok": true,
+          "measured": {
+            "r0高": 18.38,
+            "pill高": 18.38,
+            "label高": 1,
+            "num高": 15
+          },
+          "expect": "h ≤ 26（预期 23~24，由 .state-pill 撑高；22 只是标签行高）",
+          "tag": "A"
+        },
+        "V11-3@A": {
+          "ok": true,
+          "measured": {
+            "pillLeft": 43,
+            "r0Left": 43,
+            "numRight": 189.56,
+            "r0Right": 189.56
+          },
+          "expect": "pill.left ≥ r0.left−1 且 num.right ≤ r0.right+1（对内部截断是盲的）",
+          "tag": "A"
+        },
+        "V10-最坏内容@A": {
+          "ok": true,
+          "measured": {
+            "最坏文本": "12 名 · 意志 99 ／ 威胁 50",
+            "当前文本": "0 名 · 意志 0",
+            "可用": 258.84,
+            "需要": 148.81,
+            "余量": 110.03
+          },
+          "expect": "需要 ≤ 可用（威胁 50 / 意志两位数的文字绘制宽不得越过面板内容右缘）",
+          "tag": "A"
+        },
+        "V01@B": {
+          "ok": false,
+          "measured": {
+            "禁用文案": false,
+            "块数": 0,
+            "块": []
+          },
+          "expect": "无「派遣交流与缓冲期」且块数 ∈{3,4}",
+          "tag": "B"
+        },
+        "V02@B": {
+          "ok": true,
+          "measured": {
+            "实心": 0,
+            "文本": [],
+            "ghost": 0,
+            "装饰": []
+          },
+          "expect": "实心 ≤1；ghost dotted underline",
+          "tag": "B"
+        },
+        "V03@B": {
+          "ok": false,
+          "measured": {
+            "checkbox": 0,
+            "已提交": 0
+          },
+          "expect": "=0 且「已提交：」≥1",
+          "tag": "B"
+        },
+        "V04@B": {
+          "ok": false,
+          "measured": {
+            "select": 0,
+            "radiogroup": 0,
+            "badge": 0
+          },
+          "expect": "select+radiogroup=1 且 badge=0",
+          "tag": "B"
+        },
+        "V05@B": {
+          "ok": true,
+          "measured": {
+            "态": "B",
+            "已投入：": 0
+          },
+          "expect": "= 0",
+          "tag": "B"
+        },
+        "V06@B": {
+          "ok": true,
+          "measured": {
+            "命中": false
+          },
+          "expect": "不含「暂定意志」",
+          "tag": "B"
+        },
+        "V07@B": {
+          "ok": false,
+          "measured": {
+            "details": 0,
+            "正文字数": 0,
+            "外部p字数": 0,
+            "外部p": ""
+          },
+          "expect": "≥1 且 ≥20 字；外部 <p> ≤12 字",
+          "tag": "B"
+        },
+        "V08@B": {
+          "ok": true,
+          "measured": {
+            "绿钮": 0,
+            "清单": []
+          },
+          "expect": "≤1 且非禁用（禁用绿钮也算多一颗）",
+          "tag": "B"
+        },
+        "V09@B": {
+          "ok": true,
+          "measured": {
+            "disabled": true,
+            "bg": "rgb(236, 234, 224)",
+            "opacity": "1"
+          },
+          "expect": "disabled 时 bg ≠ 绿系（期望 rgb(236,234,224)）",
+          "tag": "B"
+        },
+        "V10@B": {
+          "ok": false,
+          "measured": "无 .r0 或 .r0-num",
+          "expect": "存在 .r0-num",
+          "tag": "B"
+        },
+        "V11-1@B": {
+          "ok": false,
+          "measured": {
+            "box": {
+              "sw": 322,
+              "cw": 322
+            },
+            "body": null
+          },
+          "expect": "box/body 均无横向滚动（min-width:0 时恒真，不可作 R0 判据）",
+          "tag": "B"
+        },
+        "V11-2@B": {
+          "ok": false,
+          "measured": {
+            "r0高": null,
+            "pill高": null,
+            "label高": null,
+            "num高": null
+          },
+          "expect": "h ≤ 26（预期 23~24，由 .state-pill 撑高；22 只是标签行高）",
+          "tag": "B"
+        },
+        "V11-3@B": {
+          "ok": false,
+          "measured": {
+            "pillLeft": null,
+            "r0Left": null,
+            "numRight": null,
+            "r0Right": null
+          },
+          "expect": "pill.left ≥ r0.left−1 且 num.right ≤ r0.right+1（对内部截断是盲的）",
+          "tag": "B"
+        },
+        "V10-最坏内容@B": {
+          "ok": false,
+          "measured": {
+            "最坏文本": null,
+            "当前文本": null,
+            "可用": null,
+            "需要": null,
+            "余量": null
+          },
+          "expect": "需要 ≤ 可用（威胁 50 / 意志两位数的文字绘制宽不得越过面板内容右缘）",
+          "tag": "B"
+        },
+        "V01@C1": {
+          "ok": true,
+          "measured": {
+            "禁用文案": false,
+            "块数": 4,
+            "块": [
+              "r-head",
+              "quest-submitted",
+              "quest-main-action",
+              "commit-hint quest-rules"
+            ]
+          },
+          "expect": "无「派遣交流与缓冲期」且块数 ∈{3,4}",
+          "tag": "C1"
+        },
+        "V02@C1": {
+          "ok": true,
+          "measured": {
+            "实心": 1,
+            "文本": [
+              "确认派遣名单"
+            ],
+            "ghost": 1,
+            "装饰": [
+              "underline|dotted"
+            ]
+          },
+          "expect": "实心 ≤1；ghost dotted underline",
+          "tag": "C1"
+        },
+        "V03@C1": {
+          "ok": true,
+          "measured": {
+            "checkbox": 0,
+            "已提交": 1
+          },
+          "expect": "=0 且「已提交：」≥1",
+          "tag": "C1"
+        },
+        "V04@C1": {
+          "ok": true,
+          "measured": {
+            "select": 0,
+            "radiogroup": 1,
+            "badge": 0
+          },
+          "expect": "select+radiogroup=1 且 badge=0",
+          "tag": "C1"
+        },
+        "V05@C1": {
+          "ok": true,
+          "measured": {
+            "态": "C1",
+            "已投入：": 0
+          },
+          "expect": "= 0",
+          "tag": "C1"
+        },
+        "V06@C1": {
+          "ok": true,
+          "measured": {
+            "命中": false
+          },
+          "expect": "不含「暂定意志」",
+          "tag": "C1"
+        },
+        "V07@C1": {
+          "ok": true,
+          "measured": {
+            "details": 1,
+            "正文字数": 96,
+            "外部p字数": 0,
+            "外部p": ""
+          },
+          "expect": "≥1 且 ≥20 字；外部 <p> ≤12 字",
+          "tag": "C1"
+        },
+        "V08@C1": {
+          "ok": true,
+          "measured": {
+            "绿钮": 1,
+            "清单": [
+              "primary:确认派遣名单"
+            ]
+          },
+          "expect": "≤1 且非禁用（禁用绿钮也算多一颗）",
+          "tag": "C1"
+        },
+        "V09@C1": {
+          "ok": true,
+          "measured": {
+            "disabled": true,
+            "bg": "rgb(236, 234, 224)",
+            "opacity": "1"
+          },
+          "expect": "disabled 时 bg ≠ 绿系（期望 rgb(236,234,224)）",
+          "tag": "C1"
+        },
+        "V10@C1": {
+          "ok": true,
+          "measured": {
+            "文本": "2 名 · 意志 4",
+            "文本右缘": 189.56,
+            "面板内容右": 377,
+            "右越界": -187.44,
+            "左越界": -105.16,
+            "num右": 189.56,
+            "r0右": 189.56,
+            "文本行数": 1,
+            "num宽": 71,
+            "旧口径_overflow": 0,
+            "旧口径_行盒": 1
+          },
+          "expect": "文本矩形 ⊂ 面板内容盒（左右各 ≤1px）；num.right ≤ r0.right+1；文本单行",
+          "tag": "C1"
+        },
+        "V11-1@C1": {
+          "ok": true,
+          "measured": {
+            "box": {
+              "sw": 322,
+              "cw": 322
+            },
+            "body": {
+              "sw": 364,
+              "cw": 364
+            }
+          },
+          "expect": "box/body 均无横向滚动（min-width:0 时恒真，不可作 R0 判据）",
+          "tag": "C1"
+        },
+        "V11-2@C1": {
+          "ok": true,
+          "measured": {
+            "r0高": 18.38,
+            "pill高": 18.38,
+            "label高": 1,
+            "num高": 15
+          },
+          "expect": "h ≤ 26（预期 23~24，由 .state-pill 撑高；22 只是标签行高）",
+          "tag": "C1"
+        },
+        "V11-3@C1": {
+          "ok": true,
+          "measured": {
+            "pillLeft": 43,
+            "r0Left": 43,
+            "numRight": 189.56,
+            "r0Right": 189.56
+          },
+          "expect": "pill.left ≥ r0.left−1 且 num.right ≤ r0.right+1（对内部截断是盲的）",
+          "tag": "C1"
+        },
+        "V10-最坏内容@C1": {
+          "ok": true,
+          "measured": {
+            "最坏文本": "12 名 · 意志 99 ／ 威胁 50",
+            "当前文本": "2 名 · 意志 4",
+            "可用": 258.84,
+            "需要": 148.81,
+            "余量": 110.03
+          },
+          "expect": "需要 ≤ 可用（威胁 50 / 意志两位数的文字绘制宽不得越过面板内容右缘）",
+          "tag": "C1"
+        },
+        "V01@C2": {
+          "ok": true,
+          "measured": {
+            "禁用文案": false,
+            "块数": 4,
+            "块": [
+              "r-head",
+              "quest-submitted",
+              "quest-main-action",
+              "commit-hint quest-rules"
+            ]
+          },
+          "expect": "无「派遣交流与缓冲期」且块数 ∈{3,4}",
+          "tag": "C2"
+        },
+        "V02@C2": {
+          "ok": true,
+          "measured": {
+            "实心": 0,
+            "文本": [],
+            "ghost": 1,
+            "装饰": [
+              "underline|dotted"
+            ]
+          },
+          "expect": "实心 ≤1；ghost dotted underline",
+          "tag": "C2"
+        },
+        "V03@C2": {
+          "ok": true,
+          "measured": {
+            "checkbox": 0,
+            "已提交": 1
+          },
+          "expect": "=0 且「已提交：」≥1",
+          "tag": "C2"
+        },
+        "V04@C2": {
+          "ok": true,
+          "measured": {
+            "select": 0,
+            "radiogroup": 1,
+            "badge": 0
+          },
+          "expect": "select+radiogroup=1 且 badge=0",
+          "tag": "C2"
+        },
+        "V05@C2": {
+          "ok": true,
+          "measured": {
+            "态": "C2",
+            "已投入：": 0
+          },
+          "expect": "= 0",
+          "tag": "C2"
+        },
+        "V06@C2": {
+          "ok": true,
+          "measured": {
+            "命中": false
+          },
+          "expect": "不含「暂定意志」",
+          "tag": "C2"
+        },
+        "V07@C2": {
+          "ok": true,
+          "measured": {
+            "details": 1,
+            "正文字数": 96,
+            "外部p字数": 0,
+            "外部p": ""
+          },
+          "expect": "≥1 且 ≥20 字；外部 <p> ≤12 字",
+          "tag": "C2"
+        },
+        "V08@C2": {
+          "ok": true,
+          "measured": {
+            "绿钮": 0,
+            "清单": []
+          },
+          "expect": "≤1 且非禁用（禁用绿钮也算多一颗）",
+          "tag": "C2"
+        },
+        "V09@C2": {
+          "ok": true,
+          "measured": {
+            "disabled": true,
+            "bg": "rgb(236, 234, 224)",
+            "opacity": "1"
+          },
+          "expect": "disabled 时 bg ≠ 绿系（期望 rgb(236,234,224)）",
+          "tag": "C2"
+        },
+        "V10@C2": {
+          "ok": true,
+          "measured": {
+            "文本": "2 名 · 意志 4",
+            "文本右缘": 189.56,
+            "面板内容右": 377,
+            "右越界": -187.44,
+            "左越界": -105.16,
+            "num右": 189.56,
+            "r0右": 189.56,
+            "文本行数": 1,
+            "num宽": 71,
+            "旧口径_overflow": 0,
+            "旧口径_行盒": 1
+          },
+          "expect": "文本矩形 ⊂ 面板内容盒（左右各 ≤1px）；num.right ≤ r0.right+1；文本单行",
+          "tag": "C2"
+        },
+        "V11-1@C2": {
+          "ok": true,
+          "measured": {
+            "box": {
+              "sw": 322,
+              "cw": 322
+            },
+            "body": {
+              "sw": 364,
+              "cw": 364
+            }
+          },
+          "expect": "box/body 均无横向滚动（min-width:0 时恒真，不可作 R0 判据）",
+          "tag": "C2"
+        },
+        "V11-2@C2": {
+          "ok": true,
+          "measured": {
+            "r0高": 18.38,
+            "pill高": 18.38,
+            "label高": 1,
+            "num高": 15
+          },
+          "expect": "h ≤ 26（预期 23~24，由 .state-pill 撑高；22 只是标签行高）",
+          "tag": "C2"
+        },
+        "V11-3@C2": {
+          "ok": true,
+          "measured": {
+            "pillLeft": 43,
+            "r0Left": 43,
+            "numRight": 189.56,
+            "r0Right": 189.56
+          },
+          "expect": "pill.left ≥ r0.left−1 且 num.right ≤ r0.right+1（对内部截断是盲的）",
+          "tag": "C2"
+        },
+        "V10-最坏内容@C2": {
+          "ok": true,
+          "measured": {
+            "最坏文本": "12 名 · 意志 99 ／ 威胁 50",
+            "当前文本": "2 名 · 意志 4",
+            "可用": 258.84,
+            "需要": 148.81,
+            "余量": 110.03
+          },
+          "expect": "需要 ≤ 可用（威胁 50 / 意志两位数的文字绘制宽不得越过面板内容右缘）",
+          "tag": "C2"
+        },
+        "V01@D": {
+          "ok": true,
+          "measured": {
+            "禁用文案": false,
+            "块数": 3,
+            "块": [
+              "r-head",
+              "quest-committed",
+              "commit-hint quest-rules"
+            ]
+          },
+          "expect": "无「派遣交流与缓冲期」且块数 ∈{3,4}",
+          "tag": "D"
+        },
+        "V02@D": {
+          "ok": true,
+          "measured": {
+            "实心": 0,
+            "文本": [],
+            "ghost": 0,
+            "装饰": []
+          },
+          "expect": "实心 ≤1；ghost dotted underline",
+          "tag": "D"
+        },
+        "V03@D": {
+          "ok": true,
+          "measured": {
+            "态": "D",
+            "说明": "D 态不适用"
+          },
+          "expect": "N/A",
+          "tag": "D"
+        },
+        "V04@D": {
+          "ok": false,
+          "measured": {
+            "select": 0,
+            "radiogroup": 0,
+            "data-quest": 1,
+            "badge": 0
+          },
+          "expect": "D 态 0/0/0",
+          "tag": "D"
+        },
+        "V05@D": {
+          "ok": true,
+          "measured": {
+            "态": "D",
+            "已投入：": 1
+          },
+          "expect": "= 1",
+          "tag": "D"
+        },
+        "V06@D": {
+          "ok": true,
+          "measured": {
+            "命中": false
+          },
+          "expect": "不含「暂定意志」",
+          "tag": "D"
+        },
+        "V07@D": {
+          "ok": false,
+          "measured": {
+            "details": 1
+          },
+          "expect": "D 态 details = 0",
+          "tag": "D"
+        },
+        "V08@D": {
+          "ok": true,
+          "measured": {
+            "绿钮": 1,
+            "清单": [
+              "primary door-go:结束阶段"
+            ]
+          },
+          "expect": "≤1 且非禁用（禁用绿钮也算多一颗）",
+          "tag": "D"
+        },
+        "V09@D": {
+          "ok": true,
+          "measured": {
+            "disabled": false,
+            "bg": "rgb(47, 74, 59)",
+            "opacity": "1"
+          },
+          "expect": "disabled 时 bg ≠ 绿系（期望 rgb(236,234,224)）",
+          "tag": "D"
+        },
+        "V10@D": {
+          "ok": true,
+          "measured": {
+            "文本": "2 名 · 意志 4",
+            "文本右缘": 189.56,
+            "面板内容右": 377,
+            "右越界": -187.44,
+            "左越界": -105.16,
+            "num右": 189.56,
+            "r0右": 189.56,
+            "文本行数": 1,
+            "num宽": 71,
+            "旧口径_overflow": 0,
+            "旧口径_行盒": 1
+          },
+          "expect": "文本矩形 ⊂ 面板内容盒（左右各 ≤1px）；num.right ≤ r0.right+1；文本单行",
+          "tag": "D"
+        },
+        "V11-1@D": {
+          "ok": true,
+          "measured": {
+            "box": {
+              "sw": 322,
+              "cw": 322
+            },
+            "body": {
+              "sw": 364,
+              "cw": 364
+            }
+          },
+          "expect": "box/body 均无横向滚动（min-width:0 时恒真，不可作 R0 判据）",
+          "tag": "D"
+        },
+        "V11-2@D": {
+          "ok": true,
+          "measured": {
+            "r0高": 18.38,
+            "pill高": 18.38,
+            "label高": 1,
+            "num高": 15
+          },
+          "expect": "h ≤ 26（预期 23~24，由 .state-pill 撑高；22 只是标签行高）",
+          "tag": "D"
+        },
+        "V11-3@D": {
+          "ok": true,
+          "measured": {
+            "pillLeft": 43,
+            "r0Left": 43,
+            "numRight": 189.56,
+            "r0Right": 189.56
+          },
+          "expect": "pill.left ≥ r0.left−1 且 num.right ≤ r0.right+1（对内部截断是盲的）",
+          "tag": "D"
+        },
+        "V10-最坏内容@D": {
+          "ok": true,
+          "measured": {
+            "最坏文本": "12 名 · 意志 99 ／ 威胁 50",
+            "当前文本": "2 名 · 意志 4",
+            "可用": 258.84,
+            "需要": 148.81,
+            "余量": 110.03
+          },
+          "expect": "需要 ≤ 可用（威胁 50 / 意志两位数的文字绘制宽不得越过面板内容右缘）",
+          "tag": "D"
+        }
+      },
+      "errors": [],
+      "ok": true
+    },
+    {
+      "viewport": "761x600",
+      "spot": true,
+      "states": [
+        {
+          "tag": "A",
+          "deployState": "A",
+          "blocks": 4,
+          "rHead": {
+            "lines": 2,
+            "layout": [
+              [
+                "r0:草稿暂定0 名 · 意志"
+              ],
+              [
+                "quest-actors:玩家1玩家2"
+              ]
+            ]
+          },
+          "panelTop": 460.77,
+          "panelH": 26,
+          "primaryTop": 403.77,
+          "r0h": 18.38
+        },
+        {
+          "tag": "B",
+          "deployState": null,
+          "blocks": 0,
+          "rHead": null,
+          "panelTop": 460.77,
+          "panelH": 26,
+          "primaryTop": null,
+          "r0h": null
+        },
+        {
+          "tag": "C1",
+          "deployState": "C1",
+          "blocks": 4,
+          "rHead": {
+            "lines": 2,
+            "layout": [
+              [
+                "r0:待确认暂定2 名 · 意",
+                "action-note:尚未横置角色"
+              ],
+              [
+                "quest-actors:玩家1玩家2"
+              ]
+            ]
+          },
+          "panelTop": 460.77,
+          "panelH": 26,
+          "primaryTop": 400.28,
+          "r0h": 18.38
+        },
+        {
+          "tag": "C2",
+          "deployState": "C2",
+          "blocks": 4,
+          "rHead": {
+            "lines": 2,
+            "layout": [
+              [
+                "r0:已确认 1/2暂定2 名",
+                "action-note:还差 玩家2 确认"
+              ],
+              [
+                "quest-actors:玩家1玩家2"
+              ]
+            ]
+          },
+          "panelTop": 460.77,
+          "panelH": 26,
+          "primaryTop": null,
+          "r0h": 18.38
+        },
+        {
+          "tag": "D",
+          "deployState": "D",
+          "blocks": 3,
+          "rHead": {
+            "lines": 1,
+            "layout": [
+              [
+                "r0:执行中实际2 名 · 意"
+              ]
+            ]
+          },
+          "panelTop": 433.97,
+          "panelH": 26,
+          "primaryTop": null,
+          "r0h": 18.38
+        }
+      ],
+      "verdicts": {
+        "V01@A": {
+          "ok": true,
+          "measured": {
+            "禁用文案": false,
+            "块数": 4,
+            "块": [
+              "r-head",
+              "quest-commit-list",
+              "quest-main-action",
+              "commit-hint quest-rules"
+            ]
+          },
+          "expect": "无「派遣交流与缓冲期」且块数 ∈{3,4}",
+          "tag": "A"
+        },
+        "V02@A": {
+          "ok": true,
+          "measured": {
+            "实心": 1,
+            "文本": [
+              "提交空名单（本次不投入）"
+            ],
+            "ghost": 1,
+            "装饰": [
+              "underline|dotted"
+            ]
+          },
+          "expect": "实心 ≤1；ghost dotted underline",
+          "tag": "A"
+        },
+        "V03@A": {
+          "ok": true,
+          "measured": {
+            "checkbox": 3
+          },
+          "expect": "A 态 checkbox > 0",
+          "tag": "A"
+        },
+        "V04@A": {
+          "ok": true,
+          "measured": {
+            "select": 0,
+            "radiogroup": 1,
+            "badge": 0
+          },
+          "expect": "select+radiogroup=1 且 badge=0",
+          "tag": "A"
+        },
+        "V05@A": {
+          "ok": true,
+          "measured": {
+            "态": "A",
+            "已投入：": 0
+          },
+          "expect": "= 0",
+          "tag": "A"
+        },
+        "V06@A": {
+          "ok": true,
+          "measured": {
+            "命中": false
+          },
+          "expect": "不含「暂定意志」",
+          "tag": "A"
+        },
+        "V07@A": {
+          "ok": true,
+          "measured": {
+            "details": 1,
+            "正文字数": 76,
+            "外部p字数": 0,
+            "外部p": ""
+          },
+          "expect": "≥1 且 ≥20 字；外部 <p> ≤12 字",
+          "tag": "A"
+        },
+        "V08@A": {
+          "ok": true,
+          "measured": {
+            "绿钮": 1,
+            "清单": [
+              "primary:提交空名单（本次不投入）"
+            ]
+          },
+          "expect": "≤1 且非禁用（禁用绿钮也算多一颗）",
+          "tag": "A"
+        },
+        "V09@A": {
+          "ok": true,
+          "measured": {
+            "disabled": true,
+            "bg": "rgb(236, 234, 224)",
+            "opacity": "1"
+          },
+          "expect": "disabled 时 bg ≠ 绿系（期望 rgb(236,234,224)）",
+          "tag": "A"
+        },
+        "V10@A": {
+          "ok": true,
+          "measured": {
+            "文本": "0 名 · 意志 0",
+            "文本右缘": 267.56,
+            "面板内容右": 727,
+            "右越界": -459.44,
+            "左越界": -147.16,
+            "num右": 267.56,
+            "r0右": 267.56,
+            "文本行数": 1,
+            "num宽": 71,
+            "旧口径_overflow": 0,
+            "旧口径_行盒": 1
+          },
+          "expect": "文本矩形 ⊂ 面板内容盒（左右各 ≤1px）；num.right ≤ r0.right+1；文本单行",
+          "tag": "A"
+        },
+        "V11-1@A": {
+          "ok": true,
+          "measured": {
+            "box": {
+              "sw": 284,
+              "cw": 284
+            },
+            "body": {
+              "sw": 678,
+              "cw": 678
+            }
+          },
+          "expect": "box/body 均无横向滚动（min-width:0 时恒真，不可作 R0 判据）",
+          "tag": "A"
+        },
+        "V11-2@A": {
+          "ok": true,
+          "measured": {
+            "r0高": 18.38,
+            "pill高": 18.38,
+            "label高": 15,
+            "num高": 15
+          },
+          "expect": "h ≤ 26（预期 23~24，由 .state-pill 撑高；22 只是标签行高）",
+          "tag": "A"
+        },
+        "V11-3@A": {
+          "ok": true,
+          "measured": {
+            "pillLeft": 79,
+            "r0Left": 79,
+            "numRight": 267.56,
+            "r0Right": 267.56
+          },
+          "expect": "pill.left ≥ r0.left−1 且 num.right ≤ r0.right+1（对内部截断是盲的）",
+          "tag": "A"
+        },
+        "V01@B": {
+          "ok": false,
+          "measured": {
+            "禁用文案": false,
+            "块数": 0,
+            "块": []
+          },
+          "expect": "无「派遣交流与缓冲期」且块数 ∈{3,4}",
+          "tag": "B"
+        },
+        "V02@B": {
+          "ok": true,
+          "measured": {
+            "实心": 0,
+            "文本": [],
+            "ghost": 0,
+            "装饰": []
+          },
+          "expect": "实心 ≤1；ghost dotted underline",
+          "tag": "B"
+        },
+        "V03@B": {
+          "ok": false,
+          "measured": {
+            "checkbox": 0,
+            "已提交": 0
+          },
+          "expect": "=0 且「已提交：」≥1",
+          "tag": "B"
+        },
+        "V04@B": {
+          "ok": false,
+          "measured": {
+            "select": 0,
+            "radiogroup": 0,
+            "badge": 0
+          },
+          "expect": "select+radiogroup=1 且 badge=0",
+          "tag": "B"
+        },
+        "V05@B": {
+          "ok": true,
+          "measured": {
+            "态": "B",
+            "已投入：": 0
+          },
+          "expect": "= 0",
+          "tag": "B"
+        },
+        "V06@B": {
+          "ok": true,
+          "measured": {
+            "命中": false
+          },
+          "expect": "不含「暂定意志」",
+          "tag": "B"
+        },
+        "V07@B": {
+          "ok": false,
+          "measured": {
+            "details": 0,
+            "正文字数": 0,
+            "外部p字数": 0,
+            "外部p": ""
+          },
+          "expect": "≥1 且 ≥20 字；外部 <p> ≤12 字",
+          "tag": "B"
+        },
+        "V08@B": {
+          "ok": true,
+          "measured": {
+            "绿钮": 0,
+            "清单": []
+          },
+          "expect": "≤1 且非禁用（禁用绿钮也算多一颗）",
+          "tag": "B"
+        },
+        "V09@B": {
+          "ok": true,
+          "measured": {
+            "disabled": true,
+            "bg": "rgb(236, 234, 224)",
+            "opacity": "1"
+          },
+          "expect": "disabled 时 bg ≠ 绿系（期望 rgb(236,234,224)）",
+          "tag": "B"
+        },
+        "V10@B": {
+          "ok": false,
+          "measured": "无 .r0 或 .r0-num",
+          "expect": "存在 .r0-num",
+          "tag": "B"
+        },
+        "V11-1@B": {
+          "ok": false,
+          "measured": {
+            "box": {
+              "sw": 170,
+              "cw": 170
+            },
+            "body": null
+          },
+          "expect": "box/body 均无横向滚动（min-width:0 时恒真，不可作 R0 判据）",
+          "tag": "B"
+        },
+        "V11-2@B": {
+          "ok": false,
+          "measured": {
+            "r0高": null,
+            "pill高": null,
+            "label高": null,
+            "num高": null
+          },
+          "expect": "h ≤ 26（预期 23~24，由 .state-pill 撑高；22 只是标签行高）",
+          "tag": "B"
+        },
+        "V11-3@B": {
+          "ok": false,
+          "measured": {
+            "pillLeft": null,
+            "r0Left": null,
+            "numRight": null,
+            "r0Right": null
+          },
+          "expect": "pill.left ≥ r0.left−1 且 num.right ≤ r0.right+1（对内部截断是盲的）",
+          "tag": "B"
+        },
+        "V01@C1": {
+          "ok": true,
+          "measured": {
+            "禁用文案": false,
+            "块数": 4,
+            "块": [
+              "r-head",
+              "quest-submitted",
+              "quest-main-action",
+              "commit-hint quest-rules"
+            ]
+          },
+          "expect": "无「派遣交流与缓冲期」且块数 ∈{3,4}",
+          "tag": "C1"
+        },
+        "V02@C1": {
+          "ok": true,
+          "measured": {
+            "实心": 1,
+            "文本": [
+              "确认派遣名单"
+            ],
+            "ghost": 1,
+            "装饰": [
+              "underline|dotted"
+            ]
+          },
+          "expect": "实心 ≤1；ghost dotted underline",
+          "tag": "C1"
+        },
+        "V03@C1": {
+          "ok": true,
+          "measured": {
+            "checkbox": 0,
+            "已提交": 1
+          },
+          "expect": "=0 且「已提交：」≥1",
+          "tag": "C1"
+        },
+        "V04@C1": {
+          "ok": true,
+          "measured": {
+            "select": 0,
+            "radiogroup": 1,
+            "badge": 0
+          },
+          "expect": "select+radiogroup=1 且 badge=0",
+          "tag": "C1"
+        },
+        "V05@C1": {
+          "ok": true,
+          "measured": {
+            "态": "C1",
+            "已投入：": 0
+          },
+          "expect": "= 0",
+          "tag": "C1"
+        },
+        "V06@C1": {
+          "ok": true,
+          "measured": {
+            "命中": false
+          },
+          "expect": "不含「暂定意志」",
+          "tag": "C1"
+        },
+        "V07@C1": {
+          "ok": true,
+          "measured": {
+            "details": 1,
+            "正文字数": 96,
+            "外部p字数": 0,
+            "外部p": ""
+          },
+          "expect": "≥1 且 ≥20 字；外部 <p> ≤12 字",
+          "tag": "C1"
+        },
+        "V08@C1": {
+          "ok": true,
+          "measured": {
+            "绿钮": 1,
+            "清单": [
+              "primary:确认派遣名单"
+            ]
+          },
+          "expect": "≤1 且非禁用（禁用绿钮也算多一颗）",
+          "tag": "C1"
+        },
+        "V09@C1": {
+          "ok": true,
+          "measured": {
+            "disabled": true,
+            "bg": "rgb(236, 234, 224)",
+            "opacity": "1"
+          },
+          "expect": "disabled 时 bg ≠ 绿系（期望 rgb(236,234,224)）",
+          "tag": "C1"
+        },
+        "V10@C1": {
+          "ok": true,
+          "measured": {
+            "文本": "2 名 · 意志 4",
+            "文本右缘": 267.56,
+            "面板内容右": 727,
+            "右越界": -459.44,
+            "左越界": -147.16,
+            "num右": 267.56,
+            "r0右": 267.56,
+            "文本行数": 1,
+            "num宽": 71,
+            "旧口径_overflow": 0,
+            "旧口径_行盒": 1
+          },
+          "expect": "文本矩形 ⊂ 面板内容盒（左右各 ≤1px）；num.right ≤ r0.right+1；文本单行",
+          "tag": "C1"
+        },
+        "V11-1@C1": {
+          "ok": true,
+          "measured": {
+            "box": {
+              "sw": 159,
+              "cw": 159
+            },
+            "body": {
+              "sw": 678,
+              "cw": 678
+            }
+          },
+          "expect": "box/body 均无横向滚动（min-width:0 时恒真，不可作 R0 判据）",
+          "tag": "C1"
+        },
+        "V11-2@C1": {
+          "ok": true,
+          "measured": {
+            "r0高": 18.38,
+            "pill高": 18.38,
+            "label高": 15,
+            "num高": 15
+          },
+          "expect": "h ≤ 26（预期 23~24，由 .state-pill 撑高；22 只是标签行高）",
+          "tag": "C1"
+        },
+        "V11-3@C1": {
+          "ok": true,
+          "measured": {
+            "pillLeft": 79,
+            "r0Left": 79,
+            "numRight": 267.56,
+            "r0Right": 267.56
+          },
+          "expect": "pill.left ≥ r0.left−1 且 num.right ≤ r0.right+1（对内部截断是盲的）",
+          "tag": "C1"
+        },
+        "V01@C2": {
+          "ok": true,
+          "measured": {
+            "禁用文案": false,
+            "块数": 4,
+            "块": [
+              "r-head",
+              "quest-submitted",
+              "quest-main-action",
+              "commit-hint quest-rules"
+            ]
+          },
+          "expect": "无「派遣交流与缓冲期」且块数 ∈{3,4}",
+          "tag": "C2"
+        },
+        "V02@C2": {
+          "ok": true,
+          "measured": {
+            "实心": 0,
+            "文本": [],
+            "ghost": 1,
+            "装饰": [
+              "underline|dotted"
+            ]
+          },
+          "expect": "实心 ≤1；ghost dotted underline",
+          "tag": "C2"
+        },
+        "V03@C2": {
+          "ok": true,
+          "measured": {
+            "checkbox": 0,
+            "已提交": 1
+          },
+          "expect": "=0 且「已提交：」≥1",
+          "tag": "C2"
+        },
+        "V04@C2": {
+          "ok": true,
+          "measured": {
+            "select": 0,
+            "radiogroup": 1,
+            "badge": 0
+          },
+          "expect": "select+radiogroup=1 且 badge=0",
+          "tag": "C2"
+        },
+        "V05@C2": {
+          "ok": true,
+          "measured": {
+            "态": "C2",
+            "已投入：": 0
+          },
+          "expect": "= 0",
+          "tag": "C2"
+        },
+        "V06@C2": {
+          "ok": true,
+          "measured": {
+            "命中": false
+          },
+          "expect": "不含「暂定意志」",
+          "tag": "C2"
+        },
+        "V07@C2": {
+          "ok": true,
+          "measured": {
+            "details": 1,
+            "正文字数": 96,
+            "外部p字数": 0,
+            "外部p": ""
+          },
+          "expect": "≥1 且 ≥20 字；外部 <p> ≤12 字",
+          "tag": "C2"
+        },
+        "V08@C2": {
+          "ok": true,
+          "measured": {
+            "绿钮": 0,
+            "清单": []
+          },
+          "expect": "≤1 且非禁用（禁用绿钮也算多一颗）",
+          "tag": "C2"
+        },
+        "V09@C2": {
+          "ok": true,
+          "measured": {
+            "disabled": true,
+            "bg": "rgb(236, 234, 224)",
+            "opacity": "1"
+          },
+          "expect": "disabled 时 bg ≠ 绿系（期望 rgb(236,234,224)）",
+          "tag": "C2"
+        },
+        "V10@C2": {
+          "ok": true,
+          "measured": {
+            "文本": "2 名 · 意志 4",
+            "文本右缘": 267.56,
+            "面板内容右": 727,
+            "右越界": -459.44,
+            "左越界": -147.16,
+            "num右": 267.56,
+            "r0右": 267.56,
+            "文本行数": 1,
+            "num宽": 71,
+            "旧口径_overflow": 0,
+            "旧口径_行盒": 1
+          },
+          "expect": "文本矩形 ⊂ 面板内容盒（左右各 ≤1px）；num.right ≤ r0.right+1；文本单行",
+          "tag": "C2"
+        },
+        "V11-1@C2": {
+          "ok": true,
+          "measured": {
+            "box": {
+              "sw": 159,
+              "cw": 159
+            },
+            "body": {
+              "sw": 678,
+              "cw": 678
+            }
+          },
+          "expect": "box/body 均无横向滚动（min-width:0 时恒真，不可作 R0 判据）",
+          "tag": "C2"
+        },
+        "V11-2@C2": {
+          "ok": true,
+          "measured": {
+            "r0高": 18.38,
+            "pill高": 18.38,
+            "label高": 15,
+            "num高": 15
+          },
+          "expect": "h ≤ 26（预期 23~24，由 .state-pill 撑高；22 只是标签行高）",
+          "tag": "C2"
+        },
+        "V11-3@C2": {
+          "ok": true,
+          "measured": {
+            "pillLeft": 79,
+            "r0Left": 79,
+            "numRight": 267.56,
+            "r0Right": 267.56
+          },
+          "expect": "pill.left ≥ r0.left−1 且 num.right ≤ r0.right+1（对内部截断是盲的）",
+          "tag": "C2"
+        },
+        "V01@D": {
+          "ok": true,
+          "measured": {
+            "禁用文案": false,
+            "块数": 3,
+            "块": [
+              "r-head",
+              "quest-committed",
+              "commit-hint quest-rules"
+            ]
+          },
+          "expect": "无「派遣交流与缓冲期」且块数 ∈{3,4}",
+          "tag": "D"
+        },
+        "V02@D": {
+          "ok": true,
+          "measured": {
+            "实心": 0,
+            "文本": [],
+            "ghost": 0,
+            "装饰": []
+          },
+          "expect": "实心 ≤1；ghost dotted underline",
+          "tag": "D"
+        },
+        "V03@D": {
+          "ok": true,
+          "measured": {
+            "态": "D",
+            "说明": "D 态不适用"
+          },
+          "expect": "N/A",
+          "tag": "D"
+        },
+        "V04@D": {
+          "ok": false,
+          "measured": {
+            "select": 0,
+            "radiogroup": 0,
+            "data-quest": 1,
+            "badge": 0
+          },
+          "expect": "D 态 0/0/0",
+          "tag": "D"
+        },
+        "V05@D": {
+          "ok": true,
+          "measured": {
+            "态": "D",
+            "已投入：": 1
+          },
+          "expect": "= 1",
+          "tag": "D"
+        },
+        "V06@D": {
+          "ok": true,
+          "measured": {
+            "命中": false
+          },
+          "expect": "不含「暂定意志」",
+          "tag": "D"
+        },
+        "V07@D": {
+          "ok": false,
+          "measured": {
+            "details": 1
+          },
+          "expect": "D 态 details = 0",
+          "tag": "D"
+        },
+        "V08@D": {
+          "ok": true,
+          "measured": {
+            "绿钮": 1,
+            "清单": [
+              "primary door-go:结束阶段"
+            ]
+          },
+          "expect": "≤1 且非禁用（禁用绿钮也算多一颗）",
+          "tag": "D"
+        },
+        "V09@D": {
+          "ok": true,
+          "measured": {
+            "disabled": false,
+            "bg": "rgb(47, 74, 59)",
+            "opacity": "1"
+          },
+          "expect": "disabled 时 bg ≠ 绿系（期望 rgb(236,234,224)）",
+          "tag": "D"
+        },
+        "V10@D": {
+          "ok": true,
+          "measured": {
+            "文本": "2 名 · 意志 4",
+            "文本右缘": 267.56,
+            "面板内容右": 727,
+            "右越界": -459.44,
+            "左越界": -147.16,
+            "num右": 267.56,
+            "r0右": 267.56,
+            "文本行数": 1,
+            "num宽": 71,
+            "旧口径_overflow": 0,
+            "旧口径_行盒": 1
+          },
+          "expect": "文本矩形 ⊂ 面板内容盒（左右各 ≤1px）；num.right ≤ r0.right+1；文本单行",
+          "tag": "D"
+        },
+        "V11-1@D": {
+          "ok": true,
+          "measured": {
+            "box": {
+              "sw": 159,
+              "cw": 159
+            },
+            "body": {
+              "sw": 678,
+              "cw": 678
+            }
+          },
+          "expect": "box/body 均无横向滚动（min-width:0 时恒真，不可作 R0 判据）",
+          "tag": "D"
+        },
+        "V11-2@D": {
+          "ok": true,
+          "measured": {
+            "r0高": 18.38,
+            "pill高": 18.38,
+            "label高": 15,
+            "num高": 15
+          },
+          "expect": "h ≤ 26（预期 23~24，由 .state-pill 撑高；22 只是标签行高）",
+          "tag": "D"
+        },
+        "V11-3@D": {
+          "ok": true,
+          "measured": {
+            "pillLeft": 79,
+            "r0Left": 79,
+            "numRight": 267.56,
+            "r0Right": 267.56
+          },
+          "expect": "pill.left ≥ r0.left−1 且 num.right ≤ r0.right+1（对内部截断是盲的）",
+          "tag": "D"
+        }
+      },
+      "errors": [],
+      "ok": true
+    },
+    {
+      "viewport": "1920x1080",
+      "spot": true,
+      "states": [
+        {
+          "tag": "A",
+          "deployState": "A",
+          "blocks": 4,
+          "rHead": {
+            "lines": 2,
+            "layout": [
+              [
+                "r0:草稿暂定0 名 · 意志"
+              ],
+              [
+                "quest-actors:玩家1玩家2"
+              ]
+            ]
+          },
+          "panelTop": 631.41,
+          "panelH": 26,
+          "primaryTop": 545.41,
+          "r0h": 18.38
+        },
+        {
+          "tag": "B",
+          "deployState": null,
+          "blocks": 0,
+          "rHead": null,
+          "panelTop": 631.41,
+          "panelH": 26,
+          "primaryTop": null,
+          "r0h": null
+        },
+        {
+          "tag": "C1",
+          "deployState": "C1",
+          "blocks": 4,
+          "rHead": {
+            "lines": 2,
+            "layout": [
+              [
+                "r0:待确认暂定2 名 · 意",
+                "action-note:尚未横置角色"
+              ],
+              [
+                "quest-actors:玩家1玩家2"
+              ]
+            ]
+          },
+          "panelTop": 631.41,
+          "panelH": 26,
+          "primaryTop": 545.41,
+          "r0h": 18.38
+        },
+        {
+          "tag": "C2",
+          "deployState": "C2",
+          "blocks": 4,
+          "rHead": {
+            "lines": 2,
+            "layout": [
+              [
+                "r0:已确认 1/2暂定2 名",
+                "action-note:还差 玩家2 确认"
+              ],
+              [
+                "quest-actors:玩家1玩家2"
+              ]
+            ]
+          },
+          "panelTop": 631.41,
+          "panelH": 26,
+          "primaryTop": null,
+          "r0h": 18.38
+        },
+        {
+          "tag": "D",
+          "deployState": "D",
+          "blocks": 3,
+          "rHead": {
+            "lines": 1,
+            "layout": [
+              [
+                "r0:执行中实际2 名 · 意"
+              ]
+            ]
+          },
+          "panelTop": 604.61,
+          "panelH": 26,
+          "primaryTop": null,
+          "r0h": 18.38
+        }
+      ],
+      "verdicts": {
+        "V01@A": {
+          "ok": true,
+          "measured": {
+            "禁用文案": false,
+            "块数": 4,
+            "块": [
+              "r-head",
+              "quest-commit-list",
+              "quest-main-action",
+              "commit-hint quest-rules"
+            ]
+          },
+          "expect": "无「派遣交流与缓冲期」且块数 ∈{3,4}",
+          "tag": "A"
+        },
+        "V02@A": {
+          "ok": true,
+          "measured": {
+            "实心": 1,
+            "文本": [
+              "提交空名单（本次不投入）"
+            ],
+            "ghost": 1,
+            "装饰": [
+              "underline|dotted"
+            ]
+          },
+          "expect": "实心 ≤1；ghost dotted underline",
+          "tag": "A"
+        },
+        "V03@A": {
+          "ok": true,
+          "measured": {
+            "checkbox": 3
+          },
+          "expect": "A 态 checkbox > 0",
+          "tag": "A"
+        },
+        "V04@A": {
+          "ok": true,
+          "measured": {
+            "select": 0,
+            "radiogroup": 1,
+            "badge": 0
+          },
+          "expect": "select+radiogroup=1 且 badge=0",
+          "tag": "A"
+        },
+        "V05@A": {
+          "ok": true,
+          "measured": {
+            "态": "A",
+            "已投入：": 0
+          },
+          "expect": "= 0",
+          "tag": "A"
+        },
+        "V06@A": {
+          "ok": true,
+          "measured": {
+            "命中": false
+          },
+          "expect": "不含「暂定意志」",
+          "tag": "A"
+        },
+        "V07@A": {
+          "ok": true,
+          "measured": {
+            "details": 1,
+            "正文字数": 76,
+            "外部p字数": 0,
+            "外部p": ""
+          },
+          "expect": "≥1 且 ≥20 字；外部 <p> ≤12 字",
+          "tag": "A"
+        },
+        "V08@A": {
+          "ok": true,
+          "measured": {
+            "绿钮": 1,
+            "清单": [
+              "primary:提交空名单（本次不投入）"
+            ]
+          },
+          "expect": "≤1 且非禁用（禁用绿钮也算多一颗）",
+          "tag": "A"
+        },
+        "V09@A": {
+          "ok": true,
+          "measured": {
+            "disabled": true,
+            "bg": "rgb(236, 234, 224)",
+            "opacity": "1"
+          },
+          "expect": "disabled 时 bg ≠ 绿系（期望 rgb(236,234,224)）",
+          "tag": "A"
+        },
+        "V10@A": {
+          "ok": true,
+          "measured": {
+            "文本": "0 名 · 意志 0",
+            "文本右缘": 946.56,
+            "面板内容右": 1406,
+            "右越界": -459.44,
+            "左越界": -147.16,
+            "num右": 946.56,
+            "r0右": 946.56,
+            "文本行数": 1,
+            "num宽": 71,
+            "旧口径_overflow": 0,
+            "旧口径_行盒": 1
+          },
+          "expect": "文本矩形 ⊂ 面板内容盒（左右各 ≤1px）；num.right ≤ r0.right+1；文本单行",
+          "tag": "A"
+        },
+        "V11-1@A": {
+          "ok": true,
+          "measured": {
+            "box": {
+              "sw": 284,
+              "cw": 284
+            },
+            "body": {
+              "sw": 678,
+              "cw": 678
+            }
+          },
+          "expect": "box/body 均无横向滚动（min-width:0 时恒真，不可作 R0 判据）",
+          "tag": "A"
+        },
+        "V11-2@A": {
+          "ok": true,
+          "measured": {
+            "r0高": 18.38,
+            "pill高": 18.38,
+            "label高": 15,
+            "num高": 15
+          },
+          "expect": "h ≤ 26（预期 23~24，由 .state-pill 撑高；22 只是标签行高）",
+          "tag": "A"
+        },
+        "V11-3@A": {
+          "ok": true,
+          "measured": {
+            "pillLeft": 758,
+            "r0Left": 758,
+            "numRight": 946.56,
+            "r0Right": 946.56
+          },
+          "expect": "pill.left ≥ r0.left−1 且 num.right ≤ r0.right+1（对内部截断是盲的）",
+          "tag": "A"
+        },
+        "V01@B": {
+          "ok": false,
+          "measured": {
+            "禁用文案": false,
+            "块数": 0,
+            "块": []
+          },
+          "expect": "无「派遣交流与缓冲期」且块数 ∈{3,4}",
+          "tag": "B"
+        },
+        "V02@B": {
+          "ok": true,
+          "measured": {
+            "实心": 0,
+            "文本": [],
+            "ghost": 0,
+            "装饰": []
+          },
+          "expect": "实心 ≤1；ghost dotted underline",
+          "tag": "B"
+        },
+        "V03@B": {
+          "ok": false,
+          "measured": {
+            "checkbox": 0,
+            "已提交": 0
+          },
+          "expect": "=0 且「已提交：」≥1",
+          "tag": "B"
+        },
+        "V04@B": {
+          "ok": false,
+          "measured": {
+            "select": 0,
+            "radiogroup": 0,
+            "badge": 0
+          },
+          "expect": "select+radiogroup=1 且 badge=0",
+          "tag": "B"
+        },
+        "V05@B": {
+          "ok": true,
+          "measured": {
+            "态": "B",
+            "已投入：": 0
+          },
+          "expect": "= 0",
+          "tag": "B"
+        },
+        "V06@B": {
+          "ok": true,
+          "measured": {
+            "命中": false
+          },
+          "expect": "不含「暂定意志」",
+          "tag": "B"
+        },
+        "V07@B": {
+          "ok": false,
+          "measured": {
+            "details": 0,
+            "正文字数": 0,
+            "外部p字数": 0,
+            "外部p": ""
+          },
+          "expect": "≥1 且 ≥20 字；外部 <p> ≤12 字",
+          "tag": "B"
+        },
+        "V08@B": {
+          "ok": true,
+          "measured": {
+            "绿钮": 0,
+            "清单": []
+          },
+          "expect": "≤1 且非禁用（禁用绿钮也算多一颗）",
+          "tag": "B"
+        },
+        "V09@B": {
+          "ok": true,
+          "measured": {
+            "disabled": true,
+            "bg": "rgb(236, 234, 224)",
+            "opacity": "1"
+          },
+          "expect": "disabled 时 bg ≠ 绿系（期望 rgb(236,234,224)）",
+          "tag": "B"
+        },
+        "V10@B": {
+          "ok": false,
+          "measured": "无 .r0 或 .r0-num",
+          "expect": "存在 .r0-num",
+          "tag": "B"
+        },
+        "V11-1@B": {
+          "ok": false,
+          "measured": {
+            "box": {
+              "sw": 170,
+              "cw": 170
+            },
+            "body": null
+          },
+          "expect": "box/body 均无横向滚动（min-width:0 时恒真，不可作 R0 判据）",
+          "tag": "B"
+        },
+        "V11-2@B": {
+          "ok": false,
+          "measured": {
+            "r0高": null,
+            "pill高": null,
+            "label高": null,
+            "num高": null
+          },
+          "expect": "h ≤ 26（预期 23~24，由 .state-pill 撑高；22 只是标签行高）",
+          "tag": "B"
+        },
+        "V11-3@B": {
+          "ok": false,
+          "measured": {
+            "pillLeft": null,
+            "r0Left": null,
+            "numRight": null,
+            "r0Right": null
+          },
+          "expect": "pill.left ≥ r0.left−1 且 num.right ≤ r0.right+1（对内部截断是盲的）",
+          "tag": "B"
+        },
+        "V01@C1": {
+          "ok": true,
+          "measured": {
+            "禁用文案": false,
+            "块数": 4,
+            "块": [
+              "r-head",
+              "quest-submitted",
+              "quest-main-action",
+              "commit-hint quest-rules"
+            ]
+          },
+          "expect": "无「派遣交流与缓冲期」且块数 ∈{3,4}",
+          "tag": "C1"
+        },
+        "V02@C1": {
+          "ok": true,
+          "measured": {
+            "实心": 1,
+            "文本": [
+              "确认派遣名单"
+            ],
+            "ghost": 1,
+            "装饰": [
+              "underline|dotted"
+            ]
+          },
+          "expect": "实心 ≤1；ghost dotted underline",
+          "tag": "C1"
+        },
+        "V03@C1": {
+          "ok": true,
+          "measured": {
+            "checkbox": 0,
+            "已提交": 1
+          },
+          "expect": "=0 且「已提交：」≥1",
+          "tag": "C1"
+        },
+        "V04@C1": {
+          "ok": true,
+          "measured": {
+            "select": 0,
+            "radiogroup": 1,
+            "badge": 0
+          },
+          "expect": "select+radiogroup=1 且 badge=0",
+          "tag": "C1"
+        },
+        "V05@C1": {
+          "ok": true,
+          "measured": {
+            "态": "C1",
+            "已投入：": 0
+          },
+          "expect": "= 0",
+          "tag": "C1"
+        },
+        "V06@C1": {
+          "ok": true,
+          "measured": {
+            "命中": false
+          },
+          "expect": "不含「暂定意志」",
+          "tag": "C1"
+        },
+        "V07@C1": {
+          "ok": true,
+          "measured": {
+            "details": 1,
+            "正文字数": 96,
+            "外部p字数": 0,
+            "外部p": ""
+          },
+          "expect": "≥1 且 ≥20 字；外部 <p> ≤12 字",
+          "tag": "C1"
+        },
+        "V08@C1": {
+          "ok": true,
+          "measured": {
+            "绿钮": 1,
+            "清单": [
+              "primary:确认派遣名单"
+            ]
+          },
+          "expect": "≤1 且非禁用（禁用绿钮也算多一颗）",
+          "tag": "C1"
+        },
+        "V09@C1": {
+          "ok": true,
+          "measured": {
+            "disabled": true,
+            "bg": "rgb(236, 234, 224)",
+            "opacity": "1"
+          },
+          "expect": "disabled 时 bg ≠ 绿系（期望 rgb(236,234,224)）",
+          "tag": "C1"
+        },
+        "V10@C1": {
+          "ok": true,
+          "measured": {
+            "文本": "2 名 · 意志 4",
+            "文本右缘": 946.56,
+            "面板内容右": 1406,
+            "右越界": -459.44,
+            "左越界": -147.16,
+            "num右": 946.56,
+            "r0右": 946.56,
+            "文本行数": 1,
+            "num宽": 71,
+            "旧口径_overflow": 0,
+            "旧口径_行盒": 1
+          },
+          "expect": "文本矩形 ⊂ 面板内容盒（左右各 ≤1px）；num.right ≤ r0.right+1；文本单行",
+          "tag": "C1"
+        },
+        "V11-1@C1": {
+          "ok": true,
+          "measured": {
+            "box": {
+              "sw": 159,
+              "cw": 159
+            },
+            "body": {
+              "sw": 678,
+              "cw": 678
+            }
+          },
+          "expect": "box/body 均无横向滚动（min-width:0 时恒真，不可作 R0 判据）",
+          "tag": "C1"
+        },
+        "V11-2@C1": {
+          "ok": true,
+          "measured": {
+            "r0高": 18.38,
+            "pill高": 18.38,
+            "label高": 15,
+            "num高": 15
+          },
+          "expect": "h ≤ 26（预期 23~24，由 .state-pill 撑高；22 只是标签行高）",
+          "tag": "C1"
+        },
+        "V11-3@C1": {
+          "ok": true,
+          "measured": {
+            "pillLeft": 758,
+            "r0Left": 758,
+            "numRight": 946.56,
+            "r0Right": 946.56
+          },
+          "expect": "pill.left ≥ r0.left−1 且 num.right ≤ r0.right+1（对内部截断是盲的）",
+          "tag": "C1"
+        },
+        "V01@C2": {
+          "ok": true,
+          "measured": {
+            "禁用文案": false,
+            "块数": 4,
+            "块": [
+              "r-head",
+              "quest-submitted",
+              "quest-main-action",
+              "commit-hint quest-rules"
+            ]
+          },
+          "expect": "无「派遣交流与缓冲期」且块数 ∈{3,4}",
+          "tag": "C2"
+        },
+        "V02@C2": {
+          "ok": true,
+          "measured": {
+            "实心": 0,
+            "文本": [],
+            "ghost": 1,
+            "装饰": [
+              "underline|dotted"
+            ]
+          },
+          "expect": "实心 ≤1；ghost dotted underline",
+          "tag": "C2"
+        },
+        "V03@C2": {
+          "ok": true,
+          "measured": {
+            "checkbox": 0,
+            "已提交": 1
+          },
+          "expect": "=0 且「已提交：」≥1",
+          "tag": "C2"
+        },
+        "V04@C2": {
+          "ok": true,
+          "measured": {
+            "select": 0,
+            "radiogroup": 1,
+            "badge": 0
+          },
+          "expect": "select+radiogroup=1 且 badge=0",
+          "tag": "C2"
+        },
+        "V05@C2": {
+          "ok": true,
+          "measured": {
+            "态": "C2",
+            "已投入：": 0
+          },
+          "expect": "= 0",
+          "tag": "C2"
+        },
+        "V06@C2": {
+          "ok": true,
+          "measured": {
+            "命中": false
+          },
+          "expect": "不含「暂定意志」",
+          "tag": "C2"
+        },
+        "V07@C2": {
+          "ok": true,
+          "measured": {
+            "details": 1,
+            "正文字数": 96,
+            "外部p字数": 0,
+            "外部p": ""
+          },
+          "expect": "≥1 且 ≥20 字；外部 <p> ≤12 字",
+          "tag": "C2"
+        },
+        "V08@C2": {
+          "ok": true,
+          "measured": {
+            "绿钮": 0,
+            "清单": []
+          },
+          "expect": "≤1 且非禁用（禁用绿钮也算多一颗）",
+          "tag": "C2"
+        },
+        "V09@C2": {
+          "ok": true,
+          "measured": {
+            "disabled": true,
+            "bg": "rgb(236, 234, 224)",
+            "opacity": "1"
+          },
+          "expect": "disabled 时 bg ≠ 绿系（期望 rgb(236,234,224)）",
+          "tag": "C2"
+        },
+        "V10@C2": {
+          "ok": true,
+          "measured": {
+            "文本": "2 名 · 意志 4",
+            "文本右缘": 946.56,
+            "面板内容右": 1406,
+            "右越界": -459.44,
+            "左越界": -147.16,
+            "num右": 946.56,
+            "r0右": 946.56,
+            "文本行数": 1,
+            "num宽": 71,
+            "旧口径_overflow": 0,
+            "旧口径_行盒": 1
+          },
+          "expect": "文本矩形 ⊂ 面板内容盒（左右各 ≤1px）；num.right ≤ r0.right+1；文本单行",
+          "tag": "C2"
+        },
+        "V11-1@C2": {
+          "ok": true,
+          "measured": {
+            "box": {
+              "sw": 159,
+              "cw": 159
+            },
+            "body": {
+              "sw": 678,
+              "cw": 678
+            }
+          },
+          "expect": "box/body 均无横向滚动（min-width:0 时恒真，不可作 R0 判据）",
+          "tag": "C2"
+        },
+        "V11-2@C2": {
+          "ok": true,
+          "measured": {
+            "r0高": 18.38,
+            "pill高": 18.38,
+            "label高": 15,
+            "num高": 15
+          },
+          "expect": "h ≤ 26（预期 23~24，由 .state-pill 撑高；22 只是标签行高）",
+          "tag": "C2"
+        },
+        "V11-3@C2": {
+          "ok": true,
+          "measured": {
+            "pillLeft": 758,
+            "r0Left": 758,
+            "numRight": 946.56,
+            "r0Right": 946.56
+          },
+          "expect": "pill.left ≥ r0.left−1 且 num.right ≤ r0.right+1（对内部截断是盲的）",
+          "tag": "C2"
+        },
+        "V01@D": {
+          "ok": true,
+          "measured": {
+            "禁用文案": false,
+            "块数": 3,
+            "块": [
+              "r-head",
+              "quest-committed",
+              "commit-hint quest-rules"
+            ]
+          },
+          "expect": "无「派遣交流与缓冲期」且块数 ∈{3,4}",
+          "tag": "D"
+        },
+        "V02@D": {
+          "ok": true,
+          "measured": {
+            "实心": 0,
+            "文本": [],
+            "ghost": 0,
+            "装饰": []
+          },
+          "expect": "实心 ≤1；ghost dotted underline",
+          "tag": "D"
+        },
+        "V03@D": {
+          "ok": true,
+          "measured": {
+            "态": "D",
+            "说明": "D 态不适用"
+          },
+          "expect": "N/A",
+          "tag": "D"
+        },
+        "V04@D": {
+          "ok": false,
+          "measured": {
+            "select": 0,
+            "radiogroup": 0,
+            "data-quest": 1,
+            "badge": 0
+          },
+          "expect": "D 态 0/0/0",
+          "tag": "D"
+        },
+        "V05@D": {
+          "ok": true,
+          "measured": {
+            "态": "D",
+            "已投入：": 1
+          },
+          "expect": "= 1",
+          "tag": "D"
+        },
+        "V06@D": {
+          "ok": true,
+          "measured": {
+            "命中": false
+          },
+          "expect": "不含「暂定意志」",
+          "tag": "D"
+        },
+        "V07@D": {
+          "ok": false,
+          "measured": {
+            "details": 1
+          },
+          "expect": "D 态 details = 0",
+          "tag": "D"
+        },
+        "V08@D": {
+          "ok": true,
+          "measured": {
+            "绿钮": 1,
+            "清单": [
+              "primary door-go:结束阶段"
+            ]
+          },
+          "expect": "≤1 且非禁用（禁用绿钮也算多一颗）",
+          "tag": "D"
+        },
+        "V09@D": {
+          "ok": true,
+          "measured": {
+            "disabled": false,
+            "bg": "rgb(47, 74, 59)",
+            "opacity": "1"
+          },
+          "expect": "disabled 时 bg ≠ 绿系（期望 rgb(236,234,224)）",
+          "tag": "D"
+        },
+        "V10@D": {
+          "ok": true,
+          "measured": {
+            "文本": "2 名 · 意志 4",
+            "文本右缘": 946.56,
+            "面板内容右": 1406,
+            "右越界": -459.44,
+            "左越界": -147.16,
+            "num右": 946.56,
+            "r0右": 946.56,
+            "文本行数": 1,
+            "num宽": 71,
+            "旧口径_overflow": 0,
+            "旧口径_行盒": 1
+          },
+          "expect": "文本矩形 ⊂ 面板内容盒（左右各 ≤1px）；num.right ≤ r0.right+1；文本单行",
+          "tag": "D"
+        },
+        "V11-1@D": {
+          "ok": true,
+          "measured": {
+            "box": {
+              "sw": 159,
+              "cw": 159
+            },
+            "body": {
+              "sw": 678,
+              "cw": 678
+            }
+          },
+          "expect": "box/body 均无横向滚动（min-width:0 时恒真，不可作 R0 判据）",
+          "tag": "D"
+        },
+        "V11-2@D": {
+          "ok": true,
+          "measured": {
+            "r0高": 18.38,
+            "pill高": 18.38,
+            "label高": 15,
+            "num高": 15
+          },
+          "expect": "h ≤ 26（预期 23~24，由 .state-pill 撑高；22 只是标签行高）",
+          "tag": "D"
+        },
+        "V11-3@D": {
+          "ok": true,
+          "measured": {
+            "pillLeft": 758,
+            "r0Left": 758,
+            "numRight": 946.56,
+            "r0Right": 946.56
+          },
+          "expect": "pill.left ≥ r0.left−1 且 num.right ≤ r0.right+1（对内部截断是盲的）",
+          "tag": "D"
+        }
+      },
+      "errors": [],
+      "ok": true
+    },
+    {
       "viewport": "320x568",
       "spot": false,
       "states": [
@@ -18,7 +4212,7 @@
           "deployState": "C2",
           "blocks": 4,
           "pill": "已确认 3/4",
-          "numWidth": 127,
+          "numWidth": 71,
           "rHead": {
             "lines": 3,
             "layout": [
@@ -133,15 +4327,15 @@
         "V10@C2": {
           "ok": true,
           "measured": {
-            "文本": "4 名 · 意志 9 ／ 威胁 3",
-            "文本右缘": 266.36,
-            "面板内容右": 286,
-            "右越界": -19.64,
+            "文本": "4 名 · 意志 9",
+            "文本右缘": 189.56,
+            "面板内容右": 307,
+            "右越界": -117.44,
             "左越界": -105.16,
-            "num右": 266.36,
-            "r0右": 266.36,
+            "num右": 189.56,
+            "r0右": 189.56,
             "文本行数": 1,
-            "num宽": 127,
+            "num宽": 71,
             "旧口径_overflow": 0,
             "旧口径_行盒": 1
           },
@@ -152,12 +4346,12 @@
           "ok": true,
           "measured": {
             "box": {
-              "sw": 252,
-              "cw": 252
+              "sw": 254,
+              "cw": 254
             },
             "body": {
-              "sw": 252,
-              "cw": 252
+              "sw": 294,
+              "cw": 294
             }
           },
           "expect": "box/body 均无横向滚动（min-width:0 时恒真，不可作 R0 判据）",
@@ -166,10 +4360,10 @@
         "V11-2@C2": {
           "ok": true,
           "measured": {
-            "r0高": 23.55,
-            "pill高": 23.55,
+            "r0高": 18.38,
+            "pill高": 18.38,
             "label高": 1,
-            "num高": 20.39
+            "num高": 15
           },
           "expect": "h ≤ 26（预期 23~24，由 .state-pill 撑高；22 只是标签行高）",
           "tag": "C2"
@@ -177,22 +4371,22 @@
         "V11-3@C2": {
           "ok": true,
           "measured": {
-            "pillLeft": 64,
-            "r0Left": 64,
-            "numRight": 266.36,
-            "r0Right": 266.36
+            "pillLeft": 43,
+            "r0Left": 43,
+            "numRight": 189.56,
+            "r0Right": 189.56
           },
           "expect": "pill.left ≥ r0.left−1 且 num.right ≤ r0.right+1（对内部截断是盲的）",
           "tag": "C2"
         },
         "V10-最坏内容@C2": {
-          "ok": false,
+          "ok": true,
           "measured": {
             "最坏文本": "12 名 · 意志 99 ／ 威胁 50",
-            "当前文本": "4 名 · 意志 9 ／ 威胁 3",
-            "可用": 146.84,
+            "当前文本": "4 名 · 意志 9",
+            "可用": 188.84,
             "需要": 148.81,
-            "余量": -1.97
+            "余量": 40.03
           },
           "expect": "需要 ≤ 可用（威胁 50 / 意志两位数的文字绘制宽不得越过面板内容右缘）",
           "tag": "C2"
@@ -203,6 +4397,6 @@
       "note": "四人局 C2（已确认 3/4）"
     }
   ],
-  "buildMd5End": "79dd75642807b4a25ad692fb9e0aa918",
+  "buildMd5End": "04515b18157f9d3391f3c27476c4fdf4",
   "buildStable": true
 }

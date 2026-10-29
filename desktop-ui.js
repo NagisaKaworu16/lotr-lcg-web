@@ -1,6 +1,6 @@
 /* Tabletop view: UI drafts never pay, exhaust, reveal, or bypass phase validation. */
 /* 界面版本徽标唯一来源：须与 CHANGELOG.md 最新条目标题一致（planning-dom-tests 有校验）。 */
-const APP_VERSION='v0.15.93';
+const APP_VERSION='v0.16.0';
 /* ── 决策面板：一行触发条 + 非模态浮层（v0.15.81）─────────────────────
    形态演进：v0.15.62 浮动弹窗 → v0.15.76/79 内联公共桌面（常驻 96px 内容块）→ v0.15.81
    「一行触发条 + 非模态浮层」。用户报障「阶段窗口还在桌面上」：内联块把 .decide-box 撑到
@@ -24,44 +24,169 @@ const DecisionUI=(()=>{
     render() 的异常会被 mutate() 的 catch 吞掉并回滚整个状态，症状是「按钮点了没反应」。 */
  const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
- /* 当前是否真的需要玩家决定。返回 null 表示「没有要问的」，调用方据此决定弹不弹。 */
+ /* ── 窗口语义派生（docs/design/WINDOWS.md §2 / §3）────────────────────
+    三条判据全部由这里派生，界面只消费结果：
+      · 强制 / 可选：唯一真相是 phase-log.js 的 timing，这里只加一张「引擎 step 名 →
+        窗口 key」的短别名表，不另建一套判定、不改引擎；
+      · 等待：本窗口的第一个输入属于别的座位（R5），其余情形一律不是等待；
+      · 回执：引擎自己在推进、玩家没有任何输入要做（R1 的合法例外，见 §4.1 / §7.3）。
+    全部 try/catch：派生失败就当普通步骤（不区分强制）。宁可少一个方块点，也不能让
+    渲染抛异常——render() 里的异常会被 mutate() 吞掉并回滚整个状态，现场表现是「点了没反应」。 */
+ const STEP_ALIAS={
+  /* 遭遇 5.1：引擎的 optional 步就是「交战前行动」窗口（那里给能力／事件按钮） */
+  4:{optional:'beforeChecks'},
+  /* 战斗：引擎的 step 名（attackChoice / defenderResponses / damageChoice / shadowWindow…）
+     与 phase-log 的窗口 key（enemyAction / shadows）完全不重合，不翻译就全漏判 forced。 */
+  5:{attackChoice:'enemyAction',defenderResponses:'enemyAction',damageChoice:'enemyAction',
+    shadowWindow:'shadows',shadowEffects:'shadows'},
+ };
+ /* 当前步骤对应的 phase-log 窗口条目（{no,key,label,timing}），取不到返回 null。 */
+ function winMeta(s){
+  try{
+   const k=PhaseLog.stepKey(s);if(!k)return null;
+   const g=PhaseLog.WINDOWS[s.phase];
+   const want=(STEP_ALIAS[s.phase]&&STEP_ALIAS[s.phase][k])||k;
+   return (g&&g.windows.find(w=>w.key===want))||null;
+  }catch(e){return null;}
+ }
+ function timingOf(s){const m=winMeta(s);return m?m.timing:'step';}
+ function isForced(s){return timingOf(s)==='forced';}
+ /* 强制窗口的主按钮要写「结算〈本步名〉 →」。步名必须与竖轴、日志同一个词，
+     所以直接取 phase-log 的 label，不在这里另起名字。 */
+ function stepLabel(s){const m=winMeta(s);return (m&&m.label)||'';}
+ function settleLabel(s){return '结算「'+(stepLabel(s)||'本步')+'」→';}
+ /* 本窗口已经消费掉的输入数：窗口内单调递增，是「又该问了」的唯一量（R4）。 */
+ function consumedOf(s){
+  try{
+   const q=s.questing||{},c=(ScenarioEngine.planning&&ScenarioEngine.planning.context(s))||{};
+   return (q.finalPasses?.length||0)+(q.actionApprovals?.length||0)+(q.deploymentApprovals?.length||0)
+    +Object.keys(q.deployments||{}).length+(c.finalPasses?.length||0)
+    +(c.plannedActions?.length||0)+(s.pending?.length||0);
+  }catch(e){return 0;}
+ }
+ /* 还开着的候选数。同一个 render 里 pending / syncKey 会各问一次，按 state 引用 + 廉价
+    指纹记一次结果，避免把 WindowEngine.options()（内含 probe 枚举）重复跑第三遍。 */
+ let openMemo={s:null,stamp:'',n:0};
+ function openCandidates(s){
+  try{
+   const stamp=`${s.round}:${s.phase}:${s.pending?.length||0}:${(s.windowPrefs?.muted||[]).length}:${(s.log||[]).length}`;
+   if(openMemo.s!==s||openMemo.stamp!==stamp){
+    const n=((WindowEngine.options(s).list)||[]).filter(o=>!o.muted).length;
+    openMemo={s,stamp,n};
+   }
+   return openMemo.n;
+  }catch(e){return 0;}
+ }
+ /* 决策锚点：round.phase.step.已消费输入数.还开着的候选数。
+    只看 bodyHash 会漏问「连开两次同名能力」——面板正文一字未改，但人已经用掉一次输入。 */
+ function decisionAnchor(s){
+  try{
+   const c=ScenarioEngine.planning.context(s)||{};
+   return `${s.round}.${s.phase}.${c.step||'-'}.${consumedOf(s)}.${openCandidates(s)}`;
+  }catch(e){return '0.0.0.-1.0';}
+ }
+ /* R5：本窗口第一个输入属于别的座位 → 等待态（只闪点、不弹层）。
+    单人局直接短路（live<2），否则单人局永远显示「等待玩家1」。
+    只在探险阶段的名单提交上判：其它窗口在现有实现里没有「这份输入归谁」的概念，
+    硬判会把全队共用的决定（防御名单、旅行地点）误判成别人的事。
+    返回值刻意只表示「别人」：属于自己时返回 null，调用方据此决定要不要弹层。 */
+ function ownerOf(s,pid){
+  try{
+   const live=s.players.filter(p=>!p.eliminated);
+   if(live.length<2)return null;
+   const q=s.questing||{};
+   if(s.phase!==2||q.completed||q.step!=='commit'||q.deploymentLocked)return null;
+   /* 只有「我已经交完、别人还没交」才算等待；我自己还没交时手里始终有一份名单要填，
+      那是我自己的窗口（A 态各自填各自的，不能把 n-1 个人都显示成「等待玩家1」）。 */
+   if(!q.deployments?.[pid]?.confirmed)return null;
+   const un=(q.order||[]).find(id=>!q.deployments?.[id]?.confirmed);
+   return un!==undefined&&un!==pid?un:null;
+  }catch(e){return null;}
+ }
+ const nameOf=(s,id)=>{try{return s.players[id]?.name||('玩家'+(id+1));}catch(e){return '其他玩家';}};
+ /* 回执的 10 秒计时：从「进入横置」那一刻起算（§7.3 约束 4）。 */
+ let receiptAt=0,receiptKey='';
+ function receiptSince(s,q){
+  try{
+   const k=`${s.round}:${s.phase}:${q.step}:${(q.order||[]).join(',')}`,now=Date.now();
+   if(k!==receiptKey){receiptKey=k;receiptAt=now;}
+   return receiptAt?now-receiptAt:0;
+  }catch(e){return 0;}
+ }
+
+ /* 当前是否真的需要玩家决定。返回 null 表示「没有要问的」，调用方据此决定弹不弹。
+    五个出口一律显式给出 {kind,title,body,act,forced,owner}：
+      · act    = 要不要自动展开浮层（铁律：回执与等待态永远 false）；
+      · forced = 这一步在 phase-log 里是 timing:'forced'（不区分时降级为 false）；
+      · owner  = 本窗口的输入属于别人时给出别人的 id（只有等待态有值，其余 null）。
+    不再用 actionable(body) 推断「该不该弹」——等待态想放一颗「切换视角」就会误判（§5）。 */
  function pending(s,pid,door){
   if(!s||s.status!=='playing')return null;
   /* v0.15.77：开局弃牌面板整体退役（用户指令：只留「保留手牌／整手调度一次」两个按钮，
      直接渲染在手牌区上方，见 tableHTML 的 openingBar）。设置揭示阶段仍走 setup 面板。 */
   const sp=DesktopUI.setupPanel(s);
-  if(sp)return {kind:'setup',title:'剧本设置 · 翻开遭遇牌',body:sp};
+  /* §4 M1：剧本设置揭示是「必须结算这张翻牌才能继续」的步骤（forced），
+     只是它没有 phase-log 的 timing 记录，所以在这里写死。取消是步骤内的可选项，不算跳过。 */
+  if(sp)return {kind:'setup',title:'强制 · 剧本设置 · 翻开遭遇牌',body:sp,act:true,forced:true,owner:null};
   /* 开局弃牌与设置揭示属于设置流程，仍留在牌桌上，不进弹窗。 */
   const m=DesktopUI.mode(s,pid);
   /* quest 草稿的控制台由 QuestUI.picker 提供（阶段面板已接）；
      defense/attack 的草稿面板（含「基础伤害预估」与提交按钮）在这里进弹窗。
      v0.15.62 重构时误把 attack 也排除了，玩家在牌桌上点完目标与攻击者后
      看不到任何预览与提交按钮——selectTitle 里留着「选择攻击目标」就是证据。 */
-  if(m&&m.kind!=='quest')return {kind:'select',title:selectTitle(m),body:DesktopUI.selection(s,m)};
+  if(m&&m.kind!=='quest'){
+   /* 6.1 分配防御是 forced（§4 M29）：必须结算、但不能跳过（不选＝无人防御属候选级减损）。
+      6.2 玩家攻击仍是可选窗口。 */
+   const forced=m.kind==='defense';
+   return {kind:'select',title:(forced?'强制 · ':'')+selectTitle(m),body:DesktopUI.selection(s,m),act:true,forced,owner:null};
+  }
   /* 阶段面板整块归弹窗：里面每一条都是「引擎没法替人下结论」的东西
      （放弃/取消放弃、开始投入、逐张翻牌、二次确认）。以前它同时渲染在操作条与底部，
      三处同一份内容，玩家得决定该看哪儿。 */
   const pnl=phasePanel(s,pid,m);
-  if(pnl)return {kind:'phase'+(pnl.kind||''),title:pnl.title,body:pnl.html+windowTail(s)};
+  if(pnl){
+   /* 等待态（R5）：输入属于别人 → 不自动展开、不改焦点，体内最多留一颗「切换视角」。 */
+   const owner=pnl.act===false?null:ownerOf(s,pid);
+   if(owner!==null){
+    const nm=esc(nameOf(s,owner));
+    const body=`<p class="small muted">轮到 ${nm}。这里只提示，不会替 ${nm} 做决定。</p>${pnl.html}`+
+     `<div class="actions"><button class="btn-ghost" data-action="desktop" data-desktop="view" data-player="${owner}">切换到 ${nm} 的视角</button></div>`;
+    return {kind:'phase'+(pnl.kind||''),title:`等待 · ${nm} 提交名单`,body,act:false,forced:false,owner};
+   }
+   /* 行动窗口（智能模式下的能力／「全队跳过本窗口」）是**这一步的内容**，不是自动开合的结果：
+     必须无条件拼上，否则「面板里没有一个按钮」会被误读成「这一步没事可做」。
+     探险 afterCommit 就是这样——阶段面板只剩一行已投入摘要，唯一的出口在行动窗口里，
+     早先把它按 act 一起砍掉，浮层降级成纯知会、桌面只剩一颗禁用不了的「结束阶段」。
+     act 只决定「要不要自动展开」，正文永远是 pnl.html + tail。 */
+   const tail=pnl.receipt?'':(winState(s).html||'');
+   const body=pnl.html+tail;
+   const act=pnl.act===false?false:actionable(body);
+   return {kind:'phase'+(pnl.kind||''),
+    title:(pnl.receipt?'':(isForced(s)?'强制 · ':''))+pnl.title,
+    body,act,forced:!pnl.receipt&&isForced(s),owner:null};
+  }
   /* 行动窗口（智能模式下可用的能力与「本次跳过」）在没有专属阶段面板时单独出现。
      v0.15.62 把阶段面板整体搬进弹窗后，这块原来由 DesktopUI.taskPanel 渲染，
      而 taskPanel 从此不再被调用——智能模式下玩家会看不到任何可用能力，
-     也没法跳过某个窗口。这里兜一层：引擎说有事可做，就给它一个独立的「可做的事」。 */
-  /* 只在智能模式下兜这一层：详细模式的各阶段面板自带完整控制，
+     也没法跳过某个窗口。这里兜一层：引擎说有事可做，就给它一个独立的「可做的事」。
+     只在智能模式下兜这一层：详细模式的各阶段面板自带完整控制，
      再拼一份会出现两个「放弃本窗口行动」之类的重复按钮。 */
-  const win=windowTail(s);
-  if(win)return {kind:'window',title:'可做的事',body:win};
+  const w=winState(s);
+  if(w.html)return {kind:'window',title:(isForced(s)?'强制 · ':'')+'可做的事',body:w.html,act:w.open>0,forced:isForced(s),owner:null};
   return null;
  }
  /* 智能模式下的行动窗口：可用的能力、以及每张的「本次跳过」。
-    详细模式的阶段面板自带这些控制，重复拼接会出现两个「放弃本窗口行动」。 */
- function windowTail(s){
+    详细模式的阶段面板自带这些控制，重复拼接会出现两个「放弃本窗口行动」。
+    这里把「HTML」与「还开着几个候选」一起给出：前台据此决定 act（§5：window 出口的
+    act = 候选数>0），后台（syncKey 的锚点）也不用再跑一遍 options()。 */
+ function winState(s){
   try{
-   /* v0.15.74：出牌阶段不弹「可做的事」（同上，控制收进 PlanningUI.strip 与卡面按钮）。 */
-   if(s.phase===1)return '';
-   if(ScenarioEngine.windows.settings(s).mode==='detailed')return '';
-   return WindowUI.panel(s)||'';
-  }catch(e2){ return ''; }
+   /* v0.15.74：出牌阶段不弹「可做的事」（控制收进 PlanningUI.strip 与卡面按钮）。 */
+   if(s.phase===1)return {html:'',open:0};
+   if(ScenarioEngine.windows.settings(s).mode==='detailed')return {html:'',open:0};
+   const open=openCandidates(s);
+   return {html:WindowUI.panel(s)||'',open};
+  }catch(e2){ return {html:'',open:0}; }
  }
  function selectTitle(m){
  /* v0.15.83：防御／攻击的选择面板标题原来统一叫「选择要处理到的角色」，
@@ -97,14 +222,30 @@ const DecisionUI=(()=>{
     html=(QuestUI.picker(s,pid)||'')||(q.step==='staging'&&q.current?(QuestUI.revealCard(s)||''):'')||html;
     /* 这里不能再提前 return null：下面还有「名单锁定期只读状态卡」要兜。 */
    }
-   /* 名单锁定、正在按顺序横置与结算投入响应——这一段玩家没有选择可做，
+   /* 名单全员确认、引擎正在按顺序横置与结算投入响应——这一段玩家没有输入要做，
       但也不能让弹窗彻底消失：刚点完「二次确认」就什么都不见了，人会以为卡住。
-      给一张只读状态卡，说明引擎正在做什么、还差谁。 */
+      这条出口从「窗口」降级为**回执**（WINDOWS.md §4.1 / §7.3），四条硬约束：
+        ① 体内不得出现任何 <button>；② act:false（不自动展开、不抢焦点）；
+        ③ 必须回答「还差谁（逐个列名 + ✓/·）」与「下一步是什么」；
+        ④ 出现条件收紧为「q.order 全员 confirmed 且 !q.completed」。
+      若一个人都没确认却仍然没有 html，那是缺分支的 bug —— 不许用回执兜住，
+      明说「本步缺少可操作入口」并留 console.warn，让问题暴露出来。 */
    if(!html&&!q.completed){
-    const done=Object.keys(q.deployments||{}).filter(id=>q.deployments[id]?.confirmed).length,total=(q.order||[]).length;
-    html=`<p class="small muted">引擎正在按起始玩家顺序横置已投入的角色并结算投入响应。这一步没有需要你决定的事，稍候即可。</p>
-     <ul class="decide-list">${(q.order||[]).map(id=>`<li class="${q.deployments?.[id]?.confirmed?'ok':''}">${q.deployments?.[id]?.confirmed?'✓':'·'} ${esc(s.players[id]?.name||('玩家'+(id+1)))}</li>`).join('')}</ul>
-     <p class="small">已确认 ${done}/${total} 人。</p>`;
+    const order=q.order||[],todo=order.filter(id=>!q.deployments?.[id]?.confirmed);
+    if(!order.length||todo.length){
+     try{console.warn('[DecisionUI] 探险阶段缺少可操作入口',{round:s.round,step:q.step,order,todo});}catch(e){}
+     return {title:'探险阶段 · '+(QuestUI.stepName(q.step)||'进行中'),
+      html:'<p class="small muted">本步缺少可操作入口（已记录到控制台）。可用右侧日志里的撤回回到上一步。</p>',
+      kind:'',act:false,receipt:true};
+    }
+    const rows=order.map(id=>`<li class="${q.deployments?.[id]?.confirmed?'ok':''}">${q.deployments?.[id]?.confirmed?'✓':'·'} ${esc(nameOf(s,id))}</li>`).join('');
+    const since=receiptSince(s,q);
+    const stale=since>10000;
+    html=`<p class="small muted">引擎正在按起始玩家顺序横置已投入的角色并结算投入响应。</p>
+     <ul class="decide-list">${rows}</ul>
+     <p class="small">全员已确认（${order.length}/${order.length}）。下一步：角色逐名横置完毕、投入响应结算完后，引擎自动开放探查区。</p>
+     <p class="small ${stale?'is-warn':'muted'}">${stale?'停在横置已超过 10 秒，可用日志里的撤回回到上一步。':'这一步没有需要你决定的事，稍候即可。'}</p>`;
+    return {title:'探险阶段 · 正在横置',html,kind:'',act:false,receipt:true};
    }
    if(!html)return null;
    return {title:'探险阶段 · '+(QuestUI.stepName(q.step)||'进行中'),html,kind:''};
@@ -144,7 +285,12 @@ const DecisionUI=(()=>{
    .replace(/\d+ 名 · 意志 \d+/g,'N 名 · 意志 M')
    .replace(/\bchecked\b/g,'')
    .replace(/data-state="on"/g,'data-state=""')
+   /* v0.15.93+：提交按钮带上人数（「提交名单 · 3 名」）与空名单说明（「提交空名单（本次不投入）」）。
+      勾一次草稿就换一次 key 的话，浮层会在玩家勾选时自己弹回来盖住下一张卡——
+      所以三种写法统一抹成「提交名单」：草稿数变化不是新决策。 */
+   .replace(/提交空名单（本次不投入）/g,'提交名单')
    .replace(/提交空名单/g,'提交名单')
+   .replace(/提交名单 · \d+ 名/g,'提交名单')
    /* v0.15.83：防御／攻击的草稿数字与「有没有新决策」无关，同样要归一。
       不归一的话，关掉浮层后在桌面上点一张角色卡，key 就变一次、浮层自己弹回来
       （正好盖住玩家要点的下一张卡）。 */
@@ -161,35 +307,73 @@ const DecisionUI=(()=>{
  /* 「玩家真的能点」的按钮：<button> 且不带 disabled。缩略图的 aria-disabled 不算——
     那是「这张卡此刻不能选」，不是「这一步没有要做的事」。 */
  function actionable(body){return /<button\b(?![^>]*\sdisabled\b)/i.test(String(body||''));}
- function syncKey(s,d){
-  const key=`${s.round}:${s.phase}:${d.kind}:${bodyHash(stableBody(d.body))}`;
-  if(key!==pop.key)pop={key,open:actionable(d.body)};
+ function syncKey(s,d,pid){
+  /* key 由 4 段扩到 6 段：加了「决策锚点」与「该不该弹」。
+     · 锚点（consumedOf / 候选数 / step）让「人已经用掉一次输入」也能换 key ——
+       连开两次同名能力时 bodyHash 完全相同，只靠哈希会漏问（R4）；
+     · act 让等待态与回执永不自动展开（R5 / §7.3），即使体内有一颗「切换视角」。 */
+  const key=`${s.round}:${s.phase}:${d.kind}:${bodyHash(stableBody(d.body))}:${decisionAnchor(s)}:${d.act?'1':'0'}`;
+  if(key!==pop.key){
+   const mine=d.owner===null||d.owner===undefined||d.owner===pid;
+   pop={key,open:!!d.act&&mine};
+  }
   return key;
  }
  function focusSel(sel){
   try{const el=document.querySelector(sel);if(el&&typeof el.focus==='function')el.focus({preventScroll:true});}catch(e){}
  }
+ /* 状态点四态只由 data-tone 表达，形状在 CSS 里换（形状通道，不靠颜色）：
+     todo 实心圆 / forced 实心方块 / wait 空心圆+虚线 / info 空心圆+实线。
+     aria-label 直接沿用 d.title —— 强制与等待的前缀已经写进标题，读屏也念得到。 */
  function triggerHTML(d,tone,hint,open){
-  return `<button class="decide-trigger" type="button" data-action="decide" data-decide="toggle" data-tone="${tone}" data-focus-key="decide-trigger" aria-expanded="${open}" aria-controls="decide-pop" aria-label="${esc(d.title)}${hint?'，'+esc(hint):''}"><span class="decide-dot" aria-hidden="true"></span><span class="decide-title">${esc(d.title)}</span>${hint?`<span class="decide-hint" aria-live="polite">${esc(hint)}</span>`:''}<span class="decide-chevron" aria-hidden="true"></span></button>`;
+  return `<button class="decide-trigger" type="button" data-action="decide" data-decide="toggle" data-tone="${tone}" data-act="${d.act?'1':'0'}" data-focus-key="decide-trigger" aria-expanded="${open}" aria-controls="decide-pop" aria-label="${esc(d.title)}${hint?'，'+esc(hint):''}"><span class="decide-dot" aria-hidden="true"></span><span class="decide-title">${esc(d.title)}</span>${hint?`<span class="decide-hint">${esc(hint)}</span>`:''}<span class="decide-chevron" aria-hidden="true"></span></button>`;
  }
+ /* 浮层用 aria-labelledby 指向 h2（标题已经念过一次，不再重复一份 aria-label）。
+    #decide-announcer 只有一个、常驻在触发条旁边：窗口/owner 变化时由 announce() 写一句，
+    .decide-hint 上的 aria-live 因此可以去掉（每次勾选都念「已选 3 名」会淹没读屏）。 */
  function popHTML(d,extra){
-  return `<div class="decide-pop" id="decide-pop" role="group" aria-label="${esc(d.title)} · 详情"><div class="decide-head"><h2 tabindex="-1">${esc(d.title)}</h2><button class="decide-close" type="button" data-action="decide" data-decide="close" aria-label="关闭「${esc(d.title)}」浮层">×</button></div><div class="decide-body">${extra}${d.body}</div></div>`;
+  return `<div class="decide-pop" id="decide-pop" role="group" aria-labelledby="decide-title"><div class="decide-head"><h2 id="decide-title" tabindex="-1">${esc(d.title)}</h2><button class="decide-close" type="button" data-action="decide" data-decide="close" aria-label="关闭「${esc(d.title)}」浮层">×</button></div><div class="decide-body">${extra}${d.body}</div></div>`;
+ }
+ /* 播报队列：只在「窗口标题/归属人」变化时更新一句，同一句话重复渲染不重复念（§7.3）。 */
+ let voice={key:'',text:''};
+ function voiceOf(d){
+  try{
+   const key=`${d.title}|${d.owner??''}`;
+   if(key===voice.key)return;
+   const text=d.owner!==null&&d.owner!==undefined
+    ?d.title.replace(/^等待 · /,'')            /* 「等待 · 玩家2 提交名单」→「玩家2 提交名单」 */
+    :d.act?`需要你决定：${d.title}`:`知会：${d.title}`;
+   voice={key,text};
+  }catch(e){}
+ }
+ function announce(){
+  try{
+   const el=document.querySelector('#decide-announcer');
+   if(!el||!voice.text)return;
+   if(el.textContent!==voice.text)el.textContent=voice.text;
+  }catch(e){}
  }
  /* 待决定内容：一行触发条 + （展开时）非模态浮层。没有要决定的事就返回空串，不占任何高度。
     commit 步骤的选人网格（QuestUI.popExtra）拼在浮层体的最前面——一扇窗只装一件决策，
     同一时刻只允许一个浮层（v0.15.80 的 .quest-pick 与 .decide-pop 曾会撞车）。 */
  function html(s,pid){
   const d=pending(s,pid);
-  if(!d){pop={key:'',open:false};return '';}
-  syncKey(s,d);
+  if(!d){pop={key:'',open:false};voice={key:'',text:''};return '';}
+  syncKey(s,d,pid);
   const extra=typeof QuestUI!=='undefined'&&QuestUI.popExtra?QuestUI.popExtra(s,pid):'';
   /* v0.15.83：战斗的防御／攻击选人也做成缩略图网格（浮层会盖住桌面角色卡）。
      两个 popExtra 互斥（一个看 phase===2，一个看 phase===5），留一个兜底以防将来撞车。 */
   const cExtra=typeof CombatUI!=='undefined'&&CombatUI.popExtra?CombatUI.popExtra(s,pid):'';
-  const pickExtra=extra||cExtra;
+  /* 选人网格只在「这一步真的轮到你动手」时拼进浮层：等待态与回执体内必须 0 个 button
+     （回执的铁律，§7.3），拼一份选人网格会把 6 颗缩略图按钮带进一张只读回执。 */
+  const pickExtra=d.act?(extra||cExtra):'';
   const hint=typeof QuestUI!=='undefined'&&QuestUI.pickHint?QuestUI.pickHint(s,pid):'';
   const open=!!pop.open;
-  return `<section class="decide-box" role="region" aria-label="${esc(d.title)}">${triggerHTML(d,actionable(d.body)?'todo':'info',hint,open)}${open?popHTML(d,pickExtra):''}</section>`;
+  /* tone 只由两个通道推出：要不要你动手（act）、是不是在等别人（owner）。
+     回执（act:false 且无 owner）自动落到 info，forced 步骤自动落到 forced。 */
+  const tone=d.owner!==null&&d.owner!==undefined?'wait':d.act?(d.forced?'forced':'todo'):'info';
+  voiceOf(d);
+  return `<section class="decide-box" role="region" aria-label="${esc(d.title)}">${triggerHTML(d,tone,hint,open)}<span id="decide-announcer" class="visually-hidden" role="status" aria-live="polite" aria-atomic="true"></span>${open?popHTML(d,pickExtra):''}</section>`;
  }
  /* 开合是纯视图操作：不 mutate、不入撤销历史。开启把焦点交给浮层标题（tabindex=-1），
     关闭交回触发条——键盘玩家关掉之后不该被扔回页首。 */
@@ -226,6 +410,8 @@ const DecisionUI=(()=>{
    这里按「触发条到视口顶」的真实距离收 max-height，差额交给 .decide-body 滚动
    （头固定、底部主操作条 sticky，滚动不影响点到提交）。窄屏 ≤760 是固定抽屉，不动。 */
  function fit(){
+  /* 播报先做：它不依赖布局，窄屏/无布局引擎时也不该被跳过。 */
+  announce();
   try{
    if(typeof window!=='undefined'&&window.innerWidth&&window.innerWidth<=760)return;
    const pop=document.querySelector('.decide-pop'),tg=document.querySelector('.decide-trigger');
@@ -248,7 +434,11 @@ const DecisionUI=(()=>{
   document.addEventListener('pointerdown',outsidePointer,true);
   document.addEventListener('keydown',escClose,true);
  }
- return {pending,html,handle,outsidePointer,escClose,actionable,fit};
+ /* 导出：timingOf / isForced / stepLabel / settleLabel / consumedOf / decisionAnchor 供
+    其它面板（window-ui、五个 *-ui）与验收脚本共用同一份派生，不各算一套。
+    actionable 保留导出：quest-overlay-tests 直接调它，且它仍是阶段面板 act 的兜底。 */
+ return {pending,html,handle,outsidePointer,escClose,actionable,fit,announce,
+  timingOf,isForced,stepLabel,settleLabel,consumedOf,decisionAnchor,ownerOf,STEP_ALIAS};
 })();
 const DesktopUI=(()=>{
  const E=ScenarioEngine,R=E.planning,Q=E.questing,C=E.combat,esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -345,7 +535,8 @@ const DesktopUI=(()=>{
      defense/attack 的数值摘要与提交按钮保持原样，不受影响。 */
   if(m.kind==='quest')return `<div class="table-selection">${head}<div class="draft-stats"><span class="draft-count">${selected.length?'本人已选 '+selected.length+' 名':'本人未选角色'}</span></div><div class="actions">${b('清空选择','clear')}</div></div>`;
   const count=stats?`<span class="draft-count">已选 ${selected.length} 名</span>`:'';
-  const submit=b(m.kind==='defense'?'提交暂定防御名单':'提交暂定攻击名单','submit','',m.kind==='attack'&&(!d.target||!selected.length));
+ /* §8.2：「暂定」重复（面板标题已经在说暂定），主语只留防御／攻击。 */
+  const submit=b(m.kind==='defense'?'提交防御名单':'提交攻击名单','submit','',m.kind==='attack'&&(!d.target||!selected.length));
   const amount=`${stats}${count}`;
   return `<div class="table-selection">${head}${amount?`<div class="draft-stats" aria-live="polite">${amount}</div>`:''}<p class="draft-note">${esc(tail)}</p><div class="actions">${submit}${b('清空选择','clear')}${m.kind==='attack'?`<button data-action="combatFlow" data-combat="endAttacks" data-player="${m.player}">暂定结束我的攻击</button>`:''}</div><p class="small muted">这里只暂定名单。全员二次确认后才横置、支付并执行。</p></div>`;
  }
@@ -374,7 +565,7 @@ const DesktopUI=(()=>{
  function setupPendingReveal(s){return !!(s&&s.setupReveal&&!s.setupReveal.finished);}
  function setupPanel(s){if(!setupPendingReveal(s))return '';const x=s.setupReveal,cur=x.current,opts=cur?E.setupCancelOptions(s):[];
   const card=cur?`<div class="setup-reveal">${ImageLibrary.encounterArt(cur.id)}<div><h3>${esc(cur.name)}</h3><p>${esc(cur.rule||'')}</p><p class="small">${esc({Enemy:'敌人',Location:'地点',Treachery:'诡计',Objective:'目标'}[cur.type]||cur.type)} · 厄运 ${cur.doomed||0} · ${cur.surge?'涌现':'无涌现'} · ${x.canceled?'翻开效果已取消（关键词仍结算）':'等待结算'}${x.kind==='tower'&&x.guard?' · 本张守卫目标':''}</p></div></div>`:'';
-  return `<section class="panel setup-flow"><div class="panel-title"><h2>剧本设置 · 开局翻牌（${x.kind==='tower'?'每张目标各1张':'每位玩家各1张'}）</h2><span class="badge">剩 ${x.remaining} 张</span></div><p class="small">开局翻牌逐张结算：每张都可以在翻开时使用<b>意志考验</b>或<b>埃莉诺</b>取消其翻开效果。取消后关键词仍结算，然后翻下一张。</p>${card}<div class="actions">${cur?opts.map(o=>`<button data-action="setupCancel" data-value="${esc(o.value)}">${esc(o.label)}</button>`).join(''):''}${cur?`<button class="primary" data-action="setupResolve">结算此牌并继续</button>`:`<button class="primary" data-action="setupDraw">翻开下一张遭遇牌</button>`}</div></section>`;
+  return `<section class="panel setup-flow"><div class="panel-title"><h2>剧本设置 · 开局翻牌（${x.kind==='tower'?'每张目标各1张':'每位玩家各1张'}）</h2><span class="badge">剩 ${x.remaining} 张</span></div><p class="small">开局翻牌逐张结算：每张都可以在翻开时使用<b>意志考验</b>或<b>埃莉诺</b>取消其翻开效果。取消后关键词仍结算，然后翻下一张。</p>${card}<div class="actions">${cur?opts.map(o=>`<button data-action="setupCancel" data-value="${esc(o.value)}">${esc(o.label)}</button>`).join(''):''}${cur?`<button class="primary" data-action="setupResolve">结算「${esc(cur.name)}」→</button>`:`<button class="primary" data-action="setupDraw">翻开下一张 →</button>`}</div></section>`;
  }
  /* 剧本结算计分面板：胜利后显示官方公式的完整分项明细。 */
  function scorePanel(s){
@@ -581,7 +772,11 @@ function tableHTML(s,pid){
    const unaff=sp.affordable===false;
    const reason=unaff?`资源不足：还差 ${sp.short} 点`:(sp.legal?'点击选择目标与费用':sp.reason);
    const probe=unaff?(()=>{const rec=ImageLibrary.by[c.code],url=rec?ImageLibrary.safeUrl(rec.faces?.B||rec.imageUrl):null;return url?` data-hover-src="${esc(url)}" data-hover-shape="tall"`:'';})():'';
-   return `<article class="table-card hand-card ${sp.legal?'selectable':''}${unaff?' unaffordable':''}"${probe}><button class="card-face" data-action="planning" data-plan="play" data-player="${p.id}" data-uid="${c.uid}" ${sp.legal?'':'disabled'} aria-label="使用${esc(meta.nameZh)}">${art(c.code)}</button><div class="table-card-caption"><b>${esc(meta.nameZh)}</b><span>费用 ${meta.cost??'—'} · ${esc(meta.sphereName||meta.sphere)}</span></div>${inspect(c.code)}<span class="card-legality">${esc(reason)}</span></article>`;}).join('');
+   /* v0.15.94：付不起的卡不再靠 filter/opacity 压暗（会污染卡图色准、且把卡名压到 3.36:1），
+      改由卡框外侧的「虚线框 + 左下角『缺 N』角标」承担。角标只读 data-short 这一个数，
+      不承载任何规则判断——unaffordable 的判据仍是上面的 sp.affordable，本属性纯视觉。 */
+   const shortAttr=unaff?` data-short="${esc(String(sp.short))}"`:'';
+   return `<article class="table-card hand-card ${sp.legal?'selectable':''}${unaff?' unaffordable':''}"${shortAttr}${probe}><button class="card-face" data-action="planning" data-plan="play" data-player="${p.id}" data-uid="${c.uid}" ${sp.legal?'':'disabled'} aria-label="使用${esc(meta.nameZh)}">${art(c.code)}</button><div class="table-card-caption"><b>${esc(meta.nameZh)}</b><span>费用 ${meta.cost??'—'} · ${esc(meta.sphereName||meta.sphere)}</span></div>${inspect(c.code)}<span class="card-legality">${esc(reason)}</span></article>`;}).join('');
   /* 玩家状态条已提升为模块级 tabStats(s,o)——见 hudHTML 上方注释。 */
   return `<div class="desktop-table"><div class="tabletop-layout"><div class="tabletop-main">${dockHTML(s,p,m)}<div class="public-table">${questZoneHTML(s,q,m)}</section>${row('探查区 <span class="threat-total">总威胁 '+E.threat(s)+'</span>',(s.active?'<div class="row-divider" role="presentation"><span>地点</span></div>'+encounter(s,s.active,'active',m):'')+s.staging.map(c=>encounter(s,c,'staging',m)).join(''),'staging-zone')}${s.objectives.length?row('剧本目标',s.objectives.map(c=>encounter(s,c,'objective',m)).join('')):''}${others}</div><section class="player-mat"><div class="zone-heading"><h2>${esc(p.name)} · ${esc(p.registeredDeck?.name||'玩家区域')}</h2><span class="own-piles">威胁 ${p.threat}${s.first===p.id?' · 起始玩家':''} · <span class="pile-chip">牌库 <b>${p.playerDeck.length}</b></span> · <span class="pile-chip">弃牌 <b>${p.playerDiscard.length}</b></span></span></div><section class="table-zone bottom-deck" aria-label="队伍与手牌"><div class="zone-heading"><h2>队伍与手牌 <span class="small muted">英雄 ${p.heroStates.length} · 盟友 ${p.allies.length} · 附属 ${p.attachments.length} · 手牌 ${p.hand.length}</span></h2>${phaseDoor(s)}${DecisionUI.html(s,p.id)}</div>${PlanningUI.strip(s,p.id)}${attachRow(s,p)}<div class="table-card-row own-characters">${playerChars(s,p).map(c=>character(s,c,m)).join('')}${p.engaged.length?`<div class="row-divider" role="presentation"><span>交战</span></div>${p.engaged.map(c=>encounter(s,c,'engaged',m)).join('')}`:''}</div>${openingBar(s,p)}<div class="table-card-row hand-zone">${hand}</div></section></section></div><aside class="tabletop-rail">${PhaseLog.rail(s,railOpen())}<section class="table-log" aria-label="远征日志">${PhaseLog.panel(s,logMarks(),logScope(),railOpen(),false)}</section></aside></div></div>`;
  }

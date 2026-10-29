@@ -98,9 +98,12 @@ function headRow(s,pid,ph){
   const green=(label,kind,key)=>`<button class="primary" data-action="quest" data-quest="${kind}" data-player="${pid}" data-focus-key="${key}">${esc(label)}</button>`;
   const ghost=(label,kind,key)=>`<button class="quest-ghost" data-action="quest" data-quest="${kind}" data-player="${pid}" data-focus-key="${key}">${esc(label)}</button>`;
   let main='',sub='';
-  if(ph==='A')main=green(draftPeek(s,pid).length?'提交名单':'提交空名单','commit','quest-submit');
+  if(ph==='A'){const n=draftPeek(s,pid).length;
+   /* §8.2：数字进按钮（「提交名单 · 3 名」），空名单要说明后果（「提交空名单（本次不投入）」）——
+      以前两种文案只差一个字，玩家看不出 0 名是一个合法选择还是一次误触。 */
+   main=green(n?'提交名单 · '+n+' 名':'提交空名单（本次不投入）','commit','quest-submit');}
   else if(ph==='B')sub=ghost('修改名单','withdraw','quest-withdraw');
-  else if(ph==='C1'){main=green('确认派遣','approveDeployment','quest-approve');sub=ghost('修改名单','withdraw','quest-withdraw');}
+  else if(ph==='C1'){main=green('确认派遣名单','approveDeployment','quest-approve');sub=ghost('修改名单','withdraw','quest-withdraw');}
   else if(ph==='C2')sub=ghost('取消确认','unapproveDeployment','quest-unapprove');
   return `<div class="quest-main-action">${main}${sub}</div>`;
  }
@@ -131,7 +134,7 @@ function deploySection(s,pid){
   const num=document.querySelector('.r0-num');
   if(num)num.textContent=statusParts(s,pid,'A').num;
   const commit=document.querySelector('[data-quest="commit"]');
-  if(commit)commit.textContent=ids.length?'提交名单':'提交空名单';
+  if(commit)commit.textContent=ids.length?'提交名单 · '+ids.length+' 名':'提交空名单（本次不投入）';
   document.querySelectorAll('[data-commit]').forEach(el=>{const l=el.closest&&el.closest('label');if(l&&l.dataset)l.dataset.state=el.checked?'on':'';});
   /* 明细若正展开着，勾选也要跟着变，否则读屏与视觉都会停在旧数。 */
   const cell=document.querySelector('[data-roster-player="'+pid+'"]');
@@ -198,7 +201,7 @@ function focusActor(pid){
     全部完成时点它=引擎自检并推进。撤销走顶栏「撤销一步」，这里不再重复。 */
  function panel(s,pid){if(s.phase!==2||!s.questing)return '';const q=s.questing,ch=P.choiceSpec(s),sp=R.spec(s),live=liveOrder(s),actor=live.includes(pid)?pid:(live[0]??null);const w=P.window(s);let body='';
   if(q.completed)return '<section class="panel deck-valid"><h2>阶段3 · 探险阶段验收完成</h2><p>探险结果与阶段结束效果已结算。点「结束阶段」进入第四阶段 · 旅行。</p></section>';
-  if(ch)body+=`<div class="notice">${esc(ch.message)} <button data-action="planning" data-plan="choice" data-id="${ch.task.id}">处理卡牌响应</button></div>`;
+  if(ch)body+=`<div class="notice">${esc(ch.message)} ${ChoiceUI.button(s,ch.task,`data-action="planning" data-plan="choice" data-id="${ch.task.id}"`)}</div>`;
   if(sp)body+=`<div class="notice">${esc(sp.message)} ${button('选择并结算','choice',`data-id="${sp.task.id}"`,!!ch)}</div>${q.tasks.filter(t=>t!==sp.task&&t.kind==='commitResponse').map(t=>button('先结算：'+(P.find(s,t.payload.uid)?.meta.nameZh||'投入响应'),'choice',`data-id="${t.id}"`,!!ch)).join('')}`;
   /* 派遣这一段整块交给 deploySection：状态枚举只有一份实现，详细模式与智能模式共用。
      有卡牌响应要处理时不出控件（避免在别人决定时提交名单），只留只读摘要。 */
@@ -210,7 +213,7 @@ function focusActor(pid){
   }else body+=committedLine(s);
   if(q.discussion&&(q.plannedActions?.length||q.actionLocked||q.actionError)){body+=`<section class="notice"><h3>暂定行动 · 交流缓冲区</h3><p>按下列顺序执行；全员二次确认前不支付、不弃牌、不抽牌。修改或撤销会清除全体二次确认。</p>${q.actionError?`<p>${esc(q.actionError)}</p>`:''}${(q.plannedActions||[]).map(a=>{const source=a.kind==='play'?s.players[a.player].hand.find(c=>c.uid===a.uid):P.find(s,a.uid)?.state;const m=source?P.data(s,{...source,owner:a.player}):null;return `<p>${esc(s.players[a.player].name)} · ${a.kind==='play'?'事件':'能力'}：${esc(m?.nameZh||'#'+a.uid)} ${button('撤销此暂定行动','cancelAction',`data-player="${a.player}" data-id="${a.id}"`,q.actionLocked)}</p>`;}).join('')}<div class="actions">${q.order.filter(id=>!s.players[id].eliminated).map(id=>button(s.players[id].name+(q.actionApprovals?.includes(id)?'：取消二次确认':'：二次确认行动'),q.actionApprovals?.includes(id)?'unapproveActions':'approveActions',`data-player="${id}"`,!q.plannedActions?.length||q.actionLocked||!!ch||!!sp)).join('')}</div>${q.actionLocked?'<p>全员已确认，正在执行；请先处理效果与响应。</p>':''}</section>`;}
   if(q.step==='staging'&&!sp&&!ch){if(q.current){const c=q.current.card;body+=`<div class="quest-reveal">${ImageLibrary.encounterArt(c.id)}<h3>${esc(c.name)}</h3><p>${esc(c.rule)}</p><p>厄运 ${c.doomed||0} · ${c.surge?'涌现':'无涌现'} · ${q.current.canceled?'翻开效果已取消':'等待结算'}</p><div class="actions">${R.cancelOptions(s).map(o=>button(o.label,'cancel',`data-value="${o.value}"`)).join('')}${button('结算此牌的关键词与效果','reveal')}</div></div>`;}else body+=button(q.remaining.length?'翻开下一张遭遇牌（待翻 '+q.remaining.length+'）':'结束探查，开放行动窗口','draw');}
-  if(w.kind==='action'&&!q.actionLocked&&ScenarioEngine.windows.settings(s).mode==='detailed'&&actor!==null){body+=`<p class="small">事件与主动能力先进入暂定清单，全员二次确认后执行。${q.plannedActions?.length?'暂定行动尚未执行，请先二次确认或撤销。':'准备好后直接点下方主按钮推进，全队即视为放弃本窗口；仍可逐个点放弃。'}</p><div class="actions">${s.players.filter(p=>!p.eliminated).map(p=>button(p.name+(q.finalPasses.includes(p.id)?'：取消放弃行动':'：放弃本窗口行动'),q.finalPasses.includes(p.id)?'unpass':'pass',`data-player="${p.id}"`,false)).join('')}${button(q.step==='beforeCommit'?'开始投入角色':q.step==='afterCommit'?'开始探查':q.step==='afterStaging'?'自动结算探险':'结束探险阶段','move','',!!q.plannedActions?.length)}</div><label>使用行动的玩家 <select id="planning-actor">${s.players.filter(p=>!p.eliminated).map(p=>`<option value="${p.id}" ${p.id===actor?'selected':''}>${esc(p.name)}</option>`).join('')}</select></label><div class="actions">${P.abilities(s,actor).map(a=>`<button data-action="planning" data-plan="ability" data-player="${actor}" data-uid="${a.uid}" title="${esc(a.reason)}" ${a.legal?'':'disabled'}>${esc(a.name)}</button>`).join('')}</div><p class="small muted">事件在下方手牌区操作；任一行动会清除全体玩家的放弃标记。</p>`;}
+  if(w.kind==='action'&&!q.actionLocked&&ScenarioEngine.windows.settings(s).mode==='detailed'&&actor!==null){body+=`<p class="small">事件与主动能力先进入暂定清单，全员二次确认后执行。${q.plannedActions?.length?'暂定行动尚未执行，请先二次确认或撤销。':'准备好后直接点下方主按钮推进，全队即视为放弃本窗口；仍可逐个点放弃。'}</p><div class="actions">${s.players.filter(p=>!p.eliminated).map(p=>button(p.name+(q.finalPasses.includes(p.id)?'：取消放弃行动':'：放弃本窗口行动'),q.finalPasses.includes(p.id)?'unpass':'pass',`data-player="${p.id}"`,false)).join('')}${button(q.step==='beforeCommit'?'开始投入角色 →':q.step==='afterCommit'?'开始探查 →':q.step==='afterStaging'?'自动结算探险 →':'结束探险阶段 →','move','',!!q.plannedActions?.length)}</div><label>使用行动的玩家 <select id="planning-actor">${s.players.filter(p=>!p.eliminated).map(p=>`<option value="${p.id}" ${p.id===actor?'selected':''}>${esc(p.name)}</option>`).join('')}</select></label><div class="actions">${P.abilities(s,actor).map(a=>`<button data-action="planning" data-plan="ability" data-player="${actor}" data-uid="${a.uid}" title="${esc(a.reason)}" ${a.legal?'':'disabled'}>${esc(a.name)}</button>`).join('')}</div><p class="small muted">事件在下方手牌区操作；任一行动会清除全体玩家的放弃标记。</p>`;}
   /* commit 这一段的数字在 R0 里，标题行不再重复「投入意志」；但威胁必须在这里补上——
      v0.15.72 把「／ 威胁 N」从 R0 数字串里移出（它在界面上已是第四处重复，且全局值
      不属于「我的派遣」这一行），玩家在 commit 时仍需要看到意志要对抗多少威胁。其他
@@ -357,12 +360,12 @@ const qtk=(type,n)=>`<span class="tk tk-${type}"><img src="assets/tokens/${type}
   if(!mine.length)return `<div class="pick-void" role="note"><span class="pick-void-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="7.6" y="3.6" width="8.8" height="16.8" rx="1.6"/><path d="M7.6 9h8.8M7.6 15h8.8"/><path d="M4.2 19.8 19.8 4.2"/></svg></span><span class="pick-void-copy"><b>本回合无可用角色</b><em>英雄与盟友都已横置或已离场，先把场上状态处理完再回来投入</em></span></div>`;
   return group('英雄',heroes)+group('盟友',allies);
  }
- /* 选人区的小标题行：谁在选 + （A 态）重置选择 + （C1 态）确认语义说明。
-    「重置选择」只清草稿：主操作（提交／确认／修改）一律留在 .quest-deploy 的 R2，
+ /* 选人区的小标题行：谁在选 + （A 态）清空选择 + （C1 态）确认语义说明。
+    「清空选择」只清草稿：主操作（提交／确认／修改）一律留在 .quest-deploy 的 R2，
     避免同一件事出现两颗同名按钮——v0.15.80 的浮层脚部曾与 R2 各有一颗「提交名单」。*/
  function pickBar(s,pid,ph){
   const ids=draftPeek(s,pid);
-  const clear=ph==='A'?`<button class="quest-ghost pick-clear" data-action="quest" data-quest="clear" data-player="${pid}" aria-label="清空选择（重置当前名单草稿）"${ids.length?'':' disabled'}>重置选择</button>`:'';
+  const clear=ph==='A'?`<button class="quest-ghost pick-clear" data-action="quest" data-quest="clear" data-player="${pid}" aria-label="清空选择（重置当前名单草稿）"${ids.length?'':' disabled'}>清空选择</button>`:'';
   const note=ph==='C1'?'<span class="pick-note">确认后尚未横置，全员确认后才执行；可随时取消确认。</span>':ph==='B'?'<span class="pick-note">已提交名单，等待其他玩家</span>':ph==='C2'?'<span class="pick-note">已确认，等待其他玩家确认</span>':'';
   return `<div class="pick-bar"><span class="pick-bar-title">投入角色 · ${esc(nameOf(s,pid))}</span>${note}${clear}</div>`;
  }

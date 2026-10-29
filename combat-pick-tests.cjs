@@ -52,7 +52,7 @@ test('防御选择：浮层里给出全部候选角色的缩略图网格（不�
  assert(p.includes('data-desktop="pick"'),'点缩略图走与桌面卡同一条 pick 路径');
  assert(/aria-label="防御者 [^"]*攻击 \d+ 防御 \d+ 生命 \d+[^"]*点击加入名单"/.test(p),'缩略图 aria-label 含攻防数值与动作');
  assert(p.includes('不选表示无人防御'),'无人防御的语义要写明');
- assert(p.includes('提交暂定防御名单'),'提交入口仍在浮层里');
+ assert(p.includes('提交防御名单'),'提交入口仍在浮层里（「暂定」由面板标题承担，不再重复进按钮）');
 });
 
 test('防御选择：点缩略图即入草稿，预览与已选数同步刷新',async()=>{

@@ -1,3 +1,61 @@
+# v0.16.0 · 窗口规则五条（引擎级+UI级）与 Vintage Analog 全站视觉体系（2026-10-30）
+
+用户参照诡镇奇谈网页版（arkhamhorror.app，开源 Haskell+Vue）问「触发窗口是不是会一直提醒」，取证其
+`runWindow`/`WindowAsk`/`abilityRidesAlong` 源码后提炼五条规则并要求落地，同时按 Vintage Analog（羊皮纸+sepia 暖调）
+改版全站四个面。规范文档：`docs/design/WINDOWS.md`（36 行判定矩阵）、`docs/design/DESIGN_SYSTEM.md`（令牌全套）。
+
+**一、窗口五条规则（引擎级 + UI 级）**
+1. **无候选则窗口不存在**：`DecisionUI.pending()` 五出口全部先判「有没有必须由人完成的一步」，纯摘要不再开会话；
+   `actionable()` 降为兜底，不再是唯一真相。
+2. **骑乘式/被动不单独开**：同一时机的强制效果合并展示；回执面板收紧为「全员 confirmed 且 !completed」，
+   `act:false` + 0 按钮 + `tone=info`（M17）。
+3. **强制 vs 可选可辨**：forced 不渲染「全队跳过本窗口」，`本次跳过` 降为 ghost；计划阶段 forced 选择
+   显示方块点 +「必须先处理，否则不能结束计划阶段」（`choiceSkip` 走 `R.resolveChoice(...,{skip:true})`）。
+4. **同一时机结算完继续追问**：`syncKey` 升 6 段 `round:phase:kind:bodyHash:decisionAnchor:act`，
+   `consumedOf()` 五项求和防「连开两次同名能力不重问」。
+5. **他人窗口只闪点不弹层**：`owner` 入 key；状态点四态（todo 金实心圆 / forced 红实心方块 / wait 灰虚线圆 /
+   info 灰实线圆）形状为主通道，灰度下仍可辨；`#decide-announcer`（aria-live）补读屏。
+   新增 `scripts/check-window-rules.cjs`（47 项，含 7px 虚线的逐字节截图比对）。
+
+**二、Vintage Analog 视觉体系**
+1. **四层表面明度阶梯**：page #e1d7be → board #ede3c8 → mat #f7f1de → pop #fffcf2（ΔL* 4.2/4.7/3.8），
+   墨色三档（--ink/-2/-3）、强调色三物理条件拆分（gold/gold-ink/gold-line 等 55 个令牌，7 个旧名保留别名）。
+2. **滤镜归零**：7 处 `filter` 全部移除（4 活改状态载体、2 死代码删除、1 处打在文字上的改 `color` 通道）；
+   `opacity` 压文字的 5 处改 `color`。卡面只允许通过 `img` 加载，不再重采样。
+3. **七阶段数据色**（`phase-log.js` PHASE_COLOR，DESIGN_SYSTEM §5.7-c）：七色**等亮度**（对 --on-dark 恰 5.6:1，
+   极差 0.04），日志流不因读到战斗条目变重；OKLab 彩度 0.082–0.100（陈年颜料带，参照赭石 0.079）；
+   两两 ΔE 最小 0.079，旧值资源/旅行仅 0.025（几乎不可分）。**顺手修掉三处既有对比度失败**
+   （旧计划/探险/旅行对白字 4.22/4.29/4.49 < 4.5）。资源与刷新有意留在冷侧（靛青是正当颜料），已在文档注明。
+4. **实测口径收口**：新增 `scripts/check-palette.cjs`——断言六个面**实际渲染**的 CSS 颜色 ⊆ 调色板 ∪ 允许清单
+   （源码 359 个去重色值里 38 个是令牌，数声明会严重高估，必须扫 computed style）。
+   本轮共落地约 45 处调牌板外残留：legacy `.card` 组件整族、`details.cat-item` 边框（卡牌页 128 处）、
+   侧栏图标/边框/小字、日志面板字面量（3 条硬失败：.log-count 2.85 / .log-empty 2.81 / .log-undo 4.41）、
+   纯白 input/select、`#toast` 等。竖轴深底统一为 `--surface-rail`。
+5. **圆角收敛**：六种旧圆角 → 三档尺寸（sm 6 / md 8 / lg 10）+ pill 形态；`--radius-xl` 退役并入 lg
+   （2 处引用改写，令牌删除；行内块 3px 例外见 §1）。
+
+**三、顺手修掉的既有缺陷**
+1. **顶栏非活跃玩家标签数字几乎看不见**（P0）：`.player-tabs button .tab-stats b{color:var(--ink)}` 是浅底旧 SPA
+   规则，v0.15.88 标签搬进深色 header 后实测 **1.34:1**（玩家2 的威胁/资源/伤害只剩暗影）。新增
+   `.game-hud` 作用域改用 `--on-dark-2`/`--on-dark`（6.13/8.20:1），浅底的卡组页原规则保留。
+2. **`.railPhase` 死按钮**：`phase-log.js` 阶段头的 `<button data-action="railPhase">` 全仓无分发分支，
+   7 个阶段头点了没反应 → 改 `<div class="rail-head">`，连带新增 `data-action` 白名单护栏
+   （源码指纹扫描，防 `b()` 批量改签名时把 `data-action="travelFlow"` 撕成 `data-action=""`）。
+3. **对比度审计盲区**：`check-contrast.cjs` 原是选择器白名单，`.log-count`/`.threat-total`/`.tab-stats` 都不在内，
+   报「0 条」但没扫。改为**全文字元素遍历** + 背景图承载护栏（数字坐在卡图/代币立绘上时 background-color 算不准），
+   跳过数打印出来。`check-auto-phase.cjs` 的 `/usr/bin/chromium` 硬编码改为候选探测。
+
+**四、待办（下一轮）**
+- 活跃玩家标签底色 `#527085`（--on-dark 4.37 / .tab-stats 4.12 均不达标）、可选中卡片边框 `#79b9db`（冷天蓝，
+  `--accent-gold` 对深卡面仅 2.73）、竖轴 trigger/action 两条时机线（`#e8c169` 过艳 / `#6ea86b` 全页唯一鲜绿）
+  ——三项已派设计裁定，未回，`check-palette.cjs` 允许清单与 `check-contrast.cjs` 的 3 条 FAIL 均为已知待办。
+- `check-quest-r0` 27/30、`visual-acceptance-v` 26 红：均为本轮之前既有，`git show HEAD:` 复跑一致，非回归。
+
+**验收**：`python scripts/check_project.py` 503/503；`check-window-rules` 47/47；`check-state-carriers` 45/45；
+`check-palette` 6 面 0 越界；`check-hud-row` 69/69；`browser-check` ok=true；`check-contrast --min 4.5`
+仅剩 3 条已知待办（上）。截图：`docs/browser-acceptance/vintage-{1920,1440,1366,1280}.png`、
+`phase-color-compare.png`（新旧七阶段色对照）、`window-rules-2p.png`。
+
 # v0.15.93 · 决策条归位：并进「队伍与手牌」标题行，浮层收窄、面板标题降级（2026-10-29）
 
 用户问「各阶段弹窗所归属的模块/功能有没有更简约的显示或触发方式」。实测现状：决策条 963×**42px**

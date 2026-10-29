@@ -13,7 +13,7 @@
  *   W4 每态 .r0-num getClientRects().length === 1（不折行）
  *   W5 每态 .r0 盒高 23.55 ± 1（.state-pill 是盒高唯一来源）
  *   W6 窄屏 .r0-label 仍在可访问性树里（sr-only，不是 display:none）
- *   W7 .door-go:disabled 背景不再是主色绿 rgb(54, 88, 66)
+ *   W7 .door-go:disabled 背景不再是主色绿 rgb(47, 74, 59)（--accent-green #2f4a3b）
  *
  * 注意：`.r0` 容器的 scrollWidth − clientWidth 恒为 0（子元素 min-width 吸收），
  * 它在 bug 存在时也是 0——**不能单独当门禁**，这里只当回归守卫。
@@ -25,7 +25,7 @@
 const {chromium}=require('playwright-core'),fs=require('fs'),path=require('path'),ROOT=path.join(__dirname,'..');
 const CHROME=['/usr/bin/chromium','/usr/bin/google-chrome','/Applications/Google Chrome.app/Contents/MacOS/Google Chrome','C:/Program Files/Google/Chrome/Application/chrome.exe','C:/Program Files (x86)/Google/Chrome/Application/chrome.exe','C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'];
 const VIEWS=[[1440,950],[390,844],[320,568]];
-const GREEN='rgb(54, 88, 66)';
+const GREEN='rgb(47, 74, 59)';
 
 /* 五态构造：走引擎（submitDeployment / approveDeployment）+ render，可复现且不依赖点击。
    两人局 A 草稿 → B 玩家0已交 → C1 全员已交本人未确认 → C2 本人已确认 → D 锁定。

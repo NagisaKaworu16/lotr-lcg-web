@@ -1,13 +1,13 @@
 const TravelUI=(()=>{
  const E=ScenarioEngine,T=E.traveling,R=E.planning,Q=E.questing,esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const b=(label,kind,args='',disabled=false)=>`<button data-action="travelFlow" data-travel="${kind}" ${args} ${disabled?'disabled':''}>${esc(label)}</button>`;
+ const b=(label,kind,args='',disabled=false,cls='')=>`<button${cls?` class="${cls}"`:''} data-action="travelFlow" data-travel="${kind}" ${args} ${disabled?'disabled':''}>${esc(label)}</button>`;
  const NAME=['资源','计划','探险','旅行','遭遇','战斗','刷新'];
  /* 面板底部唯一出口：有必需操作时点它=列还差什么，全部完成时点它=引擎自检并推进。
     撤销统一走顶栏「撤销一步」，面板里不再放第二份重复控件。 */
  function panel(s,pid){if(s.phase!==3||!s.traveling)return '';const x=s.traveling,actor=s.players[pid]&&!s.players[pid].eliminated?pid:s.first,ch=R.choiceSpec(s),sp=x.tasks[0]?.kind==='travelResponses'?T.responseSpec(s):Q.spec(s);let body='';
   if(x.completed)return '<section class="panel deck-valid"><h2>阶段4 · 旅行阶段验收完成</h2><p>当前地点、资源和角色状态保留。点击下方「进入第五阶段 · 遭遇」继续。</p></section>';
-  if(ch)body+=`<div class="notice">${esc(ch.message)} <button data-action="planning" data-plan="choice" data-id="${ch.task.id}">处理卡牌响应</button></div>`;
-  if(sp)body+=`<div class="notice">${esc(sp.message)} ${b('处理响应／选择','choice',`data-id="${sp.task.id}"`,!!ch)}</div>`;
+  if(ch)body+=`<div class="notice">${esc(ch.message)} ${ChoiceUI.button(s,ch.task,`data-action="planning" data-plan="choice" data-id="${ch.task.id}"`)}</div>`;
+  if(sp)body+=`<div class="notice">${esc(sp.message)} ${ChoiceUI.button(s,sp.task,`data-action="travelFlow" data-travel="choice" data-id="${sp.task.id}"`,!!ch)}</div>`;
   if(x.step==='choice'){body+=`<p>由起始玩家 ${esc(s.players[s.first].name)} 暂定旅行地点，全队二次确认后才支付费用和移动地点。${s.active?'已有当前地点，本次不能旅行到另一地点。':''}</p><div class="actions">${s.staging.filter(c=>c.type==='Location').map(c=>{const sp=T.spec(s,c.uid);return `<span title="${esc(sp.reason)}">${b('暂定：'+c.name,'propose',`data-uid="${c.uid}"`,!sp.legal)}${!sp.legal?`<span class="small muted">${esc(sp.reason)}</span>`:''}</span>`;}).join('')}${b('暂定本次不旅行','skip','',!T.spec(s,null).legal)}</div>`;
    if(x.proposal){const c=s.staging.find(c=>c.uid===x.proposal.uid);body+=`<div class="notice"><b>暂定选择：${c?esc(c.name):'不旅行'}</b><p>${c?esc(c.rule):'保留原有当前地点。'} 费用尚未支付，可取消或更改。</p><div class="actions">${b('取消／修改旅行选择','cancel')}${x.order.filter(id=>!s.players[id].eliminated).map(id=>b(s.players[id].name+(x.approvals.includes(id)?'：取消二次确认':'：二次确认旅行'),x.approvals.includes(id)?'unapprove':'approve',`data-player="${id}"`)).join('')}</div></div>`;}}
   if(x.step==='staging'&&!sp&&!ch){if(x.current){const c=x.current.card;body+=`<div class="quest-reveal">${ImageLibrary.encounterArt(c.id)}<h3>${esc(c.name)}</h3><p>${esc(c.rule)}</p><p>旅行费用翻牌：按原版规则，本阶段不触发厄运／涌现关键词。</p><div class="actions">${Q.cancelOptions(s).map(o=>b(o.label,'cancelReveal',`data-value="${o.value}"`)).join('')}${b('结算旅行费用翻牌','reveal')}</div></div>`;}else body+=b(x.remaining.length?'翻开旅行费用遭遇牌':'完成费用翻牌，继续旅行','draw');}
@@ -15,7 +15,7 @@ const TravelUI=(()=>{
    /* v0.15.62：这一组出口原来只在详细模式渲染，智能模式全靠操作条里的 picker 兜——
       弹窗接管阶段面板之后，智能模式下这里就成了「只有一句说明、没有按钮」的空壳。
       两个模式都给同一组出口，详细模式额外多渲染上面的能力清单。 */
-   body+=`<div class="actions">${x.order.filter(id=>!s.players[id].eliminated).map(id=>b(s.players[id].name+(x.finalPasses.includes(id)?'：取消放弃行动':'：放弃本窗口行动'),x.finalPasses.includes(id)?'unpass':'pass',`data-player="${id}"`,!!x.actionLocked)).join('')}${b('结算旅行阶段结束','finish','',!!x.plannedActions?.length||!!x.actionLocked)}</div>`;
+   body+=`<div class="actions">${x.order.filter(id=>!s.players[id].eliminated).map(id=>b(s.players[id].name+(x.finalPasses.includes(id)?'：取消放弃行动':'：放弃本窗口行动'),x.finalPasses.includes(id)?'unpass':'pass',`data-player="${id}"`,!!x.actionLocked)).join('')}${b(settleLabel(s),'finish','',!!x.plannedActions?.length||!!x.actionLocked)}</div>`;
    if(x.plannedActions?.length||x.actionError)body+=`<div class="notice"><h3>暂定行动 · 交流缓冲区</h3>${x.actionError?`<p>${esc(x.actionError)}</p>`:''}${(x.plannedActions||[]).map(a=>{const src=a.kind==='play'?s.players[a.player].hand.find(c=>c.uid===a.uid):R.find(s,a.uid)?.state;return `<p>${esc(s.players[a.player].name)} · ${esc(src?R.data(s,{...src,owner:a.player}).nameZh:'#'+a.uid)} ${b('撤销暂定行动','cancelAction',`data-id="${a.id}" data-player="${a.player}"`,!!x.actionLocked)}</p>`;}).join('')}<div class="actions">${x.order.filter(id=>!s.players[id].eliminated).map(id=>b(s.players[id].name+(x.actionApprovals?.includes(id)?'：取消二次确认':'：二次确认行动'),x.actionApprovals?.includes(id)?'unapproveActions':'approveActions',`data-player="${id}"`,!!x.actionLocked||!x.plannedActions?.length)).join('')}</div></div>`;}
   return `<section class="panel questing-panel"><h2>阶段4 · ${x.step==='choice'?'旅行选择与全队确认':x.step==='staging'?'支付旅行费用':x.step==='action'?'旅行后行动窗口':'旅行效果与响应'}</h2>${body}</section>`;
  }

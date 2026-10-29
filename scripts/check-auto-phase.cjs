@@ -1,9 +1,19 @@
 /* 自动推进回归：从建局一路点到第 7 阶段，验证「结束阶段」不会卡死。
    引擎不替玩家做的三件事（投入名单、旅行地点、遭遇翻牌）由脚本代按，
    其余必须靠引擎自己走完；同一状态连续出现 12 次视为卡死。 */
-const {chromium}=require('playwright-core'),path=require('path'),ROOT=path.join(__dirname,'..');
+const {chromium}=require('playwright-core'),path=require('path'),fs=require('fs'),ROOT=path.join(__dirname,'..');
+/* 浏览器路径按其它验收脚本的候选列表探测（原来硬编码 '/usr/bin/chromium'，
+   在 Windows 上直接 launch 失败，脚本等于从没跑过）。CHROME_PATH 优先，便于 CI 指定。 */
+const CHROME=process.env.CHROME_PATH||[
+ '/usr/bin/chromium','/usr/bin/google-chrome',
+ '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+ 'C:/Program Files/Google/Chrome/Application/chrome.exe',
+ 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe',
+ 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',
+].find(x=>fs.existsSync(x));
 (async()=>{
- const b=await chromium.launch({executablePath:'/usr/bin/chromium',headless:true,args:['--no-sandbox']});
+ if(!CHROME){console.log('SKIP: 未找到本机 Chrome/Edge（可用 CHROME_PATH 指定）');process.exit(3);}
+ const b=await chromium.launch({executablePath:CHROME,headless:true,args:['--no-sandbox']});
  const p=await (await b.newContext({viewport:{width:1440,height:960}})).newPage();
  const errs=[];p.on('pageerror',e=>errs.push(e.message));
  await p.goto('file:///'+path.join(ROOT,'index.html'));await p.waitForTimeout(400);
@@ -45,11 +55,19 @@ const {chromium}=require('playwright-core'),path=require('path'),ROOT=path.join(
   /* 记录最后一次点击的按钮标识，卡死时能知道脚本到底点了什么 */
   const clk=el=>{if(el){const d=el.dataset||{};window.__lastHit=(d.combat||d.window||d.quest||d.encounter||d.refresh||d.travel||d.action||'?')+'|p='+(d.player??'')+'|u='+(d.uid??'')+'|'+(el.textContent||'').trim().slice(0,10);el.click();}return el;};
 
+  /* v0.15.81 起决策面板只在浮层打开时存在于 DOM（.decide-trigger 是唯一把手）。
+     本脚本以前只扫全局 button，浮层一关就什么都找不到，于是反复点「结束阶段」原地打转
+     ——phase 5 的 defenseChoice 实测卡死（HEAD 构建同样卡，不是某一版改出来的）。
+     扫描之前先把浮层打开：折叠态只做这一件事，下次迭代就能拿到真按钮。 */
+  {const t=q('.decide-trigger[aria-expanded="false"]');
+   if(t){clk(t);return 'openDecide'}}
   /* 敌人攻击按玩家轮转：只点当前行动玩家（activeEnemyPlayer）的按钮 */
   const enemyBtns=()=>{if(state.phase!==5||!state.combat)return null;
    const pid=ScenarioEngine.combat.activeEnemyPlayer(state);
    return [...document.querySelectorAll('button[data-combat="enemy"]')].find(x=>!x.disabled&&+x.dataset.player===pid);};
-  let b=[...document.querySelectorAll('button')].find(x=>!x.disabled&&x.offsetParent&&/^(选择并结算|处理强制选择|处理卡牌响应|处理强制效果／卡牌响应)$/.test(x.textContent.trim()));
+  /* 文案统一后（WINDOWS.md §8.2）：待结算响应只剩两类 —— 强制「处理强制效果：「卡名」」、
+     可选「选择响应：「卡名」」；「选择并结算」是探险翻牌的结算入口，保留。 */
+  let b=[...document.querySelectorAll('button')].find(x=>!x.disabled&&x.offsetParent&&/^(选择并结算|处理强制效果|选择响应)(：「.*」)?$/.test(x.textContent.trim()));
   if(b){clk(b);return 'spec'}
   b=q('button[data-quest="commit"]');if(b&&!b.disabled){clk(b);return 'commit'}
   b=[...document.querySelectorAll('button[data-quest="approveDeployment"]')].find(x=>!x.disabled);
@@ -87,6 +105,24 @@ const {chromium}=require('playwright-core'),path=require('path'),ROOT=path.join(
     const pid=ScenarioEngine.combat.activeEnemyPlayer(state);
     if(!ScenarioEngine.combat.pendingEnemies(state,pid).length){ScenarioEngine.combat.resume(state);return 'cbResume'}
    }}
+  /* 6.1 防御名单 / 6.2 攻击方案：这两步的「草稿」不在按钮上，而在**桌面角色卡**上
+     （.character-card.selectable），提交按钮在浮层里（[data-desktop="submit"]）。
+     v0.15.81 之后这条路径搬进了统一浮层，本脚本以前只扫 data-combat 键，
+     于是 defenseChoice 永远找不到落点、反复点「结束阶段」——
+     HEAD 构建同样卡在这一步，属既有缺口，不是某一版改坏的。 */
+  {const m=(()=>{try{return DesktopUI.mode(state,handView)}catch(e){return null}})();
+   if(m&&(m.kind==='defense'||m.kind==='attack')){
+    const sub=q('.decide-pop [data-desktop="submit"]');
+    const picked=document.querySelectorAll('.player-mat .character-card.selected').length;
+    const pickable=document.querySelector('.player-mat .character-card.selectable .card-face');
+    if(m.kind==='attack'){
+     const hasTarget=document.querySelectorAll('.encounter-card.selected').length;
+     const tgt=document.querySelector('.encounter-card .card-face[data-desktop="target"]');
+     if(!hasTarget&&tgt){clk(tgt);return 'atkTarget'}
+     if(hasTarget&&!picked&&pickable){clk(pickable);return 'atkPick'}
+    }else if(!picked&&pickable){clk(pickable);return 'defPick'}
+    if(sub&&!sub.disabled){clk(sub);return 'selSubmit'}
+   }}
   b=[...document.querySelectorAll('button[data-combat="defense"]')].find(x=>!x.disabled);if(b){clk(b);return 'cbDefense'}
   /* 防御响应窗口：优先直接关闭；若关闭后又被弹回同一窗口（说明还有必须处理的响应），
      改点窗口里的第一个响应，让引擎把这一轮吐完。 */
@@ -111,7 +147,7 @@ const {chromium}=require('playwright-core'),path=require('path'),ROOT=path.join(
   if(b&&!b.disabled){clk(b);return 'travel'}
   b=q('button[data-quest="draw"]');if(b&&!b.disabled){clk(b);return 'draw'}
   b=q('button[data-quest="reveal"]');if(b&&!b.disabled){clk(b);return 'reveal'}
-  /* 智能推进：没有值得提醒的行动时，用行动窗口的「全队继续到下一决策点」让引擎自己走 */
+  /* 智能推进：没有值得提醒的行动时，用行动窗口的「全队跳过本窗口 →」让引擎自己走 */
   b=q('.phase-door .door-go');if(b&&!b.disabled){clk(b);return 'door'}
   return 'none';
  });

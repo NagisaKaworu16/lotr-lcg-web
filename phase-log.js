@@ -3,15 +3,21 @@
    每条日志按所属阶段着色，鼠标悬停时右侧浮出小撤回图标，点击回退到该条记录的状态。 */
 const PhaseLog=(()=>{
  const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- /* 7 个阶段的配色：与阶段步骤条同一套色相，保证玩家在两处看到的颜色含义一致。 */
+ /* 7 个阶段的配色：与阶段步骤条同一套色相，保证玩家在两处看到的颜色含义一致。
+    v0.16.0 Vintage 数据色（DESIGN_SYSTEM §5.7-c）：七色等亮度（对 var(--on-dark) 恰 5.6:1，
+    极差 0.04），日志流不会因为读到战斗条目整行变重；OKLab 彩度 0.082–0.100，落在
+    陈年颜料带（参照：赭石 0.079 / 橄榄绿 0.054 / 纯蓝 0.313）。
+    资源 #0e647a（青）与刷新 #505795（靛）**有意留在冷侧**：靛青是正当颜料，
+    两两 ΔE(OKLab) 最小 0.079（计划/探险），旧值资源/旅行仅 0.025——
+    改色同时修掉了三处既有对比度失败（旧计划/探险/旅行对白字 4.22/4.29/4.49 < 4.5）。 */
  const PHASE_COLOR=[
-  {id:'P0',key:'resource',name:'资源',color:'#3f6b80'},
-  {id:'P1',key:'planning',name:'计划',color:'#8a6a22'},
-  {id:'P2',key:'quest',name:'探险',color:'#3f7a4a'},
-  {id:'P3',key:'travel',name:'旅行',color:'#2f7385'},
-  {id:'P4',key:'encounter',name:'遭遇',color:'#7d3f72'},
-  {id:'P5',key:'combat',name:'战斗',color:'#9a3a31'},
-  {id:'P6',key:'refresh',name:'刷新',color:'#3a5a78'}
+  {id:'P0',key:'resource',name:'资源',color:'#0e647a'},
+  {id:'P1',key:'planning',name:'计划',color:'#81520a'},
+  {id:'P2',key:'quest',name:'探险',color:'#586110'},
+  {id:'P3',key:'travel',name:'旅行',color:'#08694e'},
+  {id:'P4',key:'encounter',name:'遭遇',color:'#7d4a7d'},
+  {id:'P5',key:'combat',name:'战斗',color:'#8f4644'},
+  {id:'P6',key:'refresh',name:'刷新',color:'#505795'}
  ];
  const PHASE_BY_KEY=Object.fromEntries(PHASE_COLOR.map(p=>[p.key,p]));
  /* 日志里出现这些词时，即使没有阶段标记也能判断归属（兼容旧存档与子系统日志）。 */
@@ -79,7 +85,9 @@ const PhaseLog=(()=>{
    {no:'4.1',key:'choice',label:'选择地点',timing:'step'},
    {no:'4.2',key:'action',label:'旅行行动',timing:'action'}]},
   {id:'5',phase:'encounter',windows:[
-   {no:'5.1',key:'beforeChecks',label:'交战选择',timing:'step'},
+   /* 5.1 是**行动窗口**（encounter-ui 的 ['beforeChecks','afterChecks'] 分支给能力/事件按钮），
+      原来标成 'step' 是笔误：它既不开放行动、也不该被当成纯流程。显示元数据，不动引擎。 */
+   {no:'5.1',key:'beforeChecks',label:'交战选择',timing:'action'},
    {no:'5.2',key:'checks',label:'交战检定',timing:'forced'},
    {no:'5.3',key:'afterChecks',label:'检定后行动',timing:'action'}]},
   {id:'6',phase:'combat',windows:[
@@ -131,9 +139,15 @@ const PhaseLog=(()=>{
       折叠块（rail-fold），既没有信息量又挤掉一行窗口，现已去掉。 */
    const cls=['rail-grp',st].filter(Boolean).join(' ');
    void extra;
+   /* v0.15.94：阶段色块头**不是按钮**。折叠功能早已退役，全仓没有任何 railPhase 分发分支
+      （见 planning-dom-tests 的 data-action 派发白名单守卫），原来那个
+      `<button data-action="railPhase" aria-expanded="true">` 等于向屏幕阅读器谎称
+      「这里有一个可展开/收起的控件」，而 7 个阶段头点下去什么都不会发生。
+      改为不可交互的 <div>：去掉 type / data-action / data-phase / aria-expanded，
+      只保留 title（悬停仍能读到「阶段：N 个窗口」）。 */
    return `<div class="${cls}" role="listitem" style="--pc:${p.color}">
-    <button type="button" class="rail-head" data-action="railPhase" data-phase="${i}" aria-expanded="true" title="${esc(p.name)}阶段：${grp.windows.length} 个窗口">
-     <span>${esc(p.name)}阶段</span></button>
+    <div class="rail-head" title="${esc(p.name)}阶段：${grp.windows.length} 个窗口">
+     <span>${esc(p.name)}阶段</span></div>
     <ol class="rail-wins">${rows}</ol>
    </div>`;
   }).join('')}</div>`;

@@ -516,8 +516,13 @@ test('rail shows all seven phases and every window at once',()=>{
  const withSet=e.run('PhaseLog.rail({phase:0},new Set([5]))');
  assert.equal((withSet.match(/rail-fold/g)||[]).length,0,'openSet 不再引起折叠');
  assert.equal((withSet.match(/rail-win-no/g)||[]).length,20,'窗口仍全部列出');
- /* 全部展开：每个阶段头的 aria-expanded 都是 true */
- for(let i=0;i<7;i++)assert(r.includes(`data-action="railPhase" data-phase="${i}" aria-expanded="true"`),`阶段${i} aria-expanded 须为 true`);});
+ /* v0.15.94：阶段色块头改成不可交互的 <div>（折叠功能已退役、railPhase 无分发分支）。
+    原来那句 aria-expanded="true" 是向屏幕阅读器谎称「可展开」，断言随之改为
+    「存在且不带 data-action」——验的仍是同一件事，不是删断言过关。 */
+ assert.equal((r.match(/class="rail-head"/g)||[]).length,7,'7 个阶段色块头都要渲染');
+ assert(!/class="rail-head"[^>]*data-action=/.test(r),'阶段色块头不再可点，不得带 data-action');
+ assert(!/class="rail-head"[^>]*aria-expanded/.test(r),'阶段色块头不得再声称 aria-expanded');
+ assert(!/data-action="railPhase"/.test(r),'railPhase 这个没有分发分支的 action 必须绝迹');});
 
 test('phase door sits under the character area and reports the real checklist',async()=>{
  const e=environment();await opening(e);

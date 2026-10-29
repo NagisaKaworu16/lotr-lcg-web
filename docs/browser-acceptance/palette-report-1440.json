@@ -1,0 +1,136 @@
+{
+ "width": 1440,
+ "at": "2026-10-29T10:16:50.826Z",
+ "faces": [
+  {
+   "face": "1-开局设置",
+   "violations": [],
+   "allowed": [],
+   "skipped": {
+    "overlay": 0,
+    "shadow": 1,
+    "alphaToken": 0
+   }
+  },
+  {
+   "face": "2-组卡/英雄选择",
+   "violations": [],
+   "allowed": [
+    "#6ea86b",
+    "#e8c169",
+    "#527085",
+    "#dfe7d8"
+   ],
+   "skipped": {
+    "overlay": 20,
+    "shadow": 42,
+    "alphaToken": 0
+   }
+  },
+  {
+   "face": "3-对局桌面",
+   "violations": [],
+   "allowed": [
+    "#79b9db",
+    "#6ea86b",
+    "#e8c169",
+    "#527085",
+    "#886a9b",
+    "#ad6155",
+    "#dfe7d8"
+   ],
+   "skipped": {
+    "overlay": 20,
+    "shadow": 50,
+    "alphaToken": 1
+   }
+  },
+  {
+   "face": "4-卡牌",
+   "violations": [],
+   "allowed": [],
+   "skipped": {
+    "overlay": 0,
+    "shadow": 22,
+    "alphaToken": 1
+   }
+  },
+  {
+   "face": "4-我的卡组",
+   "violations": [],
+   "allowed": [],
+   "skipped": {
+    "overlay": 0,
+    "shadow": 1,
+    "alphaToken": 0
+   }
+  },
+  {
+   "face": "4-说明与完成范围",
+   "violations": [],
+   "allowed": [],
+   "skipped": {
+    "overlay": 0,
+    "shadow": 1,
+    "alphaToken": 0
+   }
+  }
+ ],
+ "ok": true,
+ "palette": {
+  "size": 39,
+  "derived": [
+   "#08694e",
+   "#0e647a",
+   "#23524a",
+   "#26505e",
+   "#274f49",
+   "#294d5a",
+   "#424864",
+   "#444a6a",
+   "#454c31",
+   "#484f2d",
+   "#505795",
+   "#53435b",
+   "#55462f",
+   "#586110",
+   "#59445f",
+   "#5a4245",
+   "#5b482a",
+   "#614245",
+   "#7d4a7d",
+   "#81520a",
+   "#8f4644",
+   "#e6ede2",
+   "#e7ede6",
+   "#eeebe9",
+   "#eeeddb",
+   "#f2eae6",
+   "#f2ebdb",
+   "#f4eae1"
+  ],
+  "pcVals": [
+   "#0e647a",
+   "#81520a",
+   "#586110",
+   "#08694e",
+   "#7d4a7d",
+   "#8f4644",
+   "#505795"
+  ]
+ },
+ "allowUsed": [
+  "#527085",
+  "#6ea86b",
+  "#79b9db",
+  "#886a9b",
+  "#ad6155",
+  "#dfe7d8",
+  "#e8c169"
+ ],
+ "allowUnused": [
+  "#699875",
+  "#6e9db5",
+  "#a49777"
+ ]
+}
