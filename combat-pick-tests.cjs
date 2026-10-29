@@ -28,7 +28,16 @@ function combatAt(e,step){
   handView=0;render();}`);
 }
 const html=e=>e.base.get('app').innerHTML;
-const pop=e=>{const h=html(e),i=h.indexOf('id="decide-pop"');return i<0?null:h.slice(i);};
+/* v0.15.93：浮层搬进「队伍与手牌」标题行后，页尾不再是浮层独有——角色行紧跟在后面，
+   每张卡都带 data-desktop="pick"，直接把尾巴全算进来会重复计数（实测 6 vs 3）。
+   这里按 <div> 标签配平截到浮层自身闭合处。 */
+const pop=e=>{const h=html(e),i=h.indexOf('id="decide-pop"');if(i<0)return null;
+ const start=h.lastIndexOf('<div',i);let d=0;
+ for(let k=start;k<h.length;k++){
+  if(h.startsWith('<div',k)){d++;k+=3;}
+  else if(h.startsWith('</div>',k)){d--;k+=5;if(d===0)return h.slice(i,k);}
+ }
+ return h.slice(i);};
 const thumbs=e=>((pop(e)||'').match(/class="qp-card/g)||[]).length;
 
 test('防御选择：浮层里给出全部候选角色的缩略图网格（不再要求去点被浮层盖住的桌面卡）',async()=>{

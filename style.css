@@ -694,7 +694,8 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
    不再与角色行/手牌行抢弹性高度（v0.15.79~80 曾给它 flex:1 + min-height:96px——
    那 96px 就是用户看到的「阶段窗口」）。触发条自然高、不参与弹性分配；
    浮层是 absolute 子节点，不占文档流，被 .bottom-deck/.player-mat 的裁剪问题见第 21 节。 */
-.player-mat .decide-box{flex:0 0 auto;min-height:0;margin:0 0 6px}
+/* v0.15.93：决策盒搬进「队伍与手牌」标题行（见第 38 节），这里不再需要下外边距。 */
+.player-mat .decide-box{flex:0 0 auto;min-height:0;margin:0}
 /* v0.15.75：附属区独立成行（角色行上方）。无附属时不渲染该行、零占位。 */
 .player-mat .own-attachments{flex:0 0 auto;min-height:0;overflow:auto;align-items:flex-start}
 /* 三行并存时纵向预算紧张：附属卡用 72px 紧凑幅面（424/500 裁切），
@@ -2064,4 +2065,39 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
 @media(min-width:1280px) and (max-height:820px){
  .character-card .attr-tokens{--tk:15px}
  .character-card .state-tokens{--tk:14px}
+}
+
+
+/* 38. v0.15.93 决策条归位 + 浮层收窄 + 面板标题降级。
+   改前：决策盒独占一行（963×42px）夹在「角色行」与「手牌」之间——既不属于牌桌也不属于
+   手牌，是一道孤立横杠；浮层 880×425 向上弹，盖住公共牌桌 51%。
+   改后：触发条并入「队伍与手牌」标题行、压成 26px 胶囊，与右侧「结束阶段」同属一条动线；
+   浮层收窄到 560px，探险区与探查区完整露出；浮层内的「阶段N · …」降级为小标签。
+   窄屏（≤760）仍是固定底部抽屉，不受这里的收窄影响。 */
+.bottom-deck>.zone-heading{flex-wrap:nowrap;gap:8px;align-items:center}
+.bottom-deck>.zone-heading>h2{flex:0 1 auto;min-width:0}
+.bottom-deck>.zone-heading>.decide-box{flex:0 0 auto;margin:0 0 0 8px}
+.bottom-deck>.zone-heading>.decide-box .decide-trigger{
+ width:auto;min-height:26px;height:26px;padding:0 10px;gap:6px;border-radius:999px;font-size:12px}
+.bottom-deck>.zone-heading>.decide-box .decide-title{font-size:12px;max-width:26ch}
+.bottom-deck>.zone-heading>.decide-box .decide-hint{font-size:11px;padding:1px 8px}
+.bottom-deck>.zone-heading>.decide-box .decide-dot{width:7px;height:7px}
+.bottom-deck>.zone-heading>.decide-box .decide-chevron{width:7px;height:7px}
+/* 「结束阶段」与触发条一起靠右：前者收尾、后者是当前要你决定的事，动线相邻。 */
+.bottom-deck>.zone-heading>.phase-door{flex:0 0 auto;margin-left:auto}
+/* 浮层收窄并贴右侧：左侧让出探险区/探查区（那里才是做决定要看的信息）。 */
+@media(min-width:761px){
+ /* 宽度收到 680（原 880）——再窄选人网格会折行，浮层反而变高、要滚动才能看到提交按钮
+    （check-pick-graphic 实测 560 时内容 731px > 容器 411px）。高度上限保持 62vh/600 不变。 */
+ .player-mat .decide-box .decide-pop{width:min(680px,calc(100vw - 48px));left:auto;right:0}
+}
+/* 浮层头已经写了动作名，面板自己那条「阶段5 · 检定后行动与阶段结束」降级成小标签，
+   不再与浮层标题抢层级（三层同名标题是 v0.15.81~92 的老问题）。 */
+.decide-body .panel>h2{font-size:11px;font-weight:600;letter-spacing:.06em;color:#8a7a4a;margin:0 0 4px}
+/* 窄屏标题行放不下胶囊：允许折到第二行，触发条自己占满一行。 */
+@media(max-width:760px){
+ .bottom-deck>.zone-heading{flex-wrap:wrap}
+ .bottom-deck>.zone-heading>.decide-box{flex:1 1 100%;margin:4px 0 0}
+ .bottom-deck>.zone-heading>.decide-box .decide-trigger{width:100%;min-height:44px;height:auto;border-radius:9px}
+ .bottom-deck>.zone-heading>.decide-box .decide-title{font-size:13px;max-width:none}
 }

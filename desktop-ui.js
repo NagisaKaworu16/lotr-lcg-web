@@ -1,6 +1,6 @@
 /* Tabletop view: UI drafts never pay, exhaust, reveal, or bypass phase validation. */
 /* 界面版本徽标唯一来源：须与 CHANGELOG.md 最新条目标题一致（planning-dom-tests 有校验）。 */
-const APP_VERSION='v0.15.92';
+const APP_VERSION='v0.15.93';
 /* ── 决策面板：一行触发条 + 非模态浮层（v0.15.81）─────────────────────
    形态演进：v0.15.62 浮动弹窗 → v0.15.76/79 内联公共桌面（常驻 96px 内容块）→ v0.15.81
    「一行触发条 + 非模态浮层」。用户报障「阶段窗口还在桌面上」：内联块把 .decide-box 撑到
@@ -221,6 +221,20 @@ const DecisionUI=(()=>{
   closeQuiet();
   return true;
  }
+ /* v0.15.93：触发条搬进「队伍与手牌」标题行后，浮层向上弹的可用高度从 608px 缩到约 413px。
+   内容长的面板（派遣名单实测 493px）会顶出视口顶部，连浮层标题与 × 都看不见。
+   这里按「触发条到视口顶」的真实距离收 max-height，差额交给 .decide-body 滚动
+   （头固定、底部主操作条 sticky，滚动不影响点到提交）。窄屏 ≤760 是固定抽屉，不动。 */
+ function fit(){
+  try{
+   if(typeof window!=='undefined'&&window.innerWidth&&window.innerWidth<=760)return;
+   const pop=document.querySelector('.decide-pop'),tg=document.querySelector('.decide-trigger');
+   if(!pop||!tg||typeof pop.getBoundingClientRect!=='function'||typeof tg.getBoundingClientRect!=='function')return;
+   const top=tg.getBoundingClientRect().top;
+   if(!top||top<80)return;
+   pop.style.maxHeight=Math.max(220,Math.min(top-16,600))+'px';
+  }catch(e){}
+ }
  function escClose(ev){
   if(!pop.open)return false;
   if(ev&&ev.key!==undefined&&ev.key!=='Escape')return false;
@@ -234,7 +248,7 @@ const DecisionUI=(()=>{
   document.addEventListener('pointerdown',outsidePointer,true);
   document.addEventListener('keydown',escClose,true);
  }
- return {pending,html,handle,outsidePointer,escClose,actionable};
+ return {pending,html,handle,outsidePointer,escClose,actionable,fit};
 })();
 const DesktopUI=(()=>{
  const E=ScenarioEngine,R=E.planning,Q=E.questing,C=E.combat,esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -569,7 +583,7 @@ function tableHTML(s,pid){
    const probe=unaff?(()=>{const rec=ImageLibrary.by[c.code],url=rec?ImageLibrary.safeUrl(rec.faces?.B||rec.imageUrl):null;return url?` data-hover-src="${esc(url)}" data-hover-shape="tall"`:'';})():'';
    return `<article class="table-card hand-card ${sp.legal?'selectable':''}${unaff?' unaffordable':''}"${probe}><button class="card-face" data-action="planning" data-plan="play" data-player="${p.id}" data-uid="${c.uid}" ${sp.legal?'':'disabled'} aria-label="使用${esc(meta.nameZh)}">${art(c.code)}</button><div class="table-card-caption"><b>${esc(meta.nameZh)}</b><span>费用 ${meta.cost??'—'} · ${esc(meta.sphereName||meta.sphere)}</span></div>${inspect(c.code)}<span class="card-legality">${esc(reason)}</span></article>`;}).join('');
   /* 玩家状态条已提升为模块级 tabStats(s,o)——见 hudHTML 上方注释。 */
-  return `<div class="desktop-table"><div class="tabletop-layout"><div class="tabletop-main">${dockHTML(s,p,m)}<div class="public-table">${questZoneHTML(s,q,m)}</section>${row('探查区 <span class="threat-total">总威胁 '+E.threat(s)+'</span>',(s.active?'<div class="row-divider" role="presentation"><span>地点</span></div>'+encounter(s,s.active,'active',m):'')+s.staging.map(c=>encounter(s,c,'staging',m)).join(''),'staging-zone')}${s.objectives.length?row('剧本目标',s.objectives.map(c=>encounter(s,c,'objective',m)).join('')):''}${others}</div><section class="player-mat"><div class="zone-heading"><h2>${esc(p.name)} · ${esc(p.registeredDeck?.name||'玩家区域')}</h2><span class="own-piles">威胁 ${p.threat}${s.first===p.id?' · 起始玩家':''} · <span class="pile-chip">牌库 <b>${p.playerDeck.length}</b></span> · <span class="pile-chip">弃牌 <b>${p.playerDiscard.length}</b></span></span></div><section class="table-zone bottom-deck" aria-label="队伍与手牌"><div class="zone-heading"><h2>队伍与手牌 <span class="small muted">英雄 ${p.heroStates.length} · 盟友 ${p.allies.length} · 附属 ${p.attachments.length} · 手牌 ${p.hand.length}</span></h2>${phaseDoor(s)}</div>${PlanningUI.strip(s,p.id)}${attachRow(s,p)}<div class="table-card-row own-characters">${playerChars(s,p).map(c=>character(s,c,m)).join('')}${p.engaged.length?`<div class="row-divider" role="presentation"><span>交战</span></div>${p.engaged.map(c=>encounter(s,c,'engaged',m)).join('')}`:''}</div>${DecisionUI.html(s,p.id)}${openingBar(s,p)}<div class="table-card-row hand-zone">${hand}</div></section></section></div><aside class="tabletop-rail">${PhaseLog.rail(s,railOpen())}<section class="table-log" aria-label="远征日志">${PhaseLog.panel(s,logMarks(),logScope(),railOpen(),false)}</section></aside></div></div>`;
+  return `<div class="desktop-table"><div class="tabletop-layout"><div class="tabletop-main">${dockHTML(s,p,m)}<div class="public-table">${questZoneHTML(s,q,m)}</section>${row('探查区 <span class="threat-total">总威胁 '+E.threat(s)+'</span>',(s.active?'<div class="row-divider" role="presentation"><span>地点</span></div>'+encounter(s,s.active,'active',m):'')+s.staging.map(c=>encounter(s,c,'staging',m)).join(''),'staging-zone')}${s.objectives.length?row('剧本目标',s.objectives.map(c=>encounter(s,c,'objective',m)).join('')):''}${others}</div><section class="player-mat"><div class="zone-heading"><h2>${esc(p.name)} · ${esc(p.registeredDeck?.name||'玩家区域')}</h2><span class="own-piles">威胁 ${p.threat}${s.first===p.id?' · 起始玩家':''} · <span class="pile-chip">牌库 <b>${p.playerDeck.length}</b></span> · <span class="pile-chip">弃牌 <b>${p.playerDiscard.length}</b></span></span></div><section class="table-zone bottom-deck" aria-label="队伍与手牌"><div class="zone-heading"><h2>队伍与手牌 <span class="small muted">英雄 ${p.heroStates.length} · 盟友 ${p.allies.length} · 附属 ${p.attachments.length} · 手牌 ${p.hand.length}</span></h2>${phaseDoor(s)}${DecisionUI.html(s,p.id)}</div>${PlanningUI.strip(s,p.id)}${attachRow(s,p)}<div class="table-card-row own-characters">${playerChars(s,p).map(c=>character(s,c,m)).join('')}${p.engaged.length?`<div class="row-divider" role="presentation"><span>交战</span></div>${p.engaged.map(c=>encounter(s,c,'engaged',m)).join('')}`:''}</div>${openingBar(s,p)}<div class="table-card-row hand-zone">${hand}</div></section></section></div><aside class="tabletop-rail">${PhaseLog.rail(s,railOpen())}<section class="table-log" aria-label="远征日志">${PhaseLog.panel(s,logMarks(),logScope(),railOpen(),false)}</section></aside></div></div>`;
  }
  function handle(el){const k=el.dataset.desktop,uid=+el.dataset.uid,pid=+el.dataset.player,m=mode(state,handView),d=draft(state,m);
   if(k==='view'){handView=pid;render();return;}if(k==='reset'){if(confirm('结束当前桌面并重新选择剧本？建议先导出存档。'))mutate(()=>state=null);return;}

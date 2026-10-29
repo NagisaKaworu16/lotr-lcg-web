@@ -546,8 +546,8 @@
    "matScrolls": false,
    "matScrollPair": "447/447",
    "decide": 1,
-   "rowH": 161.2,
-   "rowScrollH": 175,
+   "rowH": 213.6,
+   "rowScrollH": 214,
    "deckKids": [
     {
      "cls": "zone-heading",
@@ -556,13 +556,8 @@
     },
     {
      "cls": "table-card-row.own-characters",
-     "h": 161.2,
+     "h": 213.6,
      "flex": "1 1 auto / minH 96px"
-    },
-    {
-     "cls": "decide-box",
-     "h": 42.4,
-     "flex": "0 0 auto / minH 0px"
     },
     {
      "cls": "table-card-row.hand-zone",
@@ -594,7 +589,7 @@
     "text": "蜘蛛王攻击 3 · 防御 1生命 0/3暗影 0 · 已翻开 0"
    },
    "enemyInMat": true,
-   "counts": "队伍与手牌 英雄 3 · 盟友 0 · 附属 1 · 手牌 7等 玩家1 提交名单结束阶段",
+   "counts": "队伍与手牌 英雄 3 · 盟友 0 · 附属 1 · 手牌 7等 玩家1 提交名单结束阶段探险阶段 · 派遣名单已选 0 名（意志 0）探险阶段 · 派遣名单×投入角色 · 玩家1重置选择英雄3 名—查看阿拉贡3325—查看希奥德雷德1214—查看葛罗因2214草稿暂定0 名 · 意志 0阿拉贡意3希奥德雷德意1葛罗因意2提交空名单规则与名单名单全部提交后才能二次确认；确认后仍可取消。任何修改会清除所有人的确认。全员确认后按起始玩家顺序横置，并结算投入响应。玩家1未提交",
    "zones": {
     "rows": "26.7969px 319.844px 450px",
     "dock": {

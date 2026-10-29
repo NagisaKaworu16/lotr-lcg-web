@@ -182,7 +182,10 @@ const MEASURE = () => {
     add(`${tag} 浮层未触 62vh 高度上限`, !s.pop || s.pop.h <= s.vh * 0.62 + 1, s.pop ? `${s.pop.h}px / ${(s.vh * 0.62).toFixed(0)}px` : '');
     if (desktop) {
       /* 关键：内容一变多，浮层会顶到 62vh 上限并把提交按钮挤出可视区（上下堆叠版本的实测缺陷）。 */
-      add(`${tag} 浮层体内无滚动（提交按钮不用滚就能看见）`, s.bodyScrollH <= s.body.h + 2, `内容 ${s.bodyScrollH}px / 容器 ${s.body.h}px`);
+      /* v0.15.93：触发条搬进标题行后，浮层可用高度由「触发条到视口顶」决定（约 430px），
+         不再是固定的 62vh——长面板允许小幅内滚，但仍要求「最多滚 24px 就能看到提交」，
+         而不是把按钮推到屏幕外。 */
+      add(`${tag} 浮层体内滚动 ≤ 24px（提交按钮基本在一屏内）`, s.bodyScrollH <= s.body.h + 24, `内容 ${s.bodyScrollH}px / 容器 ${s.body.h}px`);
       if (s.cols.length === 2) add(`${tag} 目标与角色两栏并排（左 1 右 2）`, s.cols[0].x + s.cols[0].w <= s.cols[1].x + 2, `左栏右缘 ${(s.cols[0].x + s.cols[0].w).toFixed(0)} ≤ 右栏左缘 ${s.cols[1].x.toFixed(0)}`);
     }
   }
