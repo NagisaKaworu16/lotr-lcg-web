@@ -1,6 +1,6 @@
 /* Tabletop view: UI drafts never pay, exhaust, reveal, or bypass phase validation. */
 /* 界面版本徽标唯一来源：须与 CHANGELOG.md 最新条目标题一致（planning-dom-tests 有校验）。 */
-const APP_VERSION='v0.15.88';
+const APP_VERSION='v0.15.89';
 /* ── 决策面板：一行触发条 + 非模态浮层（v0.15.81）─────────────────────
    形态演进：v0.15.62 浮动弹窗 → v0.15.76/79 内联公共桌面（常驻 96px 内容块）→ v0.15.81
    「一行触发条 + 非模态浮层」。用户报障「阶段窗口还在桌面上」：内联块把 .decide-box 撑到
@@ -247,6 +247,7 @@ const DesktopUI=(()=>{
  const logScope=()=>{try{return typeof APP_LOG_SCOPE==='function'?APP_LOG_SCOPE():'round';}catch(e){return 'round';}};
  /* 竖轴手动展开的阶段；模块单独加载（测试环境）时给空集合，走「未来阶段默认折叠」。 */
  const railOpen=()=>{try{return typeof APP_RAIL_OPEN==='function'?APP_RAIL_OPEN():null;}catch(e){return null;}};
+ const questZoneOpenFlag=()=>{try{return typeof APP_QUEST_ZONE_OPEN==='function'?APP_QUEST_ZONE_OPEN():false;}catch(e){return false;}};
  const chip=(text,tone='wait')=>`<span class="op-chip ${tone}">${esc(text)}</span>`;
  /* 诡镇网页版式代币：圆形徽章、数字居中，同型多枚层叠。数量由规则引擎结算，拖放仅作视觉表现。
     属性代币（意志/攻击/防御）是静态数值快照，不参与拖放。 */
@@ -509,6 +510,29 @@ function dockHTML(s,p,m){
   +line
   +`<div class="operation-content">${scorePanel(s)}${phasePanel(s,p.id,m)}</div></div>`;
 }
+/* v0.15.89：探险区收成一行触发条——收起时整块只剩标题行（约 26px），剧本名与
+   进度条仍可见；卡图/牌文/门限点「牌文 ▾」展开。开局设置与开局翻牌阶段强制展开
+   （那两步必须读剧本牌文）。开合是纯视图操作（app.js 的 questZone 动作翻转
+   questZoneOpen），不进撤销历史、不写存档。 */
+function questZoneHTML(s,q,m){
+ const open=s.setupPending||setupPendingReveal(s)||questZoneOpenFlag();
+ const fold=open
+  ?'<button class="quest-fold" data-action="questZone" aria-expanded="true" title="收起探险区，把高度让给探查区">收起 ▴</button>'
+  :'<button class="quest-fold" data-action="questZone" aria-expanded="false" title="展开探险区：查看剧本牌文与门限">牌文 ▾</button>';
+ const head='<div class="zone-heading quest-head"><h2>当前探险 · '+esc(q.stage)+'</h2>'
+  +(open
+    ?'<strong>'+(q.points?s.progress+' / '+q.points+' 进度':'特殊胜利条件')+'</strong>'
+    :'<strong>'+esc(q.name)+'</strong>'
+     +(q.points?'<div class="quest-progress quest-progress-mini" role="progressbar" aria-label="探险进度" aria-valuemin="0" aria-valuemax="'+q.points+'" aria-valuenow="'+s.progress+'"><div class="quest-progress-fill" style="width:'+Math.min(100,Math.round(s.progress/q.points*100))+'%"></div><span class="quest-progress-label">'+s.progress+' / '+q.points+'</span></div>':''))
+  +fold+'</div>';
+ if(!open)return '<section class="table-zone quest-zone quest-collapsed">'+head+'</section>';
+ return '<section class="table-zone quest-zone">'+head
+  +'<div class="quest-display"><div class="quest-art-wrap">'+ImageLibrary.art('enc-'+q.id,'',s.setupPending?'A':'B')
+  +(q.points?'<div class="card-tokens quest-tokens" aria-hidden="true">'+tk('progress',s.progress)+'</div>':'')
+  +'</div><div><h3>'+esc(q.name)+'</h3><p>'+esc(s.setupPending?q.front:q.back)+'</p><span class="small muted">'+esc(E.gate(s)||'满足条件后由规则自动推进')+'</span></div></div>'
+  +(q.points?'<div class="quest-progress" role="progressbar" aria-label="探险进度" aria-valuemin="0" aria-valuemax="'+q.points+'" aria-valuenow="'+s.progress+'"><div class="quest-progress-fill" style="width:'+Math.min(100,Math.round(s.progress/q.points*100))+'%"></div><span class="quest-progress-label">'+s.progress+' / '+q.points+'</span></div>':'')
+  +'</section>';
+}
 function tableHTML(s,pid){
   currentState=s;if(!s.players.every(p=>p.heroStates))return legacyTable();const p=s.players[pid]||s.players[0],m=mode(s,p.id),q=E.quest(s),sc=LOTR_DATA.scenarios.find(c=>c.id===s.scenario);
   if(!m)draft(s,null);
@@ -522,7 +546,7 @@ function tableHTML(s,pid){
    const probe=unaff?(()=>{const rec=ImageLibrary.by[c.code],url=rec?ImageLibrary.safeUrl(rec.faces?.B||rec.imageUrl):null;return url?` data-hover-src="${esc(url)}" data-hover-shape="tall"`:'';})():'';
    return `<article class="table-card hand-card ${sp.legal?'selectable':''}${unaff?' unaffordable':''}"${probe}><button class="card-face" data-action="planning" data-plan="play" data-player="${p.id}" data-uid="${c.uid}" ${sp.legal?'':'disabled'} aria-label="使用${esc(meta.nameZh)}">${art(c.code)}</button><div class="table-card-caption"><b>${esc(meta.nameZh)}</b><span>费用 ${meta.cost??'—'} · ${esc(meta.sphereName||meta.sphere)}</span></div>${inspect(c.code)}<span class="card-legality">${esc(reason)}</span></article>`;}).join('');
   /* 玩家状态条已提升为模块级 tabStats(s,o)——见 hudHTML 上方注释。 */
-  return `<div class="desktop-table"><div class="tabletop-layout"><div class="tabletop-main">${dockHTML(s,p,m)}<div class="public-table"><div class="quest-location-row"><section class="table-zone quest-zone"><div class="zone-heading"><h2>当前探险 · ${esc(q.stage)}</h2><strong>${q.points?s.progress+' / '+q.points+' 进度':'特殊胜利条件'}</strong></div><div class="quest-display"><div class="quest-art-wrap">${ImageLibrary.art('enc-'+q.id,'',s.setupPending?'A':'B')}${q.points?`<div class="card-tokens quest-tokens" aria-hidden="true">${tk('progress',s.progress)}</div>`:''}</div><div><h3>${esc(q.name)}</h3><p>${esc(s.setupPending?q.front:q.back)}</p><span class="small muted">${esc(E.gate(s)||'满足条件后由规则自动推进')}</span></div></div>${q.points?`<div class="quest-progress" role="progressbar" aria-label="探险进度" aria-valuemin="0" aria-valuemax="${q.points}" aria-valuenow="${s.progress}"><div class="quest-progress-fill" style="width:${Math.min(100,Math.round(s.progress/q.points*100))}%"></div><span class="quest-progress-label">${s.progress} / ${q.points}</span></div>`:''}</section>${row('当前地点',s.active?encounter(s,s.active,'active',m):'','active-zone')}</div>${row('探查区 <span class="threat-total">总威胁 '+E.threat(s)+'</span>',s.staging.map(c=>encounter(s,c,'staging',m)).join(''))}${s.objectives.length?row('剧本目标',s.objectives.map(c=>encounter(s,c,'objective',m)).join('')):''}${others}</div><section class="player-mat"><div class="zone-heading"><h2>${esc(p.name)} · ${esc(p.registeredDeck?.name||'玩家区域')}</h2><span class="own-piles">威胁 ${p.threat}${s.first===p.id?' · 起始玩家':''} · <span class="pile-chip">牌库 <b>${p.playerDeck.length}</b></span> · <span class="pile-chip">弃牌 <b>${p.playerDiscard.length}</b></span></span></div><section class="table-zone bottom-deck" aria-label="队伍与手牌"><div class="zone-heading"><h2>队伍与手牌 <span class="small muted">英雄 ${p.heroStates.length} · 盟友 ${p.allies.length} · 附属 ${p.attachments.length} · 手牌 ${p.hand.length}</span></h2>${phaseDoor(s)}</div>${PlanningUI.strip(s,p.id)}${attachRow(s,p)}<div class="table-card-row own-characters">${playerChars(s,p).map(c=>character(s,c,m)).join('')}${p.engaged.length?`<div class="row-divider" role="presentation"><span>交战</span></div>${p.engaged.map(c=>encounter(s,c,'engaged',m)).join('')}`:''}</div>${DecisionUI.html(s,p.id)}${openingBar(s,p)}<div class="table-card-row hand-zone">${hand}</div></section></section></div><aside class="tabletop-rail">${PhaseLog.rail(s,railOpen())}<section class="table-log" aria-label="远征日志">${PhaseLog.panel(s,logMarks(),logScope(),railOpen(),false)}</section></aside></div></div>`;
+  return `<div class="desktop-table"><div class="tabletop-layout"><div class="tabletop-main">${dockHTML(s,p,m)}<div class="public-table">${questZoneHTML(s,q,m)}</section>${row('探查区 <span class="threat-total">总威胁 '+E.threat(s)+'</span>',(s.active?'<div class="row-divider" role="presentation"><span>地点</span></div>'+encounter(s,s.active,'active',m):'')+s.staging.map(c=>encounter(s,c,'staging',m)).join(''),'staging-zone')}${s.objectives.length?row('剧本目标',s.objectives.map(c=>encounter(s,c,'objective',m)).join('')):''}${others}</div><section class="player-mat"><div class="zone-heading"><h2>${esc(p.name)} · ${esc(p.registeredDeck?.name||'玩家区域')}</h2><span class="own-piles">威胁 ${p.threat}${s.first===p.id?' · 起始玩家':''} · <span class="pile-chip">牌库 <b>${p.playerDeck.length}</b></span> · <span class="pile-chip">弃牌 <b>${p.playerDiscard.length}</b></span></span></div><section class="table-zone bottom-deck" aria-label="队伍与手牌"><div class="zone-heading"><h2>队伍与手牌 <span class="small muted">英雄 ${p.heroStates.length} · 盟友 ${p.allies.length} · 附属 ${p.attachments.length} · 手牌 ${p.hand.length}</span></h2>${phaseDoor(s)}</div>${PlanningUI.strip(s,p.id)}${attachRow(s,p)}<div class="table-card-row own-characters">${playerChars(s,p).map(c=>character(s,c,m)).join('')}${p.engaged.length?`<div class="row-divider" role="presentation"><span>交战</span></div>${p.engaged.map(c=>encounter(s,c,'engaged',m)).join('')}`:''}</div>${DecisionUI.html(s,p.id)}${openingBar(s,p)}<div class="table-card-row hand-zone">${hand}</div></section></section></div><aside class="tabletop-rail">${PhaseLog.rail(s,railOpen())}<section class="table-log" aria-label="远征日志">${PhaseLog.panel(s,logMarks(),logScope(),railOpen(),false)}</section></aside></div></div>`;
  }
  function handle(el){const k=el.dataset.desktop,uid=+el.dataset.uid,pid=+el.dataset.player,m=mode(state,handView),d=draft(state,m);
   if(k==='view'){handView=pid;render();return;}if(k==='reset'){if(confirm('结束当前桌面并重新选择剧本？建议先导出存档。'))mutate(()=>state=null);return;}

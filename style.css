@@ -1998,3 +1998,23 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
 /* 22d. 「本阶段说明」在桌面是纯冗余（右栏窗口竖轴已经把当前窗口与后续时机写全），
    常驻一行 26px 却把牌桌挤掉同样高度。整块去掉。 */
 .phase-hint-wrap{display:none}
+
+/* 36. v0.15.89 牌桌区瘦身：探险区可收起 + 地点卡并入探查区行首。
+   收起态整块只剩标题行（≈26px），原卡图+牌文+进度条（≈110~150px）点「牌文 ▾」
+   才展开；开局设置/开局翻牌阶段由 questZoneHTML 强制展开。
+   .quest-location-row 包装层随之退役：quest-zone 成为 public-table 直接子级，
+   必须退出「分区吃满剩余」的 flex 分配（否则收起了也占 106px 保底高度）。 */
+.public-table>.quest-zone{flex:0 0 auto;min-height:0}
+.quest-collapsed .zone-heading{margin-bottom:0}
+.quest-head{flex-wrap:nowrap;gap:8px}
+.quest-head strong{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.quest-fold{flex:0 0 auto;min-height:0;padding:2px 9px;font-size:11px;line-height:1.5;
+ border:1px solid #c9bd9c;border-radius:999px;background:#f7f5ea;color:#5c4a1e;cursor:pointer}
+.quest-fold:hover,.quest-fold:focus-visible{background:#efe8d2;border-color:#a8965f}
+.quest-progress-mini{flex:0 1 150px;height:9px;margin-top:0}
+.quest-progress-mini .quest-progress-label{font-size:9.5px}
+/* 探查区行首的「地点」竖排分隔：画法同 22b 的交战分隔（玩家区角色行）。 */
+.public-table .table-card-row>.row-divider{display:flex;align-items:center;justify-content:center;align-self:stretch;
+ flex:0 0 18px;width:18px;margin:0 5px 0 3px;border-left:1px dashed #cfd3c6}
+.public-table .table-card-row>.row-divider>span{writing-mode:vertical-rl;font-size:9.5px;letter-spacing:1.5px;line-height:1;
+ color:#8a9184;background:#f7f5ea;padding:6px 1px;border-radius:2px}

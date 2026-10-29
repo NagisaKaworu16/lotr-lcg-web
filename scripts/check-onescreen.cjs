@@ -51,7 +51,7 @@ const W = arg('width', 1440), H = arg('height', 900);
       visible: {
         dock: inView('.operation-dock'),
         hand: inView('.hand-zone'),
-        activeZone: inView('.active-zone'),
+        activeZone: inView('.staging-zone'), /* v0.15.89：地点卡并入探查区行首，.active-zone 退役 */
         phaseWin: inView('.phase-rail-v'),  /* v0.15.45：牌堆栏移除，改查阶段窗口竖轴 */
         log: inView('.table-log'),
       },

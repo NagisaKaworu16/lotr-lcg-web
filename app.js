@@ -46,6 +46,11 @@ function APP_LOG_SCOPE(){return logScope;}
    同样是纯视图偏好，刷新后重置，不写对局、不进撤销历史。 */
 let railOpen=new Set();
 function APP_RAIL_OPEN(){return railOpen;}
+/* v0.15.89：探险区收起/展开（桌面公共牌桌的第一块）。收起时只剩一行触发条，
+   高度让给探查区；开局设置与开局翻牌阶段由 questZoneHTML 强制展开。
+   纯视图偏好：刷新重置，不写对局、不进撤销历史。 */
+let questZoneOpen=false;
+function APP_QUEST_ZONE_OPEN(){return questZoneOpen;}
 /* v0.15.49：日志抽屉开关（右栏只留阶段竖轴后，日志改为按需展开的浮层）。
    纯视图偏好，刷新重置，不入撤销历史。 */
 let logOpen=false;
@@ -407,6 +412,7 @@ function playerOptions(){return state.players.filter(p=>!p.eliminated).map(p=>`<
 async function handleAction(ev){const b=ev.target.closest('[data-action]');if(!b||b.disabled)return;const a=b.dataset.action,uid=Number(b.dataset.uid),id=Number(b.dataset.id),pid=Number(b.dataset.player);
  if(a==='desktop'){DesktopUI.handle(b);return;}
  if(a==='logScope'){const v=b.dataset.scope;if(!['round','all'].includes(v))return;logScope=v;render();return;}
+ if(a==='questZone'){questZoneOpen=!questZoneOpen;render();return;}
  if(a==='logToggle'){logOpen=!logOpen;render();return;}
  if(a==='undoLog'){const seq=Number(b.dataset.seq),j=seq-historyBase;
   if(!Number.isInteger(seq)||j<0||j>=history.length)return;

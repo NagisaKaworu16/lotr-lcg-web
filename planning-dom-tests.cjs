@@ -126,11 +126,32 @@ test('desktop tokens pin resource/damage counters to card edges like the arkham 
 });
 test('location and quest progress render as progress tokens on the arkham-style board',async()=>{const e=environment();await combatScreen(e);
  e.run(`mutate(()=>{state.staging.push({...E.byId[99],uid:++state.serial,progress:2});state.progress=1;});render();`);
+ /* v0.15.89：探险区对局中默认收成一行，卡图与叠代币只在展开态渲染——先展开再断言。 */
+ e.run('questZoneOpen=true;render();');
  const html=e.base.get('app').innerHTML;
  assert(html.includes('assets/tokens/progress.png'),'地点与探险卡应有进度代币图');
  assert(/tk-progress( stack)?" data-n="2"[\s\S]{0,90}?<b>2<\/b>/.test(html),'地点进度代币应显示 2');
  assert(html.includes('quest-tokens'),'当前探险卡应叠进度代币');
  assert(/quest-tokens[\s\S]{0,140}?tk-progress" data-n="1"/.test(html),'探险卡代币应显示当前进度 1');
+});
+test('quest zone collapses to a one-line trigger and the active location joins the staging row (v0.15.89)',async()=>{const e=environment();await opening(e);
+ /* 幽暗密林的开局翻牌窗口开着时探险区按设计强制展开；先把窗口收掉再断言收起态。 */
+ e.run('if(state.setupReveal&&!state.setupReveal.finished)state.setupReveal.finished=true;render();');
+ let html=e.base.get('app').innerHTML;
+ assert(html.includes('quest-collapsed'),'对局中探险区应默认收成一行触发条');
+ assert(html.includes('data-action="questZone"')&&html.includes('牌文'),'收起态应提供展开触发钮');
+ assert(!html.includes('quest-display'),'收起态不渲染探险卡图与牌文');
+ assert(!html.includes('quest-location-row'),'地点行包装层应退役');
+ await e.click({action:'questZone'});
+ html=e.base.get('app').innerHTML;
+ assert(html.includes('quest-display')&&!html.includes('quest-collapsed'),'点触发钮应展开探险区');
+ e.run('state.active={...E.byId[99],uid:++state.serial};render();');
+ html=e.base.get('app').innerHTML;
+ assert(/class="table-zone staging-zone"[\s\S]*?row-divider[\s\S]{0,60}?<span>地点<\/span>[\s\S]*?encounter-card/.test(html),'当前地点应带「地点」分隔并入探查区行首');
+ await e.click({action:'questZone'});
+ html=e.base.get('app').innerHTML;
+ assert(html.includes('quest-collapsed'),'再点应收起');
+ assert(/staging-zone[\s\S]*?<span>地点<\/span>/.test(html),'收起不影响地点并入探查区');
 });
 test('zero-value tokens stay visible like the arkham online board and allies never show resource tokens',async()=>{const e=environment();await combatScreen(e);
  e.run('mutate(()=>{for(const h of state.players[0].heroStates)h.resources=0;});render();');
