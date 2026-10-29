@@ -973,7 +973,7 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
 /* 29. 矮屏探险区硬上限：卡片 54px 宽 → 76px 高 + 标题 18 + 进度 9 + 间距 ≈ 110，
        超出即裁掉（牌文与门限说明可点「查看」看全文）。 */
 @media(max-height:980px){
- .quest-zone{max-height:108px;overflow:hidden}
+ .quest-zone:not(.quest-collapsed){max-height:108px;overflow:hidden}
  .quest-display{align-items:center}
  .quest-zone .zone-heading{min-height:0}
 }
@@ -2007,7 +2007,7 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
 .public-table>.quest-zone{flex:0 0 auto;min-height:0}
 .quest-collapsed .zone-heading{margin-bottom:0}
 .quest-head{flex-wrap:nowrap;gap:8px}
-.quest-head strong{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.quest-head strong{min-width:0;white-space:nowrap;overflow:visible}
 .quest-fold{flex:0 0 auto;min-height:0;padding:2px 9px;font-size:11px;line-height:1.5;
  border:1px solid #c9bd9c;border-radius:999px;background:#f7f5ea;color:#5c4a1e;cursor:pointer}
 .quest-fold:hover,.quest-fold:focus-visible{background:#efe8d2;border-color:#a8965f}
@@ -2018,3 +2018,26 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
  flex:0 0 18px;width:18px;margin:0 5px 0 3px;border-left:1px dashed #cfd3c6}
 .public-table .table-card-row>.row-divider>span{writing-mode:vertical-rl;font-size:9.5px;letter-spacing:1.5px;line-height:1;
  color:#8a9184;background:#f7f5ea;padding:6px 1px;border-radius:2px}
+
+/* 37. v0.15.90 探险卡名悬浮牌文卡 + 翻面状态可视化。
+   悬停/键盘聚焦卡名向下弹出两面文案（public-table 是 overflow-y:auto，
+   向下弹落在表格内部不会被裁；29 段矮屏的 overflow:hidden 已收窄到展开态）。 */
+.quest-name{position:relative;display:inline-block;cursor:help;border-bottom:1px dashed #a8965f;outline:none}
+.quest-name:hover,.quest-name:focus-visible{color:#7a5a12}
+.quest-tip{display:none;position:absolute;z-index:40;top:calc(100% + 9px);left:-6px;
+ width:min(430px,calc(100vw - 64px));padding:10px 12px;text-align:left;white-space:normal;
+ background:#fffdf4;border:1px solid #c9bd9c;border-radius:8px;box-shadow:0 10px 26px #00000026;
+ font-size:12.5px;line-height:1.65;color:#4a3c1c}
+.quest-name:hover .quest-tip,.quest-name:focus-visible .quest-tip{display:block}
+.quest-tip-title{display:block;margin-bottom:6px;font-size:13px;color:#3c2f12;letter-spacing:.02em}
+.quest-tip-side{display:block;padding:5px 8px;border-radius:5px;background:#f6f2e4;margin-bottom:5px}
+.quest-tip-side i{display:block;font-style:normal;font-size:10.5px;letter-spacing:.08em;color:#8a7a4a;margin-bottom:2px}
+.quest-tip-side.on{background:#f3ecce;box-shadow:inset 2px 0 0 #b08d3e}
+.quest-tip-side.on i{color:#8a6a1e;font-weight:700}
+.quest-tip-note{display:block;margin-top:2px;font-size:11.5px;color:#7a6c42}
+.quest-tip-note.flip{color:#8a5a10;font-weight:700}
+.quest-flip-badge{display:inline-block;margin-left:8px;padding:1px 8px;font-size:10.5px;font-weight:700;
+ letter-spacing:.05em;color:#5c3d00;background:#f0c65a;border:1px solid #b08d3e;border-radius:999px;vertical-align:1px}
+.quest-flip-note{display:block;margin-top:6px;font-size:12px;font-weight:700;color:#8a5a10}
+.quest-progress-mini.full .quest-progress-fill{background:#d9a72e}
+.quest-progress-mini.full .quest-progress-label{color:#8a5a10;font-weight:700}

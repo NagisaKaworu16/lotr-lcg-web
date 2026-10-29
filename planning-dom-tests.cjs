@@ -153,6 +153,24 @@ test('quest zone collapses to a one-line trigger and the active location joins t
  assert(html.includes('quest-collapsed'),'再点应收起');
  assert(/staging-zone[\s\S]*?<span>地点<\/span>/.test(html),'收起不影响地点并入探查区');
 });
+test('quest card name carries a hover tooltip with both faces and flip state (v0.15.90)',async()=>{const e=environment();await opening(e);
+ e.run('if(state.setupReveal&&!state.setupReveal.finished)state.setupReveal.finished=true;render();');
+ let html=e.base.get('app').innerHTML;
+ assert(html.includes('class="quest-name"')&&html.includes('quest-tip'),'收起条卡名应有悬浮牌文卡');
+ assert(html.includes('A面 · 入场')&&html.includes('B面 · 翻面后'),'悬浮卡应同时展示两面文案');
+ assert(html.includes('开局：从牌库取1张森林蜘蛛')&&html.includes('累积8点进度。'),'悬浮卡应含蛛蝇密布两面原文');
+ assert(html.includes('aria-label="蛛蝇密布。A面入场'),'卡名应有可访问的完整牌文读屏文本');
+ assert(!html.includes('quest-flip-badge'),'进度未满时不应出现翻面徽章');
+ /* 翻面条件达成：进度 8/8 → 徽章 + 金进度条 + 悬浮卡状态行切到 B 面。 */
+ e.run('mutate(()=>{state.progress=8;});render();');
+ html=e.base.get('app').innerHTML;
+ assert(html.includes('quest-flip-badge')&&html.includes('B面生效'),'进度达门限应亮出「B面生效」徽章');
+ assert(html.includes('quest-progress-mini full'),'迷你进度条应转金（full）');
+ assert(html.includes('探险值已满：B面文案生效中'),'悬浮卡状态行应说明 B 面生效');
+ await e.click({action:'questZone'});
+ html=e.base.get('app').innerHTML;
+ assert(html.includes('quest-flip-note'),'展开态应有翻面金句');
+});
 test('zero-value tokens stay visible like the arkham online board and allies never show resource tokens',async()=>{const e=environment();await combatScreen(e);
  e.run('mutate(()=>{for(const h of state.players[0].heroStates)h.resources=0;});render();');
  const html=e.base.get('app').innerHTML;

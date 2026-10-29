@@ -1,6 +1,6 @@
 /* Tabletop view: UI drafts never pay, exhaust, reveal, or bypass phase validation. */
 /* 界面版本徽标唯一来源：须与 CHANGELOG.md 最新条目标题一致（planning-dom-tests 有校验）。 */
-const APP_VERSION='v0.15.89';
+const APP_VERSION='v0.15.90';
 /* ── 决策面板：一行触发条 + 非模态浮层（v0.15.81）─────────────────────
    形态演进：v0.15.62 浮动弹窗 → v0.15.76/79 内联公共桌面（常驻 96px 内容块）→ v0.15.81
    「一行触发条 + 非模态浮层」。用户报障「阶段窗口还在桌面上」：内联块把 .decide-box 撑到
@@ -514,22 +514,45 @@ function dockHTML(s,p,m){
    进度条仍可见；卡图/牌文/门限点「牌文 ▾」展开。开局设置与开局翻牌阶段强制展开
    （那两步必须读剧本牌文）。开合是纯视图操作（app.js 的 questZone 动作翻转
    questZoneOpen），不进撤销历史、不写存档。 */
+/* v0.15.90：探险卡名悬浮牌文卡——悬停或键盘聚焦卡名，向下弹出 A/B 两面文案。
+   翻面条件（进度 ≥ 门限）达成时：迷你进度条转金、卡名旁亮「B面生效」徽章、
+   悬浮卡状态行说明 B 面生效中，展开态再补一句金句。纯视图，不改引擎。 */
+function questFlipReady(s,q){return !!q.points&&s.progress>=q.points;}
+function questTipHTML(s,q){
+ const flip=questFlipReady(s,q);
+ const status=s.setupPending?'开局设置阶段：A面（入场效果）生效。'
+  :flip?'探险值已满：B面文案生效中，阶段结算后推进。'
+  :(q.points?'累积 '+q.points+' 点进度后翻面，B面文案生效。':'特殊胜利条件，无进度门限。');
+ return '<span class="quest-tip" role="tooltip">'
+  +'<b class="quest-tip-title">'+esc(q.name)+(q.points?' · 翻面门限 '+q.points+' 进度':' · 特殊胜利条件')+'</b>'
+  +'<span class="quest-tip-side'+(s.setupPending?' on':'')+'"><i>A面 · 入场</i>'+esc(q.front)+'</span>'
+  +'<span class="quest-tip-side'+(!s.setupPending?' on':'')+'"><i>B面 · 翻面后</i>'+esc(q.back)+'</span>'
+  +'<span class="quest-tip-note'+(flip?' flip':'')+'">'+esc(status)+'</span></span>';
+}
+function questNameHTML(s,q){
+ const flip=questFlipReady(s,q);
+ return '<span class="quest-name" tabindex="0" aria-label="'+esc(q.name+'。A面入场：'+q.front+'。B面翻面后：'+q.back)+'">'
+  +esc(q.name)+questTipHTML(s,q)+'</span>'
+  +(flip?'<b class="quest-flip-badge">B面生效</b>':'');
+}
 function questZoneHTML(s,q,m){
  const open=s.setupPending||setupPendingReveal(s)||questZoneOpenFlag();
+ const flip=questFlipReady(s,q);
  const fold=open
   ?'<button class="quest-fold" data-action="questZone" aria-expanded="true" title="收起探险区，把高度让给探查区">收起 ▴</button>'
   :'<button class="quest-fold" data-action="questZone" aria-expanded="false" title="展开探险区：查看剧本牌文与门限">牌文 ▾</button>';
  const head='<div class="zone-heading quest-head"><h2>当前探险 · '+esc(q.stage)+'</h2>'
   +(open
     ?'<strong>'+(q.points?s.progress+' / '+q.points+' 进度':'特殊胜利条件')+'</strong>'
-    :'<strong>'+esc(q.name)+'</strong>'
-     +(q.points?'<div class="quest-progress quest-progress-mini" role="progressbar" aria-label="探险进度" aria-valuemin="0" aria-valuemax="'+q.points+'" aria-valuenow="'+s.progress+'"><div class="quest-progress-fill" style="width:'+Math.min(100,Math.round(s.progress/q.points*100))+'%"></div><span class="quest-progress-label">'+s.progress+' / '+q.points+'</span></div>':''))
+    :'<strong>'+questNameHTML(s,q)+'</strong>'
+     +(q.points?'<div class="quest-progress quest-progress-mini'+(flip?' full':'')+'" role="progressbar" aria-label="探险进度" aria-valuemin="0" aria-valuemax="'+q.points+'" aria-valuenow="'+s.progress+'"><div class="quest-progress-fill" style="width:'+Math.min(100,Math.round(s.progress/q.points*100))+'%"></div><span class="quest-progress-label">'+s.progress+' / '+q.points+'</span></div>':''))
   +fold+'</div>';
  if(!open)return '<section class="table-zone quest-zone quest-collapsed">'+head+'</section>';
  return '<section class="table-zone quest-zone">'+head
   +'<div class="quest-display"><div class="quest-art-wrap">'+ImageLibrary.art('enc-'+q.id,'',s.setupPending?'A':'B')
   +(q.points?'<div class="card-tokens quest-tokens" aria-hidden="true">'+tk('progress',s.progress)+'</div>':'')
-  +'</div><div><h3>'+esc(q.name)+'</h3><p>'+esc(s.setupPending?q.front:q.back)+'</p><span class="small muted">'+esc(E.gate(s)||'满足条件后由规则自动推进')+'</span></div></div>'
+  +'</div><div><h3>'+questNameHTML(s,q)+'</h3><p>'+esc(s.setupPending?q.front:q.back)+'</p><span class="small muted">'+esc(E.gate(s)||'满足条件后由规则自动推进')+'</span>'
+  +(flip?'<b class="quest-flip-note">探险值已满 · B面文案生效中</b>':'')+'</div></div>'
   +(q.points?'<div class="quest-progress" role="progressbar" aria-label="探险进度" aria-valuemin="0" aria-valuemax="'+q.points+'" aria-valuenow="'+s.progress+'"><div class="quest-progress-fill" style="width:'+Math.min(100,Math.round(s.progress/q.points*100))+'%"></div><span class="quest-progress-label">'+s.progress+' / '+q.points+'</span></div>':'')
   +'</section>';
 }

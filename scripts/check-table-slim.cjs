@@ -133,6 +133,38 @@ const geo = page => page.evaluate(() => {
     add(`${tag}：无横向溢出`, !g.overflowX);
     add(`${tag}：手牌仍在视口内`, !!g.hand && g.hand.bottom <= vp.h + 0.5, `hand bottom=${g.hand && g.hand.bottom}`);
     add(`${tag}：探查区保底高度 ≥ 84（24 段预算不被探险区挤掉）`, g.stagingRowH >= 84, `row h=${g.stagingRowH}`);
+
+    /* ── E. v0.15.90 卡名悬浮牌文卡：真实悬停后读几何，验证不被裁剪 ── */
+    await page.hover('.quest-collapsed .quest-name'); await page.waitForTimeout(140);
+    const tg = await page.evaluate(() => {
+      const t = document.querySelector('.quest-collapsed .quest-tip');
+      if (!t) return null;
+      const b = t.getBoundingClientRect(), pt = document.querySelector('.public-table').getBoundingClientRect();
+      return { shown: getComputedStyle(t).display !== 'none',
+        left: +b.left.toFixed(1), right: +b.right.toFixed(1), bottom: +b.bottom.toFixed(1),
+        tableBottom: +pt.bottom.toFixed(1), vw: document.documentElement.clientWidth,
+        text: t.textContent };
+    });
+    add(`${tag}：悬停卡名弹出悬浮卡（含 A/B 两面与状态行）`,
+      !!tg && tg.shown && /A面 · 入场/.test(tg.text) && /B面 · 翻面后/.test(tg.text) && /翻面/.test(tg.text),
+      tg ? `shown=${tg.shown}` : 'tip missing');
+    add(`${tag}：悬浮卡落在 public-table 内（bottom 不超出表格底，不被 overflow-y 裁）`,
+      !!tg && tg.bottom <= tg.tableBottom + 1, `tip bottom=${tg && tg.bottom} table bottom=${tg && tg.tableBottom}`);
+    add(`${tag}：悬浮卡不越出视口（左右）`,
+      !!tg && tg.left >= -1 && tg.right <= tg.vw + 1, `l=${tg && tg.left} r=${tg && tg.right} vw=${tg && tg.vw}`);
+    /* 翻面态：进度灌到门限 → 徽章 + 金进度条 + 悬浮卡状态行。 */
+    await page.mouse.move(10, vp.h - 10); await page.waitForTimeout(120);
+    await page.evaluate(() => { state.progress = 8; render(); });
+    await page.waitForTimeout(200);
+    const fg = await page.evaluate(() => ({
+      badge: !!document.querySelector('.quest-collapsed .quest-flip-badge'),
+      full: !!document.querySelector('.quest-progress-mini.full'),
+    }));
+    add(`${tag}：进度达门限亮「B面生效」徽章`, fg.badge, '');
+    add(`${tag}：迷你进度条转金（full）`, fg.full, '');
+    await page.hover('.quest-collapsed .quest-name'); await page.waitForTimeout(140);
+    const fgTip = await page.evaluate(() => (document.querySelector('.quest-collapsed .quest-tip') || { textContent: '' }).textContent);
+    add(`${tag}：翻面态悬浮卡状态行说明 B 面生效`, /探险值已满：B面文案生效中/.test(fgTip), '');
     await page.screenshot({ path: path.join(OUT, `table-slim-${vp.w}.png`) });
     await ctx.close();
   }
