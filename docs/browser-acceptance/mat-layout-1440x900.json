@@ -183,14 +183,14 @@
    "enemyInMat": null,
    "counts": "队伍与手牌 英雄 3 · 盟友 0 · 附属 0 · 手牌 7还差 2 项结束阶段",
    "zones": {
-    "rows": "48.0938px 259.906px 450px",
+    "rows": "26px 346px 450px",
     "dock": {
-     "y": 109,
-     "h": 48
+     "y": 45,
+     "h": 26
     },
     "table": {
-     "y": 166,
-     "h": 260
+     "y": 80,
+     "h": 346
     },
     "mat": {
      "y": 435,
@@ -263,14 +263,14 @@
    "enemyInMat": null,
    "counts": "队伍与手牌 英雄 3 · 盟友 0 · 附属 1 · 手牌 7还差 2 项结束阶段",
    "zones": {
-    "rows": "48.0938px 259.906px 450px",
+    "rows": "26px 346px 450px",
     "dock": {
-     "y": 109,
-     "h": 48
+     "y": 45,
+     "h": 26
     },
     "table": {
-     "y": 166,
-     "h": 260
+     "y": 80,
+     "h": 346
     },
     "mat": {
      "y": 435,
@@ -352,14 +352,14 @@
    "enemyInMat": true,
    "counts": "队伍与手牌 英雄 3 · 盟友 0 · 附属 1 · 手牌 7还差 2 项结束阶段",
    "zones": {
-    "rows": "48.0938px 259.906px 450px",
+    "rows": "26px 346px 450px",
     "dock": {
-     "y": 109,
-     "h": 48
+     "y": 45,
+     "h": 26
     },
     "table": {
-     "y": 166,
-     "h": 260
+     "y": 80,
+     "h": 346
     },
     "mat": {
      "y": 435,
@@ -441,14 +441,14 @@
    "enemyInMat": true,
    "counts": "队伍与手牌 英雄 3 · 盟友 0 · 附属 1 · 手牌 7还差 2 项结束阶段",
    "zones": {
-    "rows": "48.0938px 259.906px 450px",
+    "rows": "26px 346px 450px",
     "dock": {
-     "y": 109,
-     "h": 48
+     "y": 45,
+     "h": 26
     },
     "table": {
-     "y": 166,
-     "h": 260
+     "y": 80,
+     "h": 346
     },
     "mat": {
      "y": 435,
@@ -521,14 +521,14 @@
    "enemyInMat": true,
    "counts": "队伍与手牌 英雄 3 · 盟友 0 · 附属 1 · 手牌 7还差 2 项结束阶段",
    "zones": {
-    "rows": "48.0938px 259.906px 450px",
+    "rows": "26px 346px 450px",
     "dock": {
-     "y": 109,
-     "h": 48
+     "y": 45,
+     "h": 26
     },
     "table": {
-     "y": 166,
-     "h": 260
+     "y": 80,
+     "h": 346
     },
     "mat": {
      "y": 435,
@@ -546,7 +546,7 @@
    "matScrolls": false,
    "matScrollPair": "447/447",
    "decide": 1,
-   "rowH": 163.6,
+   "rowH": 161.2,
    "rowScrollH": 175,
    "deckKids": [
     {
@@ -556,12 +556,12 @@
     },
     {
      "cls": "table-card-row.own-characters",
-     "h": 163.6,
+     "h": 161.2,
      "flex": "1 1 auto / minH 96px"
     },
     {
      "cls": "decide-box",
-     "h": 40,
+     "h": 42.4,
      "flex": "0 0 auto / minH 0px"
     },
     {
@@ -578,22 +578,8 @@
     "bottom": 878,
     "scrollH": 407
    },
-   "chip": {
-    "box": {
-     "x": 111,
-     "y": 628.2,
-     "w": 15,
-     "h": 19,
-     "bottom": 647.2
-    },
-    "nat": 750,
-    "inCaption": true
-   },
-   "chipClicks": {
-    "action": "images",
-    "image": "open",
-    "plan": ""
-   },
+   "chip": null,
+   "chipClicks": null,
    "divider": 1,
    "enemies": 3,
    "attachRow": false,
@@ -608,16 +594,16 @@
     "text": "蜘蛛王攻击 3 · 防御 1生命 0/3暗影 0 · 已翻开 0"
    },
    "enemyInMat": true,
-   "counts": "队伍与手牌 英雄 3 · 盟友 0 · 附属 1 · 手牌 7还差 4 项结束阶段",
+   "counts": "队伍与手牌 英雄 3 · 盟友 0 · 附属 1 · 手牌 7等 玩家1 提交名单结束阶段",
    "zones": {
-    "rows": "33.5625px 274.438px 450px",
+    "rows": "26.7969px 345.203px 450px",
     "dock": {
-     "y": 109,
-     "h": 34
+     "y": 45,
+     "h": 27
     },
     "table": {
-     "y": 152,
-     "h": 274
+     "y": 81,
+     "h": 345
     },
     "mat": {
      "y": 435,

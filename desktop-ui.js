@@ -1,6 +1,6 @@
 /* Tabletop view: UI drafts never pay, exhaust, reveal, or bypass phase validation. */
 /* 界面版本徽标唯一来源：须与 CHANGELOG.md 最新条目标题一致（planning-dom-tests 有校验）。 */
-const APP_VERSION='v0.15.87';
+const APP_VERSION='v0.15.88';
 /* ── 决策面板：一行触发条 + 非模态浮层（v0.15.81）─────────────────────
    形态演进：v0.15.62 浮动弹窗 → v0.15.76/79 内联公共桌面（常驻 96px 内容块）→ v0.15.81
    「一行触发条 + 非模态浮层」。用户报障「阶段窗口还在桌面上」：内联块把 .decide-box 撑到
@@ -424,10 +424,16 @@ const DesktopUI=(()=>{
    原 .expedition-title 标题条整行移除，牌桌上移。
    player-tabs 沿用原标记（.player-tabs 选择器在六个验收脚本里继续有效）。 */
  function hudHTML(s,p){
-  const sc=LOTR_DATA.scenarios.find(c=>c.id===s.scenario);
-  const meta=s.session&&s.session.name?esc(sc.name)+' · ':'';
-  return `<strong class="hud-name">${esc(s.session&&s.session.name||sc.name)}</strong>`
-   +`<span class="hud-meta">${meta}第 ${s.round} 回合 · ${s.players.length} 人同机${s.session&&s.session.difficulty?' · '+({easy:'简单',normal:'标准',nightmare:'噩梦'}[s.session.difficulty]||''):''} · ${E.phases[s.phase]}</span>`
+ const sc=LOTR_DATA.scenarios.find(c=>c.id===s.scenario);
+ /* v0.15.88：顶栏收成一行后，这行只留「会变的两个值」——第几回合、当前阶段。
+     人数不必写：玩家标签有几个就是几人；难度与剧本集名（s.session.name）收进 title，
+     悬停即见。原来「剧本名 · 第 2 回合 · 1 人同机 · 标准 · 遭遇」24 个字把顶栏撑到
+     必须换行，白白吃掉牌桌 50px。 */
+ const title=(s.session&&s.session.name)||sc.name;
+ const diff=s.session&&s.session.difficulty?({easy:'简单',normal:'标准',nightmare:'噩梦'}[s.session.difficulty]||'标准'):'标准';
+ const tip=`${title} · ${sc.name} · ${s.players.length} 人同机 · ${diff} · 第 ${s.round} 回合 · ${E.phases[s.phase]}`;
+ return `<strong class="hud-name" title="${esc(tip)}">${esc(title)}</strong>`
+  +`<span class="hud-meta">第 ${s.round} 回合 · ${E.phases[s.phase]}</span>`
    +`<div class="player-tabs" role="group" aria-label="查看玩家">${s.players.map(o=>`<button data-action="desktop" data-desktop="view" data-player="${o.id}" class="${o.id===p.id?'active':''}" aria-pressed="${o.id===p.id}"><b class="tab-name">${esc(o.name)}</b>${tabStats(s,o)}</button>`).join('')}</div>`
    +b('重新选择剧本','reset');
  }
@@ -487,7 +493,23 @@ const DesktopUI=(()=>{
    :`<button data-action="keepHand" data-player="${x.id}">保留手牌</button><button data-action="mulligan" data-player="${x.id}">整手调度一次</button>`}</span>`).join('');
   return `<div class="opening-inline" aria-label="起始手牌选择"><span class="small muted">起始手牌（规则书第10页）· 可整手洗回重抽一次，第二手必须保留</span>${groups}</div>`;
  }
- function tableHTML(s,pid){
+ /* v0.15.88：操作条只剩「真有输入才有的一行」——状态 chip（等谁提交／待确认）与阶段推进按钮。
+   撤掉的两样：
+     1) 提示语主标题（prompt）——它与阶段竖轴的高亮、决策浮层标题、结束阶段按钮的
+        title 说的是同一句话，一屏要读四遍。降级成整条的 title / aria-label，
+        需要时悬停或读屏可得，不再占一行 34px。
+     2) 品牌行「MIDDLE-EARTH EXPEDITION · vX.Y.Z」——纯装饰，版本号在说明页与存档里都有。
+   没有 chip、没有推进按钮、内容区也空时，这条高度自然收成 0（grid 行 auto → 0），
+   省下的 34px 全部还给牌桌；有剧本待结算／选择面板时照旧展开。 */
+function dockHTML(s,p,m){
+ const chips=(status(s)?.chips)||'',nxt=next(s);
+ const label=prompt(s,m);
+ const line=(chips||nxt)?`<div class="operation-title">${chips?`<div class="operation-chips">${chips}</div>`:''}${nxt}</div>`:'';
+ return `<div class="operation-dock" role="region" aria-label="${esc(label)}" title="${esc(label)}">`
+  +line
+  +`<div class="operation-content">${scorePanel(s)}${phasePanel(s,p.id,m)}</div></div>`;
+}
+function tableHTML(s,pid){
   currentState=s;if(!s.players.every(p=>p.heroStates))return legacyTable();const p=s.players[pid]||s.players[0],m=mode(s,p.id),q=E.quest(s),sc=LOTR_DATA.scenarios.find(c=>c.id===s.scenario);
   if(!m)draft(s,null);
   const others=s.players.filter(x=>x.id!==p.id).map(o=>`<section class="other-player"><div class="zone-heading"><h3>${esc(o.name)}${s.first===o.id?' · 起始玩家':''}</h3><span>威胁 ${o.threat}${o.eliminated?' · 已淘汰':''}</span>${b('查看手牌与完整区域','view',`data-player="${o.id}"`)}</div><div class="table-card-row peer-cards">${playerChars(s,o).map(c=>character(s,c,m)).join('')}${o.engaged.map(c=>encounter(s,c,'engaged',m)).join('')}</div></section>`).join('');
@@ -500,7 +522,7 @@ const DesktopUI=(()=>{
    const probe=unaff?(()=>{const rec=ImageLibrary.by[c.code],url=rec?ImageLibrary.safeUrl(rec.faces?.B||rec.imageUrl):null;return url?` data-hover-src="${esc(url)}" data-hover-shape="tall"`:'';})():'';
    return `<article class="table-card hand-card ${sp.legal?'selectable':''}${unaff?' unaffordable':''}"${probe}><button class="card-face" data-action="planning" data-plan="play" data-player="${p.id}" data-uid="${c.uid}" ${sp.legal?'':'disabled'} aria-label="使用${esc(meta.nameZh)}">${art(c.code)}</button><div class="table-card-caption"><b>${esc(meta.nameZh)}</b><span>费用 ${meta.cost??'—'} · ${esc(meta.sphereName||meta.sphere)}</span></div>${inspect(c.code)}<span class="card-legality">${esc(reason)}</span></article>`;}).join('');
   /* 玩家状态条已提升为模块级 tabStats(s,o)——见 hudHTML 上方注释。 */
-  return `<div class="desktop-table"><div class="tabletop-layout"><div class="tabletop-main"><div class="operation-dock" role="region" aria-label="当前操作"><div class="operation-title"><span class="operation-indicator"></span><strong>${esc(prompt(s,m))}</strong><div class="operation-chips">${status(s)?.chips||''}</div><span class="small">第 ${s.phase+1}/7 阶段 · ${E.phases[s.phase]}</span><span class="dock-eyebrow">MIDDLE-EARTH EXPEDITION · ${APP_VERSION}</span>${next(s)}</div><details class="phase-hint-wrap"><summary>本阶段说明</summary><p class="small phase-hint">${esc(phaseHint())}</p></details><div class="operation-content">${scorePanel(s)}${phasePanel(s,p.id,m)}</div></div><div class="public-table"><div class="quest-location-row"><section class="table-zone quest-zone"><div class="zone-heading"><h2>当前探险 · ${esc(q.stage)}</h2><strong>${q.points?s.progress+' / '+q.points+' 进度':'特殊胜利条件'}</strong></div><div class="quest-display"><div class="quest-art-wrap">${ImageLibrary.art('enc-'+q.id,'',s.setupPending?'A':'B')}${q.points?`<div class="card-tokens quest-tokens" aria-hidden="true">${tk('progress',s.progress)}</div>`:''}</div><div><h3>${esc(q.name)}</h3><p>${esc(s.setupPending?q.front:q.back)}</p><span class="small muted">${esc(E.gate(s)||'满足条件后由规则自动推进')}</span></div></div>${q.points?`<div class="quest-progress" role="progressbar" aria-label="探险进度" aria-valuemin="0" aria-valuemax="${q.points}" aria-valuenow="${s.progress}"><div class="quest-progress-fill" style="width:${Math.min(100,Math.round(s.progress/q.points*100))}%"></div><span class="quest-progress-label">${s.progress} / ${q.points}</span></div>`:''}</section>${row('当前地点',s.active?encounter(s,s.active,'active',m):'','active-zone')}</div>${row('探查区 <span class="threat-total">总威胁 '+E.threat(s)+'</span>',s.staging.map(c=>encounter(s,c,'staging',m)).join(''))}${s.objectives.length?row('剧本目标',s.objectives.map(c=>encounter(s,c,'objective',m)).join('')):''}${others}</div><section class="player-mat"><div class="zone-heading"><h2>${esc(p.name)} · ${esc(p.registeredDeck?.name||'玩家区域')}</h2><span class="own-piles">威胁 ${p.threat}${s.first===p.id?' · 起始玩家':''} · <span class="pile-chip">牌库 <b>${p.playerDeck.length}</b></span> · <span class="pile-chip">弃牌 <b>${p.playerDiscard.length}</b></span></span></div><section class="table-zone bottom-deck" aria-label="队伍与手牌"><div class="zone-heading"><h2>队伍与手牌 <span class="small muted">英雄 ${p.heroStates.length} · 盟友 ${p.allies.length} · 附属 ${p.attachments.length} · 手牌 ${p.hand.length}</span></h2>${phaseDoor(s)}</div>${PlanningUI.strip(s,p.id)}${attachRow(s,p)}<div class="table-card-row own-characters">${playerChars(s,p).map(c=>character(s,c,m)).join('')}${p.engaged.length?`<div class="row-divider" role="presentation"><span>交战</span></div>${p.engaged.map(c=>encounter(s,c,'engaged',m)).join('')}`:''}</div>${DecisionUI.html(s,p.id)}${openingBar(s,p)}<div class="table-card-row hand-zone">${hand}</div></section></section></div><aside class="tabletop-rail">${PhaseLog.rail(s,railOpen())}<section class="table-log" aria-label="远征日志">${PhaseLog.panel(s,logMarks(),logScope(),railOpen(),false)}</section></aside></div></div>`;
+  return `<div class="desktop-table"><div class="tabletop-layout"><div class="tabletop-main">${dockHTML(s,p,m)}<div class="public-table"><div class="quest-location-row"><section class="table-zone quest-zone"><div class="zone-heading"><h2>当前探险 · ${esc(q.stage)}</h2><strong>${q.points?s.progress+' / '+q.points+' 进度':'特殊胜利条件'}</strong></div><div class="quest-display"><div class="quest-art-wrap">${ImageLibrary.art('enc-'+q.id,'',s.setupPending?'A':'B')}${q.points?`<div class="card-tokens quest-tokens" aria-hidden="true">${tk('progress',s.progress)}</div>`:''}</div><div><h3>${esc(q.name)}</h3><p>${esc(s.setupPending?q.front:q.back)}</p><span class="small muted">${esc(E.gate(s)||'满足条件后由规则自动推进')}</span></div></div>${q.points?`<div class="quest-progress" role="progressbar" aria-label="探险进度" aria-valuemin="0" aria-valuemax="${q.points}" aria-valuenow="${s.progress}"><div class="quest-progress-fill" style="width:${Math.min(100,Math.round(s.progress/q.points*100))}%"></div><span class="quest-progress-label">${s.progress} / ${q.points}</span></div>`:''}</section>${row('当前地点',s.active?encounter(s,s.active,'active',m):'','active-zone')}</div>${row('探查区 <span class="threat-total">总威胁 '+E.threat(s)+'</span>',s.staging.map(c=>encounter(s,c,'staging',m)).join(''))}${s.objectives.length?row('剧本目标',s.objectives.map(c=>encounter(s,c,'objective',m)).join('')):''}${others}</div><section class="player-mat"><div class="zone-heading"><h2>${esc(p.name)} · ${esc(p.registeredDeck?.name||'玩家区域')}</h2><span class="own-piles">威胁 ${p.threat}${s.first===p.id?' · 起始玩家':''} · <span class="pile-chip">牌库 <b>${p.playerDeck.length}</b></span> · <span class="pile-chip">弃牌 <b>${p.playerDiscard.length}</b></span></span></div><section class="table-zone bottom-deck" aria-label="队伍与手牌"><div class="zone-heading"><h2>队伍与手牌 <span class="small muted">英雄 ${p.heroStates.length} · 盟友 ${p.allies.length} · 附属 ${p.attachments.length} · 手牌 ${p.hand.length}</span></h2>${phaseDoor(s)}</div>${PlanningUI.strip(s,p.id)}${attachRow(s,p)}<div class="table-card-row own-characters">${playerChars(s,p).map(c=>character(s,c,m)).join('')}${p.engaged.length?`<div class="row-divider" role="presentation"><span>交战</span></div>${p.engaged.map(c=>encounter(s,c,'engaged',m)).join('')}`:''}</div>${DecisionUI.html(s,p.id)}${openingBar(s,p)}<div class="table-card-row hand-zone">${hand}</div></section></section></div><aside class="tabletop-rail">${PhaseLog.rail(s,railOpen())}<section class="table-log" aria-label="远征日志">${PhaseLog.panel(s,logMarks(),logScope(),railOpen(),false)}</section></aside></div></div>`;
  }
  function handle(el){const k=el.dataset.desktop,uid=+el.dataset.uid,pid=+el.dataset.player,m=mode(state,handView),d=draft(state,m);
   if(k==='view'){handView=pid;render();return;}if(k==='reset'){if(confirm('结束当前桌面并重新选择剧本？建议先导出存档。'))mutate(()=>state=null);return;}

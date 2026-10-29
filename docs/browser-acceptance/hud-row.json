@@ -1,0 +1,351 @@
+{
+  "ok": true,
+  "version": "v0.15.88",
+  "checks": [
+    {
+      "name": "1920×1080：顶栏只有一行（HUD 与导航同排）",
+      "ok": true,
+      "detail": "header h=37 hud y=5 h=26"
+    },
+    {
+      "name": "1920×1080：顶栏总高 ≤ 56px（改前 101）",
+      "ok": true,
+      "detail": "h=37"
+    },
+    {
+      "name": "1920×1080：HUD 排在导航右侧、与其垂直居中对齐",
+      "ok": true,
+      "detail": "nav right=324.7 hud x=336.7"
+    },
+    {
+      "name": "1920×1080：玩家标签是一行（名字+数值同排，高 ≤ 30）",
+      "ok": true,
+      "detail": "flex=row h=26"
+    },
+    {
+      "name": "1920×1080：「重新选择剧本」完整落在顶栏内",
+      "ok": true,
+      "detail": "right=1578.0 / 1920"
+    },
+    {
+      "name": "1920×1080：无横向溢出",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "1920×1080：操作条只剩推进按钮（无提示语大标题、高度 ≤ 30）",
+      "ok": true,
+      "detail": "dock h=26"
+    },
+    {
+      "name": "1920×1080：牌桌 DOM 里不再有品牌行",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "1920×1080：提示语降级到 title/aria-label 且非空",
+      "ok": true,
+      "detail": "打出卡牌或使用行动"
+    },
+    {
+      "name": "1920×1080：无决策无推进时操作条高度归零",
+      "ok": true,
+      "detail": "dock h=0"
+    },
+    {
+      "name": "1920×1080：公共牌桌因此变高（1366 档 220 → 455.5）",
+      "ok": true,
+      "detail": "table h=455.5"
+    },
+    {
+      "name": "1920×1080：手牌仍在视口内且未被裁",
+      "ok": true,
+      "detail": "hand bottom=974.5 / 1080"
+    },
+    {
+      "name": "1440×900：顶栏只有一行（HUD 与导航同排）",
+      "ok": true,
+      "detail": "header h=37 hud y=5 h=26"
+    },
+    {
+      "name": "1440×900：顶栏总高 ≤ 56px（改前 101）",
+      "ok": true,
+      "detail": "h=37"
+    },
+    {
+      "name": "1440×900：HUD 排在导航右侧、与其垂直居中对齐",
+      "ok": true,
+      "detail": "nav right=324.7 hud x=336.7"
+    },
+    {
+      "name": "1440×900：玩家标签是一行（名字+数值同排，高 ≤ 30）",
+      "ok": true,
+      "detail": "flex=row h=26"
+    },
+    {
+      "name": "1440×900：「重新选择剧本」完整落在顶栏内",
+      "ok": true,
+      "detail": "right=1098.0 / 1440"
+    },
+    {
+      "name": "1440×900：无横向溢出",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "1440×900：操作条只剩推进按钮（无提示语大标题、高度 ≤ 30）",
+      "ok": true,
+      "detail": "dock h=26"
+    },
+    {
+      "name": "1440×900：牌桌 DOM 里不再有品牌行",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "1440×900：提示语降级到 title/aria-label 且非空",
+      "ok": true,
+      "detail": "打出卡牌或使用行动"
+    },
+    {
+      "name": "1440×900：无决策无推进时操作条高度归零",
+      "ok": true,
+      "detail": "dock h=0"
+    },
+    {
+      "name": "1440×900：公共牌桌因此变高（1366 档 220 → 372）",
+      "ok": true,
+      "detail": "table h=372"
+    },
+    {
+      "name": "1440×900：手牌仍在视口内且未被裁",
+      "ok": true,
+      "detail": "hand bottom=871.0 / 900"
+    },
+    {
+      "name": "1366×768：顶栏只有一行（HUD 与导航同排）",
+      "ok": true,
+      "detail": "header h=37 hud y=5 h=26"
+    },
+    {
+      "name": "1366×768：顶栏总高 ≤ 56px（改前 101）",
+      "ok": true,
+      "detail": "h=37"
+    },
+    {
+      "name": "1366×768：HUD 排在导航右侧、与其垂直居中对齐",
+      "ok": true,
+      "detail": "nav right=324.7 hud x=336.7"
+    },
+    {
+      "name": "1366×768：玩家标签是一行（名字+数值同排，高 ≤ 30）",
+      "ok": true,
+      "detail": "flex=row h=26"
+    },
+    {
+      "name": "1366×768：「重新选择剧本」完整落在顶栏内",
+      "ok": true,
+      "detail": "right=1024.0 / 1366"
+    },
+    {
+      "name": "1366×768：无横向溢出",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "1366×768：操作条只剩推进按钮（无提示语大标题、高度 ≤ 30）",
+      "ok": true,
+      "detail": "dock h=26"
+    },
+    {
+      "name": "1366×768：牌桌 DOM 里不再有品牌行",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "1366×768：提示语降级到 title/aria-label 且非空",
+      "ok": true,
+      "detail": "打出卡牌或使用行动"
+    },
+    {
+      "name": "1366×768：无决策无推进时操作条高度归零",
+      "ok": true,
+      "detail": "dock h=0"
+    },
+    {
+      "name": "1366×768：公共牌桌因此变高（1366 档 220 → 318）",
+      "ok": true,
+      "detail": "table h=318"
+    },
+    {
+      "name": "1366×768：手牌仍在视口内且未被裁",
+      "ok": true,
+      "detail": "hand bottom=741.0 / 768"
+    },
+    {
+      "name": "1280×800：顶栏只有一行（HUD 与导航同排）",
+      "ok": true,
+      "detail": "header h=37 hud y=5 h=26"
+    },
+    {
+      "name": "1280×800：顶栏总高 ≤ 56px（改前 101）",
+      "ok": true,
+      "detail": "h=37"
+    },
+    {
+      "name": "1280×800：HUD 排在导航右侧、与其垂直居中对齐",
+      "ok": true,
+      "detail": "nav right=324.7 hud x=336.7"
+    },
+    {
+      "name": "1280×800：玩家标签是一行（名字+数值同排，高 ≤ 30）",
+      "ok": true,
+      "detail": "flex=row h=26"
+    },
+    {
+      "name": "1280×800：「重新选择剧本」完整落在顶栏内",
+      "ok": true,
+      "detail": "right=938.0 / 1280"
+    },
+    {
+      "name": "1280×800：无横向溢出",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "1280×800：操作条只剩推进按钮（无提示语大标题、高度 ≤ 30）",
+      "ok": true,
+      "detail": "dock h=26"
+    },
+    {
+      "name": "1280×800：牌桌 DOM 里不再有品牌行",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "1280×800：提示语降级到 title/aria-label 且非空",
+      "ok": true,
+      "detail": "打出卡牌或使用行动"
+    },
+    {
+      "name": "1280×800：无决策无推进时操作条高度归零",
+      "ok": true,
+      "detail": "dock h=0"
+    },
+    {
+      "name": "1280×800：公共牌桌因此变高（1366 档 220 → 350）",
+      "ok": true,
+      "detail": "table h=350"
+    },
+    {
+      "name": "1280×800：手牌仍在视口内且未被裁",
+      "ok": true,
+      "detail": "hand bottom=773.0 / 800"
+    },
+    {
+      "name": "4人局 1366×768：顶栏仍是一行（≤ 56px）",
+      "ok": true,
+      "detail": "h=37"
+    },
+    {
+      "name": "4人局 1366×768：导航不折行（nav 单行高 ≤ 30）",
+      "ok": true,
+      "detail": "nav h=25"
+    },
+    {
+      "name": "4人局 1366×768：四个玩家标签都在（多出的靠横向滚动）",
+      "ok": true,
+      "detail": "chips=4 {\"clientW\":378,\"scrollW\":774,\"overflowX\":\"auto\"}"
+    },
+    {
+      "name": "4人局 1366×768：「重新选择剧本」仍在顶栏内且完整",
+      "ok": true,
+      "detail": "right=1024.0 / 1366"
+    },
+    {
+      "name": "4人局 1366×768：无横向溢出",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "4人局 1280×800：顶栏仍是一行（≤ 56px）",
+      "ok": true,
+      "detail": "h=37"
+    },
+    {
+      "name": "4人局 1280×800：导航不折行（nav 单行高 ≤ 30）",
+      "ok": true,
+      "detail": "nav h=25"
+    },
+    {
+      "name": "4人局 1280×800：四个玩家标签都在（多出的靠横向滚动）",
+      "ok": true,
+      "detail": "chips=4 {\"clientW\":292,\"scrollW\":774,\"overflowX\":\"auto\"}"
+    },
+    {
+      "name": "4人局 1280×800：「重新选择剧本」仍在顶栏内且完整",
+      "ok": true,
+      "detail": "right=938.0 / 1280"
+    },
+    {
+      "name": "4人局 1280×800：无横向溢出",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "开局待确认阶段：操作条仍展开并给出状态 chip",
+      "ok": true,
+      "detail": "chips=1 dock h=26.8"
+    },
+    {
+      "name": "开局待确认阶段：chip 行不再带提示语大标题",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "对局中：HUD 可见",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "对局中：HUD 元信息只留回合与阶段（不再写人数/难度）",
+      "ok": true,
+      "detail": "穿越幽暗密林第 1 回合 · 计划玩家1威胁 29 · 资源 3 · 伤害 0起始重新选择剧本"
+    },
+    {
+      "name": "对局中：剧本名 title 里保留了难度与人数（悬停可查）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "切到卡牌页签：HUD 隐藏",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "切到说明页：HUD 隐藏",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "说明页承接品牌行与版本号",
+      "ok": true,
+      "detail": "v0.15.88"
+    },
+    {
+      "name": "切回牌桌：HUD 自动恢复",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "对局结束（won）：HUD 不再显示",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "无脚本错误",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}

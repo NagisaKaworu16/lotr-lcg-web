@@ -1508,7 +1508,6 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
 .game-hud{flex-basis:100%;display:flex;align-items:center;gap:12px;flex-wrap:wrap;
  padding:5px 20px 7px;border-top:1px solid #3b5141;font-size:13px;color:#cbd1c1}
 .game-hud[hidden]{display:none}
-.dock-eyebrow{color:#6f8ea0;font:500 11px Cinzel,var(--font-title);letter-spacing:1px;text-transform:uppercase;opacity:.85}
 .game-hud .hud-name{font:500 15px var(--font-title);color:#f6e3ad;letter-spacing:.02em}
 .game-hud .hud-meta{color:#8fa396;font-size:12.5px}
 .game-hud .player-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
@@ -1519,6 +1518,46 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
 .game-hud .player-tabs .first-mark,.game-hud .player-tabs .elim-mark{font-size:11px}
 .game-hud button[data-desktop=reset]{background:transparent;border-color:#647460;color:#e8b9a8;font-size:12.5px;padding:3px 10px}
 .game-hud button[data-desktop=reset]:hover{background:#46604c;color:#f6c8b4;border-color:#a17d6a}
+
+/* ── 0c. 顶栏一行化（v0.15.88）──────────────────────────────────────
+   用户要求：把「剧本 + 回合/阶段」和「玩家 威胁/资源/伤害 + 重新选择剧本」
+   这两块信息收进顶部菜单栏（原本它们已经在 #gameHud 里，但 flex-basis:100%
+   逼它们独占第二行），腾出的整行还给牌桌——1366×768 下约 50px。
+   做法：≥1280px 时 header 不再换行，.game-hud 作为普通 flex 项用 order 排到
+   导航之后、历史按钮之前；玩家标签从「名字 / 数值上下两行」改成一行
+   （名字 + 三个数字），26px 高与导航按钮齐平。
+   ⚠ 这里绝不能出现 display 声明：.game-hud[hidden]{display:none}（0,2,0）靠
+   优先级压住基础 .game-hud{display:flex}（0,1,0）；一旦在 (0,3,1) 的选择器里
+   写 display:flex，非对局页签也会显示这条 HUD。
+   ≤1279px 是纵向单屏（页面可滚），保持原来的换行布局，不挤导航。 */
+@media(min-width:1280px){
+ body:has(.desktop-table) header{flex-wrap:nowrap;padding:5px 16px;gap:12px}
+ /* 先让「不该被压」的固定件扛住：导航、历史按钮、撤销/导出/导入都不收缩。
+    不写这条的话，HUD 一抢空间，nav 的「说明与完成范围」会折成三行、
+    .header-actions 的三个按钮会折成两行（4 人局 1366 实测顶栏 37 → 50px）。 */
+ body:has(.desktop-table) header>nav{flex:0 0 auto}
+ body:has(.desktop-table) header>nav button{white-space:nowrap}
+ body:has(.desktop-table) header>.game-hud{order:2;flex:1 1 auto;min-width:0;flex-wrap:nowrap;gap:10px;
+  padding:0 0 0 12px;margin:0;border-top:0;border-left:1px solid #3b5141;overflow:hidden}
+ body:has(.desktop-table) header>.game-hud .hud-name{flex:0 1 auto;min-width:10ch;max-width:26ch;font-size:14px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ body:has(.desktop-table) header>.game-hud .hud-meta{flex:0 0 auto;font-size:12px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#93a894}
+ /* 玩家标签是唯一可以让步的东西：横向滚动，不折行、不挤压别人。
+    4 人局 1280 下 4 个标签约 480px，正好吃满剩余宽度。 */
+ body:has(.desktop-table) header>.game-hud .player-tabs{flex:1 1 auto;flex-wrap:nowrap;margin-left:auto;
+  gap:5px;min-width:120px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none}
+ body:has(.desktop-table) header>.game-hud .player-tabs::-webkit-scrollbar{display:none}
+ body:has(.desktop-table) header>.game-hud .player-tabs button{flex:0 0 auto;height:26px;min-height:0;
+  padding:0 9px;flex-direction:row;align-items:center;gap:6px;font-size:12px;line-height:1.2;border-radius:6px}
+ body:has(.desktop-table) header>.game-hud .player-tabs .tab-stats{font-size:10.5px;white-space:nowrap}
+ body:has(.desktop-table) header>.game-hud .player-tabs .first-mark,
+ body:has(.desktop-table) header>.game-hud .player-tabs .elim-mark{font-size:9.5px;padding:0 5px}
+ body:has(.desktop-table) header>.game-hud>button[data-desktop=reset]{flex:0 0 auto;height:26px;
+  padding:0 9px;font-size:12px;border-radius:6px}
+ body:has(.desktop-table) header>.history-nav{order:3;flex:0 0 auto}
+ body:has(.desktop-table) header>.header-actions{order:4;flex:0 0 auto}
+}
 
 /* ── 18c. 待决定面板：一行触发条 + 非模态浮层（v0.15.81）──────────────
    形态：桌面上只留一行 .decide-trigger（圆点 + 标题 + 可选 hint + chevron，约 40px），
@@ -1606,14 +1645,16 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
 .opening-inline button{flex:0 0 auto}
 .opening-inline.done{border-style:solid;border-color:#d8dcd0;background:transparent}
 
-/* 顶部操作条：内容为空时整条收成一行摘要。
-   .operation-content 本身已有 :empty{display:none}，这里再把标题行的内边距收窄、
-   隐藏提示语，省下的高度还给牌桌与手牌。有内容（剧本事项、选择面板）时自动恢复原样。 */
+/* 顶部操作条：内容为空时整条收成 0 高。
+   v0.15.88 起 .operation-title 只装状态 chip 与阶段推进按钮（提示语与品牌行已撤），
+   两者都没有时这一行根本不渲染；.operation-content 本身已有 :empty{display:none}，
+   于是整条 dock 高度归零，牌桌上移。有内容（剧本事项、选择面板）时自动恢复。 */
 .operation-dock:not(:has(.operation-content:not(:empty))){
  padding:0}
-.operation-dock:not(:has(.operation-content:not(:empty))) .operation-title{padding:7px 14px}
-.operation-dock:not(:has(.operation-content:not(:empty))) .operation-title strong{font-size:14.5px}
-.operation-dock:not(:has(.operation-content:not(:empty))) .phase-hint{display:none}
+.operation-dock:not(:has(.operation-content:not(:empty))) .operation-title{padding:0;gap:6px}
+/* 只剩推进按钮时，它是「结束阶段」的副本（角色区右上角那颗才是主入口），
+   不必比导航按钮更大——26px 与顶栏按钮同高，省下的 12px 还给牌桌。 */
+.operation-dock:not(:has(.operation-content:not(:empty))) .operation-title button{min-height:26px;padding:2px 12px;font-size:12.5px}
 /* 长说明默认折起来。它每个阶段都是同一段 60~80 字的方法论，
    常驻只是把牌桌往下推一行；要查的时候点一下就看得到。 */
 .phase-hint-wrap{margin:0;padding:0 16px 6px;font-size:12px;color:#768174}
