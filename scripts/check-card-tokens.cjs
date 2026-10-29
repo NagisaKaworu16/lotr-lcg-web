@@ -1,9 +1,9 @@
-/* 角色卡代币布局验收（v0.15.91「上属性 / 下状态」双带）。
+/* 角色卡代币布局验收（v0.15.92「左列属性 / 右下状态」角标双簇）。
    改前：属性 2×2 方块悬在卡面上方 7px 并盖掉插画上缘；状态两枚压在牌文框正中。
-   改后：属性 1×4 横带贴卡面上沿内侧、状态 1×2 贴下沿，代币锚 .card-frame。
+   改后：属性 4 枚竖列贴卡面左缘（接手实体卡印刷属性图标位）、状态 2 枚收右下角。
    断言：
-     A. 属性 4 枚同一行、等距、落在卡面内（不悬空）；数字不溢出圆；
-     B. 状态 2 枚同一行、贴卡面底边（下沿距卡面底 ≤ 4px），且在牌文带内占比 ≤ 30%；
+     A. 属性 4 枚同一列（左缘对齐、自上而下等距）、整簇落在卡面内；数字不溢出圆；
+     B. 状态 2 枚同一列、贴卡面右下角（距右 ≤ 3px、距底 ≤ 4px），牌文带占比 ≤ 30%；
      C. 卡高与改前一致（≤ 150px），卡名不被压；
      D. 零值代币仍渲染但淡化（opacity < 1）；
      E. 四档视口 + 2 人局对手小卡：无横向溢出、手牌仍在视口内。
@@ -65,10 +65,15 @@ const geo = page => page.evaluate(() => {
   return {
     card, art, cap, attr, state,
     attrCount: attr.length, stateCount: state.length,
-    attrSameRow: attr.length > 1 && Math.max(...attr.map(r => r.t)) - Math.min(...attr.map(r => r.t)) <= 1,
-    stateSameRow: state.length > 1 && Math.max(...state.map(r => r.t)) - Math.min(...state.map(r => r.t)) <= 1,
+    /* 竖列：左缘对齐（left 差 ≤1）、自上而下递增（每枚比上一枚低 ≥ 代币高）。 */
+    attrSameCol: attr.length > 1 && Math.max(...attr.map(r => r.l)) - Math.min(...attr.map(r => r.l)) <= 1,
+    attrStacked: attr.every((r, i) => i === 0 || r.t > attr[i - 1].t),
+    stateSameCol: state.length > 1 && Math.max(...state.map(r => r.l)) - Math.min(...state.map(r => r.l)) <= 1,
     attrInside: attr.every(r => r.t >= card.t - 0.5 && r.b <= card.b + 0.5 && r.l >= card.l - 0.5 && r.r <= card.r + 0.5),
+    attrLeftPct: attr.length ? +((Math.max(...attr.map(r => r.r)) - art.l) / art.w * 100).toFixed(1) : null,
+    attrTopGap: attr.length ? Math.min(...attr.map(r => r.t)) - art.t : null,
     stateBottomGap: state.length ? Math.max(...state.map(r => r.b)) - art.b : null,
+    stateRightGap: state.length ? art.r - Math.max(...state.map(r => r.r)) : null,
     textPct: +(hit / ((band.b - band.t) * art.w) * 100).toFixed(1),
     digitFont: digit ? parseFloat(getComputedStyle(digit).fontSize) : null,
     zeroOpacity: zero ? parseFloat(getComputedStyle(zero).opacity) : null,
@@ -79,7 +84,7 @@ const geo = page => page.evaluate(() => {
     overflowX: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
     hand: (() => { const h = document.querySelector('.hand-zone'); return h ? R(h) : null; })(),
     peerAttr: [...document.querySelectorAll('.other-player .attr-tokens .tk')].length
-      ? (() => { const r = R(document.querySelector('.other-player .attr-tokens')); return { h: r.h, w: r.w }; })() : null,
+      ? (() => { const r = R(document.querySelector('.other-player .attr-tokens')); return { h: r.h, w: +r.w.toFixed(1) }; })() : null,
   };
 });
 
@@ -102,18 +107,23 @@ const geo = page => page.evaluate(() => {
     if (!g) { add(`${tag}：找到角色卡`, false, 'no character card'); await ctx.close(); continue; }
 
     add(`${tag}：属性代币 4 枚都在`, g.attrCount === 4, `count=${g.attrCount}`);
-    add(`${tag}：属性 4 枚排成同一行（不再 2×2）`, g.attrSameRow,
-      g.attr.map(r => r.t).join(','));
-    add(`${tag}：属性带整行落在卡面内（不再悬空出卡）`, g.attrInside,
+    add(`${tag}：属性 4 枚排成同一列（不再是 2×2 块）`, g.attrSameCol && g.attrStacked,
+      g.attr.map(r => r.l + '@' + r.t).join(' '));
+    add(`${tag}：属性簇整簇落在卡面内（不再悬空出卡）`, g.attrInside,
       `card ${g.card.t}–${g.card.b} attr ${g.attr.map(r => r.t + '–' + r.b).join(' ')}`);
-    add(`${tag}：属性带只压插画上沿（每枚高 ≤ 20）`, g.attr.every(r => r.h <= 20), `h=${g.attr[0].h}`);
+    add(`${tag}：属性簇贴卡面左缘（左条占宽 ≤ 40%，且距上沿 ≤ 5px）`,
+      g.attrLeftPct !== null && g.attrLeftPct <= 40 && Math.abs(g.attrTopGap) <= 5,
+      `left%=${g.attrLeftPct} topGap=${g.attrTopGap}`);
+    add(`${tag}：属性代币尺寸收在 15–20（每枚 ≤ 20）`, g.attr.every(r => r.h <= 20 && r.h >= 13), `h=${g.attr[0].h}`);
     add(`${tag}：属性数字不溢出圆（字号 ≤ 代币 × 0.62）`,
       g.digitFont !== null && g.digitFont <= g.attr[0].h * 0.62 + 0.6, `font=${g.digitFont} tk=${g.attr[0].h}`);
 
     add(`${tag}：状态代币 2 枚（资源+伤害）`, g.stateCount === 2, `count=${g.stateCount}`);
-    add(`${tag}：状态 2 枚并排一行（不再竖叠）`, g.stateSameRow, g.state.map(r => r.t).join(','));
-    add(`${tag}：状态带贴卡面下沿（距卡面底 ≤ 4px）`,
-      g.stateBottomGap !== null && Math.abs(g.stateBottomGap) <= 4, `gap=${g.stateBottomGap}`);
+    add(`${tag}：状态 2 枚竖排在右下角（同列）`, g.stateSameCol, g.state.map(r => r.l + '@' + r.t).join(' '));
+    add(`${tag}：状态簇贴卡面右下角（距底 ≤ 4px、距右 ≤ 3px）`,
+      g.stateBottomGap !== null && Math.abs(g.stateBottomGap) <= 4 &&
+      g.stateRightGap !== null && Math.abs(g.stateRightGap) <= 3,
+      `bottom=${g.stateBottomGap} right=${g.stateRightGap}`);
     add(`${tag}：牌文带被遮挡 ≤ 30%（改前状态块整块压在牌文上）`, g.textPct <= 30, `pct=${g.textPct}`);
 
     add(`${tag}：卡高不变（≤ 150，玩家区高度预算不受影响）`, g.cardH <= 150, `h=${g.cardH}`);
@@ -125,8 +135,8 @@ const geo = page => page.evaluate(() => {
     add(`${tag}：无横向溢出`, !g.overflowX);
     add(`${tag}：手牌仍在视口内`, !!g.hand && g.hand.b <= vp.h + 0.5, `hand bottom=${g.hand && g.hand.b}`);
 
-    /* 对手小卡沿用双带：属性行不该退化成 2×2 块或悬出卡外。 */
-    if (g.peerAttr) add(`${tag}：对手小卡属性带是单行（高 ≤ 22）`, g.peerAttr.h <= 22, `h=${g.peerAttr.h}`);
+    /* 对手小卡沿用同一套角标簇：左列要窄、状态簇不能在卡外。 */
+    if (g.peerAttr) add(`${tag}：对手小卡属性列为左条（宽 ≤ 20）`, g.peerAttr.w <= 20, JSON.stringify(g.peerAttr));
 
     await page.locator('.own-characters').first().screenshot({ path: path.join(OUT, `card-tokens-${vp.w}.png`) });
     await ctx.close();

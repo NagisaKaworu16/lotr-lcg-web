@@ -121,7 +121,7 @@ test('desktop tokens pin resource/damage counters to card edges like the arkham 
  assert(/tk-damage" data-n="1"[\s\S]{0,90}?<b>1<\/b>/.test(html),'英雄伤害代币应显示 1');
  assert(/tk-damage( stack)?" data-n="2"[\s\S]{0,90}?<b>2<\/b>/.test(html),'敌人伤害代币应显示 2');
  assert((html.match(/tk-\w+ stack/g)||[]).length>=2,'数量>1 的代币应带层叠样式');
- assert(html.includes('card-tokens state-tokens'),'状态代币应为卡牌下方的独立行');
+ assert(html.includes('card-tokens state-tokens'),'状态代币簇应挂在卡面右下角（.card-frame 内）');
  assert(!/card-tokens[^>]*data-action/.test(html),'代币是纯展示，不得携带动作');
 });
 test('location and quest progress render as progress tokens on the arkham-style board',async()=>{const e=environment();await combatScreen(e);
@@ -190,7 +190,7 @@ test('attribute tokens sit above the character card and always show willpower at
  const block=()=>{const all=e.base.get('app').innerHTML,i=all.indexOf(`data-card-uid="${uid}"`);return all.slice(i,all.indexOf('</article>',i)+9);};
  const b1=block();
  const attrRow=b1.slice(0,b1.indexOf('<button class="card-face"'));
- assert(attrRow.includes('card-tokens attr-tokens'),'属性代币行应位于卡面按钮之前（卡牌上方）');
+ assert(attrRow.includes('card-tokens attr-tokens'),'属性代币簇应位于卡面按钮之前（卡面左缘）');
  const hasTok=(cls,n)=>new RegExp(`tk-${cls}( stack)?" data-n="${n}"`).test(attrRow);
  assert(hasTok('willpower',v.willpower||0),'意志代币应显示 stats 意志值');
  assert(hasTok('attack',v.attack||0),'攻击代币应显示 stats 攻击值');

@@ -739,10 +739,15 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
 /* 角色卡：属性代币压卡面上缘、状态代币压下缘，卡名只留一行 */
 .character-card{position:relative;overflow:visible}
 .character-card .card-frame{position:relative;display:block}
-/* v0.15.91 双带：属性 1×4 贴卡面上沿内侧（扫读顺序固定），状态 1×2 贴下沿。
-   代币锚 .card-frame（只包住卡面），卡名换行不会把状态行顶进插画。 */
-.character-card .attr-tokens{position:absolute;top:2px;left:0;right:0;transform:none;justify-content:space-between;z-index:3;padding:0;--tk:18px;gap:0}
-.character-card .state-tokens{position:absolute;bottom:1px;left:50%;transform:translateX(-50%);flex-wrap:nowrap;z-index:3;padding:0;--tk:18px;gap:4px}
+/* v0.15.92 角标双簇：属性 4 枚竖列贴卡面左缘（接手实体卡左侧印刷属性图标的位置），
+   状态 2 枚收在右下角。代币锚 .card-frame（只包住卡面），卡名换行不会把状态簇顶进插画。
+   竖列宽度只占左缘一条（18px），比横带更少压插画主体；右下角窄簇回避牌文正中。 */
+.character-card .attr-tokens{position:absolute;top:3px;left:0;right:auto;transform:none;
+ flex-direction:column;flex-wrap:nowrap;align-items:flex-start;justify-content:flex-start;
+ z-index:3;padding:0;--tk:18px;gap:2px}
+.character-card .state-tokens{position:absolute;bottom:2px;right:0;left:auto;top:auto;transform:none;
+ flex-direction:column;flex-wrap:nowrap;align-items:flex-end;justify-content:flex-end;
+ z-index:3;padding:0;--tk:16px;gap:2px}
 /* 数字随代币缩放（原来硬编码 14px，18px 圆里会溢出） */
 .card-frame .tk b{font-size:clamp(9.5px,calc(var(--tk) * .58),14px)}
 /* 零值降噪：0 资源 / 0 伤害 仍可见但退到背后（不删，规则需要它） */
@@ -873,10 +878,12 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
 .public-table>.other-player .table-card .card-face img{height:88px;width:62px;object-fit:cover;aspect-ratio:auto}
 .public-table>.other-player .table-card-caption{display:none}
 .public-table>.other-player .card-tokens{--tk:17px}
-/* v0.15.91：对手小卡沿用同一套「上属性 / 下状态」双带，只是代币更小、贴着卡面内侧
-   （原来靠居中定位悬在卡外，基类改带后必须显式给四边）。 */
-.public-table>.other-player .attr-tokens{top:1px;left:0;right:0;transform:none;justify-content:space-between;gap:0;flex-wrap:nowrap;--tk:16px}
-.public-table>.other-player .state-tokens{bottom:1px;top:auto;left:50%;right:auto;transform:translateX(-50%);flex-wrap:nowrap;gap:2px;--tk:16px}
+/* v0.15.92：对手小卡沿用同一套「左列属性 / 右下状态」角标簇，只是代币更小
+   （原来靠居中定位悬在卡外，基类改竖列后必须显式给方向与四边）。 */
+.public-table>.other-player .attr-tokens{top:1px;left:0;right:auto;transform:none;flex-direction:column;
+ flex-wrap:nowrap;align-items:flex-start;justify-content:flex-start;gap:1px;--tk:16px}
+.public-table>.other-player .state-tokens{bottom:1px;top:auto;left:auto;right:0;transform:none;flex-direction:column;
+ flex-wrap:nowrap;align-items:flex-end;justify-content:flex-end;gap:1px;--tk:16px}
 
 /* 21. 收尾：地点区无卡时不占宽度（只留标题），把横向空间还给探险文字；
        探险牌文放宽到 4 行，进度条拉满。 */
@@ -961,7 +968,8 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
  .public-table>.other-player .table-card .card-face img{width:46px;height:46px;object-fit:cover;object-position:50% 18%}
  .public-table>.other-player .card-tokens{--tk:14px}
  .public-table>.other-player .attr-tokens{display:none}
- .public-table>.other-player .state-tokens{bottom:-6px;top:auto;left:auto;right:-4px;transform:none}
+ .public-table>.other-player .state-tokens{bottom:-6px;top:auto;left:auto;right:-4px;transform:none;
+  flex-direction:row;align-items:center;gap:2px}
  .public-table>.other-player .inspect-card{display:none}
  .player-mat>.zone-heading::after{display:none}
 }
@@ -1169,7 +1177,7 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
  .public-table>.other-player .table-card .card-face{height:40px;flex:0 0 40px;overflow:hidden}
  .public-table>.other-player .table-card .card-face img{width:100%;height:40px;object-fit:cover;object-position:50% 16%}
  .public-table>.other-player .card-tokens{--tk:11px}
- .public-table>.other-player .state-tokens{bottom:-5px;right:-3px}
+ .public-table>.other-player .state-tokens{bottom:-5px;right:-3px;flex-direction:row;align-items:center;gap:1px}
 }
 
 /* ── 15. 阶段-窗口竖轴 + 结构化日志（照规则书「阶段与时机」图） ─────────
@@ -2051,8 +2059,9 @@ body:has(.desktop-table) .player-tabs button{height:36px;min-height:0;padding:2p
 .quest-progress-mini.full .quest-progress-fill{background:#d9a72e}
 .quest-progress-mini.full .quest-progress-label{color:#8a5a10;font-weight:700}
 
-/* 37b. 矮屏窄卡（1366/1280 档卡宽 76、画区 66）：4×18 放不下一行，代币降到 15。
-   4×15=60 ≤ 66，状态 2×15=30 也留有余量。 */
+/* 37b. 矮屏窄卡（1366/1280 档卡宽 76）：代币降到 15 让左列 4 枚（4×15+3×2=66）
+   仍落在卡面高度内，右下状态簇 2×15+2=32 也不压到卡名行。 */
 @media(min-width:1280px) and (max-height:820px){
- .character-card .attr-tokens,.character-card .state-tokens{--tk:15px}
+ .character-card .attr-tokens{--tk:15px}
+ .character-card .state-tokens{--tk:14px}
 }

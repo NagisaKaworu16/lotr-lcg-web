@@ -118,7 +118,7 @@
   {
    "name": "⑥ 进入探险阶段后手牌仍完整可见",
    "ok": true,
-   "detail": "手牌底 818.8 / 区底 832.8"
+   "detail": "手牌底 845.6 / 区底 859.6"
   },
   {
    "name": "⑥ 决策触发条在场时玩家区仍不纵向滚动",
@@ -540,13 +540,13 @@
    "vh": 900,
    "mat": "ref: <Node>",
    "hand": "ref: <Node>",
-   "handBottom": 818.8,
-   "matBottom": 832.8,
+   "handBottom": 845.6,
+   "matBottom": 859.6,
    "handInMat": true,
    "matScrolls": false,
    "matScrollPair": "447/447",
    "decide": 1,
-   "rowH": 163.6,
+   "rowH": 161.2,
    "rowScrollH": 175,
    "deckKids": [
     {
@@ -556,12 +556,12 @@
     },
     {
      "cls": "table-card-row.own-characters",
-     "h": 163.6,
+     "h": 161.2,
      "flex": "1 1 auto / minH 96px"
     },
     {
      "cls": "decide-box",
-     "h": 40,
+     "h": 42.4,
      "flex": "0 0 auto / minH 0px"
     },
     {
@@ -572,55 +572,41 @@
    ],
    "deckBox": {
     "x": 25,
-    "y": 417.2,
+    "y": 444,
     "w": 981,
     "h": 408.6,
-    "bottom": 825.8,
+    "bottom": 852.6,
     "scrollH": 407
    },
-   "chip": {
-    "box": {
-     "x": 111,
-     "y": 576.1,
-     "w": 15,
-     "h": 19,
-     "bottom": 595.1
-    },
-    "nat": 750,
-    "inCaption": true
-   },
-   "chipClicks": {
-    "action": "images",
-    "image": "open",
-    "plan": ""
-   },
+   "chip": null,
+   "chipClicks": null,
    "divider": 1,
    "enemies": 3,
    "attachRow": false,
    "enemyCap": {
     "box": {
      "x": 381,
-     "y": 579.1,
+     "y": 605.9,
      "w": 86,
      "h": 44,
-     "bottom": 623.1
+     "bottom": 649.9
     },
     "text": "蜘蛛王攻击 3 · 防御 1生命 0/3暗影 0 · 已翻开 0"
    },
    "enemyInMat": true,
-   "counts": "队伍与手牌 英雄 3 · 盟友 0 · 附属 1 · 手牌 7还差 4 项结束阶段",
+   "counts": "队伍与手牌 英雄 3 · 盟友 0 · 附属 1 · 手牌 7等 玩家1 提交名单结束阶段",
    "zones": {
-    "rows": "0px 319.844px 450px",
+    "rows": "26.7969px 319.844px 450px",
     "dock": {
      "y": 45,
-     "h": 0
+     "h": 27
     },
     "table": {
-     "y": 54,
+     "y": 81,
      "h": 320
     },
     "mat": {
-     "y": 383,
+     "y": 410,
      "h": 450
     }
    }
