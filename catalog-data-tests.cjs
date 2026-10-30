@@ -98,6 +98,16 @@ test('hard contract: the Core slice passes PlayerCards.verify unchanged', () => 
   assert.doesNotThrow(() => P.verify(snapshot), 'Core 切片必须能直接通过引擎的快照校验');
 });
 
+test('runtime module: player-carddata.js stays in sync with the JSON source', () => {
+  const M = require('./player-carddata.js');
+  assert.equal(M.cardCount, DATA.cardCount, 'module 与 JSON 卡数必须一致（重跑 fetch-card-data.py 同步）');
+  assert.equal(M.packCount, DATA.packCount);
+  assert.deepEqual(M.cards.map(c => c.code), DATA.cards.map(c => c.code),
+    'module 与 JSON 的卡序（packCode/position/code 排序）必须一致');
+  assert.ok(fs.statSync(path.join(__dirname, 'player-carddata.js')).size < 2 * 1024 * 1024,
+    'module 体积超 2MB 时要重新评估内联方案（team-lead 的体积红线）');
+});
+
 test('coverage report: local-image and Chinese-name gaps (stats only, never red)', () => {
   const local = new Set(fs.readdirSync(path.join(__dirname, 'assets', 'cards-en')));
   const withLocal = DATA.cards.filter(c => local.has(c.code + '.webp'));

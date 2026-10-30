@@ -10,7 +10,7 @@ function environment(){const dialogs=[],base=new Map;const attr=(s,k)=>new RegEx
  for(const id of ['app','toast','undo','export','import','tableTab','catalogTab','playersTab','imagesTab','helpTab']){let e=new El;e.id=id;base.set(id,e);}
  const document={querySelector:s=>base.get(s.slice(1))||base.get('app').querySelector(s),querySelectorAll:()=>[],createElement:t=>new El(t),body:{append(){}}};
  const ctx=vm.createContext({module:undefined,document,localStorage:{getItem:()=>null,setItem(){},removeItem(){}},setTimeout:()=>1,clearTimeout(){},console,Blob,URL,confirm:()=>true});
- for(const f of ['data.js','starter-decks.js','player-cards.js','ringsdb-snapshot.js','planning-engine.js','quest-engine.js','travel-engine.js','encounter-engine.js','combat-engine.js','refresh-engine.js','window-engine.js','phase-engine.js','engine.js','score-engine.js','player-ui.js','image-index.js','encounter-image-index.js','chinese-core-images.js','image-ui.js','planning-ui.js','quest-ui.js','travel-ui.js','encounter-ui.js','combat-ui.js','refresh-ui.js','window-ui.js','phase-log.js','desktop-ui.js','product-catalog.js','app.js'])vm.runInContext(fs.readFileSync(__dirname+'/'+f,'utf8'),ctx,{filename:f});
+ for(const f of ['data.js','starter-decks.js','player-cards.js','ringsdb-snapshot.js','player-carddata.js','planning-engine.js','quest-engine.js','travel-engine.js','encounter-engine.js','combat-engine.js','refresh-engine.js','window-engine.js','phase-engine.js','engine.js','score-engine.js','player-ui.js','image-index.js','encounter-image-index.js','chinese-core-images.js','image-ui.js','planning-ui.js','quest-ui.js','travel-ui.js','encounter-ui.js','combat-ui.js','refresh-ui.js','window-ui.js','phase-log.js','desktop-ui.js','product-catalog.js','app.js'])vm.runInContext(fs.readFileSync(__dirname+'/'+f,'utf8'),ctx,{filename:f});
  const run=s=>vm.runInContext(s,ctx);const click=d=>run(`$('#app').onclick({target:{closest:()=>({dataset:${JSON.stringify(d)}})}})`);
  return {ctx,run,click,dialogs,base};
 }
@@ -359,15 +359,22 @@ test('desktop version badge comes from one constant that matches the latest CHAN
 
 test('card library merges player and encounter cards behind a three-way player/encounter/both split',async()=>{
  const e=environment();e.run(`catalogSide='both';catalogView='list';catalogQuery='';tab='catalog';render();`);
- const html=e.base.get('app').innerHTML,players=e.run('RINGSDB_SNAPSHOT.cards.length'),encounters=e.run('D.cards.length+D.quests.length');
+ const html=e.base.get('app').innerHTML,players=e.run('(typeof PLAYER_CARDS_DATA!=="undefined"?PLAYER_CARDS_DATA:RINGSDB_SNAPSHOT).cards.length'),encounters=e.run('D.cards.length+D.quests.length');
  assert(html.includes('卡牌库'),'卡牌库页签未渲染标题');
  assert(html.includes('data-action="catSide" data-value="player"')&&html.includes('data-action="catSide" data-value="encounter"')&&html.includes('data-action="catSide" data-value="both"'),'缺少玩家／战役／两者都三档分类');
  assert(html.includes('data-action="catView" data-value="list"')&&html.includes('data-action="catView" data-value="art"'),'缺少名称／卡图视图切换');
  const count=()=>e.run("Number($('#resultCount').textContent.match(/\\d+/)[0])");
- assert.equal(e.run('catalogStats().total'),players+encounters,'卡池总数应为玩家卡与战役卡之和');
- assert.equal(count(),players+encounters,'两者都时结果数应为全量');
  const body=()=>e.run("$('#catalogResults').innerHTML");
- assert(body().includes('玩家卡 · 领导')&&body().includes('遭遇卡 · 敌人'),'两者都视图应同时出现玩家卡与遭遇卡分组');
+ const rows=()=>(body().match(/class="cat-item"/g)||[]).length;
+ /* v0.16.2 全量分批：1315+ 张不能一次进 DOM，首屏只挂一批，尾部「显示更多」增量 */
+ const loadAll=()=>{for(let i=0;i<40&&body().includes('data-action="catMore"');i++)e.click({action:'catMore'});};
+ assert.equal(e.run('catalogStats().total'),players+encounters,'卡池总数应为玩家卡与战役卡之和');
+ assert.equal(count(),players+encounters,'两者都时计数应为全量');
+ assert.equal(rows(),Math.min(players+encounters,60),'首屏 DOM 行数应受批上限约束（分批渲染生效）');
+ assert(body().includes('玩家卡 · 领导'),'首屏应渲染第一组（玩家卡 · 领导）');
+ loadAll();
+ assert.equal(rows(),players+encounters,'加载到底后行数应为全量');
+ assert(body().includes('遭遇卡 · 敌人'),'加载后应同时出现玩家卡与遭遇卡分组');
  assert(body().includes('>探险卡<'),'探险卡应为独立类别分组');
  /* 单侧分类 */
  e.run(`catalogSide='player';render();`);
@@ -375,19 +382,25 @@ test('card library merges player and encounter cards behind a three-way player/e
  assert(!body().includes('遭遇卡 · ')&&!body().includes('探险卡'),'玩家分类不应混入战役分组');
  e.run(`catalogSide='encounter';render();`);
  assert.equal(count(),encounters,'战役分类应只含遭遇卡与探险卡');
- /* 按系列包（pod）筛选：基础版全部卡牌都属 Core Set，三类齐全 */
+ /* 按系列包（pod）筛选：基础版三类齐全，Core=73 玩家卡+45 遭遇卡+10 探险卡 */
  e.run(`catalogSide='both';podFilter='Core';render();`);
- assert.equal((body().match(/class="cat-item"/g)||[]).length,players+encounters,'Core 包筛选应包含全部基础版卡牌');
+ loadAll();
+ assert.equal(rows(),128,'Core 包筛选应包含全部基础版卡牌');
  assert(body().includes('玩家卡 · 领导')&&body().includes('遭遇卡 · 敌人')&&body().includes('探险卡'),'系列包筛选下应同时有玩家卡／遭遇卡／探险卡三个类别');
- assert(e.run("$('#resultCount').textContent").includes(`玩家卡 ${players} / 遭遇卡 ${encounters-10} / 探险卡 10`),'计数应按三类拆分');
+ assert(e.run("$('#resultCount').textContent").includes('玩家卡 73 / 遭遇卡 45 / 探险卡 10'),'计数应按三类拆分');
+ /* 扩展系列（全量数据 98 系列）：一次渲染完，不再分批 */
+ e.run(`podFilter='HfG';render();`);
+ assert.equal(rows(),10,'HfG 系列应渲染全部 10 张');
+ assert(e.run("$('#resultCount').textContent").includes('The Hunt for Gollum'),'系列筛选应显示系列名');
  e.run(`podFilter='';render();`);
- /* 关键词跨两类 */
+ /* 关键词跨两类（计数全量，DOM 受批上限） */
  e.run(`catalogSide='both';render();$('#search').value='蛛';filterCatalog();`);
  const hit=count();
  assert(hit>0&&hit<players+encounters,'关键词筛选未生效');
+ assert.equal(rows(),Math.min(hit,60),'搜索结果行数受批上限约束');
 e.run(`$('#search').value='';filterCatalog();`);
- /* 卡图视图 */
- e.run(`catalogView='art';render();`);
+ /* 卡图视图（Core 玩家卡才有本地中文卡图） */
+ e.run(`catalogView='art';podFilter='Core';render();`);
  assert(body().includes('cat-figure'),'卡图视图应渲染卡图网格');
  assert(body().includes('assets/cards-zh-core/'),'玩家卡应使用本地中文卡图');
  e.run(`catalogView='list';render();`);
@@ -397,6 +410,7 @@ e.run(`$('#search').value='';filterCatalog();`);
  assert(body().includes('data-hover-shape="tall"'),'玩家卡应标为竖版悬停卡图');
  e.run(`catalogSide='encounter';render();`);
  assert(body().includes('data-hover-shape="wide"'),'探险卡应标为横版悬停卡图');
+ e.run(`podFilter='';render();`);
  /* 详情按需注入 */
  const detail=e.run("catalogDetail('player','01001')");
  assert(detail.includes('领导')&&detail.includes('01001'),'玩家卡详情应含球色与编号');

@@ -47,6 +47,8 @@ ZH_TITLES = os.path.join(ROOT, 'product-zh.json')
 OUT_DIR = os.path.join(ROOT, 'docs', 'data')
 CACHE_DIR = os.path.join(OUT_DIR, 'cache')
 OUT_FILE = os.path.join(OUT_DIR, 'player-carddata.json')
+# 运行时 module（build.py 内联进 index.html，file:// 离线红线）；与 JSON 同源同内容
+OUT_MODULE = os.path.join(ROOT, 'player-carddata.js')
 PACKS_URL = 'https://ringsdb.com/api/public/packs/'
 CARDS_URL = 'https://ringsdb.com/api/public/cards/{code}.json'
 UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/155 Safari/537.36'
@@ -248,11 +250,20 @@ def main():
     with io.open(tmp, 'w', encoding='utf-8') as fh:
         json.dump(dataset, fh, ensure_ascii=False, indent=1)
     os.replace(tmp, OUT_FILE)
+    # 同步生成 JS module：'<' 转义防 </script 提前闭合（build.py 对内联源有该检查）
+    module_text = ('/* 由 scripts/fetch-card-data.py 从 docs/data/player-carddata.json 生成——手改无效，重跑脚本同步。 */\n'
+                   'const PLAYER_CARDS_DATA=' + json.dumps(dataset, ensure_ascii=False).replace('</', '<\\/') + ';\n'
+                   'if(typeof module!=="undefined")module.exports=PLAYER_CARDS_DATA;\n')
+    tmp_m = OUT_MODULE + '.tmp'
+    with io.open(tmp_m, 'w', encoding='utf-8') as fh:
+        fh.write(module_text)
+    os.replace(tmp_m, OUT_MODULE)
     zh_known = sum(1 for c in cards if c['nameZh'])
     types = {}
     for c in cards:
         types[c['type']] = types.get(c['type'], 0) + 1
     print(f'wrote {OUT_FILE}: {os.path.getsize(OUT_FILE)} bytes')
+    print(f'wrote {OUT_MODULE}: {os.path.getsize(OUT_MODULE)} bytes')
     print(f'cards={len(cards)} packs={dataset["packCount"]} types={types}')
     print(f'chinese names: {zh_known}/{len(cards)} ({100.0 * zh_known / len(cards):.1f}%)')
 

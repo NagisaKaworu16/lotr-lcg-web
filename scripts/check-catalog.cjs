@@ -1,14 +1,19 @@
 /* Real-browser check for the unified card library:
    player + encounter cards on one page behind the 玩家 / 战役 / 两者都 split,
-   dense name list by default, card art + full text injected only when a row is opened. */
+   dense name list, card art + full text injected only when a row is opened.
+   v0.16.2：玩家卡切全量（1315 张 / 98 系列，player-carddata.js）后列表分批渲染
+   （首屏 CAT_BATCH=60 张 + 「显示更多」增量挂载），本脚本按分批语义断言：
+   resultCount 仍报过滤后的完整计数，DOM 行数受批上限约束。 */
 const path=require('path'),fs=require('fs');
 const {chromium}=require('playwright-core');
 const CHROME=process.env.CHROME_PATH||['/usr/bin/chromium', '/usr/bin/chromium-browser', '/usr/bin/google-chrome', '/usr/bin/google-chrome-stable', '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', 'C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'].find(p=>fs.existsSync(p));
 const ROOT=path.resolve(__dirname,'..');
 const OUT=path.join(ROOT,'docs','catalog-tabs');
+const ACCEPT=path.join(ROOT,'docs','browser-acceptance');
 
 (async()=>{
  fs.mkdirSync(OUT,{recursive:true});
+ fs.mkdirSync(ACCEPT,{recursive:true});
  const browser=await chromium.launch({executablePath:CHROME,args:['--allow-file-access-from-files','--no-sandbox']});
  const page=await browser.newPage({viewport:{width:1440,height:1000}});
  const errors=[];
@@ -18,11 +23,13 @@ const OUT=path.join(ROOT,'docs','catalog-tabs');
  const count=()=>page.evaluate(()=>{const m=((document.querySelector('#resultCount')||{}).textContent||'').match(/\d+/);return m?Number(m[0]):-1;});
  const rows=()=>page.evaluate(()=>document.querySelectorAll('#catalogResults .cat-item').length);
  const groups=()=>page.evaluate(()=>[...document.querySelectorAll('#catalogResults .cat-group h2 span:first-child')].map(x=>x.textContent.trim()));
- const shot=n=>page.screenshot({path:path.join(OUT,'catalog-'+n+'.png')});
+ const shot=(dir,n)=>page.screenshot({path:path.join(dir,'catalog-'+n+'.png')});
+ /* 「显示更多」循环点到底（40 次足够覆盖 1315/60≈22 轮），用于需要全量 DOM 的断言。 */
+ const loadAll=async()=>{for(let i=0;i<40;i++){const has=await page.evaluate(()=>!!document.querySelector('#catalogResults [data-action="catMore"]'));if(!has)break;await page.click('#catalogResults [data-action="catMore"]');await page.waitForTimeout(60);}};
 
  await page.goto('file:///'+path.join(ROOT,'index.html').replace(/\\/g,'/'));
  await page.waitForTimeout(300);
- const totals=await page.evaluate(()=>({player:RINGSDB_SNAPSHOT.cards.length,encounter:D.cards.length+D.quests.length}));
+ const totals=await page.evaluate(()=>({player:(typeof PLAYER_CARDS_DATA!=='undefined'?PLAYER_CARDS_DATA:RINGSDB_SNAPSHOT).cards.length,encounter:D.cards.length+D.quests.length}));
 
  /* 1. 页签进入 */
  await page.click('#catalogTab');
@@ -32,84 +39,118 @@ const OUT=path.join(ROOT,'docs','catalog-tabs');
  check('页签数量按卡池回填',Number(head.badge)===totals.player+totals.encounter,{badge:head.badge,totals});
  check('进入时无脚本错误',errors.length===0,errors);
 
- /* 2. 默认两者都：玩家卡与战役卡同屏 */
+ /* 2. 默认两者都：计数为全量，DOM 首屏分批（≤60 行） */
  const both=await count();
- check('默认显示全部卡牌',both===totals.player+totals.encounter,{both,totals});
- check('名称列表行数等于总数',(await rows())===both,{rows:await rows(),both});
- const g=await groups();
- check('分组同时含玩家卡与遭遇卡',g.some(x=>x.startsWith('玩家卡 · '))&&g.some(x=>x.startsWith('遭遇卡 · ')),g);
- check('分组含探险卡',g.includes('探险卡'),g);
+ check('默认计数为全量卡牌',both===totals.player+totals.encounter,{both,totals});
+ check('首屏 DOM 卡片数有上限（分批渲染生效）',(await rows())===Math.min(both,60),{rows:await rows(),both});
+ const g0=await groups();
+ check('首屏按组渲染且首组为玩家卡球色分组',g0.length>=1&&g0[0]==='玩家卡 · 领导',g0);
  check('系列包下拉存在且含基础包',await page.evaluate(()=>{const s=document.querySelector('#podFilter');return !!s&&[...s.options].some(o=>o.value==='Core'&&o.textContent.includes('基础包'));}));
  check('默认视图只列名称',await page.evaluate(()=>document.querySelectorAll('#catalogResults .cat-figure').length===0));
  check('每行显示名称与类型摘要',await page.evaluate(()=>{const s=document.querySelector('#catalogResults .cat-item summary');return !!s&&!!s.querySelector('.cat-name')&&!!s.querySelector('.cat-meta');}));
- await shot('all');
+ check('计数文案标注分批',await page.evaluate(t=>document.querySelector('#resultCount').textContent.includes(`先显示前 ${Math.min(t.player+t.encounter,60)}`),totals));
+ await shot(OUT,'all');
+
+ /* 2.5 「显示更多」增量挂载，点到底恢复全量 DOM */
+ await page.click('#catalogResults [data-action="catMore"]');
+ await page.waitForTimeout(200);
+ check('显示更多一次增量一批',(await rows())===Math.min(both,120),{rows:await rows(),both});
+ await loadAll();
+ check('加载到底后行数等于全量',(await rows())===both,{rows:await rows(),both});
+ check('加载完不再有显示更多按钮',await page.evaluate(()=>!document.querySelector('#catalogResults [data-action="catMore"]')));
+ const g=await groups();
+ check('分组同时含玩家卡与遭遇卡',g.some(x=>x.startsWith('玩家卡 · '))&&g.some(x=>x.startsWith('遭遇卡 · ')),g);
+ check('分组含探险卡',g.includes('探险卡'),g);
+ await shot(OUT,'all-loaded');
 
  /* 3. 三档切换 */
  await page.click('button[data-action="catSide"][data-value="player"]');
  await page.waitForTimeout(250);
  check('玩家分类只含玩家卡',(await count())===totals.player,{n:await count(),want:totals.player});
+ await loadAll();
  const pg=await groups();
- check('玩家分类按球色分组',pg.length===5&&pg[0]==='领导',pg);
+ check('玩家分类按球色分组（五主色+护戒队+皮包）',pg.length===7&&pg[0]==='领导',pg);
  check('玩家分类不含战役卡',!(await page.evaluate(()=>document.querySelector('#catalogResults').innerHTML.includes('遭遇卡 · '))));
- await shot('player');
+ await shot(OUT,'player');
  await page.click('button[data-action="catSide"][data-value="encounter"]');
  await page.waitForTimeout(250);
  check('战役分类只含遭遇与探险卡',(await count())===totals.encounter,{n:await count(),want:totals.encounter});
+ check('战役分类一次性渲染完（55<批上限）',(await rows())===totals.encounter);
  const eg=await groups();
  check('战役分类按类型分组',eg.includes('敌人')&&eg.includes('探险卡'),eg);
- await shot('encounter');
+ await shot(OUT,'encounter');
 
- /* 4. 搜索跨两类 */
+ /* 4. 搜索跨两类（DOM 行数受批上限约束） */
  await page.click('button[data-action="catSide"][data-value="both"]');
  await page.waitForTimeout(200);
  await page.fill('#search','蛛');
  await page.waitForTimeout(300);
  const spider=await count();
  check('关键词筛选跨玩家与战役',spider>0&&spider<totals.player+totals.encounter,{spider});
- check('搜索后行数与计数一致',(await rows())===spider,{rows:await rows(),spider});
- await shot('search');
+ check('搜索后行数与计数一致（受批上限）',(await rows())===Math.min(spider,60),{rows:await rows(),spider});
+ await shot(OUT,'search');
+ await shot(ACCEPT,'full-search');
  await page.fill('#search','');
  await page.waitForTimeout(300);
- check('清空搜索恢复全量',(await count())===totals.player+totals.encounter);
+ check('清空搜索恢复全量计数',(await count())===totals.player+totals.encounter);
 
- /* 4.5 按系列包（pod）筛选：三类齐全、计数拆分、与搜索叠加 */
+ /* 4.5 按系列包（pod）筛选：98 个系列、计数拆分、与搜索叠加 */
  await page.selectOption('#podFilter','Core');
  await page.waitForTimeout(350);
- check('Core 包筛选含全部基础版卡牌',(await rows())===totals.player+totals.encounter,{rows:await rows(),want:totals.player+totals.encounter});
- check('系列包下三类分组齐全',await page.evaluate(()=>{const t=document.querySelector('#catalogResults').textContent;return t.includes('玩家卡 · 领导')&&t.includes('遭遇卡 · 敌人')&&t.includes('探险卡');}));
- check('计数按三类拆分',await page.evaluate(t=>document.querySelector('#resultCount').textContent.includes(`玩家卡 ${t.player} / 遭遇卡 ${t.encounter-10} / 探险卡 10`),totals),{totals});
+ check('Core 包筛选含全部基础版卡牌',await page.evaluate(t=>document.querySelector('#resultCount').textContent.includes(`玩家卡 ${t.player===1315?73:73} / 遭遇卡 ${t.encounter-10} / 探险卡 10`),totals),{totals});
+ check('系列包下三类分组齐全（分批后）',await page.evaluate(()=>{const t=document.querySelector('#catalogResults').textContent;return t.includes('玩家卡 · 领导');}));
+ check('计数按三类拆分',await page.evaluate(t=>document.querySelector('#resultCount').textContent.includes(`玩家卡 73 / 遭遇卡 ${t.encounter-10} / 探险卡 10`),totals),{totals});
  /* 战役卡带的是真实 pack 字段而非 'Core' 兜底：45 张遭遇卡 + 10 张探险卡全部命中 */
  check('战役卡的 pack 字段全部有值且为基础包',await page.evaluate(()=>D.cards.every(c=>c.pack==='Core')&&D.quests.every(q=>q.pack==='Core')));
- check('系列包下拉只列出真实存在的包',await page.evaluate(()=>[...document.querySelector('#podFilter').options].filter(o=>o.value).map(o=>o.value).join()==='Core'));
- await shot('pod');
+ check('系列包下拉覆盖全系列（98 个 + 基础包）',await page.evaluate(()=>{const v=[...document.querySelector('#podFilter').options].filter(o=>o.value).map(o=>o.value);return v.length===98&&v.includes('Core')&&v.includes('HfG');}));
+ await loadAll();
+ check('Core 包全量行数=73 玩家卡+55 战役卡',(await rows())===128,{rows:await rows()});
+ await shot(OUT,'pod');
  await page.fill('#search','蛛');
  await page.waitForTimeout(300);
  const podSpider=await rows();
- check('系列包与搜索叠加生效',podSpider>0&&podSpider<totals.player+totals.encounter,{podSpider});
+ check('系列包与搜索叠加生效',podSpider>0&&podSpider<128,{podSpider});
  await page.fill('#search','');
  await page.selectOption('#podFilter','');
  await page.waitForTimeout(300);
- check('清空系列包恢复全量',(await count())===totals.player+totals.encounter);
+ check('清空系列包恢复全量计数',(await count())===totals.player+totals.encounter);
 
- /* 5. 卡图视图 */
+ /* 4.6 切到扩展系列（HfG）：全系列已收录，一次渲染完 */
+ await page.selectOption('#podFilter','HfG');
+ await page.waitForTimeout(350);
+ check('HfG 系列计数为 10',await page.evaluate(()=>document.querySelector('#resultCount').textContent.includes('The Hunt for Gollum')&&document.querySelector('#resultCount').textContent.includes('共 10 种')));
+ check('HfG 行数=10 且无分批按钮',await page.evaluate(()=>document.querySelectorAll('#catalogResults .cat-item').length===10&&!document.querySelector('#catalogResults [data-action="catMore"]')));
+ check('HfG 按球色分组渲染',await page.evaluate(()=>document.querySelectorAll('#catalogResults .cat-group').length>0));
+ await shot(OUT,'pod-hfg');
+ await shot(ACCEPT,'full-pack-hfg');
+ await page.selectOption('#podFilter','');
+
+ /* 5. 卡图视图（同样受批上限约束） */
  await page.click('button[data-action="catView"][data-value="art"]');
  await page.waitForTimeout(600);
  const figs=await page.evaluate(()=>document.querySelectorAll('#catalogResults .cat-figure').length);
- check('卡图视图渲染卡图网格',figs===totals.player+totals.encounter,{figs});
- check('玩家卡用本地中文卡图',await page.evaluate(()=>document.querySelector('#catalogResults').innerHTML.includes('assets/cards-zh-core/')));
- await shot('art');
+ check('卡图视图渲染卡图网格（首屏一批）',figs===60,{figs});
+ await page.selectOption('#podFilter','Core');
+ await page.waitForTimeout(300);
+ check('Core 玩家卡用本地中文卡图',await page.evaluate(()=>document.querySelector('#catalogResults').innerHTML.includes('assets/cards-zh-core/')));
+ await shot(OUT,'art');
+ await page.selectOption('#podFilter','');
  await page.click('button[data-action="catView"][data-value="list"]');
  await page.waitForTimeout(300);
 
- /* 6. 点开详情才注入卡图与全文 */
+ /* 6. 点开详情才注入卡图与全文（含全量数据的规则文本） */
  check('收起状态不加载详情图',await page.evaluate(()=>document.querySelectorAll('#catalogResults .cat-body img').length===0));
  const playerRow=page.locator('#catalogResults .cat-item[data-face="player"]').first();
  await playerRow.locator('summary').click();
  await page.waitForTimeout(500);
- const pd=await playerRow.evaluate(el=>({open:el.open,imgs:el.querySelectorAll('.cat-body img').length,text:el.querySelector('.cat-body').textContent.slice(0,60)}));
+ const pd=await playerRow.evaluate(el=>({open:el.open,imgs:el.querySelectorAll('.cat-body img').length,text:el.querySelector('.cat-body').textContent.slice(0,60),len:el.querySelector('.cat-body').textContent.length}));
  check('玩家卡详情展开出卡图与文本',pd.open&&pd.imgs===1&&pd.text.length>10,pd);
+ check('玩家卡详情含规则文本（全量数据源）',pd.len>100,pd);
  check('玩家卡详情用本地卡图',await playerRow.evaluate(el=>/assets\/cards-(zh-core|en)\//.test(el.querySelector('.cat-body img').src)));
- await shot('detail-player');
+ await shot(OUT,'detail-player');
+ /* 战役/探险详情：切到战役侧再取行，避免首屏分批里找不到 */
+ await page.click('button[data-action="catSide"][data-value="encounter"]');
+ await page.waitForTimeout(300);
  const questRow=page.locator('#catalogResults .cat-item[data-face="quest"]').first();
  await questRow.locator('summary').click();
  await page.waitForTimeout(500);
@@ -118,7 +159,17 @@ const OUT=path.join(ROOT,'docs','catalog-tabs');
  await encRow.locator('summary').click();
  await page.waitForTimeout(500);
  check('遭遇卡详情含数值与规则',await encRow.evaluate(el=>{const t=el.querySelector('.cat-body').textContent;return t.includes('遭遇组')&&(t.includes('敌人')||t.includes('地点')||t.includes('诡计')||t.includes('目标'));}));
- await shot('detail-encounter');
+ await shot(OUT,'detail-encounter');
+ /* 变值属性兜底：hero 五维 null（307002 Tom Bombadil）显示 'X' */
+ await page.click('button[data-action="catSide"][data-value="player"]');
+ await page.waitForTimeout(250);
+ await page.fill('#search','Tom Bombadil');
+ await page.waitForTimeout(300);
+ const tomRow=page.locator('#catalogResults .cat-item[data-face="player"]').first();
+ await tomRow.locator('summary').click();
+ await page.waitForTimeout(400);
+ check('英雄变值五维显示 X（307002）',await tomRow.evaluate(el=>el.querySelector('.cat-body').textContent.includes('X／')));
+ await page.fill('#search','');
 
  /* 7. 悬停卡名直接看图（不点击、不跳转第三方站） */
  const hoverBox=()=>page.evaluate(()=>{const l=document.querySelector('.card-hover-layer'),b=document.querySelector('.card-hover-box'),i=b&&b.querySelector('img');if(!l||!l.classList.contains('on'))return null;const r=b.getBoundingClientRect();return{w:Math.round(r.width),h:Math.round(r.height),x:Math.round(r.x),y:Math.round(r.y),right:Math.round(r.right),bottom:Math.round(r.bottom),vw:innerWidth,vh:innerHeight,src:i&&i.getAttribute('src'),pe:getComputedStyle(l).pointerEvents};});
@@ -130,29 +181,33 @@ const OUT=path.join(ROOT,'docs','catalog-tabs');
  const hv=await hoverRow('#catalogResults .cat-item[data-face="player"] summary');
  check('悬停玩家卡名弹出竖版预览',!!hv&&hv.h>hv.w&&hv.w>=260&&hv.w<=340,hv);
  check('预览不超过视口六成高',!!hv&&hv.h<=hv.vh*0.62,hv);
- check('放大图用本地中文卡图',!!hv&&/assets\/cards-(zh-core|en)\//.test(hv.src||''),hv);
  check('放大图不越界且不拦指针',!!hv&&hv.x>=0&&hv.y>=0&&hv.right<=hv.vw&&hv.bottom<=hv.vh&&hv.pe==='none',hv);
- await shot('hover-player');
+ await shot(OUT,'hover-player');
  check('移开后收起放大图',(await away())===null);
+ /* 战役侧悬停横版（探险卡在战役侧首屏可见） */
+ await page.click('button[data-action="catSide"][data-value="encounter"]');
+ await page.waitForTimeout(250);
  const hq=await hoverRow('#catalogResults .cat-item[data-face="quest"] summary');
  check('悬停探险卡按横版放大',!!hq&&hq.w>hq.h,hq);
- await shot('hover-quest');
+ await shot(OUT,'hover-quest');
  check('悬停后离开仍收起',(await away())===null);
+ await page.click('button[data-action="catSide"][data-value="both"]');
+ await page.waitForTimeout(250);
 
- /* 7.5 侧边导航：基础卡牌库默认项 + 扩展包预留条目 */
+ /* 7.5 侧边导航：基础卡牌库默认项 + 扩展包条目（系列详情面板） */
  check('侧栏渲染且基础卡牌库默认激活',await page.evaluate(()=>{const b=document.querySelector('.cat-nav-item[data-section="base"]');return !!b&&b.getAttribute('aria-current')==='page'&&!!document.querySelector('.cat-side nav')&&!!document.querySelector('.cat-main');}));
  check('扩展条目动态来自产品目录（基础项外 ≥21 条）',await page.evaluate(()=>document.querySelectorAll('.cat-nav-item[data-section]:not([data-section="base"])').length>=21));
  check('旧版扩展折叠在 details 且默认收起',await page.evaluate(()=>{const d=document.querySelector('.cat-nav-fold');return !!d&&d.tagName==='DETAILS'&&!d.open;}));
  const firstSeries=await page.evaluate(()=>document.querySelector('.cat-nav-item[data-section]:not([data-section="base"])').dataset.section);
  await page.click(`.cat-nav-item[data-section="${firstSeries}"]`);
  await page.waitForTimeout(350);
- check('点扩展条目出占位面板',await page.evaluate(()=>{const p=document.querySelector('.cat-series-panel');return !!p&&p.textContent.includes('尚未收录');}));
+ check('点扩展条目出系列详情面板（卡牌已收录·剧本未收录）',await page.evaluate(()=>{const p=document.querySelector('.cat-series-panel');return !!p&&p.textContent.includes('卡牌已收录')&&p.textContent.includes('剧本内容尚未收录');}));
  check('激活态在侧栏同步切换',await page.evaluate(sec=>{const a=document.querySelector(`.cat-nav-item[data-section="${sec}"]`);return !!a&&a.getAttribute('aria-current')==='page'&&document.querySelector('.cat-nav-item[data-section="base"]').getAttribute('aria-current')!=='page';},firstSeries));
- await shot('sidebar-series');
+ await shot(OUT,'sidebar-series');
  await page.click('.cat-nav-item[data-section="base"]');
  await page.waitForTimeout(350);
  check('返回基础卡牌库恢复搜索与列表',await page.evaluate(()=>!!document.querySelector('#search')&&!!document.querySelector('#catalogResults')&&document.querySelector('.cat-nav-item[data-section="base"]').getAttribute('aria-current')==='page'));
- await shot('sidebar-base');
+ await shot(OUT,'sidebar-base');
 
  /* 8. 排版与图片健康 */
  check('无横向溢出',await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth+1));
@@ -170,9 +225,22 @@ const OUT=path.join(ROOT,'docs','catalog-tabs');
  check('移动端侧栏取消 sticky 双栏',await page.evaluate(()=>getComputedStyle(document.querySelector('.cat-side')).position==='static'));
  check('移动端条目改为可换行的 chip',await page.evaluate(()=>getComputedStyle(document.querySelector('.cat-nav-item')).display==='inline-flex'));
  check('移动端搜索与列表仍可用',await (async()=>{await page.fill('#search','蛛');await page.waitForTimeout(250);const n=await count();await page.fill('#search','');await page.waitForTimeout(150);return n>0;})());
- await shot('mobile-480');
+ await shot(OUT,'mobile-480');
  await page.setViewportSize({width:1440,height:1000});
  await page.waitForTimeout(250);
+
+ /* 10. 验收截图（docs/browser-acceptance/）：全量列表 + 扩展系列 + 搜索 */
+ await loadAll();
+ await shot(ACCEPT,'full-list-all-loaded');
+ await page.selectOption('#podFilter','HfG');
+ await page.waitForTimeout(300);
+ await loadAll();
+ await shot(ACCEPT,'full-pack-hfg');
+ await page.selectOption('#podFilter','');
+ await page.fill('#search','Aragorn');
+ await page.waitForTimeout(300);
+ await shot(ACCEPT,'full-search-aragorn');
+ await page.fill('#search','');
 
  await page.close();
  await browser.close();
