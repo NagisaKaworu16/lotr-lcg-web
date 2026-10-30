@@ -41,14 +41,14 @@ const ALLOW = {
   /* 注：PHASE_COLOR 的 7 个阶段色**不在这里**——它们由下面的 --pc 派生机制自动覆盖
      （七色 × 那三种 mix 实算），写死在这里反而会掩盖「派生链断了」这种失效。
      它们仍是 §4 待 visual 裁定的项目，届时改 phase-log.js 一处即可。 */
-  /* §4 待 visual 裁定：`.rail-win-line[data-timing]` 三色（action / trigger） */
-  '#6ea86b': 'rail-win-line[data-timing=action]',
-  '#e8c169': 'rail-win-line[data-timing=trigger]',
-  /* §4 待 visual 裁定：活跃玩家标签（底色 + 统计字） */
-  '#527085': 'player-tabs button.active 底',
-  '#dfe7d8': 'player-tabs button.active .tab-stats',
-  /* §4 待 visual 裁定：可选中卡面光环 */
-  '#79b9db': 'table-card.selectable 环',
+  /* §5.11-A：活跃玩家标签底。规范明示「不新增令牌」的唯一一处新增字面量
+     （三级台阶 28.7→35.4→42.6 的第三级，锁在顶栏自己的绿色相 H143 上） */
+  '#4b6d48': '§5.11-A active 玩家标签底',
+  /* §5.7-b：时机线数据色。与 forced（--accent-red-on-dark 4.51）等亮度、
+     OKLCh 彩度 0.112–0.119、L* 69.2–69.3 钉死，色相是唯一变量——
+     单独定值，不许复用 --on-dark-gold 等语义令牌 */
+  '#cda351': '§5.7-b trigger 时机线',
+  '#72b97d': '§5.7-b action 时机线',
   /* §6-32：领域色五色，规范明示「保留原值不动」——只做 border-top 4px 竖带，
      从不承载文字，是「领域识别」的唯一线索 */
   '#6e9db5': '§6-32 领域色 knowledge',

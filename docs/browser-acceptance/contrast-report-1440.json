@@ -1,7 +1,7 @@
 {
  "width": 1440,
- "min": 4.5,
- "at": "2026-10-29T10:15:01.376Z",
+ "min": 3,
+ "at": "2026-10-30T01:34:10.731Z",
  "stages": [
   {
    "stage": "landing",
@@ -13,19 +13,7 @@
   },
   {
    "stage": "setup",
-   "bad": [
-    {
-     "text": "威胁 29 · 资源 0 · 伤害 0",
-     "cls": "tab-stats",
-     "tag": "span",
-     "fg": "rgb(223, 231, 216)",
-     "bg": "rgb(82,112,133)",
-     "ratio": 4.12,
-     "need": 4.5,
-     "fs": 10.5,
-     "bold": false
-    }
-   ],
+   "bad": [],
    "skipped": {
     "image": 25,
     "hidden": 86
@@ -33,19 +21,7 @@
   },
   {
    "stage": "resource",
-   "bad": [
-    {
-     "text": "威胁 29 · 资源 3 · 伤害 0",
-     "cls": "tab-stats",
-     "tag": "span",
-     "fg": "rgb(223, 231, 216)",
-     "bg": "rgb(82,112,133)",
-     "ratio": 4.12,
-     "need": 4.5,
-     "fs": 10.5,
-     "bold": false
-    }
-   ],
+   "bad": [],
    "skipped": {
     "image": 26,
     "hidden": 93
@@ -53,24 +29,12 @@
   },
   {
    "stage": "phase2",
-   "bad": [
-    {
-     "text": "威胁 29 · 资源 3 · 伤害 0",
-     "cls": "tab-stats",
-     "tag": "span",
-     "fg": "rgb(223, 231, 216)",
-     "bg": "rgb(82,112,133)",
-     "ratio": 4.12,
-     "need": 4.5,
-     "fs": 10.5,
-     "bold": false
-    }
-   ],
+   "bad": [],
    "skipped": {
     "image": 26,
     "hidden": 95
    }
   }
  ],
- "ok": false
+ "ok": true
 }
