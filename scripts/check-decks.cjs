@@ -27,7 +27,9 @@ const OUT=path.join(ROOT,'docs','catalog-tabs');
  /* 1. 顶部导航只剩一个卡牌入口 */
  const nav=await page.evaluate(()=>[...document.querySelectorAll('nav button')].map(b=>b.textContent.trim()));
  check('顶部导航不再有英雄与玩家牌',!nav.some(t=>t.includes('英雄与玩家')),nav);
- check('导航项为五项',nav.length===5,nav);
+ /* v0.15.25（633d164）把「英雄」「玩家牌」合并为「卡牌」后，导航恒为四项：首页/卡牌/我的卡组/说明与完成范围。
+    旧断言「项数为五」与上一条「不再有英雄与玩家牌」自相矛盾，2026-10-30 修正为四项。 */
+ check('导航项为四项',nav.length===4,nav);
 
  /* 2. 我的卡组 → 新建牌组 */
  await page.click('#decksTab');
