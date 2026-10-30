@@ -1,14 +1,14 @@
 {
  "width": 1440,
  "min": 3,
- "at": "2026-10-30T03:41:18.054Z",
+ "at": "2026-10-30T04:11:01.593Z",
  "stages": [
   {
    "stage": "landing",
    "bad": [],
    "skipped": {
     "image": 0,
-    "hidden": 54
+    "hidden": 55
    }
   },
   {
@@ -16,7 +16,7 @@
    "bad": [],
    "skipped": {
     "image": 25,
-    "hidden": 86
+    "hidden": 87
    }
   },
   {
@@ -24,7 +24,7 @@
    "bad": [],
    "skipped": {
     "image": 26,
-    "hidden": 93
+    "hidden": 94
    }
   },
   {
@@ -32,7 +32,7 @@
    "bad": [],
    "skipped": {
     "image": 26,
-    "hidden": 95
+    "hidden": 96
    }
   }
  ],
