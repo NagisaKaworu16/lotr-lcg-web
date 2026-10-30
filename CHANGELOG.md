@@ -1,3 +1,29 @@
+# v0.16.1 · 牌组重名防呆：保存改名、同名来源徽标与列表稳定排序（2026-10-30）
+
+用户在开局选牌器里看到两副「领导基础教学牌组」无法分辨——自建牌组保存时沿用原名，与预组同名也不做任何提示，
+且 `decks()` 把预组与自建合并后按名称混排，预组和自建的相对顺序随名称漂移。三项修复全在 `player-ui.js`：
+
+1. **保存防呆（源头）**：新增 `uniqueDeckName(name)`。手动保存（`action==='save'`）与导入路径（`saveDeck()`，
+   覆盖 RingsDB 链接导入与文件导入）在**新增**条目（`i<0`）时对 `decks()`（预组+自建）全部其他牌组查重：
+   同名 → 自动改「原名（副本）」；「（副本）」也被占用 → 递增「（副本 2）（副本 3）…」直到不重名，toast 说明
+   「检测到同名牌组，已命名为『××（副本）』」。**编辑既有牌组（`i>=0`）不触发改名**——覆盖自己是既有语义；
+   同 id 重复导入同一副 RingsDB 牌组走覆盖分支，不产生重复。
+2. **同名来源徽标**：`deckCard()` 仅当同名条目 >1 时在 `h2` 标题后追加来源徽标（复用现有 `.badge`，
+   显示「预组」/「自定义」/「RingsDB #n」），两张同名卡一眼可辨；名字唯一时不出徽标。
+3. **稳定排序**：抽共用 `sortedDecks(list, bySize)`——预组按固定球色顺序（领导→战术→精神→知识）在前，
+   自建按名称 `localeCompare('zh')`；「我的卡组」页（`deckList()`）与开局选牌器（`deckGrid()`）两处渲染共用，
+   顺序保证一致。卡组页「排序：张数」选项保留，作为预组/自建两组内部的次序键。
+
+测试：新增 `player-deck-tests.cjs` 7 项（vm 沙箱直载 player-ui.js；新增同名→副本、副本仍重→序号、
+编辑既有→不改名、新名→不改名、导入路径防呆与同 id 覆盖语义、徽标出现/隐没条件、两处渲染顺序一致）。
+`check_project.py` 503 → **516** 全绿。实机探针（Chrome 无头）注入同名自建牌组复刻线上场景：
+「我的卡组」与选牌器 h2 顺序完全一致、两张同名卡分别带「预组」「自定义」徽标，截图
+`docs/browser-acceptance/deck-dup-library-1440.png` / `deck-dup-chooser-1440.png`；check-palette 6 面 0 越界、
+check-contrast 0 低对比、browser-check ok=true。**已知既有红**：`check-decks.cjs`「导航项为五项」断言在
+本次改动前的 HEAD 上即失败（导航现为四项：首页/卡牌/我的卡组/说明与完成范围），属陈旧断言，未随本版改动。
+工程备注：`player-deck-tests.cjs` 的 vm 沙箱与宿主 realm 的 `Array.prototype` 不同，跨 realm 数组必须先
+`[...arr]` 展开再 `assert.deepEqual`，否则「same structure but not reference-equal」。
+
 # v0.16.0 · 窗口规则五条（引擎级+UI级）与 Vintage Analog 全站视觉体系（2026-10-30）
 
 用户参照诡镇奇谈网页版（arkhamhorror.app，开源 Haskell+Vue）问「触发窗口是不是会一直提醒」，取证其

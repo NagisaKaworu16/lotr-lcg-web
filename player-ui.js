@@ -7,6 +7,21 @@ const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const names={hero:'英雄',ally:'盟友',attachment:'附属',event:'事件'};
 function presets(){return ['leadership','tactics','spirit','lore'].map(sp=>P.starter(snapshot,sp));}
 function decks(){return [...presets(),...saved];}
+const PRESET_ORDER=['leadership','tactics','spirit','lore'];
+/* 重名防呆：新增保存时若与现有牌组（预组+自建）同名，给出「原名（副本）」；
+ * 若「（副本）」也被占用则继续递增序号（（副本 2）（副本 3）…）直到不重名。 */
+function uniqueDeckName(name){const taken=new Set(decks().map(d=>d.name)),base=String(name||'未命名牌组');if(!taken.has(base))return null;let cand=base+'（副本）',n=1;while(taken.has(cand)){n++;cand=base+'（副本 '+n+'）';}return cand;}
+/* 稳定排序：预组按固定球色顺序排在前，自建按名称 localeCompare('zh')。
+ * 「我的卡组」页与剧本开局选牌器两处渲染共用，保证两处顺序一致。 */
+function sortedDecks(list,bySize=false){
+ const rank=d=>{const s=String(d.id||'');return s.startsWith('starter-')?PRESET_ORDER.indexOf(s.slice(8)):-1;};
+ return [...list].sort((a,b)=>{
+  const ra=rank(a),rb=rank(b);
+  if((ra<0)!==(rb<0))return ra<0?1:-1;
+  if(ra>=0&&ra!==rb)return ra-rb;
+  return bySize?deckInfo(b).total-deckInfo(a).total:String(a.name).localeCompare(String(b.name),'zh');
+ });
+}
 function startDraft(){if(!draft)draft=JSON.parse(JSON.stringify(presets()[0]));}
 function button(t,action,attrs='',cls=''){return `<button class="${cls}" data-action="pc" data-pc="${action}" ${attrs}>${t}</button>`;}
 function deckOptions(selected){return decks().map(d=>`<option value="${esc(d.id)}" ${selected===d.id?'selected':''}>${esc(d.name)}</option>`).join('');}
@@ -93,7 +108,10 @@ async function handle(b){startDraft();capture();const action=b.dataset.pc,code=b
   if(action==='importUrl'){await importDeckUrl();render();return;}
   if(action==='load'){let d=decks().find(d=>d.id===document.querySelector('#pc-load').value);if(d){draft=JSON.parse(JSON.stringify(d));builderOrigin=d.id;}importReport=null;}
   if(action==='clear'){if(!confirm('清空当前未保存的牌组？'))return;draft={id:'new',name:'自定义基础版牌组',mode:'standard',heroes:[],slots:{}};importReport=null;}
-  if(action==='save'){let r=P.validateDeck(draft,snapshot);if(!r.valid)throw Error(r.errors.join('\n'));if(draft.id.startsWith('starter-')||['new','custom-import'].includes(draft.id))draft.id='custom-'+Date.now();let i=saved.findIndex(x=>x.id===draft.id),copy=JSON.parse(JSON.stringify(draft));if(i>=0)saved[i]=copy;else saved.push(copy);persist();builderOrigin=draft.id;importReport=null;toast('牌组已保存，可在剧本开局时选用。');}
+  if(action==='save'){let r=P.validateDeck(draft,snapshot);if(!r.valid)throw Error(r.errors.join('\n'));if(draft.id.startsWith('starter-')||['new','custom-import'].includes(draft.id))draft.id='custom-'+Date.now();let i=saved.findIndex(x=>x.id===draft.id),renamed='';
+   /* 只对「新增」防呆：编辑既有牌组（i>=0）本就是覆盖自己，不改名。 */
+   if(i<0){const alt=uniqueDeckName(draft.name);if(alt){draft.name=alt;renamed='检测到同名牌组，已命名为「'+alt+'」。';}}
+   let copy=JSON.parse(JSON.stringify(draft));if(i>=0)saved[i]=copy;else saved.push(copy);persist();builderOrigin=draft.id;importReport=null;toast(renamed+'牌组已保存，可在剧本开局时选用。');}
   if(action==='share'){const url=shareLink(draft);if(!url){toast('本机双击打开的页面没有可分享的地址；部署到网站后即可复制链接。');return;}await copyText(url);}
   if(action==='export'){download(P.exportDeck(draft),'lotr-core-deck.json');}
   if(action==='refresh'){
@@ -114,16 +132,21 @@ function deckInfo(d){
 }
 function deckCard(d,actions,extra=''){
  const i=deckInfo(d);
- return `<article class="deck-card ${extra}" data-deck="${esc(d.id)}"><div class="deck-card-heroes">${i.heroes.map(h=>`<span class="deck-hero-thumb">${ImageLibrary.art(h.code,'hero-thumbnail')}</span>`).join('')||'<span class="deck-hero-thumb"></span>'}</div><div class="deck-card-body"><h2>${esc(d.name)}</h2><p class="small muted">${i.heroes.map(h=>esc(h.nameZh)).join('、')||'未选英雄'}</p><p class="deck-card-tags"><span class="badge">${esc(i.source)}</span><span class="badge">${i.total} 张</span>${i.spheres.length?`<span class="badge">${i.spheres.map(x=>esc(P.SPHERES[x]||x)).join('／')}</span>`:''}${i.valid?'':'<span class="badge danger">构筑未通过</span>'}</p></div><div class="deck-card-actions">${actions}</div></article>`;
+ /* 重名防混淆：仅当同名不止一副时，才在名字后面标注来源（预组／自定义），让玩家分得清。 */
+ const dup=decks().filter(x=>x.name===d.name).length>1?` <span class="badge">${esc(i.source)}</span>`:'';
+ return `<article class="deck-card ${extra}" data-deck="${esc(d.id)}"><div class="deck-card-heroes">${i.heroes.map(h=>`<span class="deck-hero-thumb">${ImageLibrary.art(h.code,'hero-thumbnail')}</span>`).join('')||'<span class="deck-hero-thumb"></span>'}</div><div class="deck-card-body"><h2>${esc(d.name)}${dup}</h2><p class="small muted">${i.heroes.map(h=>esc(h.nameZh)).join('、')||'未选英雄'}</p><p class="deck-card-tags"><span class="badge">${esc(i.source)}</span><span class="badge">${i.total} 张</span>${i.spheres.length?`<span class="badge">${i.spheres.map(x=>esc(P.SPHERES[x]||x)).join('／')}</span>`:''}${i.valid?'':'<span class="badge danger">构筑未通过</span>'}</p></div><div class="deck-card-actions">${actions}</div></article>`;
 }
 function deckActions(d){const i=deckInfo(d);return `<button data-action="deckUse" data-deck="${esc(d.id)}">设为玩家1</button><button data-action="deckEdit" data-deck="${esc(d.id)}">编辑</button><button data-action="deckExport" data-deck="${esc(d.id)}">导出</button>${i.mine?`<button class="danger" data-action="deckDelete" data-deck="${esc(d.id)}">删除</button>`:''}`;}
 function deckById(id){return decks().find(d=>d.id===id)||null;}
 function deckName(id){return deckById(id)?.name||'';}
-function saveDeck(deck){const r=P.validateDeck(deck,snapshot);if(!r.valid)throw Error(r.errors.join('\n'));const copy=JSON.parse(JSON.stringify(deck));if(!copy.id||String(copy.id).startsWith('starter-')||['new','custom-import'].includes(copy.id))copy.id='custom-'+Date.now();const i=saved.findIndex(x=>x.id===copy.id);if(i>=0)saved[i]=copy;else saved.push(copy);persist();return copy;}
+function saveDeck(deck){const r=P.validateDeck(deck,snapshot);if(!r.valid)throw Error(r.errors.join('\n'));const copy=JSON.parse(JSON.stringify(deck));if(!copy.id||String(copy.id).startsWith('starter-')||['new','custom-import'].includes(copy.id))copy.id='custom-'+Date.now();const i=saved.findIndex(x=>x.id===copy.id);
+ /* 导入路径同样是新增保存：同名防呆与手动保存一致（改名后由调用方在 toast 里说明）。 */
+ if(i<0){const alt=uniqueDeckName(copy.name);if(alt)copy.name=alt;}
+ if(i>=0)saved[i]=copy;else saved.push(copy);persist();return copy;}
 function removeDeck(id){const i=saved.findIndex(x=>x.id===id);if(i<0)throw Error('只能删除自己保存的牌组');saved.splice(i,1);persist();}
 function loadDeck(id){const d=deckById(id);if(!d)throw Error('找不到该牌组');draft=JSON.parse(JSON.stringify(d));importReport=null;}
 function deckMatches(x){const i=deckInfo(x),text=String(deckView.text||'').toLowerCase();const okText=!text||`${x.name} ${i.heroes.map(h=>h.nameZh+' '+h.name).join(' ')}`.toLowerCase().includes(text);const okSphere=!deckView.sphere||i.spheres.includes(deckView.sphere);return okText&&okSphere;}
-function deckList(){const list=decks().filter(deckMatches);if(deckView.sort==='size')list.sort((a,b)=>deckInfo(b).total-deckInfo(a).total);else list.sort((a,b)=>String(a.name).localeCompare(String(b.name),'zh'));return list;}
+function deckList(){return sortedDecks(decks().filter(deckMatches),deckView.sort==='size');}
 function decksPage(){
  const list=deckList();
  return `<div class="intro"><div><div class="eyebrow">DECK LIBRARY · ${saved.length} 副自建</div><h1>我的卡组</h1><p class="muted">四系教学预组，加上你导入或保存的牌组。点「新建牌组」进入卡牌库式列表配牌；开始剧本时会请每位玩家从这里选一副。</p></div><div class="actions"><button class="primary" data-action="deckNew">新建牌组</button><button data-action="deckGoSetup">返回剧本桌面</button></div></div>
@@ -133,11 +156,11 @@ function decksPage(){
  <div class="toolbar deck-filters"><input id="deck-search" placeholder="搜索牌组名或英雄…" value="${esc(deckView.text)}"><select id="deck-sort"><option value="name" ${deckView.sort==='name'?'selected':''}>排序：名称</option><option value="size" ${deckView.sort==='size'?'selected':''}>排序：张数</option></select><span class="spacer"></span>${['','leadership','tactics','spirit','lore'].map(k=>`<button data-action="deckViewSphere" data-value="${k}" class="${deckView.sphere===k?'primary':''}">${k?esc(P.SPHERES[k]):'全部'}</button>`).join('')}</div>
  <section class="deck-list">${list.map(d=>deckCard(d,deckActions(d))).join('')||'<p class="empty">没有匹配的牌组。</p>'}</section>`;
 }
-function bindDecks(){const s=document.querySelector('#deck-search');if(s)s.oninput=()=>{deckView.text=s.value;render();};const o=document.querySelector('#deck-sort');if(o)o.onchange=()=>{deckView.sort=o.value;render();};const f=document.querySelector('#deck-import-file');if(f)f.onchange=async ev=>{const file=ev.target.files[0];if(!file)return;try{const d=P.importDeck(JSON.parse(await file.text()),snapshot);saveDeck({...d,id:'custom-'+Date.now()});render();toast('牌组已保存到「我的卡组」。');}catch(e){toast('导入失败：'+e.message);}finally{ev.target.value='';}};}
+function bindDecks(){const s=document.querySelector('#deck-search');if(s)s.oninput=()=>{deckView.text=s.value;render();};const o=document.querySelector('#deck-sort');if(o)o.onchange=()=>{deckView.sort=o.value;render();};const f=document.querySelector('#deck-import-file');if(f)f.onchange=async ev=>{const file=ev.target.files[0];if(!file)return;try{const d=P.importDeck(JSON.parse(await file.text()),snapshot);const s=saveDeck({...d,id:'custom-'+Date.now()});render();toast((s.name!==d.name?'检测到同名牌组，已命名为「'+s.name+'」。':'')+'牌组已保存到「我的卡组」。');}catch(e){toast('导入失败：'+e.message);}finally{ev.target.value='';}};}
 async function handleDecks(b){const a=b.dataset.action,id=b.dataset.deck;
  if(a==='deckViewTab'){deckView.tab=b.dataset.value;render();return true;}
  if(a==='deckViewSphere'){deckView.sphere=b.dataset.value;render();return true;}
- if(a==='deckImportUrl'){const input=document.querySelector('#deck-import-url'),raw=String(input&&input.value||'').trim(),m=raw.match(/(?:decklist|deck)\/(?:view\/)?(\d+)/i)||raw.match(/^(\d+)$/);if(!m){toast('无法识别牌组编号；示例 https://ringsdb.com/decklist/view/12345');return true;}const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),15000);try{const res=await fetch('https://ringsdb.com/api/public/decklist/'+m[1],{signal:ctrl.signal,headers:{Accept:'application/json'}});if(!res.ok)throw Error('RingsDB 返回 HTTP '+res.status);const d=P.fromRingsdb(await res.json()),r=P.validateDeck(d,snapshot);saveDeck(d);render();toast(r.valid?'已保存 RingsDB 牌组：'+d.name:'已保存 '+d.name+'，但构筑未通过：'+r.errors.slice(0,2).join('；'));}catch(e){toast(e.name==='AbortError'?'RingsDB 请求超时（15秒）；国内网络通常无法访问':'导入失败：'+e.message);}finally{clearTimeout(timer);}return true;}
+ if(a==='deckImportUrl'){const input=document.querySelector('#deck-import-url'),raw=String(input&&input.value||'').trim(),m=raw.match(/(?:decklist|deck)\/(?:view\/)?(\d+)/i)||raw.match(/^(\d+)$/);if(!m){toast('无法识别牌组编号；示例 https://ringsdb.com/decklist/view/12345');return true;}const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),15000);try{const res=await fetch('https://ringsdb.com/api/public/decklist/'+m[1],{signal:ctrl.signal,headers:{Accept:'application/json'}});if(!res.ok)throw Error('RingsDB 返回 HTTP '+res.status);const d=P.fromRingsdb(await res.json()),r=P.validateDeck(d,snapshot),s=saveDeck(d);render();toast((s.name!==d.name?'检测到同名牌组，已命名为「'+s.name+'」。':'')+(r.valid?'已保存 RingsDB 牌组：'+s.name:'已保存 '+s.name+'，但构筑未通过：'+r.errors.slice(0,2).join('；')));}catch(e){toast(e.name==='AbortError'?'RingsDB 请求超时（15秒）；国内网络通常无法访问':'导入失败：'+e.message);}finally{clearTimeout(timer);}return true;}
  if(a==='deckNew'){startBuild();tab='decks';render();return true;}
  if(a==='deckBack'){building=false;render();return true;}
  if(a==='deckBackTo'){const d=deckById(id);if(!d){toast('原牌组已不存在。');return true;}if(!confirm('放弃当前未保存的改动，回到「'+d.name+'」？'))return true;startBuild(id);tab='decks';render();toast('已回填原牌组「'+d.name+'」。');return true;}
@@ -148,6 +171,6 @@ async function handleDecks(b){const a=b.dataset.action,id=b.dataset.deck;
  if(a==='deckUse'){const d=deckById(id);if(!d)return true;setupDraft.decks[0]=id;tab='table';render();toast('已把「'+d.name+'」设为玩家1牌组；点开始远征时确认。');return true;}
  return false;
 }
-function deckGrid(picks,player){return `<div class="deck-grid">${decks().map(d=>deckCard(d,`<button class="${picks[player]===d.id?'primary':''}" data-action="chooserPick" data-deck="${esc(d.id)}" data-player="${player}">${picks[player]===d.id?'已选':'选用'}</button>`,picks[player]===d.id?'is-selected':'')).join('')}</div>`;}
-return {builder,isBuilding,startBuild,openSharedDeck,shareLink,bind,handle,configs,registered,handPanel,getSnapshot:()=>snapshot,decksPage,bindDecks,handleDecks,deckGrid,deckById,deckName,saveDeck,loadDeck,removeDeck,deckInfo};
+function deckGrid(picks,player){return `<div class="deck-grid">${sortedDecks(decks()).map(d=>deckCard(d,`<button class="${picks[player]===d.id?'primary':''}" data-action="chooserPick" data-deck="${esc(d.id)}" data-player="${player}">${picks[player]===d.id?'已选':'选用'}</button>`,picks[player]===d.id?'is-selected':'')).join('')}</div>`;}
+return {builder,isBuilding,startBuild,openSharedDeck,shareLink,bind,handle,configs,registered,handPanel,getSnapshot:()=>snapshot,decks,decksPage,bindDecks,handleDecks,deckGrid,deckById,deckName,saveDeck,loadDeck,removeDeck,deckInfo};
 })();
