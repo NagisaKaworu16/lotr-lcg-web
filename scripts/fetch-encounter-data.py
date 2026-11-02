@@ -87,8 +87,8 @@ PLAYER_TYPES = {'hero', 'ally', 'attachment', 'event', 'treasure',
 # encounter-specific stats extend the shared core).
 CARD_FIELDS = ('code,name,nameZh,type,typeName,sphere,sphereName,cost,engagement,threat,'
                'willpower,attack,defense,health,questPoints,victory,isUnique,quantity,'
-               'encounterSet,traits,keywords,shadow,rulesText,flavor,hasErrata,illustrator,'
-               'packCode,packName,packNameZh,position,imagesrc,sourceUrl,stage,'
+               'encounterSet,traits,keywords,shadow,rulesText,front,back,flavor,hasErrata,'
+               'illustrator,packCode,packName,packNameZh,position,imagesrc,sourceUrl,stage,'
                'scenarioQuantity').split(',')
 
 
@@ -148,6 +148,21 @@ def zh_pack_titles():
         return {}
 
 
+def split_sides(text):
+    """Split double-sided quest rulesText at the structured '<b>Side A</b>' /
+    '<b>Side B</b>' markers, dropping the markers themselves. Returns None when
+    the text carries no marker pair — HoB's quest text is only partially marked
+    (verified: 10/13 of the HfG+Core quest cards) and its /Export/Scenarios
+    QuestCards.Text is no better (Front/Back assignment is inconsistent across
+    cards and misses whole sides), so unmarked cards stay unsplit and get
+    reported as missing rather than guessed at."""
+    a, b = '<b>Side A</b>', '<b>Side B</b>'
+    if a in text and b in text:
+        front, back = text.split(a, 1)[1].split(b, 1)
+        return front.strip(), back.strip()
+    return None
+
+
 def project(card, zh_titles):
     return {
         'code': card.get('code'),
@@ -173,6 +188,8 @@ def project(card, zh_titles):
         'keywords': card.get('keywords') or '',
         'shadow': card.get('shadow') or '',
         'rulesText': card.get('text') or '',
+        'front': None,   # quest cards: side A text (split from rulesText markers)
+        'back': None,    # quest cards: side B text; None/'' = source lacks the side
         'flavor': card.get('flavor') or '',
         'hasErrata': card.get('has_errata'),
         'illustrator': card.get('illustrator'),
@@ -352,6 +369,12 @@ def main():
                                                 'nightmare': sc['nightmare']}
 
     cards = [merged[s] for s in order]
+    # quest front/back: split at the structured Side A/B markers where present
+    for c in cards:
+        if c['type'] == 'quest':
+            sides = split_sides(c['rulesText'])
+            if sides:
+                c['front'], c['back'] = sides
     print(f'\nmerged unique encounter cards: {len(cards)}; failed: {failed or "none"}')
     if args.no_project or not cards:
         return
@@ -429,6 +452,12 @@ def main():
                 problems.append(f'quest {c["code"]} {c["name"]}: missing stage (scenario merge failed?)')
             if c.get('questPoints') is None:
                 problems.append(f'quest {c["code"]} {c["name"]}: missing questPoints')
+            if not c.get('front') or not c.get('back'):
+                problems.append(f'quest {c["code"]} {c["name"]}: '
+                                f'front {"ok" if c.get("front") else "MISSING"} / '
+                                f'back {"ok" if c.get("back") else "MISSING"} '
+                                f'(no Side A/B markers in HoB text; scenario QuestCards.Text '
+                                f'similarly incomplete — engine needs a manual-text overlay)')
         if c['type'] in ('objective', 'objective-ally') and c.get('willpower') is None:
             # HoB data gap (e.g. Signs of Gollum 02014): printed willpower exists
             # on the physical card but the export omits it — report, never guess.
