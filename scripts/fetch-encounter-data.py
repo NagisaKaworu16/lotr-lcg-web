@@ -251,7 +251,6 @@ def main():
                 continue
 
             quests = scen.get('QuestCards') or []
-            quest_by_title = {q.get('Title'): q for q in quests}
             quest_stats = []
             for q in quests:
                 front, back = q.get('Front') or {}, q.get('Back') or {}
@@ -291,7 +290,6 @@ def main():
                 if (quantities['normal'] > 0 and not is_nightmare
                         and sc['Slug'] not in merged):
                     merged[sc['Slug']] = project(detail, zh_titles)
-                    merged[sc['Slug']]['scenarioQuantity'] = quantities
                     order.append(sc['Slug'])
 
             # merge the pack's own encounter-side cards (dedupe by HoB slug)
@@ -303,17 +301,28 @@ def main():
                 merged[slug] = project(c, zh_titles)
                 order.append(slug)
 
-            # quest-card stage/questPoints: match by title onto the catalog card
-            for title, q in quest_by_title.items():
-                url = (by_slug.get(q.get('Slug', '')) or {}).get('url') or ''
-                slug = url.rsplit('/', 1)[-1] if url else None
-                if slug and slug in merged:
-                    front = q.get('Front') or {}
-                    back = q.get('Back') or {}
-                    merged[slug]['stage'] = [front.get('Stats', {}).get('StageNumber'),
-                                             (back.get('Stats') or {}).get('StageNumber')]
-                    if merged[slug]['questPoints'] is None:
-                        merged[slug]['questPoints'] = num((back.get('Stats') or {}).get('QuestPoints'))
+            # quest-card stage/questPoints: match by title onto the catalog card.
+            # Same-titled quest pairs exist by design (Core 01121/01122 both
+            # "A Chosen Path" — the stage-3 player choice), so walk the ordered
+            # QuestCards list and hand stats out in order to same-titled cards
+            # (position order); a title dict would silently drop the first.
+            used = {}
+            for q in quests:
+                title = q.get('Title')
+                front = q.get('Front') or {}
+                back = q.get('Back') or {}
+                stats = (front.get('Stats', {}).get('StageNumber'),
+                         (back.get('Stats') or {}).get('StageNumber'))
+                qp = num((back.get('Stats') or {}).get('QuestPoints'))
+                candidates = sorted(
+                    (c for c in merged.values() if c['type'] == 'quest' and c['name'] == title),
+                    key=lambda c: (c['position'] if c['position'] is not None else 0, c['code'] or ''))
+                idx = used.get(title, 0)
+                used[title] = idx + 1
+                if idx < len(candidates):
+                    candidates[idx]['stage'] = stats
+                    if candidates[idx]['questPoints'] is None:
+                        candidates[idx]['questPoints'] = qp
 
             scenario_summaries.append({
                 'slug': slug,
@@ -329,6 +338,18 @@ def main():
                            for m in ('easy', 'normal')},
                 'nightmareSetCards': sum(1 for c in scenario_cards if c['nightmareSet']),
             })
+
+        # Per-scenario usage on the card itself only when the pack maps to
+        # exactly ONE scenario — shared encounter sets (Core: three scenarios)
+        # would otherwise silently carry whichever scenario was processed
+        # first. For multi-scenario packs the quantities stay on
+        # scenarios[].encounterCards, keyed by slug.
+        if len(pack_scenarios) == 1 and scenario_summaries:
+            for sc in scenario_summaries[-1]['encounterCards']:
+                card = merged.get(sc['slug'])
+                if card is not None and card['scenarioQuantity'] is None:
+                    card['scenarioQuantity'] = {'easy': sc['easy'], 'normal': sc['normal'],
+                                                'nightmare': sc['nightmare']}
 
     cards = [merged[s] for s in order]
     print(f'\nmerged unique encounter cards: {len(cards)}; failed: {failed or "none"}')
@@ -386,6 +407,13 @@ def main():
     for f in stat_fields:
         n = sum(1 for c in cards if c.get(f) not in (None, ''))
         print(f'  {f}: {n}/{len(cards)}')
+
+    print('\n-- cards per encounter set --')
+    sets = {}
+    for c in cards:
+        sets[c['encounterSet'] or '(no encounter set)'] = sets.get(c['encounterSet'] or '(no encounter set)', 0) + 1
+    for k in sorted(sets):
+        print(f'  {k}: {sets[k]}')
 
     print('\n-- numeric spot checks --')
     problems = []
