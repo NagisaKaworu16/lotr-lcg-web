@@ -63516,7 +63516,7 @@ function catalogEntries(){
    const group=FETCH_ENC_TYPES[c.type];
    if(!group)throw new Error('未知 fetched 遭遇卡类型：'+c.type+'（'+c.packCode+':'+c.code+' '+(c.name||'')+'）——请在 FETCH_ENC_TYPES 显式登记，不许静默归「其他」');
    const face=c.type==='quest'?'quest':'encounter';
-   out.push({side:'encounter',face,code:c.code,pod:c.packCode||'Core',name:c.nameZh||c.name,en:c.name,group,kind:group,
+   out.push({side:'encounter',face,code:c.slug||c.code,pod:c.packCode||'Core',name:c.nameZh||c.name,en:c.name,group,kind:group,
     meta:[group,c.encounterSet||'',c.type==='quest'&&c.stage?'阶段 '+c.stage:(c.quantity?'×'+c.quantity:'')].filter(Boolean).join(' · '),
     search:[c.name,c.nameZh,c.rulesText,c.shadow,c.traits,c.keywords,c.encounterSet].filter(Boolean).join(' ').toLowerCase()});
   }
@@ -63578,7 +63578,7 @@ function catalogDetail(face,code,pod){
    return `<div class="cat-detail">${ImageLibrary.questFaces(q.id)}<div class="cat-text">${catalogFacts(rows)}<p><b>A面 / 入场</b><br>${enc(q.front)}</p><p><b>B面</b><br>${enc(q.back)}</p></div></div>`;
   }
   /* v0.16.7：fetched 探险卡（data.js 未收录）走同一版式，缺面文案如实标注 */
-  const fq=(typeof ENCOUNTER_CARDS_DATA!=='undefined'&&ENCOUNTER_CARDS_DATA.cards||[]).find(x=>x.type==='quest'&&x.code===String(code)&&(pod?x.packCode===pod:true));
+  const fq=(typeof ENCOUNTER_CARDS_DATA!=='undefined'&&ENCOUNTER_CARDS_DATA.cards||[]).find(x=>x.type==='quest'&&(x.slug?x.slug===String(code):x.code===String(code))&&(pod?x.packCode===pod:true));
   if(fq){
    const rows=[['阶段',fq.stage||Number(String(fq.code)[3])],['进度',fq.questPoints||'特殊条件'],['卡包',fq.packNameZh||fq.packName],['编号',fq.code]];
    return `<div class="cat-detail">${ImageLibrary.questFaces(fq.code)}<div class="cat-text">${catalogFacts(rows)}<p><b>A面 / 入场</b><br>${enc(fq.front||'（源数据缺 A 面文案）')}</p><p><b>B面</b><br>${enc(fq.back||'（源数据缺 B 面文案）')}</p></div></div>`;
@@ -63594,7 +63594,7 @@ function catalogDetail(face,code,pod){
   return `<div class="cat-detail">${ImageLibrary.encounterArt(c.id)}<div class="cat-text">${catalogFacts(rows)}<p>${enc(c.rule)}</p>${c.shadow?`<p><b>暗影效果</b><br>${enc(c.shadow)}</p>`:''}</div></div>`;
  }
  /* v0.16.7：fetched 遭遇卡（data.js 未收录）。rulesText 是 HTML 富文本——全站口径 enc() 全转义照做。 */
- const f=(typeof ENCOUNTER_CARDS_DATA!=='undefined'&&ENCOUNTER_CARDS_DATA.cards||[]).find(x=>x.code===String(code)&&(pod?x.packCode===pod:true));
+ const f=(typeof ENCOUNTER_CARDS_DATA!=='undefined'&&ENCOUNTER_CARDS_DATA.cards||[]).find(x=>(x.slug?x.slug===String(code):x.code===String(code))&&(pod?x.packCode===pod:true));
  if(f){
   const rows=[['类型',FETCH_ENC_TYPES[f.type]||f.typeName||f.type],['遭遇组',f.encounterSet],['数量','×'+(f.quantity||1)]];
   if(f.type==='enemy')rows.push(['交战／威胁',`${f.engagement??'—'}／${f.threat??0}`],['攻击／防御／生命',`${f.attack??'—'}／${f.defense??'—'}／${f.health??'—'}`]);

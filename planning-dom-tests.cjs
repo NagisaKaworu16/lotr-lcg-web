@@ -445,6 +445,9 @@ test('fetched encounter cards fill gaps; data.js stays authoritative',async()=>{
  /* 富文本转义抽查：任一 fetched 敌人的 rulesText 不得以原文出现在详情里 */
  const fe=e.run("catalogEntries().find(x=>x.side==='encounter'&&typeof x.code==='string'&&x.kind==='敌人')||{}");
  if(fe&&fe.code){const fh=e.run("catalogDetail('encounter',"+JSON.stringify(String(fe.code))+","+JSON.stringify(String(fe.pod))+")");assert(!fh.includes('<b>When')&&!fh.includes('<b>Shadow'),'enemy 规则文本必须全转义');}
+ /* slug 唯一键（fe2 全量版字段）：条目 code 优先取 slug，detail 按 slug+(pod) 命中 */
+ const slugOk=e.run("(function(){const c=ENCOUNTER_CARDS_DATA.cards.find(x=>x.type==='enemy');c.slug='probe-slug-xyz';catalogCache=null;const e1=catalogEntries().find(x=>x.side==='encounter'&&x.pod===c.packCode&&x.code==='probe-slug-xyz');const h=catalogDetail('encounter','probe-slug-xyz',c.packCode);delete c.slug;catalogCache=null;return !!e1&&h.includes('遭遇组');})()");
+ assert(slugOk,'slug 存在时应作为条目唯一键（条目与详情均按 slug 命中）');
  /* podName 对 fetched 未知包回退 packName／packNameZh */
  assert(e.run("podName('Core')").includes('基础包'),'Core 名不变');
 });
