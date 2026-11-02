@@ -1,3 +1,9 @@
+# v0.16.6 · 系列下拉译名扩容：接入 product-zh.json（2026-11-02）
+
+- `podZhIndex` 并入 **PACK_ZH_TITLES**（新增 `scripts/gen-pack-zh.py` 从 product-zh.json 的 titles 生成 `pack-zh.js` module，build.py 收编进 index.html；译名唯一维护点仍是 product-zh.json，改表后重跑生成脚本 + build.py）。PRODUCT_TABS 条目命中优先，两表都没有的仍回退英文。
+- 覆盖率：下拉 99 个系列中 **96 个显示「中文名 · English」**（v0.16.5 为 86）。新覆盖 10 个：Revised Core Set→新版核心包、The Old Forest→老林子、Fog on the Barrow-downs→古冢迷雾、The Hunt for the Dreadnaught→追捕无畏号、The Dark of Mirkwood→黑森林之黯、ALeP - The Scouring of the Shire→夏尔平乱、ALeP - The Nine are Abroad→九戒灵出动、ALeP - The Siege of Erebor→埃瑞博防卫战、ALeP - The Hobbit→霍比特人、ALeP - The Mirror of Galadriel→加拉德瑞尔之镜。
+- 仍英文回退 3 个（查无权威译名，不编造）：ALeP - The Brandywine Pursuit、Messenger of the King Allies（×2）——银星计划的 RingsDB 中文插件数据只在 QQ 群文件分发，公开渠道不可得；拿到译名后填入 product-zh.json 重跑脚本即可。
+
 # v0.16.5 · 卡牌页收敛：侧栏退役 + 系列下拉中文本地化（2026-10-30）
 
 - **删除卡牌页左侧列表**（含「基础」自引用项与提示语）：v0.16.2 全量接线后扩展包侧栏条目全是占位页，系列下拉已是唯一筛选入口。catalog()/catNavHtml()/catNavItem()/catalogNav()/catalogSeriesPanel() 与 catSection、catalogNavCache 变量、catNav action 分支全部移除（grep 全仓清零）；legacySeries 仍被首页扩展章节使用，保留。

@@ -224,8 +224,11 @@ let catShown=CAT_BATCH;
  * v0.16.2：玩家卡切到全量数据（player-carddata.js，1315 张 / 98 系列），
  * 系列名与循环序来自 PLAYER_CARDS_DATA.packs。
  * v0.16.5：中文产品名从 PRODUCT_TABS 的 zh/en 字段建 en→zh 惰性索引
- * （pack 名与产品 en 名的字面差异用「去 Campaign Expansion 后缀／去 ALeP 前缀／去 The 前缀／冒号后半段」规整）；
- * 目录外的系列（噩梦包、ALeP 独立条目等）如实回退英文名，不编造译名。 */
+ * （pack 名与产品 en 名的字面差异用「去 Campaign Expansion 后缀／去 ALeP 前缀／去 The 前缀／冒号后半段」规整）。
+ * v0.16.6：并入 PACK_ZH_TITLES（scripts/gen-pack-zh.py 从 product-zh.json 生成，
+ * 译名唯一维护点是 product-zh.json）——Revised Core／噩梦包／ALeP 独立条目等
+ * 产品目录之外的系列由此获得工作译名；两表都没有的（如 The Brandywine Pursuit、
+ * Messenger of the King Allies）如实回退英文名，不编造译名。 */
 const POD_NAMES={Core:'基础包 · Core Set',THfG:'寻找咕噜 · The Hunt for Gollum'};
 let POD_ZH_CACHE=null;
 function podZhIndex(){
@@ -233,6 +236,8 @@ function podZhIndex(){
  const idx=new Map,norm=s=>String(s||'').trim().toLocaleLowerCase();
  for(const k of ['revised','legacy'])for(const ch of (typeof PRODUCT_TABS!=='undefined'&&PRODUCT_TABS||{})[k]||[])for(const it of ch.items||[])
   if(it.zh&&it.en&&!idx.has(norm(it.en)))idx.set(norm(it.en),it.zh);
+ if(typeof PACK_ZH_TITLES!=='undefined')for(const [en,zh] of Object.entries(PACK_ZH_TITLES||{}))
+  if(zh&&!idx.has(norm(en)))idx.set(norm(en),zh);
  return POD_ZH_CACHE=idx;
 }
 function podName(id){
