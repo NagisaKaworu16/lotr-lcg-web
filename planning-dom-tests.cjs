@@ -433,7 +433,7 @@ test('fetched encounter cards fill gaps; data.js stays authoritative',async()=>{
  /* 69 卡版 fetched 全部去重（无净增 quest），此断言仅在全量版有 fetched quest 时执行 */
  const qEntry=e.run("(function(){const norm=s=>String(s||'').toLowerCase().replace(/[^a-z0-9]/g,'');const qi=new Set(LOTR_DATA.quests.map(q=>q.id));const qn=new Set(LOTR_DATA.quests.map(q=>norm(q.name)));return catalogEntries().find(x=>x.face==='quest'&&typeof x.code==='string'&&ENCOUNTER_CARDS_DATA.cards.find(k=>k.packCode+':'+k.code===x.code&&(k.type==='quest'&&!qi.has(Number(k.position))&&!(norm(k.name)&&qn.has(norm(k.name))))));})()");
  if(qEntry&&qEntry.code){
-  const html=e.run("catalogDetail('quest',"+JSON.stringify(qEntry.code)+")");
+  const html=e.run("catalogDetail('quest',"+JSON.stringify(qEntry.code)+","+JSON.stringify(qEntry.pod)+")");
   assert(html.includes('A面 / 入场')&&html.includes('阶段'),'fetched 探险卡详情应渲染');
   assert(!html.includes('<b>Shadow')&&!html.includes('<b>When')&&!html.includes('<b>Setup'),'fetched 富文本必须全转义（原文标记不得出现）');
  }
@@ -444,7 +444,7 @@ test('fetched encounter cards fill gaps; data.js stays authoritative',async()=>{
 
  /* 富文本转义抽查：任一 fetched 敌人的 rulesText 不得以原文出现在详情里 */
  const fe=e.run("catalogEntries().find(x=>x.side==='encounter'&&typeof x.code==='string'&&x.kind==='敌人')||{}");
- if(fe&&fe.code){const fh=e.run("catalogDetail('encounter',"+JSON.stringify(String(fe.code))+")");assert(!fh.includes('<b>When')&&!fh.includes('<b>Shadow'),'enemy 规则文本必须全转义');}
+ if(fe&&fe.code){const fh=e.run("catalogDetail('encounter',"+JSON.stringify(String(fe.code))+","+JSON.stringify(String(fe.pod))+")");assert(!fh.includes('<b>When')&&!fh.includes('<b>Shadow'),'enemy 规则文本必须全转义');}
  /* podName 对 fetched 未知包回退 packName／packNameZh */
  assert(e.run("podName('Core')").includes('基础包'),'Core 名不变');
 });

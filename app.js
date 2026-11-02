@@ -286,8 +286,10 @@ function catalogEntries(){
    :dnames.has(norm(k.name));
   for(const c of ENCOUNTER_CARDS_DATA.cards){
    if(isKnown(c))continue;
-   const group=FETCH_ENC_TYPES[c.type]||c.typeName||c.type,face=c.type==='quest'?'quest':'encounter';
-   out.push({side:'encounter',face,code:c.packCode+':'+c.code,pod:c.packCode||'Core',name:c.nameZh||c.name,en:c.name,group,kind:group,
+   const group=FETCH_ENC_TYPES[c.type];
+   if(!group)throw new Error('未知 fetched 遭遇卡类型：'+c.type+'（'+c.packCode+':'+c.code+' '+(c.name||'')+'）——请在 FETCH_ENC_TYPES 显式登记，不许静默归「其他」');
+   const face=c.type==='quest'?'quest':'encounter';
+   out.push({side:'encounter',face,code:c.code,pod:c.packCode||'Core',name:c.nameZh||c.name,en:c.name,group,kind:group,
     meta:[group,c.encounterSet||'',c.type==='quest'&&c.stage?'阶段 '+c.stage:(c.quantity?'×'+c.quantity:'')].filter(Boolean).join(' · '),
     search:[c.name,c.nameZh,c.rulesText,c.shadow,c.traits,c.keywords,c.encounterSet].filter(Boolean).join(' ').toLowerCase()});
   }
@@ -330,10 +332,10 @@ function catalogHover(e){
  const key=e.face==='player'?e.code:'enc-'+e.code,rec=ImageLibrary.by[key],url=rec?ImageLibrary.safeUrl(rec.imageUrl):null;
  return url?{src:url,shape:e.face==='quest'?'wide':'tall'}:null;
 }
-function catalogItem(e){const h=catalogHover(e);return `<details class="cat-item" data-code="${enc(e.code)}" data-face="${e.face}"><summary${h?` data-hover-src="${enc(h.src)}" data-hover-shape="${h.shape}"`:''}><span class="cat-name">${enc(e.name)}</span><span class="cat-meta">${enc(e.meta)}</span></summary><div class="cat-body"></div></details>`;}
+function catalogItem(e){const h=catalogHover(e);return `<details class="cat-item" data-code="${enc(e.code)}" data-pod="${enc(e.pod)}" data-face="${e.face}"><summary${h?` data-hover-src="${enc(h.src)}" data-hover-shape="${h.shape}"`:''}><span class="cat-name">${enc(e.name)}</span><span class="cat-meta">${enc(e.meta)}</span></summary><div class="cat-body"></div></details>`;}
 function catalogArt(e){const a=e.face==='player'?ImageLibrary.art(e.code):e.face==='quest'?ImageLibrary.questFaces(e.code):ImageLibrary.encounterArt(e.code);return `<figure class="cat-figure"><figcaption><b>${enc(e.name)}</b><small>${enc(e.meta)}</small></figcaption>${a}</figure>`;}
 function catalogFacts(rows){return `<dl class="cat-facts">${rows.filter(r=>r[1]!==null&&r[1]!==undefined&&r[1]!=='').map(([k,v])=>`<dt>${enc(k)}</dt><dd>${enc(v)}</dd>`).join('')}</dl>`;}
-function catalogDetail(face,code){
+function catalogDetail(face,code,pod){
  if(face==='player'){
   /* 详情按需查全量数据（1315 条内存查询无压力）；引擎用的 Core 快照不在这里。 */
   const c=((typeof PLAYER_CARDS_DATA!=='undefined'&&PLAYER_CARDS_DATA.cards)||((typeof RINGSDB_SNAPSHOT!=='undefined'&&RINGSDB_SNAPSHOT.cards)||[])).find(x=>x.code===code);if(!c)return '';
@@ -349,7 +351,7 @@ function catalogDetail(face,code){
    return `<div class="cat-detail">${ImageLibrary.questFaces(q.id)}<div class="cat-text">${catalogFacts(rows)}<p><b>A面 / 入场</b><br>${enc(q.front)}</p><p><b>B面</b><br>${enc(q.back)}</p></div></div>`;
   }
   /* v0.16.7：fetched 探险卡（data.js 未收录）走同一版式，缺面文案如实标注 */
-  const fq=(typeof ENCOUNTER_CARDS_DATA!=='undefined'&&ENCOUNTER_CARDS_DATA.cards||[]).find(x=>x.type==='quest'&&x.packCode+':'+x.code===String(code));
+  const fq=(typeof ENCOUNTER_CARDS_DATA!=='undefined'&&ENCOUNTER_CARDS_DATA.cards||[]).find(x=>x.type==='quest'&&x.code===String(code)&&(pod?x.packCode===pod:true));
   if(fq){
    const rows=[['阶段',fq.stage||Number(String(fq.code)[3])],['进度',fq.questPoints||'特殊条件'],['卡包',fq.packNameZh||fq.packName],['编号',fq.code]];
    return `<div class="cat-detail">${ImageLibrary.questFaces(fq.code)}<div class="cat-text">${catalogFacts(rows)}<p><b>A面 / 入场</b><br>${enc(fq.front||'（源数据缺 A 面文案）')}</p><p><b>B面</b><br>${enc(fq.back||'（源数据缺 B 面文案）')}</p></div></div>`;
@@ -365,7 +367,7 @@ function catalogDetail(face,code){
   return `<div class="cat-detail">${ImageLibrary.encounterArt(c.id)}<div class="cat-text">${catalogFacts(rows)}<p>${enc(c.rule)}</p>${c.shadow?`<p><b>暗影效果</b><br>${enc(c.shadow)}</p>`:''}</div></div>`;
  }
  /* v0.16.7：fetched 遭遇卡（data.js 未收录）。rulesText 是 HTML 富文本——全站口径 enc() 全转义照做。 */
- const f=(typeof ENCOUNTER_CARDS_DATA!=='undefined'&&ENCOUNTER_CARDS_DATA.cards||[]).find(x=>x.packCode+':'+x.code===String(code));
+ const f=(typeof ENCOUNTER_CARDS_DATA!=='undefined'&&ENCOUNTER_CARDS_DATA.cards||[]).find(x=>x.code===String(code)&&(pod?x.packCode===pod:true));
  if(f){
   const rows=[['类型',FETCH_ENC_TYPES[f.type]||f.typeName||f.type],['遭遇组',f.encounterSet],['数量','×'+(f.quantity||1)]];
   if(f.type==='enemy')rows.push(['交战／威胁',`${f.engagement??'—'}／${f.threat??0}`],['攻击／防御／生命',`${f.attack??'—'}／${f.defense??'—'}／${f.health??'—'}`]);
@@ -409,7 +411,7 @@ function bindCatalog(){
   const d=ev.target;
   if(!d.classList||typeof d.classList.contains!=='function'||!d.classList.contains('cat-item')||!d.open)return;
   const body=d.querySelector('.cat-body');if(!body||body.dataset.loaded)return;
-  body.innerHTML=catalogDetail(d.dataset.face,d.dataset.code);
+  body.innerHTML=catalogDetail(d.dataset.face,d.dataset.code,d.dataset.pod);
   body.dataset.loaded='1';
   ImageLibrary.bindErrors(body);
  },true);

@@ -1,7 +1,7 @@
 {
   "pageUrl": "file:///c:/Users/Administrator/WorkBuddy/魔戒LCG/index.html",
   "executablePath": "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe",
-  "startedAt": "2026-11-02T09:43:33.276Z",
+  "startedAt": "2026-11-02T09:56:41.653Z",
   "checks": [
     {
       "name": "start-2p",
@@ -85,17 +85,17 @@
     {
       "name": "full-round-loop",
       "ok": true,
-      "phase": 5,
+      "phase": 2,
       "round": 3,
-      "view": 1,
+      "view": 0,
       "quest": {
-        "step": "completed",
+        "step": "staging",
         "locked": true
       },
       "travel": true,
       "enc": true,
       "combat": {
-        "step": "beforeDamage",
+        "step": "completed",
         "proposal": false
       },
       "refresh": true
@@ -114,7 +114,7 @@
     {
       "name": "images-load",
       "ok": true,
-      "total": 64,
+      "total": 68,
       "failed": 0
     },
     {
@@ -183,7 +183,7 @@
       "ok": true,
       "sidebar": false,
       "layout": false,
-      "options": 209,
+      "options": 100,
       "zh": [
         "安格玛觉醒",
         "追梦者",
@@ -199,7 +199,7 @@
       "ok": true,
       "sidebar": false,
       "layout": false,
-      "options": 209,
+      "options": 100,
       "zh": [
         "安格玛觉醒",
         "追梦者",
@@ -237,6 +237,6 @@
   "consoleErrors": [],
   "pageErrors": [],
   "failedImages": [],
-  "finishedAt": "2026-11-02T09:45:15.055Z",
+  "finishedAt": "2026-11-02T09:58:22.988Z",
   "ok": true
 }

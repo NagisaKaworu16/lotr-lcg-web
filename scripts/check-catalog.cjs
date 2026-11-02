@@ -223,13 +223,13 @@ const ACCEPT=path.join(ROOT,'docs','browser-acceptance');
    const dn=new Set(D.cards.map(x=>norm(x.en||x.name)));
    const fresh=ENCOUNTER_CARDS_DATA.cards.filter(k=>k.type!=='quest'&&!dn.has(norm(k.name)));
    const sample=fresh.find(k=>k.type==='enemy'&&k.rulesText)||fresh[0];
-   return {total:catalogStats().total,fresh:fresh.length,sample:sample?{name:sample.name,code:sample.packCode+':'+sample.code}:null};
+   return {total:catalogStats().total,fresh:fresh.length,sample:sample?{name:sample.name,code:sample.code,pod:sample.packCode}:null};
  });
  check('fetched 净增条目全部入库（徽标=现算总数）',await page.evaluate(n=>document.querySelector('#catalogTab span').textContent===String(n),fetchedInfo.total),fetchedInfo);
  check('抽样新卡可搜索可显示',!fetchedInfo.sample||await (async()=>{
    await page.fill('#search',fetchedInfo.sample.name);await page.waitForTimeout(350);
    /* 搜索是全文匹配（rulesText 也算），只要求目标行存在且详情可开 */
-   const rowSel=page.locator('#catalogResults .cat-item[data-code="'+fetchedInfo.sample.code+'"] summary');
+   const rowSel=page.locator('#catalogResults .cat-item[data-code="'+fetchedInfo.sample.code+'"][data-pod="'+fetchedInfo.sample.pod+'"] summary');
    if(!await rowSel.count())return false;
    await rowSel.click();await page.waitForTimeout(400);
    const t=await page.evaluate(()=>{const d=document.querySelector('#catalogResults .cat-item[open] .cat-body');return {text:d.textContent,html:d.innerHTML};});
