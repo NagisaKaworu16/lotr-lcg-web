@@ -1,0 +1,218 @@
+/* 剧本定义数据化改造（v0.16.3）的专项回归：
+   1) 三剧本 setup/flags/easyRemove/stages 数据驱动行为与改造前逐条等价；
+   2) 每个 gate 条件的触发/不触发两路；
+   3) advance 推进链与 120 的随机分叉；
+   4) prisoner 只按 flags.prisoner 开关，对其余剧本零影响；
+   5) 未知剧本字段/枚举值一律 fail loud（不许静默跳过）；
+   6) 数据 schema 自检（stage 覆盖全部探险卡、next 目标存在、枚举值合法）。 */
+const test=require('node:test'),assert=require('node:assert/strict');
+const path=require('path');
+const ROOT=path.join(__dirname,'..');
+const E=require(path.join(ROOT,'engine.js'));
+const D=require(path.join(ROOT,'data.js'));
+
+function drain(s){while(s.pending.length){let t=s.pending[0];if(t.kind==='spider'){let c=[...s.deck,...s.discard].find(c=>c.traits?.includes('Spider'));assert(c);E.resolve(s,t.id,c.uid);}else if(t.kind==='rescue')E.rescue(s,t.id);else E.resolve(s,t.id);}}
+function auto(s){for(let i=0;i<20&&s.setupReveal&&!s.setupReveal.finished;i++){E.setupRevealStep(s);drain(s);}return s;}
+function put(s,id,zone){const c={...E.byId[id],uid:++s.serial};(zone||s.staging).push(c);return c;}
+function deckCount(s,id){return s.deck.filter(c=>c.id===id).length;}
+/* 深拷贝 scenarios 用于 fail-loud 用例的污染-恢复 */
+const SCENARIOS_BACKUP=JSON.parse(JSON.stringify(D.scenarios));
+function withScenario(id,mutate,fn){const sc=D.scenarios.find(x=>x.id===id);const backup=JSON.parse(JSON.stringify(sc));try{mutate(sc);fn();}finally{D.scenarios.splice(D.scenarios.findIndex(x=>x.id===id),1,JSON.parse(JSON.stringify(backup)));}}
+
+/* ── 1. 数据 schema 自检 ─────────────────────────────────────────────── */
+test('scenario schema: stages cover every quest, next targets exist, enums valid',()=>{
+ const allQuests=new Set(D.quests.map(q=>q.id)),covered=new Set;
+ assert.deepEqual(D.scenarios.map(s=>s.id),['mirkwood','anduin','dolguldur'],'剧本声明顺序即 UI 顺序，不许变');
+ for(const sc of D.scenarios){
+  assert(sc.coverCard===sc.stages[0].id,'coverCard 必须是首张探险卡（PODS 派生的封面依据）');
+  const ids=new Set(sc.stages.map(st=>st.id));
+  assert.equal(ids.size,sc.stages.length,'stage id 不许重复');
+  for(const st of sc.stages){
+   covered.add(st.id);
+   assert('next' in st,`stage ${st.id} 缺 next 字段`);
+   if(st.next==='random'){assert(Array.isArray(st.nextRandom)&&st.nextRandom.length>=1);for(const n of st.nextRandom)assert(ids.has(n),`随机分叉目标 ${n} 未定义`);}
+   else if(st.next!==null)assert(ids.has(st.next),`stage ${st.id} 的 next ${st.next} 未定义`);
+   if(st.gate)for(const k of Object.keys(st.gate))assert(['spawnDefeated','noInPlay','noEnemies','holdObjectives','rescued'].includes(k),`未知 gate 字段 ${k}`);
+   if(st.onEnter)assert(['spiderSearch','revealPerPlayer'].includes(st.onEnter.type),`未知 onEnter 类型`);
+   if(st.revealPer!==undefined)assert(['player','skip'].includes(st.revealPer),`未知 revealPer`);
+  }
+ }
+ assert.deepEqual([...covered].sort((a,b)=>a-b),[...allQuests].sort((a,b)=>a-b),'10 张探险卡必须全部有 stage 定义');
+});
+
+/* ── 2. setup 等价 ───────────────────────────────────────────────────── */
+test('mirkwood setup stages 96+99 into staging then shuffles',()=>{
+ const s=E.create('mirkwood',1,42);
+ assert.deepEqual(s.staging.map(c=>c.id).sort(),[96,99]);
+ assert.equal(s.setupReveal,undefined);
+});
+test('anduin setup: per-player reveal flow, troll ensured in staging afterwards',()=>{
+ const s=auto(E.create('anduin',1,7));
+ assert(s.setupReveal.finished);
+ assert(s.staging.some(c=>c.id===82),'afterReveal.ensureInStaging 应保底山丘巨魔进场');
+ assert(s.setupReveal.reveals.length===1,'每位玩家翻1张');
+});
+test('dolguldur setup: tower mode sets aside Nazgul, seats 3 objectives, assigns prisoner',()=>{
+ const s=E.create('dolguldur',1,7);
+ assert.equal(s.setupReveal.kind,'tower');
+ assert.equal(s.setupReveal.remaining,3,'为每张目标各翻1张');
+ assert.deepEqual(s.setaside.map(c=>c.id),[102]);
+ assert.deepEqual(s.objectives.map(c=>c.id),[108,109,110]);
+ assert.equal(s.prisoner,null,'囚犯在设置流程完成后才抽取');
+ auto(s);
+ assert(s.prisoner&&Number.isInteger(s.prisoner.player)&&Number.isInteger(s.prisoner.hero));
+ const p=s.players[s.prisoner.player];
+ assert(Array.isArray(p.heroes)&&p.heroes[s.prisoner.hero],'囚犯英雄索引必须有效');
+});
+
+/* ── 3. gate 两路验证 ────────────────────────────────────────────────── */
+test('gate 121: spawnDefeated blocks until Ungoliant Spawn defeated',()=>{
+ const s=E.create('mirkwood',1,9);s.quest=121;s.progress=99;
+ assert.match(E.gate(s),/昂哥立安之子/);
+ const c=put(s,76);E.defeat(s,c.uid);
+ assert.equal(E.gate(s),'');
+ E.advance(s,true);assert.equal(s.status,'won','121 无后继，击败后胜利（与改造前一致）');
+});
+test('gate 122: blocks while Spawn in play, passes once gone',()=>{
+ const s=E.create('mirkwood',1,9);s.quest=122;s.progress=99;
+ const c=put(s,76);
+ assert.match(E.gate(s),/仍在场/);
+ E.defeat(s,c.uid);
+ assert.equal(E.gate(s),'');
+ E.advance(s,true);assert.equal(s.status,'won');
+});
+test('gate 126: blocks while Hill Troll in staging, passes once removed',()=>{
+ const s=auto(E.create('anduin',1,7));s.progress=8;
+ assert.match(E.gate(s),/山丘巨魔仍在场/);
+ s.staging.splice(s.staging.findIndex(c=>c.id===82),1);
+ assert.equal(E.gate(s),'');
+ E.advance(s,true);assert.equal(s.quest,127,'126 的 next 是 127');
+});
+test('gate 128: blocks while any enemy in play',()=>{
+ const s=auto(E.create('anduin',1,7));s.quest=128;s.progress=99;
+ put(s,82);
+ assert.match(E.gate(s),/场上仍有敌人/);
+ for(const a of [s.staging,...s.players.map(p=>p.engaged)])for(let i=a.length-1;i>=0;i--)if(a[i].type==='Enemy')a.splice(i,1);
+ assert.equal(E.gate(s),'');
+ E.advance(s,true);assert.equal(s.status,'won');
+});
+test('gate 123: requires at least one held objective',()=>{
+ const s=auto(E.create('dolguldur',1,7));s.quest=123;s.progress=99;
+ assert.match(E.gate(s),/至少持有1张目标/);
+ s.objectives[0].holder={player:0,hero:0};
+ assert.equal(E.gate(s),'');
+ E.advance(s,true);assert.equal(s.quest,124);
+});
+test('gate 124: requires rescue AND all three objectives held',()=>{
+ const s=auto(E.create('dolguldur',1,7));s.quest=124;s.progress=99;
+ for(const o of s.objectives)o.holder={player:0,hero:0};
+ assert.match(E.gate(s),/须救出囚犯并持有全部3张目标/,'未救出囚犯时被挡');
+ s.rescued=true;
+ assert.equal(E.gate(s),'');
+ E.advance(s,true);assert.equal(s.quest,125);
+});
+test('gate 125: blocks while Nazgul in play',()=>{
+ const s=auto(E.create('dolguldur',1,7));s.quest=125;s.progress=99;
+ const n=put(s,102);
+ assert.match(E.gate(s),/多尔哥多戒灵仍在场/);
+ s.staging.splice(s.staging.findIndex(c=>c.uid===n.uid),1);
+ assert.equal(E.gate(s),'');
+ E.advance(s,true);assert.equal(s.status,'won');
+});
+
+/* ── 4. advance 推进链与随机分叉 ─────────────────────────────────────── */
+test('advance chain: 119→120, 126→127, 127→128, 123→124, 124→125 all data-driven',()=>{
+ const s=E.create('mirkwood',1,3);s.progress=99;E.advance(s,true);assert.equal(s.quest,120);
+ const a=auto(E.create('anduin',1,3));a.progress=99;a.staging.splice(a.staging.findIndex(c=>c.id===82),1);E.advance(a,true);assert.equal(a.quest,127);
+ a.quest=127;a.progress=99;E.advance(a,true);assert.equal(a.quest,128);
+ const d=auto(E.create('dolguldur',1,3));d.progress=99;d.objectives[0].holder={player:0,hero:0};E.advance(d,true);assert.equal(d.quest,124);
+ d.quest=124;d.rescued=true;d.progress=99;for(const o of d.objectives)o.holder={player:0,hero:0};E.advance(d,true);assert.equal(d.quest,125);
+});
+test('advance random branch at 120 yields both 121 and 122 across seeds',()=>{
+ const outcomes=new Set;
+ for(let seed=1;seed<100;seed++){
+  const s=E.create('mirkwood',1,seed);s.progress=8;E.advance(s,true);
+  assert.equal(s.quest,120);s.progress=100;E.advance(s,true);outcomes.add(s.quest);
+ }
+ assert.deepEqual([...outcomes].sort(),[121,122]);
+});
+
+/* ── 5. 探查张数与交战检定跳过 ───────────────────────────────────────── */
+test('staging counts: 127 = players+1, 128 = skip (data-driven revealPer/revealBonus)',()=>{
+ const s=auto(E.create('anduin',1,7));s.quest=127;s.progress=99;s.staging.splice(s.staging.findIndex(c=>c.id===82),1);E.advance(s,true);
+ assert.equal(s.quest,128);
+ /* 直接检查 stage 定义被引擎按数据解读：127 的手动探查入口翻 players+1 张 */
+ const s2=auto(E.create('anduin',1,7));s2.quest=127;s2.phase=2;
+ const before=s2.deck.length;E.stage(s2);
+ assert.equal(before-s2.deck.length,2,'单人 127：1（每玩家）+1（revealBonus）');
+});
+test('encounter checks: 127 skips via stage.skipEngagementCheck, optional engagement still works',()=>{
+ const s=auto(E.create('anduin',1,7));s.quest=127;s.phase=4;
+ put(s,96);const b=put(s,76);
+ E.encounterChecks(s);
+ assert.equal(s.checkedRound,s.round,'手动入口按数据跳过');
+ assert(s.staging.includes(b),'检定跳过但敌人不被强制交战');
+});
+
+/* ── 6. prisoner 按 flags 开关 ───────────────────────────────────────── */
+test('prisoner flag: dolguldur on, mirkwood/anduin never assign prisoner',()=>{
+ for(let seed=1;seed<=30;seed++){
+  const m=E.create('mirkwood',1,seed);assert.equal(m.prisoner,null,'mirkwood 无囚犯');
+  const a=E.create('anduin',1,seed);assert.equal(a.prisoner,null,'anduin 无囚犯');
+ }
+ const d=auto(E.create('dolguldur',1,11));assert(d.prisoner,'flags.prisoner=true 的剧本必须抽囚犯');
+});
+test('rescue is fail-loud on scenarios without the prisoner flag',()=>{
+ const m=E.create('mirkwood',1,5);
+ m.pending.push({id:1,kind:'rescue',text:'伪造的救援事项'});
+ assert.throws(()=>E.rescue(m,1),/没有囚犯机制/,'非囚犯剧本的救援事项必须显式报错');
+});
+
+/* ── 7. easyRemove 数据迁移等价 ──────────────────────────────────────── */
+test('easyRemove per scenario: exact quantities removed, normal mode untouched',()=>{
+ const cases=[['mirkwood',{90:1,91:1,94:1,93:2,80:2,79:1,75:1}],['anduin',{90:1,91:1,94:1,93:2,115:2,116:1,82:1,84:1,86:2,112:1,114:2}],['dolguldur',{90:1,91:1,94:1,93:2,80:2,79:1,75:1,101:2}]];
+ for(const [id,table] of cases){
+  const normal=E.create(id,1,7),easy=E.create(id,1,7,null,{difficulty:'easy'});
+  const all=new Set([...Object.keys(table),...normal.deck.map(c=>String(c.id))]);
+  for(const key of all){
+   const cid=Number(key),want=(table[key]||0);
+   assert.equal(deckCount(normal,cid)-deckCount(easy,cid),want,`剧本 ${id} 卡 ${cid} 的 easy 移除数应为 ${want}`);
+  }
+ }
+});
+
+/* ── 8. fail loud：未知字段/枚举/缺失定义不许静默跳过 ────────────────── */
+test('fail loud: unknown gate field throws',()=>{
+ withScenario('mirkwood',sc=>{sc.stages[0].gate={bogusField:1};},()=>{
+  const s=E.create('mirkwood',1,7);s.progress=99;
+  assert.throws(()=>E.gate(s),/未知 stage\.gate 字段/);
+ });
+});
+test('fail loud: unknown onEnter type throws',()=>{
+ withScenario('mirkwood',sc=>{sc.stages[1].onEnter={type:'bogus'};},()=>{
+  const s=E.create('mirkwood',1,7);s.progress=99;
+  assert.throws(()=>E.advance(s,true),/未知 stage\.onEnter 类型/);
+ });
+});
+test('fail loud: unknown revealPer in setup throws at create',()=>{
+ withScenario('anduin',sc=>{sc.setup.revealPer='bogus';},()=>{
+  assert.throws(()=>E.create('anduin',1,7),/未知 setup\.revealPer/);
+ });
+});
+test('fail loud: unknown stage.revealPer throws in questing staging',()=>{
+ withScenario('anduin',sc=>{const st=sc.stages.find(x=>x.id===127);st.revealPer='bogus';},()=>{
+  const s=auto(E.create('anduin',1,7));s.quest=127;s.phase=2;
+  assert.throws(()=>E.stage(s),/未知 stage\.revealPer/);
+ });
+});
+test('fail loud: missing stage definition throws',()=>{
+ withScenario('anduin',sc=>{sc.stages.splice(sc.stages.findIndex(x=>x.id===127),1);},()=>{
+  const s=auto(E.create('anduin',1,7));s.progress=8;s.staging.splice(s.staging.findIndex(c=>c.id===82),1);
+  assert.throws(()=>E.advance(s,true),/缺少探险卡 127 的 stage 定义/);
+ });
+});
+test('fail loud: easyRemove with unknown card id throws at create',()=>{
+ withScenario('mirkwood',sc=>{sc.easyRemove={'99999':1};},()=>{
+  assert.throws(()=>E.create('mirkwood',1,7),/未知卡 id/);
+ });
+});

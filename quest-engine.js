@@ -6,12 +6,18 @@ const QuestRulesFactory=(H,R)=>{
  const field=(key,label,items)=>({key,label,options:items.map(opt)});
  const task=(s,kind,actor,payload={},optional=false)=>q(s).tasks.push({id:++s.serial,kind,actor,payload,optional});
  function check(s){need([2,3,4,5,6].includes(s.phase)&&q(s)?.round===s.round&&!q(s).completed&&s.status==='playing','当前没有进行中的探险阶段');need(!s.pending.length,'请先处理剧本事项');need(!q(s).queue.length,'请先处理卡牌响应');}
- function start(s){need(s.phase===2,'只能在第三阶段初始化探险');need(s.questing?.round!==s.round,'本回合探险阶段已经初始化，不能重复开始');need(s.players.every(p=>p.heroStates),'旧存档没有实际角色，请新开预组牌测试');const order=alive(s).map(p=>p.id).sort((a,b)=>(a-s.first+s.players.length)%s.players.length-(b-s.first+s.players.length)%s.players.length);s.questing={round:s.round,step:'beforeCommit',order,index:order.length,commitIndex:0,finalPasses:[],queue:[],tasks:[],remaining:[],closing:false,completed:false,revealed:0,encounterModifiers:[],discussion:true};for(const c of chars(s))c.state.committed=false;log(s,'开始，投入前行动窗口开放');if(s.quest===125)for(const p of alive(s)){const x=p.playerDeck.shift();if(x)p.engaged.push({id:0,uid:x.uid,name:'兽人守卫',type:'Enemy',attack:1,defense:1,health:1,threat:0,synthetic:true,playerCard:x});}}
+ function start(s){need(s.phase===2,'只能在第三阶段初始化探险');need(s.questing?.round!==s.round,'本回合探险阶段已经初始化，不能重复开始');need(s.players.every(p=>p.heroStates),'旧存档没有实际角色，请新开预组牌测试');const order=alive(s).map(p=>p.id).sort((a,b)=>(a-s.first+s.players.length)%s.players.length-(b-s.first+s.players.length)%s.players.length);s.questing={round:s.round,step:'beforeCommit',order,index:order.length,commitIndex:0,finalPasses:[],queue:[],tasks:[],remaining:[],closing:false,completed:false,revealed:0,encounterModifiers:[],discussion:true};for(const c of chars(s))c.state.committed=false;log(s,'开始，投入前行动窗口开放');
+ /* v0.16.3：兽人守卫（125）读 stage.orcGuards。这是现行框架的活路径；engine.nextPhase 里还有一条
+    无框架旧存档的遗留路径读同一字段，两处共用一份数据定义。 */
+ if(H.stageDef(s,s.quest).orcGuards)for(const p of alive(s)){const x=p.playerDeck.shift();if(x)p.engaged.push({id:0,uid:x.uid,name:'兽人守卫',type:'Enemy',attack:1,defense:1,health:1,threat:0,synthetic:true,playerCard:x});}}
  function pass(s,pid){check(s);need(!q(s).tasks.length,'请先处理探险选择');R.passAction(s,pid);}
  function allPassed(s){return alive(s).every(p=>q(s).finalPasses.includes(p.id));}
  function move(s){need(s.phase===2,'请使用旅行阶段流程');check(s);const x=q(s);need(!planned(s).length&&!x.actionLocked,'请先撤销或二次确认并执行暂定行动');need(!x.tasks.length&&!x.current,'请先结算当前遭遇或响应');need(allPassed(s),'每位玩家须确认放弃本窗口行动');if(x.step!=='afterResult')x.finalPasses=[];
   if(x.step==='beforeCommit'){x.step='commit';log(s,'按起始玩家顺序投入角色');}
-  else if(x.step==='afterCommit'){x.step='staging';s.stagedRound=s.round;x.remaining=s.quest===128?[]:Array.from({length:alive(s).length+(s.quest===127?1:0)},()=>({}));log(s,s.quest===128?'河岸伏击：跳过正常探查':'开始逐张探查');}
+  else if(x.step==='afterCommit'){x.step='staging';s.stagedRound=s.round;
+   /* v0.16.3：探查张数读 stage.revealPer（'player'=每玩家1张、'skip'=河岸伏击跳过）与 revealBonus（127 多翻1张）。 */
+   const st=H.stageDef(s,s.quest),rp=st.revealPer||'player';need(['player','skip'].includes(rp),'未知 stage.revealPer：'+rp);
+   x.remaining=rp==='skip'?[]:Array.from({length:alive(s).length+(st.revealBonus||0)},()=>({}));log(s,rp==='skip'?H.questOf(s).name+'：跳过正常探查':'开始逐张探查');}
   else if(x.step==='afterStaging'){result(s);}
   else if(x.step==='afterResult'){R.finish(s);}
   else throw Error('此步骤不能推进');
@@ -123,7 +129,9 @@ function submitDeployment(s,pid,uids){check(s);const x=q(s);need(x.step==='commi
    if(t.kind==='discard'){const p=s.players[t.actor],i=p.hand.findIndex(c=>same(c.uid,a.target));p.playerDiscard.push(p.hand.splice(i,1)[0]);}
   }q(s).tasks=q(s).tasks.filter(x=>x!==t);log(s,(a.skip?'放弃':'完成')+'：'+sp.message);R.pump(s);resumeDeployment(s);}
  function total(s){return committed(s).reduce((n,c)=>n+R.stats(s,c.uid).willpower,0);}
- function progress(s,n){if(s.active){const needPoints=Math.max(0,s.active.quest-(s.active.progress||0)),k=Math.min(n,needPoints);if(k)R.locationProgress(s,s.active.uid,k);n-=k;}s.progress+=n;log(s,'向探险卡放置'+n+'点进度');if(s.quest===124&&s.progress>0&&!s.rescued)H.task(s,'探险卡获得进度，可救出囚犯。','rescue');advanceIfReady(s);}
+ function progress(s,n){if(s.active){const needPoints=Math.max(0,s.active.quest-(s.active.progress||0)),k=Math.min(n,needPoints);if(k)R.locationProgress(s,s.active.uid,k);n-=k;}s.progress+=n;log(s,'向探险卡放置'+n+'点进度');
+  /* v0.16.3：救援窗口读 stage.rescueWindow（124）；engine.addProgress 的非框架回退路径读同一字段。 */
+  const st=H.stageDef(s,s.quest);if(st.rescueWindow&&s.progress>0&&!s.rescued)H.task(s,'探险卡获得进度，可救出囚犯。','rescue');advanceIfReady(s);}
  function advanceIfReady(s){if(!s.pending.length&&!H.gate(s)&&s.status==='playing')H.advance(s);}
  function result(s){const x=q(s),willpower=total(s),threat=H.threat(s),delta=willpower-threat;x.result={willpower,threat,delta};x.step='afterResult';s.resolvedRound=s.round;log(s,`意志${willpower}，探查区威胁${threat}，差值${delta}`);if(delta>0)progress(s,delta);else if(delta<0){for(const p of [...alive(s)])R.changeThreat(s,p.id,-delta);for(const jailor of s.staging.filter(c=>c.id===101)){const candidates=s.objectives.filter(o=>!o.holder);if(candidates.length)task(s,'jailor',s.first,{candidates:candidates.map(o=>o.uid)});}}}
  return {withdrawDeploymentApproval,enableDiscussion,unpass,queueAction,cancelAction,approveActions,withdrawActionApproval,resumeActions,approveDeployment,submitDeployment,withdrawDeployment,resumeDeployment,start,pass,move,eligible,commit,drawNext,cancelOptions,cancel,resolveReveal,spec,choose,total,progress,advanceIfReady};

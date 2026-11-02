@@ -107,7 +107,9 @@ function card(c,zone='catalog'){
 }
 function cards(a,z){return `<div class="cards">${a.length?a.map(c=>card(c,z)).join(''):empty()}</div>`;}
 let newGame=null,pendingSession=null;
-const PODS=[{id:'mirkwood',cover:119},{id:'anduin',cover:126},{id:'dolguldur',cover:123}];
+/* v0.16.3：PODS 从 data.js 的 scenarios 派生（coverCard 来自剧本定义）；
+   顺序即 data.js 里的声明顺序，也就是新局页的 UI 顺序。 */
+const PODS=D.scenarios.map(sc=>({id:sc.id,cover:sc.coverCard}));
 /* 官方只有三种模式（LOTR Easy Mode Rules / 后期规则书）：简单 Easy / 标准 Standard / 噩梦 Nightmare。
    没有「困难」。噩梦模式要用对应剧本的噩梦牌组替换遭遇牌组，本版未收录该数据，所以只开放前两种。 */
 const DIFFICULTY={easy:'简单',normal:'标准'};

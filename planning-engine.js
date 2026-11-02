@@ -9,6 +9,8 @@ const PlanningRulesFactory=(H)=>{
  const log=(s,t)=>{const k=s.phase===5?['P5','战斗']:s.phase===4?['P4','遭遇']:s.phase===3?['P3','旅行']:s.phase===2?['P2','探险']:['P1','计划'];return H.log(s,k[1]+' · '+t,k[0]);};
  const alive=s=>s.players.filter(p=>!p.eliminated);
  function data(s,x){const p=s.players[x.owner??x.controller];return p?.heroCards?.find(c=>c.code===x.code)||p?.registeredDeck?.cards?.find(c=>c.code===x.code)||BASE[x.code];}
+ /* 囚犯机制（v0.16.3 数据化）：s.prisoner 只在剧本 flags.prisoner 开启时由 engine.finishSetupFlow 赋值；
+    其余剧本 prisoner 恒为 null，本函数恒 false——无需在此重复判断剧本。 */
  function captured(s,p,index){return !s.rescued&&s.prisoner?.player===p&&s.prisoner?.hero===index;}
  function chars(s){const a=[];for(const p of alive(s)){for(const h of p.heroStates||[])if(!h.destroyed&&!captured(s,p.id,h.index))a.push({kind:'hero',uid:h.uid,controller:p.id,owner:p.id,state:h,meta:data(s,{...h,owner:p.id})});for(const c of p.allies||[])a.push({kind:'ally',uid:c.uid,controller:p.id,owner:c.owner,state:c,meta:data(s,c)});}return a;}
  function attaches(s){return alive(s).flatMap(p=>(p.attachments||[]).map(c=>({kind:'attachment',uid:c.uid,controller:p.id,owner:c.owner,state:c,meta:data(s,c)})));}

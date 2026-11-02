@@ -856,16 +856,31 @@ const LOTR_DATA = {
       "name": "穿越幽暗密林",
       "en": "Passage Through Mirkwood",
       "difficulty": 1,
+      "coverCard": 119,
       "sets": [
         "Passage Through Mirkwood",
         "Spiders of Mirkwood",
         "Dol Guldur Orcs"
       ],
+      "setup": {
+        "type": "stageCards",
+        "cards": [96, 99]
+      },
+      "flags": {},
+      "easyRemove": {
+        "90": 1,
+        "91": 1,
+        "94": 1,
+        "93": 2,
+        "80": 2,
+        "79": 1,
+        "75": 1
+      },
       "stages": [
-        119,
-        120,
-        121,
-        122
+        { "id": 119, "next": 120 },
+        { "id": 120, "next": "random", "nextRandom": [121, 122] },
+        { "id": 121, "next": null, "gate": { "spawnDefeated": 76 }, "onEnter": { "type": "spiderSearch" } },
+        { "id": 122, "next": null, "gate": { "noInPlay": [76] } }
       ]
     },
     {
@@ -873,16 +888,36 @@ const LOTR_DATA = {
       "name": "沿安都因河而下",
       "en": "Journey Along the Anduin",
       "difficulty": 4,
+      "coverCard": 126,
       "sets": [
         "Journey Down the Anduin",
         "Sauron's Reach",
         "Dol Guldur Orcs",
         "Wilderlands"
       ],
+      "setup": {
+        "type": "revealFlow",
+        "revealPer": "player",
+        "afterReveal": { "ensureInStaging": [82], "shuffle": true }
+      },
+      "flags": {},
+      "easyRemove": {
+        "90": 1,
+        "91": 1,
+        "94": 1,
+        "93": 2,
+        "115": 2,
+        "116": 1,
+        "82": 1,
+        "84": 1,
+        "86": 2,
+        "112": 1,
+        "114": 2
+      },
       "stages": [
-        126,
-        127,
-        128
+        { "id": 126, "next": 127, "gate": { "noInPlay": [82] } },
+        { "id": 127, "next": 128, "revealPer": "player", "revealBonus": 1, "skipEngagementCheck": true },
+        { "id": 128, "next": null, "revealPer": "skip", "gate": { "noEnemies": true }, "onEnter": { "type": "revealPerPlayer", "count": 2 } }
       ]
     },
     {
@@ -890,15 +925,34 @@ const LOTR_DATA = {
       "name": "逃离多尔哥多",
       "en": "Escape from Dol Guldur",
       "difficulty": 7,
+      "coverCard": 123,
       "sets": [
         "Escape from Dol Guldur",
         "Spiders of Mirkwood",
         "Dol Guldur Orcs"
       ],
+      "setup": {
+        "type": "revealFlow",
+        "revealPer": "objective",
+        "mode": "tower",
+        "setAside": [102],
+        "objectives": [108, 109, 110]
+      },
+      "flags": { "prisoner": true },
+      "easyRemove": {
+        "90": 1,
+        "91": 1,
+        "94": 1,
+        "93": 2,
+        "80": 2,
+        "79": 1,
+        "75": 1,
+        "101": 2
+      },
       "stages": [
-        123,
-        124,
-        125
+        { "id": 123, "next": 124, "gate": { "holdObjectives": 1 } },
+        { "id": 124, "next": 125, "gate": { "rescued": true, "holdObjectives": "all" }, "rescueWindow": true },
+        { "id": 125, "next": null, "gate": { "noInPlay": [102] }, "orcGuards": true }
       ]
     }
   ],

@@ -1,4 +1,16 @@
-# v0.16.2 · 卡牌库全量扩容：玩家卡 1315 张 / 98 系列接入与分批渲染（2026-10-30）
+# v0.16.3 · 剧本定义数据化：setup/gates/stages 全部进 data.js（2026-10-30）
+
+剧本特判从引擎硬编码迁入 data.js 的 scenarios[]，为扩展新剧本（《寻找咕噜》等）铺路：
+
+- scenarios 新增 coverCard / setup（stageCards｜revealFlow：revealPer/afterReveal/tower）/ flags（prisoner）/ easyRemove（键=遭遇卡 id）；stages 从数字数组升级为对象数组（id/next/gate/onEnter/revealPer/revealBonus/skipEngagementCheck/rescueWindow/orcGuards）。
+- engine / quest-engine / encounter-engine 的剧本特判全部改读数据；120 的随机分叉用 next:"random"+nextRandom；gate 用声明式枚举（spawnDefeated/noInPlay/noEnemies/holdObjectives/rescued）。
+- 引擎遇到未知剧本字段、枚举值或缺失 stage 定义一律显式报错（fail loud），不许静默跳过。
+- prisoner 只按 flags.prisoner 开关（现仅多尔哥多），其余剧本零影响；rescue 在非囚犯剧本显式报错。
+- app.js 的 PODS 封面列表改为从 D.scenarios 派生（coverCard），顺序即声明顺序。
+- Easy Mode 移除清单按剧本拆分迁移（键改卡 id）；EASY_REMOVE 英文卡名表删除。
+- 121 的随机分叉等价性、每个 gate 的触发/不触发两路、easyRemove 逐卡数量、prisoner 开关由新增的 scripts/check-scenario-data.cjs 专项回归覆盖（check_project 已收编）。
+
+ · 卡牌库全量扩容：玩家卡 1315 张 / 98 系列接入与分批渲染（2026-10-30）
 
 卡牌库从「基础 226 张」切到全量玩家牌数据（RingsDB，1315 张 / 98 系列，见 docs/data/player-carddata.json）：
 
