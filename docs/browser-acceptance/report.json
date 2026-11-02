@@ -1,7 +1,7 @@
 {
-  "pageUrl": "file:///C:/Users/Administrator/WorkBuddy/魔戒LCG/index.html",
+  "pageUrl": "file:///c:/Users/Administrator/WorkBuddy/魔戒LCG/index.html",
   "executablePath": "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe",
-  "startedAt": "2026-11-02T04:48:59.492Z",
+  "startedAt": "2026-11-02T09:43:33.276Z",
   "checks": [
     {
       "name": "start-2p",
@@ -95,8 +95,8 @@
       "travel": true,
       "enc": true,
       "combat": {
-        "step": "defenseChoice",
-        "proposal": true
+        "step": "beforeDamage",
+        "proposal": false
       },
       "refresh": true
     },
@@ -183,7 +183,7 @@
       "ok": true,
       "sidebar": false,
       "layout": false,
-      "options": 100,
+      "options": 209,
       "zh": [
         "安格玛觉醒",
         "追梦者",
@@ -199,7 +199,7 @@
       "ok": true,
       "sidebar": false,
       "layout": false,
-      "options": 100,
+      "options": 209,
       "zh": [
         "安格玛觉醒",
         "追梦者",
@@ -237,6 +237,6 @@
   "consoleErrors": [],
   "pageErrors": [],
   "failedImages": [],
-  "finishedAt": "2026-11-02T04:50:40.376Z",
+  "finishedAt": "2026-11-02T09:45:15.055Z",
   "ok": true
 }

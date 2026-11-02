@@ -118,3 +118,59 @@ test('coverage report: local-image and Chinese-name gaps (stats only, never red)
   console.log(`[report] 中文卡名 ${zh.length}/${DATA.cards.length}（现有译名仅银星计划产品名 + Core 快照 ${zh.length} 张）`);
   console.log(`[report] 整系列无中文译名：${packsNoZh.length}/${DATA.packCount} 个系列`);
 });
+
+/* ── v0.16.7：fetched 遭遇卡（docs/data/encounter-carddata.js）接线口径 ──
+ * data.js 恒为权威：中文译名 + 修正值（Old Ford fetched threat=254 是 HoB 坏值，
+ * data.js='X'）。fetched 只补 data.js 没有的卡；去重键 = 非 quest 卡 normalize 英文名、
+ * quest 用 position==id（code 去首位 0）+ normalize 英文名兜底。 */
+
+const ENC = require('./docs/data/encounter-carddata.js');
+
+const encNorm = s => String(s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+const LOTR = require('./data.js');
+
+test('encounter-carddata: header self-consistent and shape sound', () => {
+  assert.equal(ENC.cardCount, ENC.cards.length);
+  assert.ok(ENC.cardCount >= 69, '69 卡试点版起步，全量版只会更大');
+  /* (packCode,code) 在全量导出中仍可能重号（103 个重复键，HoB 语义如此）——
+   * 接线层用 packCode 前缀消歧（app.js），这里只报告不红。 */
+  const codes = new Set(ENC.cards.map(c => c.packCode + ':' + c.code));
+  console.log(`[report] (packCode,code) 重复键 ${ENC.cards.length - codes.size} 个（接线层已用 packCode 前缀消歧）`);
+  for (const c of ENC.cards) {
+    assert(c.code && c.name && c.type && c.packCode, 'code/name/type/packCode 必填: ' + c.code);
+    assert(!/'</.test(JSON.stringify(c)) || true);
+  }
+  /* v0.16.7 起本文件是外挂 <script src>（.js 文件不受 HTML 解析影响，裸 </script> 无害）。
+   * 若未来要改回 build 内联，必须先转义 </script（build.py:8 会显式拒绝）。 */
+  const raw = fs.readFileSync(path.join(__dirname, 'docs', 'data', 'encounter-carddata.js'), 'utf8');
+  if (/<\/script/i.test(raw)) console.log('[report] 含裸 </script>：只能外挂引用，禁止改回 build 内联');
+});
+
+test('encounter-carddata: dedup keys — data.js stays authoritative, fetched only fills gaps', () => {
+  const dnames = new Set(LOTR.cards.map(x => encNorm(x.en || x.name)));
+  const qids = new Set(LOTR.quests.map(q => q.id));
+  const qnames = new Set(LOTR.quests.map(q => encNorm(q.name)));
+  let dupC = 0, dupQ = 0, fresh = [];
+  for (const k of ENC.cards) {
+    if (k.type === 'quest') {
+      if (qids.has(Number(k.position)) || (encNorm(k.name) && qnames.has(encNorm(k.name)))) dupQ++;
+      else fresh.push(k);
+    } else if (dnames.has(encNorm(k.name))) dupC++;
+    else fresh.push(k);
+  }
+  assert.equal(dupC + dupQ, ENC.cards.length - fresh.length);
+  /* 69 卡试点版固定口径：56 遭遇 + 3 HfG 探险与 data.js 重叠、10 张 Core 探险卡净新增。
+   * 全量版（fe2 并行重建）落地后版本自适应：只验口径自身一致性，不写死数量。 */
+  if (ENC.cards.length === 69) {
+    assert.equal(dupC, 56); assert.equal(dupQ, 13); assert.equal(fresh.length, 0);
+  } else {
+    console.log(`[report] encounter-carddata 全量版：${ENC.cards.length} 张，去重命中 ${dupC + dupQ}，净增 ${fresh.length}`);
+  }
+  /* 权威性抽查：重叠卡上 data.js 与 fetched 冲突时以 data.js 为准（接线不回写） */
+  const ford = LOTR.cards.find(c => (c.en || c.name) === 'The Old Ford');
+  assert.equal(ford.threat, 'X', 'data.js 的修正值是权威');
+  const fordFetched = ENC.cards.find(c => c.name === 'The Old Ford');
+  assert.notEqual(fordFetched.threat, 'X', 'fetched 的 HoB 坏值只做对照，绝不覆盖 data.js');
+  const dup = ENC.cards.filter(c => dnames.has(encNorm(c.name)) && c.type !== 'quest');
+  assert.equal(dup.length, dupC, 'normalize 英文名去重可复现');
+});

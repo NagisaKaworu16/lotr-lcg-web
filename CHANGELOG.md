@@ -1,3 +1,17 @@
+# v0.16.7 · fetched 遭遇卡接入卡牌库显示层（2026-11-02）
+
+docs/data/encounter-carddata.js（HoB /Export 抓取产物）接入卡牌库，data.js 恒为权威：
+
+- **外挂数据**：shell.html 以 `<script src="docs/data/encounter-carddata.js">` 外挂引用，**不进 build.py 内联清单**（file:// 经典 script 无 CORS 问题；index.html 保持 ~3MB，全量数据独立文件）。全量版由 fe2 并行重建（69 卡试点版 → 3799 卡全量），落地后接线自动生效，无需改代码。
+- **catalogEntries 接线**：fetched 循环按去重键只补 data.js 没有的卡——非 quest 卡 normalize 英文名对 D.cards 匹配；quest 用 position==id（fetched 的 position 字段即 data.js id）+ normalize 英文名兜底（D.quests 中文名 normalize 为空串已守卫）。data.js 的修正值（如 Old Ford threat='X'）与中文译名永不反向覆盖。
+- **fetched 条目 code 加 packCode 前缀**（如 `AJtR:02070`）：全量导出中 (packCode,code) 仍有 103 个重复键（同 pack 同 code 不同卡，HoB 语义如此），前缀消歧保证 catalogDetail/hover 键唯一——已向 fe2 报告数据质量问题。
+- **catalogDetail**：encounter/quest 两分支先查 data.js、miss 后查 fetched；fetched 行按类型给 rows（敌人交战/威胁/攻防生命、地点威胁/探索、胜利点、特性、关键词、卡包）；rulesText/shadow 富文本全站口径 enc() 全转义。quest 缺面文案如实标注（占位文案）。
+- **类型中文映射**：FETCH_ENC_TYPES 覆盖全量新增类型（战役/船只目标/船只敌人/支线任务/盟友目标/地点目标/英雄目标/宝物/噩梦设置/GenCon 设置等），未知类型回退 typeName 原文。
+- **podName 未知包回退**：fetched 新系列（玩家卡 packs 之外）从卡数据取 packNameZh/packName 显示。
+- **统计实测（全量版口径）**：库内 5001 条（玩家 1315 + 战役 3686，fetched 3799 张去重后净增 3617）；系列下拉 208 个（128 个显示中文名）。69 卡试点版口径：净增 0（56 遭遇 + 13 探险全与 data.js 重叠）、库内 1384 条。
+- 测试全版本自适应（69 卡版/全量版断言均现算，不写死净增数）：catalog-data-tests +2（数据形状/去重口径/权威性抽查）；planning-dom-tests、_dg.cjs 注入 encounter-carddata.js 并新增接线断言；check-catalog 62→65 项（totals/fetched 净增现算、抽样新卡可显示、Old Ford 单条目不被 254 污染、pod 计数现算）；browser-check catalog 冒烟改徽标现算断言。
+- 回归：69 卡版与全量版双口径下 node 549/549 绿、check_project 全绿、check-catalog 全 OK、browser-check ok=true。
+
 # v0.16.6 · 系列下拉译名扩容：接入 product-zh.json（2026-11-02）
 
 - `podZhIndex` 并入 **PACK_ZH_TITLES**（新增 `scripts/gen-pack-zh.py` 从 product-zh.json 的 titles 生成 `pack-zh.js` module，build.py 收编进 index.html；译名唯一维护点仍是 product-zh.json，改表后重跑生成脚本 + build.py）。PRODUCT_TABS 条目命中优先，两表都没有的仍回退英文。

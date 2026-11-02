@@ -10,7 +10,7 @@ function environment(){const dialogs=[],base=new Map;const attr=(s,k)=>new RegEx
  for(const id of ['app','toast','undo','export','import','tableTab','catalogTab','playersTab','imagesTab','helpTab']){let e=new El;e.id=id;base.set(id,e);}
  const document={querySelector:s=>base.get(s.slice(1))||base.get('app').querySelector(s),querySelectorAll:()=>[],createElement:t=>new El(t),body:{append(){}}};
  const ctx=vm.createContext({module:undefined,document,localStorage:{getItem:()=>null,setItem(){},removeItem(){}},setTimeout:()=>1,clearTimeout(){},console,Blob,URL,confirm:()=>true});
- for(const f of ['data.js','starter-decks.js','player-cards.js','ringsdb-snapshot.js','player-carddata.js','planning-engine.js','quest-engine.js','travel-engine.js','encounter-engine.js','combat-engine.js','refresh-engine.js','window-engine.js','phase-engine.js','engine.js','score-engine.js','player-ui.js','image-index.js','encounter-image-index.js','chinese-core-images.js','image-ui.js','planning-ui.js','quest-ui.js','travel-ui.js','encounter-ui.js','combat-ui.js','refresh-ui.js','window-ui.js','phase-log.js','desktop-ui.js','product-catalog.js','app.js'])vm.runInContext(fs.readFileSync(__dirname+'/'+f,'utf8'),ctx,{filename:f});
+ for(const f of ['data.js','starter-decks.js','player-cards.js','ringsdb-snapshot.js','player-carddata.js','docs/data/encounter-carddata.js','planning-engine.js','quest-engine.js','travel-engine.js','encounter-engine.js','combat-engine.js','refresh-engine.js','window-engine.js','phase-engine.js','engine.js','score-engine.js','player-ui.js','image-index.js','encounter-image-index.js','chinese-core-images.js','image-ui.js','planning-ui.js','quest-ui.js','travel-ui.js','encounter-ui.js','combat-ui.js','refresh-ui.js','window-ui.js','phase-log.js','desktop-ui.js','product-catalog.js','app.js'])vm.runInContext(fs.readFileSync(__dirname+'/'+f,'utf8'),ctx,{filename:f});
  const run=s=>vm.runInContext(s,ctx);const click=d=>run(`$('#app').onclick({target:{closest:()=>({dataset:${JSON.stringify(d)}})}})`);
  return {ctx,run,click,dialogs,base};
 }
@@ -359,7 +359,7 @@ test('desktop version badge comes from one constant that matches the latest CHAN
 
 test('card library merges player and encounter cards behind a three-way player/encounter/both split',async()=>{
  const e=environment();e.run(`catalogSide='both';catalogView='list';catalogQuery='';tab='catalog';render();`);
- const html=e.base.get('app').innerHTML,players=e.run('(typeof PLAYER_CARDS_DATA!=="undefined"?PLAYER_CARDS_DATA:RINGSDB_SNAPSHOT).cards.length'),encounters=e.run('D.cards.length+D.quests.length');
+ const html=e.base.get('app').innerHTML,players=e.run('(typeof PLAYER_CARDS_DATA!=="undefined"?PLAYER_CARDS_DATA:RINGSDB_SNAPSHOT).cards.length'),encounters=e.run("catalogEntries().filter(x=>x.side==='encounter').length");
  assert(html.includes('卡牌库'),'卡牌库页签未渲染标题');
  assert(html.includes('data-action="catSide" data-value="player"')&&html.includes('data-action="catSide" data-value="encounter"')&&html.includes('data-action="catSide" data-value="both"'),'缺少玩家／战役／两者都三档分类');
  assert(html.includes('data-action="catView" data-value="list"')&&html.includes('data-action="catView" data-value="art"'),'缺少名称／卡图视图切换');
@@ -367,8 +367,8 @@ test('card library merges player and encounter cards behind a three-way player/e
  const body=()=>e.run("$('#catalogResults').innerHTML");
  const rows=()=>(body().match(/class="cat-item"/g)||[]).length;
  /* v0.16.2 全量分批：1315+ 张不能一次进 DOM，首屏只挂一批，尾部「显示更多」增量 */
- const loadAll=()=>{for(let i=0;i<40&&body().includes('data-action="catMore"');i++)e.click({action:'catMore'});};
- assert.equal(e.run('catalogStats().total'),players+encounters,'卡池总数应为玩家卡与战役卡之和');
+ const loadAll=()=>{for(let i=0;i<120&&body().includes('data-action="catMore"');i++)e.click({action:'catMore'});};
+ assert.equal(e.run('catalogStats().total'),players+encounters,'卡池总数应为玩家卡与战役卡之和（含 fetched 净增）');
  assert.equal(count(),players+encounters,'两者都时计数应为全量');
  assert.equal(rows(),Math.min(players+encounters,60),'首屏 DOM 行数应受批上限约束（分批渲染生效）');
  assert(body().includes('玩家卡 · 领导'),'首屏应渲染第一组（玩家卡 · 领导）');
@@ -385,9 +385,9 @@ test('card library merges player and encounter cards behind a three-way player/e
  /* 按系列包（pod）筛选：基础版三类齐全，Core=73 玩家卡+45 遭遇卡+10 探险卡 */
  e.run(`catalogSide='both';podFilter='Core';render();`);
  loadAll();
- assert.equal(rows(),128,'Core 包筛选应包含全部基础版卡牌');
+ assert.equal(rows(),e.run("catalogPods().find(x=>x[0]==='Core')[1]"),'Core 包筛选行数应与 pod 计数一致');
  assert(body().includes('玩家卡 · 领导')&&body().includes('遭遇卡 · 敌人')&&body().includes('探险卡'),'系列包筛选下应同时有玩家卡／遭遇卡／探险卡三个类别');
- assert(e.run("$('#resultCount').textContent").includes('玩家卡 73 / 遭遇卡 45 / 探险卡 10'),'计数应按三类拆分');
+ assert(e.run("$('#resultCount').textContent").includes('玩家卡 '+(typeof PLAYER_CARDS_DATA!=='undefined'?PLAYER_CARDS_DATA.cards.filter(x=>x.packCode==='Core').length:73)+' / 遭遇卡 '+e.run('D.cards.filter(x=>x.pack==="Core").length')+' / 探险卡 '+e.run('D.quests.filter(q=>q.pack==="Core").length')),'计数应按三类拆分');
  /* 扩展系列（全量数据 98 系列）：一次渲染完，不再分批 */
  e.run(`podFilter='HfG';render();`);
  assert.equal(rows(),10,'HfG 系列应渲染全部 10 张');
@@ -419,6 +419,34 @@ e.run(`$('#search').value='';filterCatalog();`);
  assert(e.run("catalogDetail('quest','119')").includes('B面'),'探险卡详情应含 B 面');
  e.run(`$('#search').value='不存在的卡名xyz';filterCatalog();`);
  assert(body().includes('没有匹配的卡牌'),'无结果时应给出空状态');
+});
+
+test('fetched encounter cards fill gaps; data.js stays authoritative',async()=>{
+ const e=environment();e.run(`tab='catalog';render();`);
+ /* 版本自适应：fetched 净增数现算（69 卡试点版=10，全量版按去重口径），不写死 */
+ const total=e.run('catalogEntries().length');
+ const fresh=e.run("catalogEntries().filter(x=>x.side==='encounter'&&typeof x.code==='string').length");
+ const freshCalc=e.run("(function(){const norm=s=>String(s||'').toLowerCase().replace(/[^a-z0-9]/g,'');const dn=new Set(LOTR_DATA.cards.map(x=>norm(x.en||x.name)));const qi=new Set(LOTR_DATA.quests.map(q=>q.id));const qn=new Set(LOTR_DATA.quests.map(q=>norm(q.name)));let n=0;for(const k of (typeof ENCOUNTER_CARDS_DATA!=='undefined'&&ENCOUNTER_CARDS_DATA.cards||[])){const known=k.type==='quest'?(qi.has(Number(k.position))||(norm(k.name)&&qn.has(norm(k.name)))):dn.has(norm(k.name));if(!known)n++;}return n;})()");
+ assert.equal(total,1315+e.run('LOTR_DATA.cards.length+LOTR_DATA.quests.length')+freshCalc,'卡池总数=玩家卡+data.js 战役卡+fetched 净增');
+ assert.equal(fresh,freshCalc,'字符串 code 标识 fetched 条目，数量与去重口径一致');
+ /* 抽样：fetched 新卡可被详情渲染（rulesText 已转义，不出现裸 HTML） */
+ /* 69 卡版 fetched 全部去重（无净增 quest），此断言仅在全量版有 fetched quest 时执行 */
+ const qEntry=e.run("(function(){const norm=s=>String(s||'').toLowerCase().replace(/[^a-z0-9]/g,'');const qi=new Set(LOTR_DATA.quests.map(q=>q.id));const qn=new Set(LOTR_DATA.quests.map(q=>norm(q.name)));return catalogEntries().find(x=>x.face==='quest'&&typeof x.code==='string'&&ENCOUNTER_CARDS_DATA.cards.find(k=>k.packCode+':'+k.code===x.code&&(k.type==='quest'&&!qi.has(Number(k.position))&&!(norm(k.name)&&qn.has(norm(k.name))))));})()");
+ if(qEntry&&qEntry.code){
+  const html=e.run("catalogDetail('quest',"+JSON.stringify(qEntry.code)+")");
+  assert(html.includes('A面 / 入场')&&html.includes('阶段'),'fetched 探险卡详情应渲染');
+  assert(!html.includes('<b>Shadow')&&!html.includes('<b>When')&&!html.includes('<b>Setup'),'fetched 富文本必须全转义（原文标记不得出现）');
+ }
+ /* Old Ford 仍单条目且值来自 data.js（threat 'X'，不被 HoB 坏值 254 污染） */
+ e.run(`$('#search').value='Old Ford';podFilter='';filterCatalog();`);
+ const fordList=e.base.get('app').nodes.find(n=>n.id==='catalogResults')._html;
+ assert((fordList.match(/The Old Ford/g)||[]).length===1,'Old Ford 应只有一条 data.js 条目');
+
+ /* 富文本转义抽查：任一 fetched 敌人的 rulesText 不得以原文出现在详情里 */
+ const fe=e.run("catalogEntries().find(x=>x.side==='encounter'&&typeof x.code==='string'&&x.kind==='敌人')||{}");
+ if(fe&&fe.code){const fh=e.run("catalogDetail('encounter',"+JSON.stringify(String(fe.code))+")");assert(!fh.includes('<b>When')&&!fh.includes('<b>Shadow'),'enemy 规则文本必须全转义');}
+ /* podName 对 fetched 未知包回退 packName／packNameZh */
+ assert(e.run("podName('Core')").includes('基础包'),'Core 名不变');
 });
 
 test('card library drops the sidebar; pod dropdown localizes series names',async()=>{

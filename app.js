@@ -230,6 +230,8 @@ let catShown=CAT_BATCH;
  * 产品目录之外的系列由此获得工作译名；两表都没有的（如 The Brandywine Pursuit、
  * Messenger of the King Allies）如实回退英文名，不编造译名。 */
 const POD_NAMES={Core:'基础包 · Core Set',THfG:'寻找咕噜 · The Hunt for Gollum'};
+/* v0.16.7：fetched 遭遇卡类型 → 中文分组（含全量数据将新增的类型；未知类型回退 typeName 原文） */
+const FETCH_ENC_TYPES={enemy:'敌人',location:'地点',treachery:'诡计',objective:'目标','objective-ally':'盟友目标','objective-enemy':'敌人目标','objective-structure':'建筑目标','objective-location':'地点目标','objective-hero':'英雄目标','ship-objective':'船只目标','ship-enemy':'船只敌人','ship-deck':'船只牌库','encounter-side-quest':'支线任务',campaign:'战役',nightmare:'噩梦','nightmare-setup':'噩梦设置',treasure:'宝物','gencon-setup':'GenCon 设置',quest:'探险卡'};
 let POD_ZH_CACHE=null;
 function podZhIndex(){
  if(POD_ZH_CACHE)return POD_ZH_CACHE;
@@ -243,7 +245,14 @@ function podZhIndex(){
 function podName(id){
  if(POD_NAMES[id])return POD_NAMES[id];
  const p=(typeof PLAYER_CARDS_DATA!=='undefined'&&PLAYER_CARDS_DATA.packs||[]).find(x=>x.code===id);
- if(!p)return id;
+ if(!p){
+  /* v0.16.7：fetched 遭遇卡的新系列（玩家卡 packs 之外）——从卡数据取 packName／packNameZh */
+  if(typeof ENCOUNTER_CARDS_DATA!=='undefined'&&ENCOUNTER_CARDS_DATA.cards){
+   const fc=ENCOUNTER_CARDS_DATA.cards.find(x=>x.packCode===id);
+   if(fc)return (fc.packNameZh?fc.packNameZh+' · ':'')+fc.packName;
+  }
+  return id;
+ }
  const norm=s=>String(s||'').trim().toLocaleLowerCase(),idx=podZhIndex(),n=norm(p.name);
  let zh=idx.get(n)
   ||idx.get(n.replace(/\s+campaign expansion$/,''))
@@ -263,6 +272,26 @@ function catalogEntries(){
   search:[c.name,c.en,c.rule,c.shadow].filter(Boolean).join(' ').toLowerCase()});
  for(const q of D.quests)out.push({side:'encounter',face:'quest',code:q.id,pod:q.pack||'Core',name:q.name,en:'',group:'探险卡',kind:'探险卡',
   meta:['探险卡','阶段 '+q.stage].join(' · '),search:[q.name,q.front,q.back].filter(Boolean).join(' ').toLowerCase()});
+ /* v0.16.7：fetched 遭遇卡（docs/data/encounter-carddata.js，外挂文件不进 build 内联清单）。
+  * data.js 恒为权威（中文译名+修正值，如 Old Ford 的 threat='X'）——fetched 只补 data.js 没有的卡，
+  * 去重键：非 quest 卡用 normalize 英文名，quest 用 position==id（code 去首位 0）+ normalize 英文名兜底。
+  * 全量数据由 fe2 并行重建，落地后无需改这里自动生效。 */
+ if(typeof ENCOUNTER_CARDS_DATA!=='undefined'&&ENCOUNTER_CARDS_DATA.cards){
+  const norm=s=>String(s||'').toLowerCase().replace(/[^a-z0-9]/g,'');
+  const dnames=new Set(D.cards.map(x=>norm(x.en||x.name)));
+  const qids=new Set(D.quests.map(q=>q.id));
+  const qnames=new Set(D.quests.map(q=>norm(q.name)));
+  const isKnown=k=>k.type==='quest'
+   ?(qids.has(Number(k.position))||(norm(k.name)&&qnames.has(norm(k.name))))
+   :dnames.has(norm(k.name));
+  for(const c of ENCOUNTER_CARDS_DATA.cards){
+   if(isKnown(c))continue;
+   const group=FETCH_ENC_TYPES[c.type]||c.typeName||c.type,face=c.type==='quest'?'quest':'encounter';
+   out.push({side:'encounter',face,code:c.packCode+':'+c.code,pod:c.packCode||'Core',name:c.nameZh||c.name,en:c.name,group,kind:group,
+    meta:[group,c.encounterSet||'',c.type==='quest'&&c.stage?'阶段 '+c.stage:(c.quantity?'×'+c.quantity:'')].filter(Boolean).join(' · '),
+    search:[c.name,c.nameZh,c.rulesText,c.shadow,c.traits,c.keywords,c.encounterSet].filter(Boolean).join(' ').toLowerCase()});
+  }
+ }
  return catalogCache=out;
 }
 function catalogPods(){
@@ -314,16 +343,38 @@ function catalogDetail(face,code){
   return `<div class="cat-detail">${ImageLibrary.art(code)}<div class="cat-text">${catalogFacts(rows)}<p class="small muted">规则文本为 RingsDB 英文原文，未作翻译。</p><p>${enc(c.rulesText||'（暂无规则文本）')}</p></div></div>`;
  }
  if(face==='quest'){
-  const q=D.quests.find(x=>x.id===Number(code));if(!q)return '';
-  const rows=[['阶段',q.stage],['进度',q.points||'特殊条件'],['编号',q.id]];
-  return `<div class="cat-detail">${ImageLibrary.questFaces(q.id)}<div class="cat-text">${catalogFacts(rows)}<p><b>A面 / 入场</b><br>${enc(q.front)}</p><p><b>B面</b><br>${enc(q.back)}</p></div></div>`;
+  const q=D.quests.find(x=>x.id===Number(code));
+  if(q){
+   const rows=[['阶段',q.stage],['进度',q.points||'特殊条件'],['编号',q.id]];
+   return `<div class="cat-detail">${ImageLibrary.questFaces(q.id)}<div class="cat-text">${catalogFacts(rows)}<p><b>A面 / 入场</b><br>${enc(q.front)}</p><p><b>B面</b><br>${enc(q.back)}</p></div></div>`;
+  }
+  /* v0.16.7：fetched 探险卡（data.js 未收录）走同一版式，缺面文案如实标注 */
+  const fq=(typeof ENCOUNTER_CARDS_DATA!=='undefined'&&ENCOUNTER_CARDS_DATA.cards||[]).find(x=>x.type==='quest'&&x.packCode+':'+x.code===String(code));
+  if(fq){
+   const rows=[['阶段',fq.stage||Number(String(fq.code)[3])],['进度',fq.questPoints||'特殊条件'],['卡包',fq.packNameZh||fq.packName],['编号',fq.code]];
+   return `<div class="cat-detail">${ImageLibrary.questFaces(fq.code)}<div class="cat-text">${catalogFacts(rows)}<p><b>A面 / 入场</b><br>${enc(fq.front||'（源数据缺 A 面文案）')}</p><p><b>B面</b><br>${enc(fq.back||'（源数据缺 B 面文案）')}</p></div></div>`;
+  }
+  return '';
  }
- const c=D.cards.find(x=>x.id===Number(code));if(!c)return '';
- const rows=[['类型',types[c.type]||c.type],['遭遇组',D.sets[c.set]],['数量','×'+(c.quantity||1)]];
- if(c.type==='Enemy')rows.push(['交战／威胁',`${c.engagement??'—'}／${c.threat??0}`],['攻击／防御／生命',`${c.attack}／${c.defense}／${c.health}`]);
- if(c.type==='Location')rows.push(['威胁／探索',`${c.threat}／${c.quest}`]);
- if(c.victory)rows.push(['胜利点',c.victory]);
- return `<div class="cat-detail">${ImageLibrary.encounterArt(c.id)}<div class="cat-text">${catalogFacts(rows)}<p>${enc(c.rule)}</p>${c.shadow?`<p><b>暗影效果</b><br>${enc(c.shadow)}</p>`:''}</div></div>`;
+ const c=D.cards.find(x=>x.id===Number(code));
+ if(c){
+  const rows=[['类型',types[c.type]||c.type],['遭遇组',D.sets[c.set]],['数量','×'+(c.quantity||1)]];
+  if(c.type==='Enemy')rows.push(['交战／威胁',`${c.engagement??'—'}／${c.threat??0}`],['攻击／防御／生命',`${c.attack}／${c.defense}／${c.health}`]);
+  if(c.type==='Location')rows.push(['威胁／探索',`${c.threat}／${c.quest}`]);
+  if(c.victory)rows.push(['胜利点',c.victory]);
+  return `<div class="cat-detail">${ImageLibrary.encounterArt(c.id)}<div class="cat-text">${catalogFacts(rows)}<p>${enc(c.rule)}</p>${c.shadow?`<p><b>暗影效果</b><br>${enc(c.shadow)}</p>`:''}</div></div>`;
+ }
+ /* v0.16.7：fetched 遭遇卡（data.js 未收录）。rulesText 是 HTML 富文本——全站口径 enc() 全转义照做。 */
+ const f=(typeof ENCOUNTER_CARDS_DATA!=='undefined'&&ENCOUNTER_CARDS_DATA.cards||[]).find(x=>x.packCode+':'+x.code===String(code));
+ if(f){
+  const rows=[['类型',FETCH_ENC_TYPES[f.type]||f.typeName||f.type],['遭遇组',f.encounterSet],['数量','×'+(f.quantity||1)]];
+  if(f.type==='enemy')rows.push(['交战／威胁',`${f.engagement??'—'}／${f.threat??0}`],['攻击／防御／生命',`${f.attack??'—'}／${f.defense??'—'}／${f.health??'—'}`]);
+  if(f.type==='location')rows.push(['威胁／探索',`${f.threat??'—'}／${f.questPoints??'—'}`]);
+  if(f.victory)rows.push(['胜利点',f.victory]);
+  rows.push(['特性',f.traits],['关键词',f.keywords],['卡包',f.packNameZh||f.packName],['编号',f.code]);
+  return `<div class="cat-detail">${ImageLibrary.encounterArt(f.code)}<div class="cat-text">${catalogFacts(rows)}<p>${enc(f.rulesText||'（暂无规则文本）')}</p>${f.shadow?`<p><b>暗影效果</b><br>${enc(f.shadow)}</p>`:''}</div></div>`;
+ }
+ return '';
 }
 /* v0.16.2：全量分批渲染。resultCount 仍报过滤后的完整计数（首屏/加载更多只影响 DOM 行数）；
  * 尾部「显示更多」按钮每次增量挂 CAT_BATCH 张。reset=false 供 catMore 续载，不重置进度。 */
