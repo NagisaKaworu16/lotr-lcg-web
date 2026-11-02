@@ -118,8 +118,13 @@ function create(scenarioId,players=1,seed=Date.now(),configs=null,options={}){
  if(configs)assert(Array.isArray(configs)&&configs.length===players,'玩家牌组配置数量不符。');
  for(let i=0;i<players;i++){const c=configs?.[i];if(c)assert(Array.isArray(c.heroes)&&c.heroes.length>=1&&c.heroes.length<=3&&Number.isInteger(c.startingThreat),'无效英雄配置。');s.players.push({id:i,name:`玩家${i+1}`,threat:c?c.startingThreat:[29,29,24,30][i],heroes:c?[...c.heroes]:[...roster[i]],...(c?{heroCodes:[...c.heroCodes],heroCards:clone(c.heroCards),registeredDeck:clone(c.registeredDeck)}:{}),engaged:[],eliminated:false});}
  for(const k of Object.keys(sc.easyRemove||{}))assert(byId[k],'剧本 easyRemove 引用未知卡 id：'+k);
+ /* v0.16.4：deckQuantities 允许剧本声明某卡的组内用量覆盖卡面 quantity（缺省走卡面）；未知 id fail loud。 */
+ const deckQty=sc.deckQuantities||{};
+ for(const k of Object.keys(deckQty))assert(byId[k],'剧本 deckQuantities 引用未知卡 id：'+k);
  for(const d of D.cards.filter(c=>sc.sets.includes(c.set))){
-  const qty=d.quantity-(difficulty==='easy'?((sc.easyRemove&&sc.easyRemove[d.id])||0):0);
+  const base=deckQty[d.id]!==undefined?deckQty[d.id]:d.quantity;
+  assert(Number.isInteger(base)&&base>=0,`卡 ${d.id} 的组内用量无效：${base}`);
+  const qty=base-(difficulty==='easy'?((sc.easyRemove&&sc.easyRemove[d.id])||0):0);
   for(let i=0;i<qty;i++)s.deck.push({...clone(d),uid:++s.serial});
  }
  shuffle(s,s.deck);
@@ -131,10 +136,11 @@ function create(scenarioId,players=1,seed=Date.now(),configs=null,options={}){
  applyScenarioSetup(s);return s;
 }
 function applyScenarioSetup(s){
- /* v0.16.3：开局设置读 scenarios[].setup。stageCards=直接把指定卡放进探查区再洗牌；
-    revealFlow=逐张翻牌流程（beginSetupFlow）。未知类型 fail loud。 */
+ /* v0.16.4：开局设置读 scenarios[].setup。stageCards=直接把指定卡放进探查区再洗牌；
+    revealFlow=逐张翻牌流程（beginSetupFlow）；无 setup 定义=标准开局（gollum 试点即此类）。 */
  const su=scenarioOf(s).setup;
- assert(su&&su.type,'剧本缺少 setup 定义：'+s.scenario);
+ if(!su){s.revealSteps=0;return;}
+ assert(su.type,'剧本 setup 定义缺少 type：'+s.scenario);
  if(su.type==='stageCards'){
   assert(Array.isArray(su.cards)&&su.cards.length,'stageCards setup 需要非空 cards 数组');
   for(const id of su.cards){const c=findTake(s,id);assert(c,`剧本设置：遭遇牌库中找不到卡 ${id}`);s.staging.push(c);}
@@ -285,7 +291,10 @@ function stage(s){assert(!s.questing,'请使用逐张探查流程');ready(s);ass
  if(rp==='skip')log(s,`${quest(s).name}：跳过探查步骤`);
  else{assert(rp==='player','未知 stage.revealPer：'+rp);reveal(s,live(s).length+(st.revealBonus||0));}
  s.revealSteps=0;}
-function threat(s){return s.phaseThreat+s.staging.filter(c=>['Enemy','Location'].includes(c.type)).reduce((n,c)=>n+(s.planning?P2.stats(s,c.uid).threat:(c.threat||0))+(c.bonus||0),0);}
+ /* 变值威胁（v0.16.4 起：133 The Old Ford 的 X=场上盟友数）在效果层实现前按 0 计，
+    数据仍如实存 'X'；此处必须容错，否则探查区威胁求和会出 NaN。 */
+ const threatVal=(s,c)=>{const v=s.planning?P2.stats(s,c.uid).threat:c.threat;return typeof v==='number'?v:0;};
+ function threat(s){return s.phaseThreat+s.staging.filter(c=>['Enemy','Location'].includes(c.type)).reduce((n,c)=>n+threatVal(s,c)+(c.bonus||0),0);}
 function addProgress(s,n,internal=false){ready(s);assert(internal||!s.planning||![1,2].includes(s.phase),'计划阶段进度必须由卡牌效果自动结算。');assert(Number.isInteger(n)&&n>=0,'进度须为非负整数。');let left=n;
  if(s.active){let c=s.active,k=Math.min(left,Math.max(0,c.quest-(c.progress||0)));c.progress=(c.progress||0)+k;left-=k;if(c.progress>=c.quest){s.active=null;leaveLocation(s,c);}}
  s.progress+=left;log(s,`放置${n}点进度，探险卡现有${s.progress}点`);

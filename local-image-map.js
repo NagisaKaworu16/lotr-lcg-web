@@ -1512,5 +1512,24 @@ const LOCAL_IMAGE_MAP={
 "https://ringsdb.com/bundles/cards/99307014.png": "assets/cards-en/99307014.webp",
 "https://ringsdb.com/bundles/cards/99309041.png": "assets/cards-en/99309041.webp",
 "https://ringsdb.com/bundles/cards/99309043.png": "assets/cards-en/99309043.webp",
-"https://ringsdb.com/bundles/cards/99310078.png": "assets/cards-en/99310078.webp"
+"https://ringsdb.com/bundles/cards/99310078.png": "assets/cards-en/99310078.webp",
+"https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/The-Hunt-Begins-1A.jpg": "assets/cards-encounter/the-hunt-begins-1a.jpg",
+"https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/The-Hunt-Begins-1B.jpg": "assets/cards-encounter/the-hunt-begins-1b.jpg",
+"https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/A-New-Terror-Abroad-2A.jpg": "assets/cards-encounter/a-new-terror-abroad-2a.jpg",
+"https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/A-New-Terror-Abroad-2B.jpg": "assets/cards-encounter/a-new-terror-abroad-2b.jpg",
+"https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/On-the-Trail-3A.jpg": "assets/cards-encounter/on-the-trail-3a.jpg",
+"https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/On-the-Trail-3B.jpg": "assets/cards-encounter/on-the-trail-3b.jpg",
+"https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/Signs-of-Gollum.jpg": "assets/cards-encounter/signs-of-gollum.jpg",
+"https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/The-Old-Ford.jpg": "assets/cards-encounter/the-old-ford.jpg",
+"https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/The-Eaves-of-Mirkwood.jpg": "assets/cards-encounter/the-eaves-of-mirkwood.jpg",
+"https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/River-Ninglor.jpg": "assets/cards-encounter/river-ninglor.jpg",
+"https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/The-East-Bank.jpg": "assets/cards-encounter/the-east-bank.jpg",
+"https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/The-West-Bank.jpg": "assets/cards-encounter/the-west-bank.jpg",
+"https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/Goblintown-Scavengers.jpg": "assets/cards-encounter/goblintown-scavengers.jpg",
+"https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/Hunters-from-Mordor.jpg": "assets/cards-encounter/hunters-from-mordor.jpg",
+"https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/False-Lead.jpg": "assets/cards-encounter/false-lead.jpg",
+"https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/Flooding.jpg": "assets/cards-encounter/flooding.jpg",
+"https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/Old-Wives'-Tales.jpg": "assets/cards-encounter/old-wives-tales.jpg"
 };
+
+if(typeof module!=="undefined")module.exports=LOCAL_IMAGE_MAP;

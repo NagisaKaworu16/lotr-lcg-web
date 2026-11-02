@@ -1,7 +1,7 @@
 {
-  "pageUrl": "file:///C:/Users/Administrator/WorkBuddy/魔戒LCG/index.html",
+  "pageUrl": "file:///c:/Users/Administrator/WorkBuddy/魔戒LCG/index.html",
   "executablePath": "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe",
-  "startedAt": "2026-10-30T03:41:29.015Z",
+  "startedAt": "2026-11-02T02:56:28.151Z",
   "checks": [
     {
       "name": "start-2p",
@@ -87,10 +87,10 @@
       "ok": true,
       "phase": 2,
       "round": 3,
-      "view": 0,
+      "view": 1,
       "quest": {
-        "step": "staging",
-        "locked": true
+        "step": "commit",
+        "locked": false
       },
       "travel": true,
       "enc": true,
@@ -114,7 +114,7 @@
     {
       "name": "images-load",
       "ok": true,
-      "total": 67,
+      "total": 72,
       "failed": 0
     },
     {
@@ -149,6 +149,34 @@
       "ok": true,
       "overflowX": false,
       "handCards": 16
+    },
+    {
+      "name": "gollum-start",
+      "ok": true,
+      "scenario": "gollum",
+      "quest": 129,
+      "deck": 48,
+      "staging": 0,
+      "prisoner": null,
+      "status": "playing",
+      "setupPending": false,
+      "players": 2
+    },
+    {
+      "name": "layout:08-2p-gollum-start",
+      "ok": true,
+      "overflowX": false,
+      "scrollWidth": 1920,
+      "dock": {
+        "sticky": false,
+        "scrollable": false,
+        "overflowY": "visible"
+      }
+    },
+    {
+      "name": "gollum-images",
+      "ok": true,
+      "broken": 0
     }
   ],
   "screenshots": [
@@ -158,11 +186,12 @@
     "04-2p-quest-1440.png",
     "05-2p-round2-1440.png",
     "06-4p-1920.png",
-    "07-4p-long-hand-1920.png"
+    "07-4p-long-hand-1920.png",
+    "08-2p-gollum-start.png"
   ],
   "consoleErrors": [],
   "pageErrors": [],
   "failedImages": [],
-  "finishedAt": "2026-10-30T03:43:01.906Z",
+  "finishedAt": "2026-11-02T02:58:04.701Z",
   "ok": true
 }

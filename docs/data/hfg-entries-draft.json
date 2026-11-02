@@ -1,0 +1,343 @@
+{
+ "comment": "由 scripts/gen-scenario-entries.py 生成，人工审核后并入 data.js；本脚本不写 data.js。",
+ "idPlan": {
+  "quests": {
+   "02011": 129,
+   "02012": 130,
+   "02013": 131
+  },
+  "cards": "02014..02024 -> 132..142"
+ },
+ "cards": [
+  {
+   "id": 132,
+   "name": "Signs of Gollum",
+   "en": "Signs of Gollum",
+   "set": "The Hunt for Gollum",
+   "pack": "THfG",
+   "type": "Objective",
+   "quantity": 4,
+   "rule": "Guarded. Response: After the players quest successfully, the players may claim Signs of Gollum if it has no attached encounters. When claimed, attach Signs of Gollum to any hero committed to the quest. (Counts as a Condition attachment with: 'Forced: After attached hero is damaged or leaves play, return this card to the top of the encounter deck.')",
+   "shadow": "",
+   "traits": "Clue.",
+   "engagement": null,
+   "threat": null,
+   "attack": null,
+   "defense": null,
+   "health": null,
+   "surge": false,
+   "doomed": 0,
+   "willpower": 4
+  },
+  {
+   "id": 133,
+   "name": "The Old Ford",
+   "en": "The Old Ford",
+   "set": "The Hunt for Gollum",
+   "pack": "THfG",
+   "type": "Location",
+   "quantity": 2,
+   "rule": "X is the number of ally cards in play.",
+   "shadow": "Shadow: Discard from play all allies with a printed cost lower than the number of Riverland locations in play.",
+   "traits": "Riverland.",
+   "engagement": null,
+   "threat": "X",
+   "attack": null,
+   "defense": null,
+   "health": null,
+   "surge": false,
+   "doomed": 0
+  },
+  {
+   "id": 134,
+   "name": "The Eaves of Mirkwood",
+   "en": "The Eaves of Mirkwood",
+   "set": "The Hunt for Gollum",
+   "pack": "THfG",
+   "type": "Location",
+   "quantity": 3,
+   "rule": "While The Eaves of Mirkwood is the active location, encounter card effects cannot be canceled.",
+   "shadow": "",
+   "traits": "Forest.",
+   "engagement": null,
+   "threat": 2,
+   "attack": null,
+   "defense": null,
+   "health": null,
+   "surge": false,
+   "doomed": 0
+  },
+  {
+   "id": 135,
+   "name": "River Ninglor",
+   "en": "River Ninglor",
+   "set": "The Hunt for Gollum",
+   "pack": "THfG",
+   "type": "Location",
+   "quantity": 2,
+   "rule": "While River Ninglor is the active location, remove 1 progress token from it and from the current quest at the end of each round.",
+   "shadow": "Shadow: Remove 1 progress token from the current quest. (2 progress tokens instead if this attack is undefended.)",
+   "traits": "Riverland.",
+   "engagement": null,
+   "threat": 2,
+   "attack": null,
+   "defense": null,
+   "health": null,
+   "surge": false,
+   "doomed": 0
+  },
+  {
+   "id": 136,
+   "name": "The East Bank",
+   "en": "The East Bank",
+   "set": "The Hunt for Gollum",
+   "pack": "THfG",
+   "type": "Location",
+   "quantity": 2,
+   "rule": "While The East Bank is the active location, ally cards cost 1 additional matching resource to play from hand.",
+   "shadow": "Shadow: If you do not control at least 1 hero with a Clue card attached, return this enemy to the staging area after its attack resolves.",
+   "traits": "Riverland.",
+   "engagement": null,
+   "threat": 3,
+   "attack": null,
+   "defense": null,
+   "health": null,
+   "surge": false,
+   "doomed": 0
+  },
+  {
+   "id": 137,
+   "name": "The West Bank",
+   "en": "The West Bank",
+   "set": "The Hunt for Gollum",
+   "pack": "THfG",
+   "type": "Location",
+   "quantity": 2,
+   "rule": "While The West Bank is the active location, attachment and event cards cost 1 additional matching resource to play from hand.",
+   "shadow": "Shadow: If you do not control at least 1 hero with a Clue card attached, double this enemy's base [attack] for this attack.",
+   "traits": "Riverland.",
+   "engagement": null,
+   "threat": 3,
+   "attack": null,
+   "defense": null,
+   "health": null,
+   "surge": false,
+   "doomed": 0
+  },
+  {
+   "id": 138,
+   "name": "Goblintown Scavengers",
+   "en": "Goblintown Scavengers",
+   "set": "The Hunt for Gollum",
+   "pack": "THfG",
+   "type": "Enemy",
+   "quantity": 2,
+   "rule": "When Revealed: Discard the top card of each player's deck. Until the end of the phase, increase Goblintown Scavenger's [threat] by the total printed cost of all cards discarded in this way.",
+   "shadow": "",
+   "traits": "Goblin. Orc.",
+   "engagement": 12,
+   "threat": 1,
+   "attack": 1,
+   "defense": 0,
+   "health": 3,
+   "surge": false,
+   "doomed": 0
+  },
+  {
+   "id": 139,
+   "name": "Hunters from Mordor",
+   "en": "Hunters from Mordor",
+   "set": "The Hunt for Gollum",
+   "pack": "THfG",
+   "type": "Enemy",
+   "quantity": 5,
+   "rule": "Hunters from Mordor get +2 [attack] and +2 [threat] for each Clue card in play.",
+   "shadow": "Shadow: Deal 1 damage to each hero with a Clue card attached. (3 damage instead if this attack is undefended.)",
+   "traits": "Mordor.",
+   "engagement": 34,
+   "threat": 2,
+   "attack": 2,
+   "defense": 2,
+   "health": 6,
+   "surge": false,
+   "doomed": 0
+  },
+  {
+   "id": 140,
+   "name": "False Lead",
+   "en": "False Lead",
+   "set": "The Hunt for Gollum",
+   "pack": "THfG",
+   "type": "Treachery",
+   "quantity": 2,
+   "rule": "When Revealed: The first player chooses and shuffles a card with the printed Clue trait back into the encounter deck. If there are no Clue cards in play, False Lead gains surge.",
+   "shadow": "",
+   "traits": "",
+   "engagement": null,
+   "threat": null,
+   "attack": null,
+   "defense": null,
+   "health": null,
+   "surge": false,
+   "doomed": 0
+  },
+  {
+   "id": 141,
+   "name": "Flooding",
+   "en": "Flooding",
+   "set": "The Hunt for Gollum",
+   "pack": "THfG",
+   "type": "Treachery",
+   "quantity": 2,
+   "rule": "Doomed 1. Surge. When Revealed: Remove all progress tokens from all Riverland locations.",
+   "shadow": "Shadow: Resolve the 'when revealed' effect of this card.",
+   "traits": "Disaster.",
+   "engagement": null,
+   "threat": null,
+   "attack": null,
+   "defense": null,
+   "health": null,
+   "surge": true,
+   "doomed": 1
+  },
+  {
+   "id": 142,
+   "name": "Old Wives' Tales",
+   "en": "Old Wives' Tales",
+   "set": "The Hunt for Gollum",
+   "pack": "THfG",
+   "type": "Treachery",
+   "quantity": 3,
+   "rule": "When Revealed: Discard 1 resource from each hero's resource pool, if able. Exhaust any hero that could not discard a resource from its pool.",
+   "shadow": "",
+   "traits": "Gossip.",
+   "engagement": null,
+   "threat": null,
+   "attack": null,
+   "defense": null,
+   "health": null,
+   "surge": false,
+   "doomed": 0
+  }
+ ],
+ "quests": [
+  {
+   "id": 129,
+   "name": "The Hunt Begins",
+   "stage": 1,
+   "pack": "THfG",
+   "points": 8,
+   "front": "Setup: Reveal 1 card per player from the encounter deck, and add it to the staging area.",
+   "back": "Forced: After the players quest successfully, the first player looks at the top 3 card fo the encounter deck. Reveal and add 1 of those cards to the staging area, and discard the other 2 cards."
+  },
+  {
+   "id": 130,
+   "name": "A New Terror Abroad",
+   "stage": 1,
+   "pack": "THfG",
+   "points": 10,
+   "front": "（源数据缺 A 面文案，TODO）",
+   "back": "Forced: At the beginning of the quest phase, the first player looks at the top 2 cards of the encounter deck. Reveal and add 1 of those cards to the staging area, and discard the other."
+  },
+  {
+   "id": 131,
+   "name": "On the Trail",
+   "stage": 1,
+   "pack": "THfG",
+   "points": 8,
+   "front": "（源数据缺 A 面文案，TODO）",
+   "back": "Any player who does not control a hero with at least 1 Clue objective attached cannot commit characters to this quest. If there are ever no heroes with Clue objectives attached in play, reset the quest deck to stage 2B. If the players defeat this stage, the players have once again found a true sign of Gollum's passing, and have won the game."
+  }
+ ],
+ "scenario": {
+  "id": "gollum",
+  "name": "寻找咕噜",
+  "en": "The Hunt for Gollum",
+  "difficulty": 2,
+  "coverCard": 129,
+  "sets": [
+   "Journey Along the Anduin",
+   "Sauron's Reach",
+   "The Hunt for Gollum"
+  ],
+  "easyRemove": {
+   "112": 1,
+   "114": 2,
+   "115": 2,
+   "116": 1,
+   "133": 2,
+   "138": 1,
+   "139": 3,
+   "142": 2
+  },
+  "deckQuantities": {},
+  "stages": [
+   {
+    "id": 129,
+    "next": 130
+   },
+   {
+    "id": 130,
+    "next": 131
+   },
+   {
+    "id": 131,
+    "next": null
+   }
+  ]
+ },
+ "sets": {
+  "The Hunt for Gollum": "寻找咕噜",
+  "Journey Along the Anduin": "沿安都因河而下"
+ },
+ "deck": {
+  "normal": 48,
+  "easy": 34,
+  "easyCheck": 34
+ },
+ "missingFaces": [
+  {
+   "code": "02012",
+   "field": "front"
+  },
+  {
+   "code": "02013",
+   "field": "front"
+  }
+ ],
+ "coreReuse": [
+  {
+   "code": "01111",
+   "dataId": 111
+  },
+  {
+   "code": "01112",
+   "dataId": 112
+  },
+  {
+   "code": "01113",
+   "dataId": 113
+  },
+  {
+   "code": "01114",
+   "dataId": 114
+  },
+  {
+   "code": "01115",
+   "dataId": 115
+  },
+  {
+   "code": "01116",
+   "dataId": 116
+  },
+  {
+   "code": "01117",
+   "dataId": 117
+  },
+  {
+   "code": "01118",
+   "dataId": 118
+  }
+ ],
+ "unmatched": []
+}

@@ -1,3 +1,18 @@
+# v0.16.4 · 《寻找咕噜》(HfG) 试点接入：首个非 Core 剧本（2026-10-30）
+
+遭遇卡数据接线首个试点，剧本数据化（v0.16.3）后的第一次实战验证：
+
+- 新增剧本条目 `gollum`（寻找咕噜 · The Hunt for Gollum）：3 张探险卡顺序链（129→130→131，stage3 next:null=胜利）、无 setup 定义=标准开局、prisoner 恒 null；difficulty 2，coverCard=129。
+- data.js 新增 11 张 HfG 遭遇卡（id 132-142，normal 档合计 29 张）+ 3 张探险卡（129-131）；遭遇卡库 45→56 张、探险卡 10→13 张。Core 复用卡（8 张）不重复建条目，直接复用既有定义。
+- engine 组牌支持 `deckQuantities:{卡id:n}` 声明式 override（缺省走卡面 quantity、未知 id fail loud）；核查结论：8 张 Core 复用卡在 HfG 的用量与卡面 quantity 全部一致，本剧本无需实际 override，但机制已回归覆盖。
+- 数据取证纠正（对照卡图）：02015 The Old Ford 威胁为变值 X（HoB 导出的 254 为损坏值），引擎 threatVal 容错按 0 计防 NaN；02014 Signs of Gollum 意志力按卡图补录 4。
+- 图片：17 张 HfG 卡面（11 卡 + 3 探险卡 A/B 面）下载至 assets/cards-encounter/，local-image-map 全部映射为本地路径（file:// 离线可载）；encounter-image-index 补 14 条目 + 17 条真实 HTTP 200 检查记录（合计 69 卡 / 82 检查）。
+- 中文缺失处理：HfG 卡名/文案暂用英文回退（RingsDB/HoB 无官方中文），卡名标 TODO；02012/02013 的 A 面文案 HoB 源即缺失，data.js 以占位文案注明。
+- set 名规范化：'Journey Down the Anduin' 全局改为官方名 'Journey Along the Anduin'（6 处）。
+- 遭遇组筛选接入：HfG 卡标 pack='THfG'，POD_NAMES 加中文映射；系列下拉（卡牌页）此前已含 THfG。
+- 回归：check-scenario-data.cjs 扩到 29 项（+5：HfG normal 档 48 张按组深比较、easy 34、标准开局 3 stage 链推进到胜利、deckQuantities override 生效+未知 id fail loud、Old Ford 变值威胁不污染探查威胁和）；check_project 546 全绿；browser-check 增「gollum 开局」冒烟（deck=48/staging=0/prisoner=null/图零破损），18 项全 PASS。
+- 工具链：新增 scripts/gen-scenario-entries.py（从 docs/data/encounter-carddata.json 生成 data.js 风格条目草稿，供人工审核后并入）；草稿存档 docs/data/hfg-entries-draft.json。
+
 # v0.16.3 · 剧本定义数据化：setup/gates/stages 全部进 data.js（2026-10-30）
 
 剧本特判从引擎硬编码迁入 data.js 的 scenarios[]，为扩展新剧本（《寻找咕噜》等）铺路：

@@ -2939,7 +2939,7 @@ const LOTR_DATA = {
       "id": 111,
       "name": "迷雾山脉哥布林",
       "en": "Misty Mountain Goblins",
-      "set": "Journey Down the Anduin",
+      "set": "Journey Along the Anduin",
       "pack": "Core",
       "type": "Enemy",
       "quantity": 3,
@@ -2958,7 +2958,7 @@ const LOTR_DATA = {
       "id": 112,
       "name": "夜间集结",
       "en": "Massing at Night",
-      "set": "Journey Down the Anduin",
+      "set": "Journey Along the Anduin",
       "pack": "Core",
       "type": "Treachery",
       "quantity": 1,
@@ -2972,7 +2972,7 @@ const LOTR_DATA = {
       "id": 113,
       "name": "安都因河岸",
       "en": "Banks of the Anduin",
-      "set": "Journey Down the Anduin",
+      "set": "Journey Along the Anduin",
       "pack": "Core",
       "type": "Location",
       "quantity": 2,
@@ -2988,7 +2988,7 @@ const LOTR_DATA = {
       "id": 114,
       "name": "金鸢尾平原",
       "en": "Gladden Fields",
-      "set": "Journey Down the Anduin",
+      "set": "Journey Along the Anduin",
       "pack": "Core",
       "type": "Location",
       "quantity": 3,
@@ -3059,6 +3059,225 @@ const LOTR_DATA = {
       "rule": "翻开：探查区当时已有的每个地点本阶段威胁+1；威胁至少35的每位玩家弃1张手牌。",
       "shadow": "",
       "traits": "",
+      "surge": false,
+      "doomed": 0
+    },
+    /* TODO：以下 HfG（寻找咕噜）条目由 scripts/gen-scenario-entries.py 生成——
+       RingsDB/HoB 无官方中文，name 暂回退英文名，译名为长期任务。
+       02014 Signs of Gollum 印刷意志 4（HoB 缺，按卡图补录）；
+       02015 The Old Ford 威胁为变值 X（HoB 导出 254 为损坏值，按卡图纠正），效果层后续实现。 */
+    {
+      "id": 132,
+      "name": "Signs of Gollum",
+      "en": "Signs of Gollum",
+      "set": "The Hunt for Gollum",
+      "pack": "THfG",
+      "type": "Objective",
+      "quantity": 4,
+      "rule": "Guarded. Response: After the players quest successfully, the players may claim Signs of Gollum if it has no attached encounters. When claimed, attach Signs of Gollum to any hero committed to the quest. (Counts as a Condition attachment with: 'Forced: After attached hero is damaged or leaves play, return this card to the top of the encounter deck.')",
+      "shadow": "",
+      "traits": "Clue.",
+      "engagement": null,
+      "threat": null,
+      "attack": null,
+      "defense": null,
+      "health": null,
+      "surge": false,
+      "doomed": 0,
+      "willpower": 4
+    },
+    {
+      "id": 133,
+      "name": "The Old Ford",
+      "en": "The Old Ford",
+      "set": "The Hunt for Gollum",
+      "pack": "THfG",
+      "type": "Location",
+      "quantity": 2,
+      "rule": "X is the number of ally cards in play.",
+      "shadow": "Shadow: Discard from play all allies with a printed cost lower than the number of Riverland locations in play.",
+      "traits": "Riverland.",
+      "engagement": null,
+      "quest": 2,
+      "threat": "X",
+      "attack": null,
+      "defense": null,
+      "health": null,
+      "surge": false,
+      "doomed": 0
+    },
+    {
+      "id": 134,
+      "name": "The Eaves of Mirkwood",
+      "en": "The Eaves of Mirkwood",
+      "set": "The Hunt for Gollum",
+      "pack": "THfG",
+      "type": "Location",
+      "quantity": 3,
+      "rule": "While The Eaves of Mirkwood is the active location, encounter card effects cannot be canceled.",
+      "shadow": "",
+      "traits": "Forest.",
+      "engagement": null,
+      "quest": 2,
+      "threat": 2,
+      "attack": null,
+      "defense": null,
+      "health": null,
+      "surge": false,
+      "doomed": 0
+    },
+    {
+      "id": 135,
+      "name": "River Ninglor",
+      "en": "River Ninglor",
+      "set": "The Hunt for Gollum",
+      "pack": "THfG",
+      "type": "Location",
+      "quantity": 2,
+      "rule": "While River Ninglor is the active location, remove 1 progress token from it and from the current quest at the end of each round.",
+      "shadow": "Shadow: Remove 1 progress token from the current quest. (2 progress tokens instead if this attack is undefended.)",
+      "traits": "Riverland.",
+      "engagement": null,
+      "quest": 4,
+      "threat": 2,
+      "attack": null,
+      "defense": null,
+      "health": null,
+      "surge": false,
+      "doomed": 0
+    },
+    {
+      "id": 136,
+      "name": "The East Bank",
+      "en": "The East Bank",
+      "set": "The Hunt for Gollum",
+      "pack": "THfG",
+      "type": "Location",
+      "quantity": 2,
+      "rule": "While The East Bank is the active location, ally cards cost 1 additional matching resource to play from hand.",
+      "shadow": "Shadow: If you do not control at least 1 hero with a Clue card attached, return this enemy to the staging area after its attack resolves.",
+      "traits": "Riverland.",
+      "engagement": null,
+      "quest": 3,
+      "threat": 3,
+      "attack": null,
+      "defense": null,
+      "health": null,
+      "surge": false,
+      "doomed": 0
+    },
+    {
+      "id": 137,
+      "name": "The West Bank",
+      "en": "The West Bank",
+      "set": "The Hunt for Gollum",
+      "pack": "THfG",
+      "type": "Location",
+      "quantity": 2,
+      "rule": "While The West Bank is the active location, attachment and event cards cost 1 additional matching resource to play from hand.",
+      "shadow": "Shadow: If you do not control at least 1 hero with a Clue card attached, double this enemy's base [attack] for this attack.",
+      "traits": "Riverland.",
+      "engagement": null,
+      "quest": 3,
+      "threat": 3,
+      "attack": null,
+      "defense": null,
+      "health": null,
+      "surge": false,
+      "doomed": 0
+    },
+    {
+      "id": 138,
+      "name": "Goblintown Scavengers",
+      "en": "Goblintown Scavengers",
+      "set": "The Hunt for Gollum",
+      "pack": "THfG",
+      "type": "Enemy",
+      "quantity": 2,
+      "rule": "When Revealed: Discard the top card of each player's deck. Until the end of the phase, increase Goblintown Scavenger's [threat] by the total printed cost of all cards discarded in this way.",
+      "shadow": "",
+      "traits": "Goblin. Orc.",
+      "engagement": 12,
+      "threat": 1,
+      "attack": 1,
+      "defense": 0,
+      "health": 3,
+      "surge": false,
+      "doomed": 0
+    },
+    {
+      "id": 139,
+      "name": "Hunters from Mordor",
+      "en": "Hunters from Mordor",
+      "set": "The Hunt for Gollum",
+      "pack": "THfG",
+      "type": "Enemy",
+      "quantity": 5,
+      "rule": "Hunters from Mordor get +2 [attack] and +2 [threat] for each Clue card in play.",
+      "shadow": "Shadow: Deal 1 damage to each hero with a Clue card attached. (3 damage instead if this attack is undefended.)",
+      "traits": "Mordor.",
+      "engagement": 34,
+      "threat": 2,
+      "attack": 2,
+      "defense": 2,
+      "health": 6,
+      "surge": false,
+      "doomed": 0
+    },
+    {
+      "id": 140,
+      "name": "False Lead",
+      "en": "False Lead",
+      "set": "The Hunt for Gollum",
+      "pack": "THfG",
+      "type": "Treachery",
+      "quantity": 2,
+      "rule": "When Revealed: The first player chooses and shuffles a card with the printed Clue trait back into the encounter deck. If there are no Clue cards in play, False Lead gains surge.",
+      "shadow": "",
+      "traits": "",
+      "engagement": null,
+      "threat": null,
+      "attack": null,
+      "defense": null,
+      "health": null,
+      "surge": false,
+      "doomed": 0
+    },
+    {
+      "id": 141,
+      "name": "Flooding",
+      "en": "Flooding",
+      "set": "The Hunt for Gollum",
+      "pack": "THfG",
+      "type": "Treachery",
+      "quantity": 2,
+      "rule": "Doomed 1. Surge. When Revealed: Remove all progress tokens from all Riverland locations.",
+      "shadow": "Shadow: Resolve the 'when revealed' effect of this card.",
+      "traits": "Disaster.",
+      "engagement": null,
+      "threat": null,
+      "attack": null,
+      "defense": null,
+      "health": null,
+      "surge": true,
+      "doomed": 1
+    },
+    {
+      "id": 142,
+      "name": "Old Wives' Tales",
+      "en": "Old Wives' Tales",
+      "set": "The Hunt for Gollum",
+      "pack": "THfG",
+      "type": "Treachery",
+      "quantity": 3,
+      "rule": "When Revealed: Discard 1 resource from each hero's resource pool, if able. Exhaust any hero that could not discard a resource from its pool.",
+      "shadow": "",
+      "traits": "Gossip.",
+      "engagement": null,
+      "threat": null,
+      "attack": null,
+      "defense": null,
+      "health": null,
       "surge": false,
       "doomed": 0
     }
@@ -3153,6 +3372,34 @@ const LOTR_DATA = {
       "points": 0,
       "front": "入场：每位玩家各翻开2张遭遇卡。",
       "back": "此后跳过探查步骤；清除场上所有敌人即可获胜。"
+    },
+    /* TODO：HfG 三张探险卡名暂回退英文；02012/02013 缺 A 面文案（HoB 源缺口）。 */
+    {
+      "id": 129,
+      "name": "The Hunt Begins",
+      "stage": 1,
+      "pack": "THfG",
+      "points": 8,
+      "front": "Setup: Reveal 1 card per player from the encounter deck, and add it to the staging area.",
+      "back": "Forced: After the players quest successfully, the first player looks at the top 3 card fo the encounter deck. Reveal and add 1 of those cards to the staging area, and discard the other 2 cards."
+    },
+    {
+      "id": 130,
+      "name": "A New Terror Abroad",
+      "stage": 2,
+      "pack": "THfG",
+      "points": 10,
+      "front": "（源数据缺 A 面文案，TODO）",
+      "back": "Forced: At the beginning of the quest phase, the first player looks at the top 2 cards of the encounter deck. Reveal and add 1 of those cards to the staging area, and discard the other."
+    },
+    {
+      "id": 131,
+      "name": "On the Trail",
+      "stage": 3,
+      "pack": "THfG",
+      "points": 8,
+      "front": "（源数据缺 A 面文案，TODO）",
+      "back": "Any player who does not control a hero with at least 1 Clue objective attached cannot commit characters to this quest. If there are ever no heroes with Clue objectives attached in play, reset the quest deck to stage 2B. If the players defeat this stage, the players have once again found a true sign of Gollum's passing, and have won the game."
     }
   ],
   "scenarios": [
@@ -3195,7 +3442,7 @@ const LOTR_DATA = {
       "difficulty": 4,
       "coverCard": 126,
       "sets": [
-        "Journey Down the Anduin",
+        "Journey Along the Anduin",
         "Sauron's Reach",
         "Dol Guldur Orcs",
         "Wilderlands"
@@ -3259,6 +3506,43 @@ const LOTR_DATA = {
         { "id": 124, "next": 125, "gate": { "rescued": true, "holdObjectives": "all" }, "rescueWindow": true },
         { "id": 125, "next": null, "gate": { "noInPlay": [102] }, "orcGuards": true }
       ]
+    },
+    {
+      "id": "gollum",
+      "name": "寻找咕噜",
+      "en": "The Hunt for Gollum",
+      "difficulty": 2,
+      "coverCard": 129,
+      "sets": [
+        "Journey Along the Anduin",
+        "Sauron's Reach",
+        "The Hunt for Gollum"
+      ],
+      "easyRemove": {
+        "112": 1,
+        "114": 2,
+        "115": 2,
+        "116": 1,
+        "133": 2,
+        "138": 1,
+        "139": 3,
+        "142": 2
+      },
+      "deckQuantities": {},
+      "stages": [
+        {
+          "id": 129,
+          "next": 130
+        },
+        {
+          "id": 130,
+          "next": 131
+        },
+        {
+          "id": 131,
+          "next": null
+        }
+      ]
     }
   ],
   "sets": {
@@ -3267,7 +3551,8 @@ const LOTR_DATA = {
     "Dol Guldur Orcs": "多尔哥多兽人",
     "Passage Through Mirkwood": "穿越幽暗密林",
     "Escape from Dol Guldur": "逃离多尔哥多",
-    "Journey Down the Anduin": "沿安都因河而下",
+    "Journey Along the Anduin": "沿安都因河而下",
+    "The Hunt for Gollum": "寻找咕噜",
     "Sauron's Reach": "索隆的魔爪"
   },
   "sources": [
@@ -57489,8 +57774,13 @@ function create(scenarioId,players=1,seed=Date.now(),configs=null,options={}){
  if(configs)assert(Array.isArray(configs)&&configs.length===players,'玩家牌组配置数量不符。');
  for(let i=0;i<players;i++){const c=configs?.[i];if(c)assert(Array.isArray(c.heroes)&&c.heroes.length>=1&&c.heroes.length<=3&&Number.isInteger(c.startingThreat),'无效英雄配置。');s.players.push({id:i,name:`玩家${i+1}`,threat:c?c.startingThreat:[29,29,24,30][i],heroes:c?[...c.heroes]:[...roster[i]],...(c?{heroCodes:[...c.heroCodes],heroCards:clone(c.heroCards),registeredDeck:clone(c.registeredDeck)}:{}),engaged:[],eliminated:false});}
  for(const k of Object.keys(sc.easyRemove||{}))assert(byId[k],'剧本 easyRemove 引用未知卡 id：'+k);
+ /* v0.16.4：deckQuantities 允许剧本声明某卡的组内用量覆盖卡面 quantity（缺省走卡面）；未知 id fail loud。 */
+ const deckQty=sc.deckQuantities||{};
+ for(const k of Object.keys(deckQty))assert(byId[k],'剧本 deckQuantities 引用未知卡 id：'+k);
  for(const d of D.cards.filter(c=>sc.sets.includes(c.set))){
-  const qty=d.quantity-(difficulty==='easy'?((sc.easyRemove&&sc.easyRemove[d.id])||0):0);
+  const base=deckQty[d.id]!==undefined?deckQty[d.id]:d.quantity;
+  assert(Number.isInteger(base)&&base>=0,`卡 ${d.id} 的组内用量无效：${base}`);
+  const qty=base-(difficulty==='easy'?((sc.easyRemove&&sc.easyRemove[d.id])||0):0);
   for(let i=0;i<qty;i++)s.deck.push({...clone(d),uid:++s.serial});
  }
  shuffle(s,s.deck);
@@ -57502,10 +57792,11 @@ function create(scenarioId,players=1,seed=Date.now(),configs=null,options={}){
  applyScenarioSetup(s);return s;
 }
 function applyScenarioSetup(s){
- /* v0.16.3：开局设置读 scenarios[].setup。stageCards=直接把指定卡放进探查区再洗牌；
-    revealFlow=逐张翻牌流程（beginSetupFlow）。未知类型 fail loud。 */
+ /* v0.16.4：开局设置读 scenarios[].setup。stageCards=直接把指定卡放进探查区再洗牌；
+    revealFlow=逐张翻牌流程（beginSetupFlow）；无 setup 定义=标准开局（gollum 试点即此类）。 */
  const su=scenarioOf(s).setup;
- assert(su&&su.type,'剧本缺少 setup 定义：'+s.scenario);
+ if(!su){s.revealSteps=0;return;}
+ assert(su.type,'剧本 setup 定义缺少 type：'+s.scenario);
  if(su.type==='stageCards'){
   assert(Array.isArray(su.cards)&&su.cards.length,'stageCards setup 需要非空 cards 数组');
   for(const id of su.cards){const c=findTake(s,id);assert(c,`剧本设置：遭遇牌库中找不到卡 ${id}`);s.staging.push(c);}
@@ -57656,7 +57947,10 @@ function stage(s){assert(!s.questing,'请使用逐张探查流程');ready(s);ass
  if(rp==='skip')log(s,`${quest(s).name}：跳过探查步骤`);
  else{assert(rp==='player','未知 stage.revealPer：'+rp);reveal(s,live(s).length+(st.revealBonus||0));}
  s.revealSteps=0;}
-function threat(s){return s.phaseThreat+s.staging.filter(c=>['Enemy','Location'].includes(c.type)).reduce((n,c)=>n+(s.planning?P2.stats(s,c.uid).threat:(c.threat||0))+(c.bonus||0),0);}
+ /* 变值威胁（v0.16.4 起：133 The Old Ford 的 X=场上盟友数）在效果层实现前按 0 计，
+    数据仍如实存 'X'；此处必须容错，否则探查区威胁求和会出 NaN。 */
+ const threatVal=(s,c)=>{const v=s.planning?P2.stats(s,c.uid).threat:c.threat;return typeof v==='number'?v:0;};
+ function threat(s){return s.phaseThreat+s.staging.filter(c=>['Enemy','Location'].includes(c.type)).reduce((n,c)=>n+threatVal(s,c)+(c.bonus||0),0);}
 function addProgress(s,n,internal=false){ready(s);assert(internal||!s.planning||![1,2].includes(s.phase),'计划阶段进度必须由卡牌效果自动结算。');assert(Number.isInteger(n)&&n>=0,'进度须为非负整数。');let left=n;
  if(s.active){let c=s.active,k=Math.min(left,Math.max(0,c.quest-(c.progress||0)));c.progress=(c.progress||0)+k;left-=k;if(c.progress>=c.quest){s.active=null;leaveLocation(s,c);}}
  s.progress+=left;log(s,`放置${n}点进度，探险卡现有${s.progress}点`);
@@ -58751,6 +59045,137 @@ const ENCOUNTER_IMAGES = {
         "B": "https://hallofbeorn.com/Images/Cards/Core-Set/Ambush-on-the-Shore-3B.jpg"
       }
     }
+,
+    /* v0.16.4：HfG（寻找咕噜）14 条目，faces 指向 HoB s3 原图 URL，本地镜像见 local-image-map.js */
+    {
+     "id": 129,
+     "name": "The Hunt Begins",
+     "type": "Quest",
+     "sourceUrl": "https://hallofbeorn.com/LotR/Details/The-Hunt-Begins-THfG",
+     "faces": {
+      "A": "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/The-Hunt-Begins-1A.jpg",
+      "B": "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/The-Hunt-Begins-1B.jpg"
+     }
+    },
+    {
+     "id": 130,
+     "name": "A New Terror Abroad",
+     "type": "Quest",
+     "sourceUrl": "https://hallofbeorn.com/LotR/Details/A-New-Terror-Abroad-THfG",
+     "faces": {
+      "A": "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/A-New-Terror-Abroad-2A.jpg",
+      "B": "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/A-New-Terror-Abroad-2B.jpg"
+     }
+    },
+    {
+     "id": 131,
+     "name": "On the Trail",
+     "type": "Quest",
+     "sourceUrl": "https://hallofbeorn.com/LotR/Details/On-the-Trail-THfG",
+     "faces": {
+      "A": "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/On-the-Trail-3A.jpg",
+      "B": "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/On-the-Trail-3B.jpg"
+     }
+    },
+    {
+     "id": 132,
+     "name": "Signs of Gollum",
+     "type": "Objective",
+     "sourceUrl": "https://hallofbeorn.com/LotR/Details/Signs-of-Gollum-THfG",
+     "faces": {
+      "front": "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/Signs-of-Gollum.jpg"
+     }
+    },
+    {
+     "id": 133,
+     "name": "The Old Ford",
+     "type": "Location",
+     "sourceUrl": "https://hallofbeorn.com/LotR/Details/The-Old-Ford-THfG",
+     "faces": {
+      "front": "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/The-Old-Ford.jpg"
+     }
+    },
+    {
+     "id": 134,
+     "name": "The Eaves of Mirkwood",
+     "type": "Location",
+     "sourceUrl": "https://hallofbeorn.com/LotR/Details/The-Eaves-of-Mirkwood-THfG",
+     "faces": {
+      "front": "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/The-Eaves-of-Mirkwood.jpg"
+     }
+    },
+    {
+     "id": 135,
+     "name": "River Ninglor",
+     "type": "Location",
+     "sourceUrl": "https://hallofbeorn.com/LotR/Details/River-Ninglor-THfG",
+     "faces": {
+      "front": "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/River-Ninglor.jpg"
+     }
+    },
+    {
+     "id": 136,
+     "name": "The East Bank",
+     "type": "Location",
+     "sourceUrl": "https://hallofbeorn.com/LotR/Details/The-East-Bank-THfG",
+     "faces": {
+      "front": "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/The-East-Bank.jpg"
+     }
+    },
+    {
+     "id": 137,
+     "name": "The West Bank",
+     "type": "Location",
+     "sourceUrl": "https://hallofbeorn.com/LotR/Details/The-West-Bank-THfG",
+     "faces": {
+      "front": "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/The-West-Bank.jpg"
+     }
+    },
+    {
+     "id": 138,
+     "name": "Goblintown Scavengers",
+     "type": "Enemy",
+     "sourceUrl": "https://hallofbeorn.com/LotR/Details/Goblintown-Scavengers-THfG",
+     "faces": {
+      "front": "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/Goblintown-Scavengers.jpg"
+     }
+    },
+    {
+     "id": 139,
+     "name": "Hunters from Mordor",
+     "type": "Enemy",
+     "sourceUrl": "https://hallofbeorn.com/LotR/Details/Hunters-from-Mordor-THfG",
+     "faces": {
+      "front": "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/Hunters-from-Mordor.jpg"
+     }
+    },
+    {
+     "id": 140,
+     "name": "False Lead",
+     "type": "Treachery",
+     "sourceUrl": "https://hallofbeorn.com/LotR/Details/False-Lead-THfG",
+     "faces": {
+      "front": "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/False-Lead.jpg"
+     }
+    },
+    {
+     "id": 141,
+     "name": "Flooding",
+     "type": "Treachery",
+     "sourceUrl": "https://hallofbeorn.com/LotR/Details/Flooding-THfG",
+     "faces": {
+      "front": "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/Flooding.jpg"
+     }
+    },
+    {
+     "id": 142,
+     "name": "Old Wives' Tales",
+     "type": "Treachery",
+     "sourceUrl": "https://hallofbeorn.com/LotR/Details/Old-Wives'-Tales-THfG",
+     "faces": {
+      "front": "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/Old-Wives'-Tales.jpg"
+     }
+    }
   ],
   "checks": [
     {
@@ -59204,6 +59629,125 @@ const ENCOUNTER_IMAGES = {
     {
       "id": 128,
       "face": "B",
+      "status": 200,
+      "mime": "image/jpeg",
+      "ok": true
+    },
+    {
+      "id": 129,
+      "face": "A",
+      "status": 200,
+      "mime": "image/jpeg",
+      "ok": true
+    },
+    {
+      "id": 129,
+      "face": "B",
+      "status": 200,
+      "mime": "image/jpeg",
+      "ok": true
+    },
+    {
+      "id": 130,
+      "face": "A",
+      "status": 200,
+      "mime": "image/jpeg",
+      "ok": true
+    },
+    {
+      "id": 130,
+      "face": "B",
+      "status": 200,
+      "mime": "image/jpeg",
+      "ok": true
+    },
+    {
+      "id": 131,
+      "face": "A",
+      "status": 200,
+      "mime": "image/jpeg",
+      "ok": true
+    },
+    {
+      "id": 131,
+      "face": "B",
+      "status": 200,
+      "mime": "image/jpeg",
+      "ok": true
+    },
+    {
+      "id": 132,
+      "face": "front",
+      "status": 200,
+      "mime": "image/jpeg",
+      "ok": true
+    },
+    {
+      "id": 133,
+      "face": "front",
+      "status": 200,
+      "mime": "image/jpeg",
+      "ok": true
+    },
+    {
+      "id": 134,
+      "face": "front",
+      "status": 200,
+      "mime": "image/jpeg",
+      "ok": true
+    },
+    {
+      "id": 135,
+      "face": "front",
+      "status": 200,
+      "mime": "image/jpeg",
+      "ok": true
+    },
+    {
+      "id": 136,
+      "face": "front",
+      "status": 200,
+      "mime": "image/jpeg",
+      "ok": true
+    },
+    {
+      "id": 137,
+      "face": "front",
+      "status": 200,
+      "mime": "image/jpeg",
+      "ok": true
+    },
+    {
+      "id": 138,
+      "face": "front",
+      "status": 200,
+      "mime": "image/jpeg",
+      "ok": true
+    },
+    {
+      "id": 139,
+      "face": "front",
+      "status": 200,
+      "mime": "image/jpeg",
+      "ok": true
+    },
+    {
+      "id": 140,
+      "face": "front",
+      "status": 200,
+      "mime": "image/jpeg",
+      "ok": true
+    },
+    {
+      "id": 141,
+      "face": "front",
+      "status": 200,
+      "mime": "image/jpeg",
+      "ok": true
+    },
+    {
+      "id": 142,
+      "face": "front",
       "status": 200,
       "mime": "image/jpeg",
       "ok": true
@@ -60732,8 +61276,27 @@ const LOCAL_IMAGE_MAP={
 "https://ringsdb.com/bundles/cards/99307014.png": "assets/cards-en/99307014.webp",
 "https://ringsdb.com/bundles/cards/99309041.png": "assets/cards-en/99309041.webp",
 "https://ringsdb.com/bundles/cards/99309043.png": "assets/cards-en/99309043.webp",
-"https://ringsdb.com/bundles/cards/99310078.png": "assets/cards-en/99310078.webp"
+"https://ringsdb.com/bundles/cards/99310078.png": "assets/cards-en/99310078.webp",
+"https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/The-Hunt-Begins-1A.jpg": "assets/cards-encounter/the-hunt-begins-1a.jpg",
+"https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/The-Hunt-Begins-1B.jpg": "assets/cards-encounter/the-hunt-begins-1b.jpg",
+"https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/A-New-Terror-Abroad-2A.jpg": "assets/cards-encounter/a-new-terror-abroad-2a.jpg",
+"https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/A-New-Terror-Abroad-2B.jpg": "assets/cards-encounter/a-new-terror-abroad-2b.jpg",
+"https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/On-the-Trail-3A.jpg": "assets/cards-encounter/on-the-trail-3a.jpg",
+"https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/On-the-Trail-3B.jpg": "assets/cards-encounter/on-the-trail-3b.jpg",
+"https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/Signs-of-Gollum.jpg": "assets/cards-encounter/signs-of-gollum.jpg",
+"https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/The-Old-Ford.jpg": "assets/cards-encounter/the-old-ford.jpg",
+"https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/The-Eaves-of-Mirkwood.jpg": "assets/cards-encounter/the-eaves-of-mirkwood.jpg",
+"https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/River-Ninglor.jpg": "assets/cards-encounter/river-ninglor.jpg",
+"https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/The-East-Bank.jpg": "assets/cards-encounter/the-east-bank.jpg",
+"https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/The-West-Bank.jpg": "assets/cards-encounter/the-west-bank.jpg",
+"https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/Goblintown-Scavengers.jpg": "assets/cards-encounter/goblintown-scavengers.jpg",
+"https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/Hunters-from-Mordor.jpg": "assets/cards-encounter/hunters-from-mordor.jpg",
+"https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/False-Lead.jpg": "assets/cards-encounter/false-lead.jpg",
+"https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/Flooding.jpg": "assets/cards-encounter/flooding.jpg",
+"https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/Old-Wives'-Tales.jpg": "assets/cards-encounter/old-wives-tales.jpg"
 };
+
+if(typeof module!=="undefined")module.exports=LOCAL_IMAGE_MAP;
 
 </script>
 <script>
@@ -61562,7 +62125,7 @@ const WindowUI=(()=>{
 </script><script src="phase-log.js"></script><script>
 /* Tabletop view: UI drafts never pay, exhaust, reveal, or bypass phase validation. */
 /* 界面版本徽标唯一来源：须与 CHANGELOG.md 最新条目标题一致（planning-dom-tests 有校验）。 */
-const APP_VERSION='v0.16.3';
+const APP_VERSION='v0.16.4';
 /* ── 决策面板：一行触发条 + 非模态浮层（v0.15.81）─────────────────────
    形态演进：v0.15.62 浮动弹窗 → v0.15.76/79 内联公共桌面（常驻 96px 内容块）→ v0.15.81
    「一行触发条 + 非模态浮层」。用户报障「阶段窗口还在桌面上」：内联块把 .decide-box 撑到
@@ -62815,7 +63378,7 @@ function catalogSeriesPanel(id){
  * 'Core' 兜底只对历史遗留的缺字段数据生效，新增数据必须写 pack。
  * v0.16.2：玩家卡切到全量数据（player-carddata.js，1315 张 / 98 系列），
  * 系列名与循环序来自 PLAYER_CARDS_DATA.packs；中文产品名映射尚缺（product-zh 只有产品级译名，未链接 packCode）。 */
-const POD_NAMES={Core:'基础包 · Core Set'};
+const POD_NAMES={Core:'基础包 · Core Set',THfG:'寻找咕噜 · The Hunt for Gollum'};
 function podName(id){
  if(POD_NAMES[id])return POD_NAMES[id];
  const p=(typeof PLAYER_CARDS_DATA!=='undefined'&&PLAYER_CARDS_DATA.packs||[]).find(x=>x.code===id);

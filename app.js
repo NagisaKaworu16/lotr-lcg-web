@@ -245,7 +245,7 @@ function catalogSeriesPanel(id){
  * 'Core' 兜底只对历史遗留的缺字段数据生效，新增数据必须写 pack。
  * v0.16.2：玩家卡切到全量数据（player-carddata.js，1315 张 / 98 系列），
  * 系列名与循环序来自 PLAYER_CARDS_DATA.packs；中文产品名映射尚缺（product-zh 只有产品级译名，未链接 packCode）。 */
-const POD_NAMES={Core:'基础包 · Core Set'};
+const POD_NAMES={Core:'基础包 · Core Set',THfG:'寻找咕噜 · The Hunt for Gollum'};
 function podName(id){
  if(POD_NAMES[id])return POD_NAMES[id];
  const p=(typeof PLAYER_CARDS_DATA!=='undefined'&&PLAYER_CARDS_DATA.packs||[]).find(x=>x.code===id);

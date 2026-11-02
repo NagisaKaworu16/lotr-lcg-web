@@ -5,7 +5,7 @@ const test=require('node:test'),assert=require('node:assert/strict'),D=require('
  * 一旦并入非基础版的遭遇卡，筛选就会把它们全部错算进基础包。 */
 
 test('every encounter card declares a pack code',()=>{
-  assert.equal(D.cards.length,45);
+  assert.equal(D.cards.length,56);
   const missing=D.cards.filter(c=>!c.pack);
   assert.equal(missing.length,0,'缺 pack 的遭遇卡：'+missing.map(c=>c.id+':'+c.name).join(', '));
   for(const c of D.cards){
@@ -15,24 +15,25 @@ test('every encounter card declares a pack code',()=>{
 });
 
 test('every quest card declares a pack code',()=>{
-  assert.equal(D.quests.length,10);
+  assert.equal(D.quests.length,13);
   const missing=D.quests.filter(q=>!q.pack);
   assert.equal(missing.length,0,'缺 pack 的探险卡：'+missing.map(q=>q.id+':'+q.name).join(', '));
   for(const q of D.quests)assert.equal(typeof q.pack,'string',q.id);
 });
 
 test('pack codes match the source sets declared in the encounter set table',()=>{
-  /* 每条遭遇组都来自基础包：sources 里写的 Core Set 必须能和 pack='Core' 对上，
-     否则说明数据和卡面出处不一致。 */
+  /* 每条遭遇组都来自其声明的来源：sources 里写的 Core Set 必须能和 pack='Core' 对上，
+     非 Core 的 packCode 只允许出现在 HfG 组（THfG），否则说明数据和卡面出处不一致。 */
   for(const c of D.cards){
     const src=String(D.sets[c.set]||'');
     if(/Core/i.test(src))assert.equal(c.pack,'Core',`${c.id} 出自 ${src}，pack 应为 Core`);
+    if(c.pack!=='Core')assert.equal(c.set,'The Hunt for Gollum',`${c.id} 非 Core pack 只允许 HfG 组，set=${c.set}`);
   }
-  for(const q of D.quests)assert.equal(q.pack,'Core',q.id);
+  for(const q of D.quests)assert.equal(q.pack,q.id>=129?'THfG':'Core',q.id);
 });
 
 test('pack codes are stable identifiers usable as catalog filter keys',()=>{
   const codes=new Set([...D.cards,...D.quests].map(c=>c.pack));
-  assert.deepEqual([...codes],['Core']);
+  assert.deepEqual([...codes].sort(),['Core','THfG']);
   for(const code of codes)assert(!/\s{2,}/.test(code),'pack code 不应含连续空格');
 });

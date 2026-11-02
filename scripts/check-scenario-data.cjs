@@ -22,7 +22,7 @@ function withScenario(id,mutate,fn){const sc=D.scenarios.find(x=>x.id===id);cons
 /* ── 1. 数据 schema 自检 ─────────────────────────────────────────────── */
 test('scenario schema: stages cover every quest, next targets exist, enums valid',()=>{
  const allQuests=new Set(D.quests.map(q=>q.id)),covered=new Set;
- assert.deepEqual(D.scenarios.map(s=>s.id),['mirkwood','anduin','dolguldur'],'剧本声明顺序即 UI 顺序，不许变');
+ assert.deepEqual(D.scenarios.map(s=>s.id),['mirkwood','anduin','dolguldur','gollum'],'剧本声明顺序即 UI 顺序，不许变');
  for(const sc of D.scenarios){
   assert(sc.coverCard===sc.stages[0].id,'coverCard 必须是首张探险卡（PODS 派生的封面依据）');
   const ids=new Set(sc.stages.map(st=>st.id));
@@ -37,7 +37,47 @@ test('scenario schema: stages cover every quest, next targets exist, enums valid
    if(st.revealPer!==undefined)assert(['player','skip'].includes(st.revealPer),`未知 revealPer`);
   }
  }
- assert.deepEqual([...covered].sort((a,b)=>a-b),[...allQuests].sort((a,b)=>a-b),'10 张探险卡必须全部有 stage 定义');
+ assert.deepEqual([...covered].sort((a,b)=>a-b),[...allQuests].sort((a,b)=>a-b),'全部探险卡（含 HfG 三张）必须都有 stage 定义');
+});
+
+/* ── 1.5 HfG（寻找咕噜）试点：数据构成与推进 ─────────────────────────── */
+test('gollum normal deck: exactly 48 cards matching official scenario usage',()=>{
+ const s=E.create('gollum',1,42);
+ assert.equal(s.deck.length,48,'normal 档牌库总数必须等于 encounter-carddata scenarios 摘要（官方构成）');
+ const bySet={};s.deck.forEach(c=>bySet[c.set]=(bySet[c.set]||0)+1);
+ assert.deepEqual(bySet,{'The Hunt for Gollum':29,"Sauron's Reach":10,'Journey Along the Anduin':9});
+ assert.deepEqual([...new Set(s.deck.map(c=>c.pack))].sort(),['Core','THfG']);
+});
+test('gollum easy deck: 34 cards via easyRemove (official per-card counts)',()=>{
+ const s=E.create('gollum',1,42,null,{difficulty:'easy'});
+ assert.equal(s.deck.length,34);
+});
+test('gollum standard setup: no reveal flow, no prisoner, stage chain 129→130→131→won',()=>{
+ const s=E.create('gollum',1,42);
+ assert.equal(s.setupReveal,undefined,'标准开局不进翻牌流程');
+ assert.equal(s.quest,129);
+ assert.equal(s.prisoner,null);
+ s.progress=8;E.advance(s,true);assert.equal(s.quest,130);
+ s.progress=10;E.advance(s,true);assert.equal(s.quest,131);
+ s.progress=8;E.advance(s,true);assert.equal(s.status,'won','stage3 next:null 即胜利');
+});
+test('deckQuantities override: honored by deck build, unknown id fails loud',()=>{
+ withScenario('gollum',sc=>{sc.deckQuantities={'111':1,'999':1};},()=>{
+  assert.throws(()=>E.create('gollum',1,7),/未知卡 id/,'未知 id 必须显式报错');
+ });
+ withScenario('gollum',sc=>{sc.deckQuantities={'111':1};},()=>{
+  const s=E.create('gollum',1,7);
+  assert.equal(s.deck.filter(c=>c.id===111).length,1,'override 生效');
+  assert.equal(s.deck.length,48-3+1,'总量随 override 变化');
+ });
+});
+test('variable threat X (Old Ford) does not poison staging threat sum',()=>{
+ const s=E.create('gollum',1,7);
+ s.staging.push({...E.byId[133],uid:++s.serial});
+ s.staging.push({...E.byId[134],uid:++s.serial});
+ const t=E.threat(s);
+ assert.equal(typeof t,'number');
+ assert.equal(t,2,'X 按 0 计（效果层后续实现），数值卡正常求和');
 });
 
 /* ── 2. setup 等价 ───────────────────────────────────────────────────── */

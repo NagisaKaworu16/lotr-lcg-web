@@ -508,6 +508,137 @@ const ENCOUNTER_IMAGES = {
         "B": "https://hallofbeorn.com/Images/Cards/Core-Set/Ambush-on-the-Shore-3B.jpg"
       }
     }
+,
+    /* v0.16.4：HfG（寻找咕噜）14 条目，faces 指向 HoB s3 原图 URL，本地镜像见 local-image-map.js */
+    {
+     "id": 129,
+     "name": "The Hunt Begins",
+     "type": "Quest",
+     "sourceUrl": "https://hallofbeorn.com/LotR/Details/The-Hunt-Begins-THfG",
+     "faces": {
+      "A": "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/The-Hunt-Begins-1A.jpg",
+      "B": "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/The-Hunt-Begins-1B.jpg"
+     }
+    },
+    {
+     "id": 130,
+     "name": "A New Terror Abroad",
+     "type": "Quest",
+     "sourceUrl": "https://hallofbeorn.com/LotR/Details/A-New-Terror-Abroad-THfG",
+     "faces": {
+      "A": "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/A-New-Terror-Abroad-2A.jpg",
+      "B": "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/A-New-Terror-Abroad-2B.jpg"
+     }
+    },
+    {
+     "id": 131,
+     "name": "On the Trail",
+     "type": "Quest",
+     "sourceUrl": "https://hallofbeorn.com/LotR/Details/On-the-Trail-THfG",
+     "faces": {
+      "A": "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/On-the-Trail-3A.jpg",
+      "B": "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/On-the-Trail-3B.jpg"
+     }
+    },
+    {
+     "id": 132,
+     "name": "Signs of Gollum",
+     "type": "Objective",
+     "sourceUrl": "https://hallofbeorn.com/LotR/Details/Signs-of-Gollum-THfG",
+     "faces": {
+      "front": "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/Signs-of-Gollum.jpg"
+     }
+    },
+    {
+     "id": 133,
+     "name": "The Old Ford",
+     "type": "Location",
+     "sourceUrl": "https://hallofbeorn.com/LotR/Details/The-Old-Ford-THfG",
+     "faces": {
+      "front": "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/The-Old-Ford.jpg"
+     }
+    },
+    {
+     "id": 134,
+     "name": "The Eaves of Mirkwood",
+     "type": "Location",
+     "sourceUrl": "https://hallofbeorn.com/LotR/Details/The-Eaves-of-Mirkwood-THfG",
+     "faces": {
+      "front": "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/The-Eaves-of-Mirkwood.jpg"
+     }
+    },
+    {
+     "id": 135,
+     "name": "River Ninglor",
+     "type": "Location",
+     "sourceUrl": "https://hallofbeorn.com/LotR/Details/River-Ninglor-THfG",
+     "faces": {
+      "front": "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/River-Ninglor.jpg"
+     }
+    },
+    {
+     "id": 136,
+     "name": "The East Bank",
+     "type": "Location",
+     "sourceUrl": "https://hallofbeorn.com/LotR/Details/The-East-Bank-THfG",
+     "faces": {
+      "front": "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/The-East-Bank.jpg"
+     }
+    },
+    {
+     "id": 137,
+     "name": "The West Bank",
+     "type": "Location",
+     "sourceUrl": "https://hallofbeorn.com/LotR/Details/The-West-Bank-THfG",
+     "faces": {
+      "front": "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/The-West-Bank.jpg"
+     }
+    },
+    {
+     "id": 138,
+     "name": "Goblintown Scavengers",
+     "type": "Enemy",
+     "sourceUrl": "https://hallofbeorn.com/LotR/Details/Goblintown-Scavengers-THfG",
+     "faces": {
+      "front": "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/Goblintown-Scavengers.jpg"
+     }
+    },
+    {
+     "id": 139,
+     "name": "Hunters from Mordor",
+     "type": "Enemy",
+     "sourceUrl": "https://hallofbeorn.com/LotR/Details/Hunters-from-Mordor-THfG",
+     "faces": {
+      "front": "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/Hunters-from-Mordor.jpg"
+     }
+    },
+    {
+     "id": 140,
+     "name": "False Lead",
+     "type": "Treachery",
+     "sourceUrl": "https://hallofbeorn.com/LotR/Details/False-Lead-THfG",
+     "faces": {
+      "front": "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/False-Lead.jpg"
+     }
+    },
+    {
+     "id": 141,
+     "name": "Flooding",
+     "type": "Treachery",
+     "sourceUrl": "https://hallofbeorn.com/LotR/Details/Flooding-THfG",
+     "faces": {
+      "front": "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/Flooding.jpg"
+     }
+    },
+    {
+     "id": 142,
+     "name": "Old Wives' Tales",
+     "type": "Treachery",
+     "sourceUrl": "https://hallofbeorn.com/LotR/Details/Old-Wives'-Tales-THfG",
+     "faces": {
+      "front": "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/The-Hunt-for-Gollum/Old-Wives'-Tales.jpg"
+     }
+    }
   ],
   "checks": [
     {
@@ -961,6 +1092,125 @@ const ENCOUNTER_IMAGES = {
     {
       "id": 128,
       "face": "B",
+      "status": 200,
+      "mime": "image/jpeg",
+      "ok": true
+    },
+    {
+      "id": 129,
+      "face": "A",
+      "status": 200,
+      "mime": "image/jpeg",
+      "ok": true
+    },
+    {
+      "id": 129,
+      "face": "B",
+      "status": 200,
+      "mime": "image/jpeg",
+      "ok": true
+    },
+    {
+      "id": 130,
+      "face": "A",
+      "status": 200,
+      "mime": "image/jpeg",
+      "ok": true
+    },
+    {
+      "id": 130,
+      "face": "B",
+      "status": 200,
+      "mime": "image/jpeg",
+      "ok": true
+    },
+    {
+      "id": 131,
+      "face": "A",
+      "status": 200,
+      "mime": "image/jpeg",
+      "ok": true
+    },
+    {
+      "id": 131,
+      "face": "B",
+      "status": 200,
+      "mime": "image/jpeg",
+      "ok": true
+    },
+    {
+      "id": 132,
+      "face": "front",
+      "status": 200,
+      "mime": "image/jpeg",
+      "ok": true
+    },
+    {
+      "id": 133,
+      "face": "front",
+      "status": 200,
+      "mime": "image/jpeg",
+      "ok": true
+    },
+    {
+      "id": 134,
+      "face": "front",
+      "status": 200,
+      "mime": "image/jpeg",
+      "ok": true
+    },
+    {
+      "id": 135,
+      "face": "front",
+      "status": 200,
+      "mime": "image/jpeg",
+      "ok": true
+    },
+    {
+      "id": 136,
+      "face": "front",
+      "status": 200,
+      "mime": "image/jpeg",
+      "ok": true
+    },
+    {
+      "id": 137,
+      "face": "front",
+      "status": 200,
+      "mime": "image/jpeg",
+      "ok": true
+    },
+    {
+      "id": 138,
+      "face": "front",
+      "status": 200,
+      "mime": "image/jpeg",
+      "ok": true
+    },
+    {
+      "id": 139,
+      "face": "front",
+      "status": 200,
+      "mime": "image/jpeg",
+      "ok": true
+    },
+    {
+      "id": 140,
+      "face": "front",
+      "status": 200,
+      "mime": "image/jpeg",
+      "ok": true
+    },
+    {
+      "id": 141,
+      "face": "front",
+      "status": 200,
+      "mime": "image/jpeg",
+      "ok": true
+    },
+    {
+      "id": 142,
+      "face": "front",
       "status": 200,
       "mime": "image/jpeg",
       "ok": true

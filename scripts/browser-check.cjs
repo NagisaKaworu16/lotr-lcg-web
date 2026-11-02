@@ -385,6 +385,36 @@ let browser;
   });
   note('long-hand-no-overflow', !hand.overflowX, hand);
 
+  // ============ 2人 寻找咕噜（HfG 试点）开局冒烟 ============
+  for (let i = 0; i < 6 && await page.locator('dialog[open]').count(); i++) {
+    const d = page.locator('dialog[open]').last();
+    const cancel = d.locator('#plan-cancel, #cancel').first();
+    if (await cancel.count() && await cancel.isEnabled().catch(() => false)) { await cancel.click(); }
+    else { await page.keyboard.press('Escape').catch(() => {}); }
+    await page.waitForTimeout(200);
+    if (await page.locator('dialog[open]').count()) {
+      await page.evaluate(() => { document.querySelectorAll('dialog[open]').forEach(x => x.close()); });
+      await page.waitForTimeout(150);
+    }
+  }
+  await page.locator('.game-hud button[data-action="desktop"][data-desktop="reset"]').click();
+  await page.waitForTimeout(400);
+  await startGame(2, '寻找咕噜');
+  const gollum = await page.evaluate(() => ({
+    scenario: state.scenario, quest: state.quest, deck: state.deck.length,
+    staging: state.staging.length, prisoner: state.prisoner, status: state.status,
+    setupPending: !!state.setupPending, players: state.players.length,
+  }));
+  /* normal 档官方牌库 48 张（29 HfG + 10 Sauron's Reach + 9 Journey Along the Anduin）；
+     标准开局（无 setup 定义）不翻任何遭遇卡：staging 空、prisoner 恒 null、探险卡停在 1A。 */
+  note('gollum-start', gollum.scenario === 'gollum' && gollum.quest === 129 && gollum.deck === 48
+    && gollum.staging === 0 && gollum.prisoner === null && gollum.status === 'playing'
+    && !gollum.setupPending && gollum.players === 2, gollum);
+  await shot('08-2p-gollum-start');
+  /* 封面/遭遇卡图本地映射：HfG 相关 img 全部本地可载（file:// 下外链可能被拦，允许跳过）。 */
+  const gollumImgs = await page.evaluate(() => [...document.querySelectorAll('img')].filter(i => !i.complete || i.naturalWidth === 0).map(i => i.getAttribute('src')).filter(s => s && /hunt|gollum|trail|terror|ford|ninglor|bank|mirkwood-eaves|scavengers|mordor|false-lead|flooding|wives/i.test(s)));
+  note('gollum-images', gollumImgs.length === 0, { broken: gollumImgs.length });
+
   await browser.close();
   report.finishedAt = new Date().toISOString();
   report.ok = report.checks.every(c => c.ok) && report.pageErrors.length === 0;
