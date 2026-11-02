@@ -214,42 +214,38 @@ const CAT_SIDES=[{id:'player',label:'玩家',note:'英雄 · 盟友 · 附属 ·
 const CAT_GROUP_ORDER=['领导','战术','精神','学识','中立','护戒队','皮包','敌人','地点','诡计','目标','探险卡'];
 const PLAYER_TYPES={hero:'英雄',ally:'盟友',attachment:'附属',event:'事件',treasure:'宝物',contract:'契约','player-side-quest':'支线任务','player-objective':'任务目标'};
 const SPHERE_NAMES={leadership:'领导',tactics:'战术',spirit:'精神',lore:'学识',neutral:'中立',fellowship:'护戒队',baggins:'皮包'};
-let catalogSide='both',catalogView='list',catalogQuery='',podFilter='',catalogCache=null,catSection='base',catalogNavCache=null;
+let catalogSide='both',catalogView='list',catalogQuery='',podFilter='',catalogCache=null;
 /* 全量分批渲染：1315+ 张绝不能一次进 DOM。首屏 CAT_BATCH 张，尾部「显示更多」按钮增量挂载。 */
 const CAT_BATCH=60;
 let catShown=CAT_BATCH;
-/* 侧边栏导航：卡牌（基础卡牌库）是默认项；扩展包条目从产品目录动态生成做占位，
- * 以后某系列收录卡牌时，把 catalogSeriesPanel 的占位换成该系列的筛选结果即可。 */
-function catalogNav(){
- if(catalogNavCache)return catalogNavCache;
- const revised=[],legacy=[];
- for(const ch of PRODUCT_TABS.revised||[])for(const it of ch.items||[])revised.push({id:it.id,name:it.zh||it.name,en:it.en&&it.en!==it.name?it.en:'',art:it.art||'',meta:it.meta||''});
- for(const s of legacySeries())legacy.push({id:s.id,name:s.name,en:s.en&&s.en!==s.name?s.en:'',art:s.art||'',meta:s.packs&&s.packs.length?`${s.packs.length} 个扩展`:'循环'});
- return catalogNavCache={revised,legacy};
-}
-function catNavItem(it){
- const icon=it.art?`<img src="${enc(it.art)}" alt="" loading="lazy" onerror="const s=this.getAttribute('src')||'';if(/\.webp$/.test(s)){this.setAttribute('src',s.replace(/\.webp$/,'.jpg'))}else{this.remove()}">`:'<span class="cat-nav-dot" aria-hidden="true"></span>';
- return `<button type="button" class="cat-nav-item" data-action="catNav" data-section="${enc(it.id)}" aria-current="${catSection===it.id?'page':'false'}">${icon}<span class="cat-nav-name">${enc(it.name)}</span></button>`;
-}
-function catNavHtml(){
- const nav=catalogNav();
- return `<aside class="cat-side"><nav class="cat-nav" aria-label="卡牌库系列导航"><div class="cat-nav-group"><h3>基础</h3><button type="button" class="cat-nav-item" data-action="catNav" data-section="base" aria-current="${catSection==='base'?'page':'false'}"><span class="cat-nav-dot" aria-hidden="true"></span><span class="cat-nav-name">卡牌<small> ${catalogStats().total} 种</small></span></button></div><div class="cat-nav-group"><h3>扩展包</h3>${nav.revised.map(catNavItem).join('')}<details class="cat-nav-fold"${catSection!=='base'&&nav.legacy.some(x=>x.id===catSection)?' open':''}><summary>旧版扩展（${nav.legacy.length}）</summary>${nav.legacy.map(catNavItem).join('')}</details><p class="cat-nav-hint small">全系列卡牌已收录，在卡牌页用「系列包」下拉筛选。</p></div></nav></aside>`;
-}
-function catalogSeriesPanel(id){
- const it=catalogNav().revised.concat(catalogNav().legacy).find(x=>x.id===id);if(!it)return '';
- const art=it.art?`<img class="cat-series-art" src="${enc(it.art)}" alt="" loading="lazy" onerror="const s=this.getAttribute('src')||'';if(/\.webp$/.test(s)){this.setAttribute('src',s.replace(/\.webp$/,'.jpg'))}else{this.remove()}">`:'';
- return `<div class="intro"><div><div class="eyebrow">SERIES · 系列详情</div><h1>${enc(it.name)}</h1>${it.en?`<p class="muted">${enc(it.en)}</p>`:''}</div></div><section class="panel cat-series-panel">${art}<div class="cat-series-text"><h2>卡牌已收录 · 剧本内容尚未收录</h2><p>这一系列的卡牌已进入卡牌库：回到「卡牌」页，用「系列包」下拉选择即可查看与筛选${it.meta?`（${enc(it.meta)}）`:''}。本页保留系列信息；对应的剧本内容将随版本更新加入。</p><p class="small muted">想先了解它的剧本？回首页从「新版扩展／旧版扩展」进入对应章节。</p><button type="button" data-action="catNav" data-section="base">← 返回卡牌</button></div></section>`;
-}
 /* 系列包（pod）：卡牌印载的扩展盒。玩家卡用 RingsDB 的 packCode；
  * 战役卡（D.cards／D.quests）用 data.js 里的 pack 字段（规范同 packCode，基础版为 'Core'）。
  * 'Core' 兜底只对历史遗留的缺字段数据生效，新增数据必须写 pack。
  * v0.16.2：玩家卡切到全量数据（player-carddata.js，1315 张 / 98 系列），
- * 系列名与循环序来自 PLAYER_CARDS_DATA.packs；中文产品名映射尚缺（product-zh 只有产品级译名，未链接 packCode）。 */
+ * 系列名与循环序来自 PLAYER_CARDS_DATA.packs。
+ * v0.16.5：中文产品名从 PRODUCT_TABS 的 zh/en 字段建 en→zh 惰性索引
+ * （pack 名与产品 en 名的字面差异用「去 Campaign Expansion 后缀／去 ALeP 前缀／去 The 前缀／冒号后半段」规整）；
+ * 目录外的系列（噩梦包、ALeP 独立条目等）如实回退英文名，不编造译名。 */
 const POD_NAMES={Core:'基础包 · Core Set',THfG:'寻找咕噜 · The Hunt for Gollum'};
+let POD_ZH_CACHE=null;
+function podZhIndex(){
+ if(POD_ZH_CACHE)return POD_ZH_CACHE;
+ const idx=new Map,norm=s=>String(s||'').trim().toLocaleLowerCase();
+ for(const k of ['revised','legacy'])for(const ch of (typeof PRODUCT_TABS!=='undefined'&&PRODUCT_TABS||{})[k]||[])for(const it of ch.items||[])
+  if(it.zh&&it.en&&!idx.has(norm(it.en)))idx.set(norm(it.en),it.zh);
+ return POD_ZH_CACHE=idx;
+}
 function podName(id){
  if(POD_NAMES[id])return POD_NAMES[id];
  const p=(typeof PLAYER_CARDS_DATA!=='undefined'&&PLAYER_CARDS_DATA.packs||[]).find(x=>x.code===id);
- return p?p.name:id;
+ if(!p)return id;
+ const norm=s=>String(s||'').trim().toLocaleLowerCase(),idx=podZhIndex(),n=norm(p.name);
+ let zh=idx.get(n)
+  ||idx.get(n.replace(/\s+campaign expansion$/,''))
+  ||idx.get(n.replace(/^alep - /,''))
+  ||idx.get(n.replace(/^the /,''));
+ if(!zh)for(const [en,z] of idx){if(en.includes(': ')&&n===norm(en.split(': ').pop())){zh=z;break;}}
+ return zh?`${zh} · ${p.name}`:p.name;
 }
 function catalogEntries(){
  if(catalogCache)return catalogCache;
@@ -290,11 +286,11 @@ function catalogGroups(side,pod){
  return [...map.values()].sort((a,b)=>(a.order<0?99:a.order)-(b.order<0?99:b.order));
 }
 function catalog(){
- const main=catSection==='base'?(()=>{
+ /* v0.16.5：侧栏删除——扩展包条目全是占位页，全量接线后「系列包」下拉已是唯一筛选入口。 */
+ return (()=>{
   const st=catalogStats();
   return `<div class="intro"><div><div class="eyebrow">CARD INDEX</div><h1>卡牌库</h1><p class="muted">玩家卡 ${st.player} 种（全系列已收录） · 战役卡 ${st.encounter} 种 · 合计 ${st.total} 种。列表先显示前 ${CAT_BATCH} 种，滚到底部可继续加载；鼠标停在卡名上直接显示卡图，点开看完整文本与机制；配牌请到「我的卡组 → 新建牌组」。中文为工作译名与机制摘要。</p></div></div><div class="cat-controls"><div class="cat-sides" role="group" aria-label="卡牌分类">${CAT_SIDES.map(s=>`<button type="button" data-action="catSide" data-value="${s.id}" aria-pressed="${s.id===catalogSide}" title="${enc(s.note)}">${s.label}</button>`).join('')}</div><select id="podFilter" aria-label="按系列包筛选"><option value="">全部系列包</option>${catalogPods().map(([id,n])=>`<option value="${enc(id)}" ${podFilter===id?'selected':''}>${enc(podName(id))}（${n}）</option>`).join('')}</select><input id="search" placeholder="搜索名称、规则或特性…" value="${enc(catalogQuery)}" aria-label="搜索卡牌"><div class="cat-views" role="group" aria-label="显示方式"><button type="button" data-action="catView" data-value="list" aria-pressed="${catalogView==='list'}">名称</button><button type="button" data-action="catView" data-value="art" aria-pressed="${catalogView==='art'}">卡图</button></div></div><div class="small muted" id="resultCount"></div><div class="cat-index" id="catalogResults"></div>`;
- })():catalogSeriesPanel(catSection);
- return `<div class="catalog-layout">${catNavHtml()}<div class="cat-main">${main}</div></div>`;
+ })();
 }
 function catalogHover(e){
  const key=e.face==='player'?e.code:'enc-'+e.code,rec=ImageLibrary.by[key],url=rec?ImageLibrary.safeUrl(rec.imageUrl):null;
@@ -457,7 +453,6 @@ async function handleAction(ev){const b=ev.target.closest('[data-action]');if(!b
  if(a==='catSide'){catalogSide=b.dataset.value;render();return;}
  if(a==='catView'){catalogView=b.dataset.value;render();return;}
  if(a==='catMore'){catShown+=CAT_BATCH;filterCatalog(false);return;}
- if(a==='catNav'){catSection=b.dataset.section||'base';render();return;}
  if(a==='pc'){await PlayerUI.handle(b);return;}
  if(a==='start'){beginScenario(b.dataset.id);return;}
  if(a==='startOpen'){openChooser(b.dataset.id);return;}

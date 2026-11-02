@@ -1,7 +1,7 @@
 {
   "pageUrl": "file:///c:/Users/Administrator/WorkBuddy/魔戒LCG/index.html",
   "executablePath": "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe",
-  "startedAt": "2026-11-02T02:56:28.151Z",
+  "startedAt": "2026-11-02T04:04:09.600Z",
   "checks": [
     {
       "name": "start-2p",
@@ -85,18 +85,18 @@
     {
       "name": "full-round-loop",
       "ok": true,
-      "phase": 2,
+      "phase": 5,
       "round": 3,
       "view": 1,
       "quest": {
-        "step": "commit",
-        "locked": false
+        "step": "completed",
+        "locked": true
       },
       "travel": true,
       "enc": true,
       "combat": {
-        "step": "completed",
-        "proposal": false
+        "step": "enemyChoice",
+        "proposal": true
       },
       "refresh": true
     },
@@ -114,7 +114,7 @@
     {
       "name": "images-load",
       "ok": true,
-      "total": 72,
+      "total": 68,
       "failed": 0
     },
     {
@@ -177,6 +177,50 @@
       "name": "gollum-images",
       "ok": true,
       "broken": 0
+    },
+    {
+      "name": "catalog-no-sidebar",
+      "ok": true,
+      "sidebar": false,
+      "layout": false,
+      "options": 100,
+      "zh": [
+        "安格玛觉醒",
+        "追梦者",
+        "埃瑞德米斯林",
+        "黑骑手",
+        "雾山奇缘"
+      ],
+      "core": true,
+      "rows": 60
+    },
+    {
+      "name": "catalog-pod-zh",
+      "ok": true,
+      "sidebar": false,
+      "layout": false,
+      "options": 100,
+      "zh": [
+        "安格玛觉醒",
+        "追梦者",
+        "埃瑞德米斯林",
+        "黑骑手",
+        "雾山奇缘"
+      ],
+      "core": true,
+      "rows": 60
+    },
+    {
+      "name": "catalog-renders",
+      "ok": true,
+      "rows": 60
+    },
+    {
+      "name": "layout:09-catalog-v16-5",
+      "ok": true,
+      "overflowX": false,
+      "scrollWidth": 1920,
+      "dock": null
     }
   ],
   "screenshots": [
@@ -187,11 +231,12 @@
     "05-2p-round2-1440.png",
     "06-4p-1920.png",
     "07-4p-long-hand-1920.png",
-    "08-2p-gollum-start.png"
+    "08-2p-gollum-start.png",
+    "09-catalog-v16-5.png"
   ],
   "consoleErrors": [],
   "pageErrors": [],
   "failedImages": [],
-  "finishedAt": "2026-11-02T02:58:04.701Z",
+  "finishedAt": "2026-11-02T04:05:52.499Z",
   "ok": true
 }

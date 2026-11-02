@@ -1,3 +1,13 @@
+# v0.16.5 · 卡牌页收敛：侧栏退役 + 系列下拉中文本地化（2026-10-30）
+
+- **删除卡牌页左侧列表**（含「基础」自引用项与提示语）：v0.16.2 全量接线后扩展包侧栏条目全是占位页，系列下拉已是唯一筛选入口。catalog()/catNavHtml()/catNavItem()/catalogNav()/catalogSeriesPanel() 与 catSection、catalogNavCache 变量、catNav action 分支全部移除（grep 全仓清零）；legacySeries 仍被首页扩展章节使用，保留。
+- CSS：.catalog-layout / .cat-side / .cat-nav* / .cat-series-* 及 960px 断点对应规则删除，卡牌主区占满全宽。
+- **系列包下拉中文本地化**：podName 从 PRODUCT_TABS（product-catalog.js）的 zh/en 字段惰性建 en→zh 索引，命中返回「中文名 · English」；pack 名与产品 en 名的字面差异用「去 Campaign Expansion 后缀／去 ALeP 前缀／去 The 前缀／冒号后半段」规整。POD_NAMES（Core/THfG）优先级不变。
+- 命中率：99 个系列中 **86 个显示中文名**；13 个如实英文回退（Revised Core Set、噩梦包×2、ALeP 独立条目×7、Dreadnaught、Dark of Mirkwood、MotK Allies×2——不在产品目录，不编造译名）。
+- 数据事实：saga 前两盒「魔戒同盟／双塔奇兵」（TRF/TtT）在 RingsDB/HoB 导出中没有独立 packCode 也无独立卡，下拉中无对应选项；王者归来（MoF）有 pack 但名称是后三盒之一——saga 命中抽样相应调整。
+- 测试：check-catalog.cjs 侧栏 7 项断言改写为「侧栏不存在／主区全宽／下拉中文抽样」；pod 计数 98→99（THfG 战役系列）；Core pod 计数断言改为从数据现算（战役卡池增长不再牵动硬编码）；战役分类首屏截断断言修正（69>60 需点显示更多——v0.16.4 遗留）。planning-dom-tests / _dg.cjs 同步重写侧栏测试。browser-check 新增卡牌页冒烟 3 项（.cat-side 为 null、#podFilter 含安格玛觉醒等译名、列表正常渲染）。
+- 回归：node 546/546 绿、check_project 全绿、check-catalog 全 OK、browser-check 21 项全 PASS。
+
 # v0.16.4 · 《寻找咕噜》(HfG) 试点接入：首个非 Core 剧本（2026-10-30）
 
 遭遇卡数据接线首个试点，剧本数据化（v0.16.3）后的第一次实战验证：

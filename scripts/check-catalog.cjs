@@ -75,7 +75,11 @@ const ACCEPT=path.join(ROOT,'docs','browser-acceptance');
  await page.click('button[data-action="catSide"][data-value="encounter"]');
  await page.waitForTimeout(250);
  check('战役分类只含遭遇与探险卡',(await count())===totals.encounter,{n:await count(),want:totals.encounter});
- check('战役分类一次性渲染完（55<批上限）',(await rows())===totals.encounter);
+ /* v0.16.4 起战役卡 69 张 > 批上限 60：首屏截断，点「显示更多」补齐 */
+ check('战役分类首屏受批上限（69>60）',(await rows())===60,{rows:await rows()});
+ await page.click('[data-action="catMore"]');
+ await page.waitForTimeout(250);
+ check('显示更多后战役分类渲染完',(await rows())===totals.encounter,{rows:await rows(),want:totals.encounter});
  const eg=await groups();
  check('战役分类按类型分组',eg.includes('敌人')&&eg.includes('探险卡'),eg);
  await shot(OUT,'encounter');
@@ -94,15 +98,16 @@ const ACCEPT=path.join(ROOT,'docs','browser-acceptance');
  await page.waitForTimeout(300);
  check('清空搜索恢复全量计数',(await count())===totals.player+totals.encounter);
 
- /* 4.5 按系列包（pod）筛选：98 个系列、计数拆分、与搜索叠加 */
+ /* 4.5 按系列包（pod）筛选：99 个系列、计数拆分、与搜索叠加 */
  await page.selectOption('#podFilter','Core');
  await page.waitForTimeout(350);
- check('Core 包筛选含全部基础版卡牌',await page.evaluate(t=>document.querySelector('#resultCount').textContent.includes(`玩家卡 ${t.player===1315?73:73} / 遭遇卡 ${t.encounter-10} / 探险卡 10`),totals),{totals});
+ /* v0.16.5：期望值从数据现算——战役卡池增长（v0.16.4 并入 THfG）不该再牵动硬编码；文案三类分开（遭遇卡不含探险卡） */
+ check('Core 包筛选含全部基础版卡牌',await page.evaluate(()=>{const coreCards=PLAYER_CARDS_DATA.cards.filter(x=>x.packCode==='Core').length,coreEnc=D.cards.filter(x=>x.pack==='Core').length,coreQ=D.quests.filter(q=>q.pack==='Core').length;return document.querySelector('#resultCount').textContent.includes(`玩家卡 ${coreCards} / 遭遇卡 ${coreEnc} / 探险卡 ${coreQ}`);}));
  check('系列包下三类分组齐全（分批后）',await page.evaluate(()=>{const t=document.querySelector('#catalogResults').textContent;return t.includes('玩家卡 · 领导');}));
- check('计数按三类拆分',await page.evaluate(t=>document.querySelector('#resultCount').textContent.includes(`玩家卡 73 / 遭遇卡 ${t.encounter-10} / 探险卡 10`),totals),{totals});
- /* 战役卡带的是真实 pack 字段而非 'Core' 兜底：45 张遭遇卡 + 10 张探险卡全部命中 */
- check('战役卡的 pack 字段全部有值且为基础包',await page.evaluate(()=>D.cards.every(c=>c.pack==='Core')&&D.quests.every(q=>q.pack==='Core')));
- check('系列包下拉覆盖全系列（98 个 + 基础包）',await page.evaluate(()=>{const v=[...document.querySelector('#podFilter').options].filter(o=>o.value).map(o=>o.value);return v.length===98&&v.includes('Core')&&v.includes('HfG');}));
+ check('计数按三类拆分',await page.evaluate(()=>{const coreCards=PLAYER_CARDS_DATA.cards.filter(x=>x.packCode==='Core').length,coreEnc=D.cards.filter(x=>x.pack==='Core').length,coreQ=D.quests.filter(q=>q.pack==='Core').length;return document.querySelector('#resultCount').textContent.includes(`玩家卡 ${coreCards} / 遭遇卡 ${coreEnc} / 探险卡 ${coreQ}`);}));
+ /* 战役卡带真实 pack 字段而非 'Core' 兜底：基础包 45+10 命中 Core，HfG 11+3 归 THfG */
+ check('战役卡的 pack 字段全部有值且按包归属',await page.evaluate(()=>{const miss=[...D.cards,...D.quests].filter(c=>!c.pack);return miss.length===0&&D.cards.filter(c=>c.pack==='Core').length===45&&D.cards.filter(c=>c.pack==='THfG').length===11&&D.quests.filter(q=>q.pack==='Core').length===10&&D.quests.filter(q=>q.pack==='THfG').length===3;}));
+ check('系列包下拉覆盖全系列（98 玩家系列 + THfG 战役系列）',await page.evaluate(()=>{const v=[...document.querySelector('#podFilter').options].filter(o=>o.value).map(o=>o.value);return v.length===99&&v.includes('Core')&&v.includes('HfG')&&v.includes('THfG');}));
  await loadAll();
  check('Core 包全量行数=73 玩家卡+55 战役卡',(await rows())===128,{rows:await rows()});
  await shot(OUT,'pod');
@@ -194,20 +199,11 @@ const ACCEPT=path.join(ROOT,'docs','browser-acceptance');
  await page.click('button[data-action="catSide"][data-value="both"]');
  await page.waitForTimeout(250);
 
- /* 7.5 侧边导航：基础卡牌库默认项 + 扩展包条目（系列详情面板） */
- check('侧栏渲染且基础卡牌库默认激活',await page.evaluate(()=>{const b=document.querySelector('.cat-nav-item[data-section="base"]');return !!b&&b.getAttribute('aria-current')==='page'&&!!document.querySelector('.cat-side nav')&&!!document.querySelector('.cat-main');}));
- check('扩展条目动态来自产品目录（基础项外 ≥21 条）',await page.evaluate(()=>document.querySelectorAll('.cat-nav-item[data-section]:not([data-section="base"])').length>=21));
- check('旧版扩展折叠在 details 且默认收起',await page.evaluate(()=>{const d=document.querySelector('.cat-nav-fold');return !!d&&d.tagName==='DETAILS'&&!d.open;}));
- const firstSeries=await page.evaluate(()=>document.querySelector('.cat-nav-item[data-section]:not([data-section="base"])').dataset.section);
- await page.click(`.cat-nav-item[data-section="${firstSeries}"]`);
- await page.waitForTimeout(350);
- check('点扩展条目出系列详情面板（卡牌已收录·剧本未收录）',await page.evaluate(()=>{const p=document.querySelector('.cat-series-panel');return !!p&&p.textContent.includes('卡牌已收录')&&p.textContent.includes('剧本内容尚未收录');}));
- check('激活态在侧栏同步切换',await page.evaluate(sec=>{const a=document.querySelector(`.cat-nav-item[data-section="${sec}"]`);return !!a&&a.getAttribute('aria-current')==='page'&&document.querySelector('.cat-nav-item[data-section="base"]').getAttribute('aria-current')!=='page';},firstSeries));
- await shot(OUT,'sidebar-series');
- await page.click('.cat-nav-item[data-section="base"]');
- await page.waitForTimeout(350);
- check('返回基础卡牌库恢复搜索与列表',await page.evaluate(()=>!!document.querySelector('#search')&&!!document.querySelector('#catalogResults')&&document.querySelector('.cat-nav-item[data-section="base"]').getAttribute('aria-current')==='page'));
- await shot(OUT,'sidebar-base');
+ /* 7.5 v0.16.5：侧栏已删除——「系列包」下拉是唯一筛选入口，系列下拉中文本地化 */
+ check('侧栏已删除（.cat-side 与 catNav 全部移除）',await page.evaluate(()=>document.querySelector('.cat-side')===null&&document.querySelectorAll('[data-action="catNav"]').length===0));
+ check('卡牌主区占满全宽（无侧栏网格容器）',await page.evaluate(()=>document.querySelector('.catalog-layout')===null&&document.querySelector('.cat-main')===null&&!!document.querySelector('#catalogResults')));
+ check('系列下拉中文本地化（抽样译名带 · 分隔）',await page.evaluate(()=>{const t=[...document.querySelector('#podFilter').options].map(o=>o.textContent).join('\n');return ['安格玛觉醒','追梦者','埃瑞德米斯林','黑骑手','前路黑暗','雾山奇缘'].every(z=>t.includes(z+' · '))&&t.includes('寻找咕噜 · The Hunt for Gollum')&&t.includes('基础包 · Core Set');}));
+ await shot(OUT,'catalog-full-width');
 
  /* 8. 排版与图片健康 */
  check('无横向溢出',await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth+1));
@@ -218,12 +214,11 @@ const ACCEPT=path.join(ROOT,'docs','browser-acceptance');
  await page.waitForTimeout(200);
  check('重复进出页签不报错',await (async()=>{await page.click('#helpTab');await page.waitForTimeout(150);await page.click('#catalogTab');await page.waitForTimeout(300);return errors.length===0;})());
 
- /* 9. 移动端适配（480 宽：侧栏从双栏变条目组） */
+ /* 9. 移动端适配（480 宽：v0.16.5 起无侧栏，主区直接单列） */
  await page.setViewportSize({width:480,height:860});
  await page.waitForTimeout(350);
  check('移动端无横向溢出',await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth+1));
- check('移动端侧栏取消 sticky 双栏',await page.evaluate(()=>getComputedStyle(document.querySelector('.cat-side')).position==='static'));
- check('移动端条目改为可换行的 chip',await page.evaluate(()=>getComputedStyle(document.querySelector('.cat-nav-item')).display==='inline-flex'));
+ check('移动端无侧栏且主区可用',await page.evaluate(()=>document.querySelector('.cat-side')===null&&!!document.querySelector('#search')&&!!document.querySelector('#catalogResults')));
  check('移动端搜索与列表仍可用',await (async()=>{await page.fill('#search','蛛');await page.waitForTimeout(250);const n=await count();await page.fill('#search','');await page.waitForTimeout(150);return n>0;})());
  await shot(OUT,'mobile-480');
  await page.setViewportSize({width:1440,height:1000});

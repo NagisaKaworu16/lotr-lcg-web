@@ -415,6 +415,27 @@ let browser;
   const gollumImgs = await page.evaluate(() => [...document.querySelectorAll('img')].filter(i => !i.complete || i.naturalWidth === 0).map(i => i.getAttribute('src')).filter(s => s && /hunt|gollum|trail|terror|ford|ninglor|bank|mirkwood-eaves|scavengers|mordor|false-lead|flooding|wives/i.test(s)));
   note('gollum-images', gollumImgs.length === 0, { broken: gollumImgs.length });
 
+  // ============ 卡牌页冒烟：侧栏删除 + 系列下拉中文（v0.16.5） ============
+  await page.click('#catalogTab');
+  await page.waitForTimeout(500);
+  const catalogSmoke = await page.evaluate(() => {
+    const opts = [...(document.querySelector('#podFilter')?.options || [])].map(o => o.textContent);
+    return {
+      sidebar: !!document.querySelector('.cat-side'),
+      layout: !!document.querySelector('.catalog-layout'),
+      options: opts.length,
+      zh: ['安格玛觉醒', '追梦者', '埃瑞德米斯林', '黑骑手', '雾山奇缘'].filter(z => opts.some(t => t.includes(z + ' · '))),
+      core: opts.some(t => t.startsWith('基础包 · Core Set（')),
+      rows: document.querySelectorAll('#catalogResults .cat-item').length,
+    };
+  });
+  note('catalog-no-sidebar', !catalogSmoke.sidebar && !catalogSmoke.layout, catalogSmoke);
+  note('catalog-pod-zh', catalogSmoke.zh.length === 5 && catalogSmoke.core, catalogSmoke);
+  note('catalog-renders', catalogSmoke.rows > 0, { rows: catalogSmoke.rows });
+  await shot('09-catalog-v16-5');
+  await page.click('#tableTab');
+  await page.waitForTimeout(300);
+
   await browser.close();
   report.finishedAt = new Date().toISOString();
   report.ok = report.checks.every(c => c.ok) && report.pageErrors.length === 0;

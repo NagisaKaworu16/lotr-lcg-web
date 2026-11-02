@@ -335,30 +335,22 @@ e.run(`$('#search').value='';filterCatalog();`);
  assert(body().includes('没有匹配的卡牌'),'无结果时应给出空状态');
 });
 
-test('card library sidebar lists base library by default with reserved expansion entries',async()=>{
- const e=environment();e.run(`catSection='base';tab='catalog';render();`);
+test('card library drops the sidebar; pod dropdown localizes series names',async()=>{
+ const e=environment();e.run(`tab='catalog';render();`);
  const html=e.base.get('app').innerHTML;
- assert(html.includes('class="catalog-layout"')&&html.includes('cat-side')&&html.includes('cat-main'),'卡牌库应为侧栏＋主区双栏布局');
- assert(html.includes('aria-label="卡牌库系列导航"'),'侧栏缺 aria 标签');
- assert(html.includes('data-section="base"')&&html.includes('>卡牌<'),'侧栏应有「卡牌」默认项');
- assert(html.includes('data-section="base" aria-current="page"'),'基础卡牌库应为默认激活项');
- /* 扩展条目动态来自产品目录，不是写死的占位 */
- const revised=e.run('catalogNav().revised.length'),legacy=e.run('catalogNav().legacy.length');
- assert(revised>=6,'新版扩展条目应来自产品目录（至少 6 个系列）');
- assert(legacy>=15,'旧版扩展条目应来自 legacySeries（15 个大盒）');
- assert(html.includes('data-action="catNav"')&&html.includes('安格玛觉醒'),'侧栏应列出扩展系列');
- assert(html.includes('旧版扩展'),'旧版扩展应折叠在 details 里');
- /* 点扩展条目 → 占位面板；返回 base → 恢复搜索与结果区 */
- await e.click({action:'catNav',section:e.run("catalogNav().revised[0].id")});
- const series=e.base.get('app').innerHTML;
- assert(series.includes('尚未收录')&&series.includes('返回卡牌'),'扩展条目应显示占位面板');
- assert(!series.includes('id="search"'),'系列详情不应显示卡牌搜索框');
- await e.click({action:'catNav',section:'base'});
- assert(seen(e,'id="search"')&&e.run("$('#resultCount')!==null&&$('#resultCount').textContent!==''"),'返回后应恢复搜索与结果区');
- /* 在系列详情里输入过滤不应报错（#search 不存在时守卫生效） */
- await e.click({action:'catNav',section:e.run("catalogNav().revised[0].id")});
- e.run(`filterCatalog();`);
- assert(true,'系列详情下 filterCatalog 应安全跳过');
+ /* v0.16.5：侧栏（占位页无价值）整体删除，主区直接渲染 */
+ assert(!html.includes('"cat-side"')&&!html.includes('data-action="catNav"')&&!html.includes('catalog-layout'),'卡牌库不应再有侧栏');
+ assert(html.includes('id="podFilter"')&&html.includes('id="search"')&&html.includes('id="catalogResults"'),'主区应保留下拉、搜索与结果区');
+ /* 系列包下拉中文本地化：PRODUCT_TABS zh 索引命中 → 「中文名 · English」。
+  * 抽样取数据集里真实存在的盒（saga 前两盒 TRF/TtT 在 RingsDB 导出中无独立 pack，见 CHANGELOG v0.16.5）。 */
+ for(const zh of ['安格玛觉醒','追梦者','埃瑞德米斯林','黑骑手','前路黑暗','雾山奇缘'])assert(html.includes(zh+' · '),'下拉缺中文系列名：'+zh);
+ assert(html.includes('寻找咕噜 · The Hunt for Gollum'),'POD_NAMES 优先级应保持（THfG）');
+ assert(e.run("podName('Core')")==='基础包 · Core Set','Core 名不变');
+ assert(e.run("podName('Nope')")==='Nope','未知 pod 应回退 id');
+ /* 目录外系列（噩梦包等）如实回退英文，不编造译名 */
+ assert(e.run("podName('The Old Forest')")==='The Old Forest','目录外系列应回退英文');
+ e.run(`$('#search').value='蛛';filterCatalog();`);
+ assert(seen(e,'显示更多')||e.run("$('#resultCount')!==null"),'无侧栏后搜索与分批渲染应照常');
 });
 
 test('deck builder replaces the old player-cards tab and uses the card library list',async()=>{
