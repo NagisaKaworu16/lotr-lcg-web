@@ -1,7 +1,7 @@
 {
   "pageUrl": "file:///C:/Users/Administrator/WorkBuddy/魔戒LCG/index.html",
   "executablePath": "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe",
-  "startedAt": "2026-11-03T04:16:51.710Z",
+  "startedAt": "2026-11-03T05:32:25.308Z",
   "checks": [
     {
       "name": "start-2p",
@@ -95,7 +95,7 @@
       "travel": true,
       "enc": true,
       "combat": {
-        "step": "defenseChoice",
+        "step": "enemyChoice",
         "proposal": true
       },
       "refresh": true
@@ -114,7 +114,7 @@
     {
       "name": "images-load",
       "ok": true,
-      "total": 62,
+      "total": 64,
       "failed": 0
     },
     {
@@ -237,6 +237,6 @@
   "consoleErrors": [],
   "pageErrors": [],
   "failedImages": [],
-  "finishedAt": "2026-11-03T04:18:33.843Z",
+  "finishedAt": "2026-11-03T05:34:06.897Z",
   "ok": true
 }

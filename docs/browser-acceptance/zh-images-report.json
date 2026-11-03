@@ -1,0 +1,61 @@
+{
+ "checks": [
+  {
+   "name": "spider-dialog-zh-webp",
+   "ok": true,
+   "src": "assets/cards-zh-enc/King-Spider-Core.webp"
+  },
+  {
+   "name": "spider-loaded",
+   "ok": true
+  },
+  {
+   "name": "spider-printings-offer-english",
+   "ok": true,
+   "options": [
+    "基础版剧本卡",
+    "正面"
+   ]
+  },
+  {
+   "name": "spider-switch-english",
+   "ok": true,
+   "src": "assets/cards-encounter/king-spider.webp"
+  },
+  {
+   "name": "hero-01001-zh",
+   "ok": true,
+   "src": "assets/cards-zh-core/01001.jpg"
+  },
+  {
+   "name": "hero-01001-loaded",
+   "ok": true
+  },
+  {
+   "name": "quest121-faces-zh",
+   "ok": true
+  },
+  {
+   "name": "quest121-dialog-zh-b",
+   "ok": true,
+   "src": "assets/cards-zh-enc/A-Chosen-Path-Don't-Leave-the-Path-Core.B.webp"
+  },
+  {
+   "name": "quest121-loaded",
+   "ok": true
+  },
+  {
+   "name": "no-console-errors",
+   "ok": true,
+   "errors": []
+  },
+  {
+   "name": "no-page-errors",
+   "ok": true,
+   "errors": []
+  }
+ ],
+ "consoleErrors": [],
+ "pageErrors": [],
+ "ok": true
+}

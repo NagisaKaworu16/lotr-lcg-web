@@ -1,3 +1,19 @@
+# v0.17.2 · 中文卡图接线（阶段2）：ZH_IMAGE_MAP 进展示层 + 豁免清单除名（2026-11-03）
+
+DragnCards 中文卡图（v0.17.1 批次① Core 138 面）接入展示层，安格玛批次1引擎（c4b24e5）对表收口：
+
+- **image-ui.js 接线**：①`safeUrl` 开头插 zh 优先查表（键=ZH_IMAGE_MAP records 携带的远端 URL）；②遭遇/关卡面合成按 **HoB slug 桥接**——encounter-image-index 的 sourceUrl 尾段 decode 后即 encounter-carddata 的 uid，A 面 `zhEnc[uid]`、B 面 `zhEnc[uid+'.B']` 直接命中本地 webp，未覆盖的（HfG 等）原样回退英文镜像；放大窗印刷版本保留「中文卡图 · 本地 + 英文原版」双选项；③玩家卡 zh 索引扩为新清单（既有基础版中文卡图优先、新清单补缺，73 张 Core 展示零回归）；image-loading-note 标签正则扩为 cards-zh-core/-zh/-zh-enc 三目录。清单缺失时（typeof 守卫）行为与旧版完全一致。
+- **shell.html**：`<script src="docs/data/zh-image-map.js">` 外挂引用（仿 encounter-carddata.js 模式，不进 build.py 内联清单）；build.py 无需改动（未列入内联清单的标签原样透传）。
+- **check-scenario-data 豁免清单除名**：「待引擎接线豁免清单」15 id 落地为**结构化处理登记**——这批 id 不经翻开效果三清单、由引擎结构原语直接处理（fe c4b24e5），登记项逐一断言引擎源码中存在对应原语（stageCards/ensureInStaging/makeActive/spawnSetAside/searchEngage/setAside/objectives），且登记无剧本未引用 id（双向诚实）；effect 覆盖正则同步 HAS_EFFECT 更名。
+- **验收**：新增 scripts/check-zh-images.cjs（playwright real-browser，file://）：King-Spider 放大主图=中文 webp 且加载成功、可切英文原版镜像；01001 中文卡图零回归；探险 121 B 面中文 webp；console/page 错误 0（无 CORS）——11/11 PASS，报告与截图入 docs/browser-acceptance/。browser-check 全量 ok=true；check_project 全绿；index.html 重建（顺带同步 data.js 161 threat='X' 内联）。
+
+# v0.17.1 · 中文卡图批次①：DragnCards 摄取管线 + Core 138 面（2026-11-03）
+
+- 新增 `scripts/fetch-zh-images.py`：cardDb.tsv（5074 行）→ name+packName 主键（**NFD 去变音符**规范化，Dúnhere 类才能命中）匹配 player/encounter-carddata；同包同名用 numberInPack 尾数消歧（Core 双「A Chosen Path」01121/01122→121/122 实测吻合）；关卡卡取 side=='A' 行、B 面=`<uuid>.B.jpg`（cardDb 原生约定）。下载走代理 + JPEG 魔数校验；转 webp 复用 optimize-card-images.py 同口径（quality 80/长边 620），但禁用其源图删除（原始 jpg 留 gitignored 缓存——批量删除护栏会在第 50 个文件处中断批次，实测）。全程幂等。
+- **Core 批实测 138/138 零缺失**：玩家 73（assets/cards-zh/<code>.webp）+ 遭遇 45 + 关卡 A/B 面 20（assets/cards-zh-enc/<uid>.webp，uid=HoB slug 与 encounter-carddata 一致），总体积 5.2MB；每条记录含 code/uid→本地路径+uuid+url+sha256。
+- 清单产物：docs/data/zh-image-map.json（5456 条全量审计）+ zh-image-map.js（仅 status=ok，全局 ZH_IMAGE_MAP）。全量未命中 2045（saga 三包 packName 体系不同、MotK 卡名前缀）与歧义 155 如实记录，后续批次加别名表精化。安格玛 S3 无中文已写入 manifest note。
+- 微修：data.js 伊亚里安（161）补 `threat:'X'` 与威/攻/防口径一致。
+
 # v0.17.0 · 《失落的王国》批次1数据层：59 张遭遇卡 + 三个剧本入口（2026-11-03）
 
 安格玛觉醒批次1（数据层先行，引擎接线由 fe 并行实施，契约对齐）：

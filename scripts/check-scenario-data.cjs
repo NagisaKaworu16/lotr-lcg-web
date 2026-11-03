@@ -282,14 +282,17 @@ test('TLR effect coverage: every id referenced by iic/dd/twh is known to the eng
  const qeSrc=require('fs').readFileSync(path.join(ROOT,'quest-engine.js'),'utf8');
  const eSrc=require('fs').readFileSync(path.join(ROOT,'engine.js'),'utf8');
  const known=new Set;
- for(const m of qeSrc.matchAll(/hasEffect=\[([^\]]*)\]/g))for(const x of m[1].split(','))if(x.trim())known.add(Number(x));
+ for(const m of qeSrc.matchAll(/(?:hasEffect|HAS_EFFECT)=\[([^\]]*)\]/g))for(const x of m[1].split(','))if(x.trim())known.add(Number(x));
  for(const m of eSrc.matchAll(/(?:manualReveal|SETUP_EFFECT)=new Set\(\[([^\]]*)\]\)/g))for(const x of m[1].split(','))if(x.trim())known.add(Number(x));
- /* 待引擎接线豁免清单（fail-loud 精神：显式登记，不静默跳过）：
-    143 兽人战团确保进场 / 151,172,190 stageCards 关卡 / 155,183 setAside 伏笔 /
-    161 伊亚里安目标 / 162 索尔迪尔 spawnHpZero / 164 searchEngage /
-    167 确保进场 / 172? 关卡 / 183 setAside / 184 确保进场 / 185 makeActive /
-    190,191 关卡链 / 192 确保进场目标。fe 接线后逐一除名。 */
- const PENDING_ENGINE_WIRING=new Set([143,151,155,161,162,164,167,172,173,183,184,185,190,191,192]);
+ /* 结构化处理登记（v0.17.2：「待引擎接线豁免清单」除名后的落地形态）：这些 id 不经
+    「翻开效果三清单」结算，而由引擎的结构性原语直接处理（fe c4b24e5 落地）。
+    每条登记指向引擎源码中必须真实存在的原语名——原语被改名/删除时此断言变红，
+    提示同步登记；断言同时要求登记无剧本未引用的 id，双向保持诚实。 */
+ const STRUCTURAL={143:'ensureInStaging',151:'stageCards',161:'objectives',162:'spawnSetAside',
+                   164:'searchEngage',167:'ensureInStaging',172:'stageCards',173:'stageCards',
+                   183:'setAside',184:'ensureInStaging',185:'makeActive'};
+ for(const prim of new Set(Object.values(STRUCTURAL)))
+  assert(eSrc.includes(prim),`结构化登记的原语 ${prim} 已不在引擎源码中，请同步 STRUCTURAL 登记`);
  const refs=new Set;
  for(const sc of D.scenarios.filter(s=>['iic','dd','twh'].includes(s.id))){
   const su=sc.setup||{};
@@ -304,11 +307,11 @@ test('TLR effect coverage: every id referenced by iic/dd/twh is known to the eng
    for(const v of Object.values(g))for(const x of (Array.isArray(v)?v:[v]))if(typeof x==='number')refs.add(x);
   }
  }
- const missing=[...refs].filter(id=>!known.has(id)&&!PENDING_ENGINE_WIRING.has(id));
- assert.deepEqual(missing,[],`剧本引用的 id 未被引擎三清单覆盖且未登记豁免: ${missing}`);
- /* 豁免清单保持诚实：不允许登记剧本未引用的 id */
- const unref=PENDING_ENGINE_WIRING&&[...PENDING_ENGINE_WIRING].filter(id=>!refs.has(id));
- assert.deepEqual(unref,[],`豁免清单存在剧本未引用的 id（fe 接线后请除名）: ${unref}`);
+ const missing=[...refs].filter(id=>!known.has(id)&&STRUCTURAL[id]==null);
+ assert.deepEqual(missing,[],`剧本引用的 id 未被引擎三清单/结构化原语覆盖: ${missing}`);
+ /* 登记保持诚实：不允许登记剧本未引用的 id（fe 调整剧本引用后请同步增删） */
+ const unref=Object.keys(STRUCTURAL).map(Number).filter(id=>!refs.has(id));
+ assert.deepEqual(unref,[],`结构化登记存在剧本未引用的 id（请同步除名）: ${unref}`);
 });
 
 test('TLR shadow audit: shadow text must have shadowSpec or be on the manual list',()=>{

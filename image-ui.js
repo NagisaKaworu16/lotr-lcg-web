@@ -4,11 +4,28 @@ const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const types={hero:'英雄',ally:'盟友',attachment:'附属',event:'事件','player-side-quest':'玩家支线任务',contract:'契约','player-objective':'玩家目标',treasure:'其他API类型（treasure）',Quest:'探险卡',Enemy:'遭遇敌人',Location:'遭遇地点',Treachery:'遭遇诡计',Objective:'遭遇目标'};
 let page=0,filter={text:'',type:'main',pack:''};const size=36;
 const zh=typeof CHINESE_CORE_IMAGES!=='undefined'?Object.fromEntries(CHINESE_CORE_IMAGES.cards.map(c=>[c.code,c])):{};
+/* v0.17.2 中文卡图（DragnCards 摄取）：ZH_IMAGE_MAP 外挂清单（docs/data/zh-image-map.js，
+   仿 encounter-carddata.js 外挂模式，不进 build.py 内联清单）。records 携带远端 URL
+   （DragnCards S3）、本地 webp 路径与 uuid；玩家卡键=RingsDB code，遭遇/关卡面键=HoB
+   slug（uid，关卡 B 面 uid+'.B'，与 encounter-image-index 的 sourceUrl 尾段同源）。
+   既有基础版中文卡图（CHINESE_CORE_IMAGES）优先，新清单只补缺——既有展示零回归。 */
+const ZIM=typeof ZH_IMAGE_MAP!=='undefined'?ZH_IMAGE_MAP:{records:[]};
+const zhByUrl={},zhEnc={};
+for(const r of ZIM.records){
+  if(r.url&&r.local)zhByUrl[r.url]=r.local;
+  if(r.kind!=='player'&&r.key&&r.local)zhEnc[r.key]=r.local;
+}
+for(const r of ZIM.records)if(r.kind==='player'&&r.local&&!zh[r.key])zh[r.key]={code:r.key,imageUrl:r.local};
 const coreLocal=Object.values(zh).map(c=>c.imageUrl).filter(u=>/^assets\/cards-zh-core\/010(?:0[1-9]|[1-6][0-9]|7[0-3])\.jpg$/.test(u));
 const mirror=typeof LOCAL_IMAGE_MAP!=='undefined'?LOCAL_IMAGE_MAP:{};
-const localUrls=new Set([...coreLocal,...Object.values(mirror)]);
-const safeUrl=u=>{const m=mirror[u];if(m)return m;if(localUrls.has(u))return u;try{let p=new URL(u);return p.protocol==='https:'&&((p.hostname==='ringsdb.com'&&p.pathname.startsWith('/bundles/cards/'))||(p.hostname==='hallofbeorn.com'&&p.pathname.startsWith('/Images/Cards/Core-Set/')))?p.href:null;}catch{return null;}};
-const encounters=ENCOUNTER_IMAGES.cards.map(c=>({code:'enc-'+c.id,name:c.name,nameZh:LOTR_DATA.cards.find(x=>x.id===c.id)?.name||LOTR_DATA.quests.find(x=>x.id===c.id)?.name||c.name,type:c.type,sphere:'',packCode:'EncounterCore',packName:'基础版剧本卡',imageUrl:c.faces.B||c.faces.front,faces:c.faces,sourceUrl:c.sourceUrl,printings:Object.entries(c.faces).map(([face,imageUrl])=>({face,packCode:'EncounterCore',packName:'基础版剧本卡',label:face==='front'?'正面':face+'面',imageUrl}))}));
+const localUrls=new Set([...coreLocal,...Object.values(mirror),...Object.values(zhByUrl)]);
+const safeUrl=u=>{if(!u)return null;const z=zhByUrl[u];if(z)return z;const m=mirror[u];if(m)return m;if(localUrls.has(u))return u;try{let p=new URL(u);return p.protocol==='https:'&&((p.hostname==='ringsdb.com'&&p.pathname.startsWith('/bundles/cards/'))||(p.hostname==='hallofbeorn.com'&&p.pathname.startsWith('/Images/Cards/Core-Set/')))?p.href:null;}catch{return null;}};
+const encUid=e=>{try{return decodeURIComponent((e.sourceUrl||'').split('/Details/')[1].split('?')[0]);}catch{return null;}};
+const encounters=ENCOUNTER_IMAGES.cards.map(c=>{const uid=encUid(c),zhA=uid?zhEnc[uid]:null,zhB=uid?zhEnc[uid+'.B']:null;
+ const zhFace=k=>k==='B'?zhB:zhA;
+ const faces={};for(const [k,v] of Object.entries(c.faces||{}))faces[k]=zhFace(k)||v;
+ const printings=[];for(const [face,imageUrl] of Object.entries(c.faces||{})){if(faces[face]!==imageUrl)printings.push({face,packCode:'EncounterCore',packName:'基础版剧本卡',label:(face==='front'?'正面':face+'面')+' · 中文卡图',imageUrl:faces[face]});printings.push({face,packCode:'EncounterCore',packName:'基础版剧本卡',label:face==='front'?'正面':face+'面',imageUrl});}
+ return {code:'enc-'+c.id,name:c.name,nameZh:LOTR_DATA.cards.find(x=>x.id===c.id)?.name||LOTR_DATA.quests.find(x=>x.id===c.id)?.name||c.name,type:c.type,sphere:'',packCode:'EncounterCore',packName:'基础版剧本卡',imageUrl:faces.B||faces.front,faces,sourceUrl:c.sourceUrl,printings};});
 const records=[...RINGSDB_IMAGES.cards.map(c=>zh[c.code]?{...c,englishImageUrl:c.imageUrl,imageUrl:zh[c.code].imageUrl,nameZhCard:zh[c.code].nameZhCard,printings:[{packCode:'Core',packName:'基础版中文卡图',label:'中文卡图 · 本地',imageUrl:zh[c.code].imageUrl},...c.printings]}:c),...encounters];
 const by=Object.fromEntries(records.map(c=>[c.code,c]));
 function explanation(code,face=null){
@@ -19,7 +36,7 @@ function explanation(code,face=null){
  const stats=c.type==='Enemy'?`交战 ${c.engagement} · 威胁 ${c.threat} · 攻击 ${c.attack} · 防御 ${c.defense} · 生命 ${c.health}`:c.type==='Location'?`威胁 ${c.threat} · 探索进度 ${c.quest}`:'';
  return `<div class="zh-card-explanation">${heading}<h3>${esc(c.name)}</h3>${stats?`<p class="small">${esc(stats)}</p>`:''}<h4>正面能力</h4><p>${esc(c.rule||'无额外正面能力。')}</p><h4>暗影效果</h4><p>${esc(c.shadow||'无暗影效果。')}</p>${c.victory?`<p class="small">胜利点 ${esc(c.victory)}</p>`:''}</div>`;
 }
-function art(code,cls='',face=null){const c=by[code],url=safeUrl(c?.faces?.[face]||c?.imageUrl);cls+=(c?.type==='Quest'?' quest-card-art':'');return url?`<button class="card-art ${cls}" data-action="images" data-image-action="open" data-code="${esc(code)}" data-face="${esc(face||'')}" aria-label="放大${esc(c.name)}卡图"><img src="${esc(url)}" alt="${esc(c.name)} · ${esc(code)}" loading="lazy" decoding="async" referrerpolicy="no-referrer"><span class="image-loading-note">${/^assets\/cards-zh-core\//.test(url)?'中文卡图 · 本地 · 点击放大':localUrls.has(url)?'英文卡图 · 本地 · 点击放大':'联网英文卡图 · 点击放大'}</span></button>`:'<div class="image-missing small muted">API暂未提供卡图</div>';}
+function art(code,cls='',face=null){const c=by[code],url=safeUrl(c?.faces?.[face]||c?.imageUrl);cls+=(c?.type==='Quest'?' quest-card-art':'');return url?`<button class="card-art ${cls}" data-action="images" data-image-action="open" data-code="${esc(code)}" data-face="${esc(face||'')}" aria-label="放大${esc(c.name)}卡图"><img src="${esc(url)}" alt="${esc(c.name)} · ${esc(code)}" loading="lazy" decoding="async" referrerpolicy="no-referrer"><span class="image-loading-note">${/^assets\/cards-zh(?:-core|-enc)?\//.test(url)?'中文卡图 · 本地 · 点击放大':localUrls.has(url)?'英文卡图 · 本地 · 点击放大':'联网英文卡图 · 点击放大'}</span></button>`:'<div class="image-missing small muted">API暂未提供卡图</div>';}
 function result(){let text=filter.text.toLocaleLowerCase();return records.filter(c=>(filter.type==='main'?['hero','ally','attachment','event'].includes(c.type):filter.type==='encounter'?c.packCode==='EncounterCore':!filter.type||c.type===filter.type)&&(!filter.pack||c.printings.some(p=>p.packCode===filter.pack)||c.packCode===filter.pack)&&`${c.code} ${c.name} ${c.nameZhCard||''} ${c.nameZh||PlayerCards.NAMES[c.code]||''} ${c.packName}`.toLocaleLowerCase().includes(text));}
 function draw(){const a=result(),pages=Math.max(1,Math.ceil(a.length/size));page=Math.min(page,pages-1);document.querySelector('#image-count').textContent=`${a.length}种卡牌 · 第${page+1}/${pages}页 · 每页最多${size}张，滚动时按需加载`;
  document.querySelector('#image-results').innerHTML=a.slice(page*size,(page+1)*size).map(c=>`<article class="image-tile">${art(c.code)}<h3>${esc(c.nameZhCard||c.nameZh||PlayerCards.NAMES[c.code]||c.name)}</h3><p class="small muted">${esc(c.name)} · #${esc(c.code)}</p><p class="small">${types[c.type]} · ${esc(c.packName)}</p>${explanation(c.code)}<a href="${esc(c.sourceUrl)}" target="_blank" rel="noreferrer" class="small">查看来源 ↗</a></article>`).join('')||'<p class="muted">没有匹配卡牌。</p>';
