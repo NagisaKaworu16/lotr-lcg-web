@@ -47,6 +47,11 @@
 | victory display | 胜利展示区 | 已裁决：批次2 复核维持（2026-11-03） |
 | engagement cost / engagement check | 交战费用 / 交战检定 | 与 Engage=交战 成对 |
 | staging step | 探查步骤 | 随探查区派生 |
+| side quest | 支线探险 | 已裁决：data.js 3 处先例（2026-11-03 批次3 复核；初译"支线任务"已废弃） |
+| Battle / Siege | 会战 / 攻城 | 已裁决：无 data.js 先例，采社区通行（2026-11-03）；文本内括注英文待展示层确认 |
+| Valour | 英勇 | 已裁决：同上（2026-11-03） |
+| Planning Action / Encounter Action / Refresh Action | 谋划行动 / 遭遇行动 / 重整行动 | 批次3 采用 |
+| optionally engage / undefended attack | 主动交战 / 未防御的攻击 | 批次3 采用 |
 
 ## 3. 特质（traits）对照表（25 词 Core 批 + 14 词批次2，均已落定）
 
@@ -72,6 +77,10 @@
 | Dark | 黑暗 | | Mountain | 山地 |
 | Healer | 医者 | | Dale | 谷地 |
 | Shirriff | 治安官 | | Ring | 魔戒 |
+| Ent | 恩特 | | Outlands | 边地 |
+| Record | 记录 | | Corsair | 海盗 |
+| Woodman | 林中人 | | Isengard | 艾森加德 |
+| Spell | 咒语 | | | |
 
 ## 4. 译文格式规范
 
