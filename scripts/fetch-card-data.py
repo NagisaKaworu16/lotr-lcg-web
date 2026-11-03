@@ -207,7 +207,7 @@ def main():
         by_code = {}
         print(f'pack list unavailable ({exc}); continuing with image-index names')
 
-    raw_cards, failed = [], []
+    raw_cards, failed, raw_counts = [], [], {}
     for i, pack in enumerate(packs, 1):
         code = pack['code']
         cache = os.path.join(CACHE_DIR, f'{code}.json')
@@ -218,6 +218,7 @@ def main():
                 payload = None
             if isinstance(payload, list) and payload:
                 raw_cards.extend(payload)
+                raw_counts[code] = len(payload)
                 continue
         try:
             payload = http_json(CARDS_URL.format(code=code), args.proxy, args.retries)
@@ -229,10 +230,17 @@ def main():
         with io.open(cache, 'w', encoding='utf-8') as fh:
             json.dump(payload, fh, ensure_ascii=False)
         raw_cards.extend(payload)
+        raw_counts[code] = len(payload)
         print(f'[{i}/{len(packs)}] {code}: {len(payload)} cards')
         time.sleep(interval)
 
     print(f'fetched/cached {len(raw_cards)} cards from {len(packs) - len(failed)} packs; failed: {failed or "none"}')
+    # 第二盲区守卫（v0.17.10）：image-index/官方清单引用的包，API 却返回 0 卡 =
+    # 数据丢失（fail loud，中止投影）。与「重印包」区分：后者 API 有卡、只是 code
+    # 与既有包全部重合而去重（见投影后打印）。
+    blank = sorted(p['code'] for p in packs if raw_counts.get(p['code'], 0) == 0)
+    if blank:
+        raise SystemExit(f'盲区：{len(blank)} 个被引用的包 API 返回 0 卡（fail loud）: {blank}')
     if args.no_project or not raw_cards:
         return
 
@@ -244,6 +252,12 @@ def main():
         seen.add(code)
         cards.append(project(raw, zh_cards, zh_titles))
     cards.sort(key=lambda c: (c['packCode'], c['position'] or 0, c['code']))
+
+    # 重印包审计：API 有卡但投影后无独立卡条目（code 与既有包全部重合，去重归原包）
+    proj_packs = {c['packCode'] for c in cards}
+    dup_only = sorted(p['code'] for p in packs
+                      if raw_counts.get(p['code']) and p['code'] not in proj_packs)
+    print(f'重印包（仅元数据，无独立卡条目）: {dup_only or "无"}')
 
     # nameZh merge: Core-snapshot names stay untouched (data.js is
     # authoritative); empty slots filled from the EDGE zh-overrides —
