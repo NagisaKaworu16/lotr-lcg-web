@@ -17,6 +17,16 @@ const RefreshRulesFactory=(H,R,Q)=>{
   for(const c of R.chars(s)){const cost=webs(s,c.controller).find(h=>h.uid===c.uid)?.cost||0;if(cost){if((x(s).payPlans[c.controller]||[]).some(uid=>String(uid)===String(c.uid))){c.state.resources-=cost;c.state.exhausted=false;}}else c.state.exhausted=false;c.state.committed=false;}
   for(const c of [...R.attaches(s),...R.enemies(s),...R.locations(s)])c.state.exhausted=false;
   x(s).frameworkDone=true;const amount=s.active?.id===114?2:1;for(const p of [...alive(s)])R.changeThreat(s,p.id,amount);
+  /* v0.16.10：安格玛批次1 刷新阶段末尾统一时点（基础威胁之后、先手轮换之前）：
+     1) stage.threatPerStagingEnemy（IiC 1B）：每个探查区敌人 +1 威胁；
+     2) time 倒计时（165/150/189 等）：H.tickTime 结算 timeExpire；
+     3) 185 严寒山脊：active 时每人 1 名角色自伤 1（程序化取第一名可用英雄）。 */
+  if(s.status==='playing'){
+   if(H.stageDef){const st=H.stageDef(s,s.quest);if(st.threatPerStagingEnemy){const n=s.staging.filter(c=>c.type==='Enemy').length;if(n)for(const p of [...alive(s)])R.changeThreat(s,p.id,n);}}
+   if(H.tickTime)H.tickTime(s);
+   if(s.active?.id===185)for(const p of alive(s)){const cs=R.chars(s).filter(c=>c.controller===p.id&&c.kind==='hero'&&!c.state.destroyed);if(cs.length){R.damageCharacter(s,cs[0],1);log(s,s.players[p.id].name+'的'+cs[0].meta.nameZh+'受1点伤害（严寒山脊）');}}
+   R.pump(s);
+  }
   if(s.status!=='playing')return;
   for(let i=1;i<=s.players.length;i++){const pid=(oldFirst+i)%s.players.length;if(!s.players[pid].eliminated){s.first=pid;break;}}
   x(s).order=order(s);x(s).index=x(s).order.length;x(s).step='action';x(s).finalPasses=[];log(s,'重置和威胁已结算；起始玩家为'+s.players[s.first].name+'，开放行动窗口');

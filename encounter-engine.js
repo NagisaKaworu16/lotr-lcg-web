@@ -14,7 +14,7 @@ const EncounterRulesFactory=(H,R,Q)=>{
  function cancel(s,pid){check(s);need(x(s).step==='optional'&&x(s).choices[pid],'没有可撤销的方案');delete x(s).choices[pid];x(s).approvals=[];}
  function approve(s,pid){check(s);need(x(s).step==='optional'&&live(s).some(p=>p.id===pid),'当前不能确认');need(!x(s).approvals.includes(pid),'已二次确认');validate(s,x(s).choices,true);x(s).approvals.push(pid);if(live(s).every(p=>x(s).approvals.includes(p.id))){x(s).step='executing';resume(s);}}
  function unapprove(s,pid){check(s);need(x(s).step==='optional'&&x(s).approvals.includes(pid),'当前不能撤回确认');x(s).approvals=x(s).approvals.filter(id=>id!==pid);}
- function engage(s,pid,uid,optional=false){if(optional)s.players[pid].optionalRound=s.round;R.engageEnemy(s,uid,pid);R.pump(s);}
+ function engage(s,pid,uid,optional=false){if(optional)s.players[pid].optionalRound=s.round;R.engageEnemy(s,uid,pid);if(H.engageHooks){const st=R.find(s,uid)?.state;H.engageHooks(s,pid,st);}R.pump(s);}
  function candidates(s,pid){const cs=s.staging.filter(c=>c.type==='Enemy'&&(c.engagement??Infinity)<=s.players[pid].threat);const max=Math.max(...cs.map(c=>c.engagement));return cs.filter(c=>c.engagement===max);}
  function resume(s){const a=x(s);if(s.phase!==4||!a||a.completed||a.running||a.queue.length||a.tasks.length||s.pending.length||s.status!=='playing')return;a.running=true;try{
   if(a.step==='executing'){while(a.optionalIndex<a.turnOrder.length&&!a.queue.length&&!s.pending.length&&s.status==='playing'){const pid=a.turnOrder[a.optionalIndex++];if(s.players[pid].eliminated)continue;const uid=a.choices[pid]?.uid;if(uid!==null&&uid!==undefined)engage(s,pid,uid,true);}if(a.queue.length||s.pending.length||s.status!=='playing')return;a.step='beforeChecks';a.finalPasses=[];log(s,'主动交战结束，开放交战检定前行动窗口');}

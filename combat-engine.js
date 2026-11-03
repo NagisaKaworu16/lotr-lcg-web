@@ -59,8 +59,10 @@ const CombatRulesFactory=(H,R,Q)=>{
  function cancelShadow(s,value){check(s);need(cancelOptions(s).some(o=>o.value===value),'当前没有合法的暗影取消');event(s,value,'01048',1);current(s).shadow.canceled=true;current(s).shadow=null;x(s).step='shadows';nextShadow(s);}
  function attachmentItems(s,pid,targetIds=null){const out=R.attaches(s).filter(c=>targetIds?targetIds.includes(c.state.target):c.controller===pid);for(const o of s.objectives)if(o.holder&&(targetIds||o.holder.player===pid)){const h=s.players[o.holder.player].heroStates[o.holder.hero];if(!targetIds||targetIds.includes(h.uid))out.push({uid:o.uid,name:o.name,objective:true});}return out;}
  function discardItem(s,uid){const a=R.attaches(s).find(c=>eq(c.uid,uid));if(a)R.discardAttachment(s,a);else{const o=s.objectives.find(c=>eq(c.uid,uid));need(o?.holder,'目标附属已经离场');o.holder=null;}}
- function resolveShadow(s){check(s);need(x(s).step==='shadowWindow','请先翻开当前暗影');const a=current(s),c=a.shadow,undef=isUndefended(s),pid=a.player,e=enemy(s,a.uid);a.shadow=null;x(s).step='shadowEffects';if(!c.shadow){resume(s);return;}
-  switch(c.id){
+ function resolveShadow(s){check(s);need(x(s).step==='shadowWindow','请先翻开当前暗影');const a=current(s),c=a.shadow,undef=isUndefended(s),pid=a.player,e=enemy(s,a.uid);a.shadow=null;x(s).step='shadowEffects';if(!c.shadow&&!c.shadowSpec){resume(s);return;}
+  /* v0.16.10：安格玛批次1 声明式暗影解释器——shadowSpec 优先于旧 shadow 文本；未知键 fail loud。 */
+  if(c.shadowSpec)applyShadow(s,a,c,pid,undef,e);
+  else switch(c.id){
    case 74:task(s,'exhaust',pid,{left:undef?2:1});break;
    case 75:for(const char of [...own(s,pid)])if(R.find(s,char.uid))R.damageCharacter(s,char,undef?2:1);break;
    case 76:R.changeThreat(s,pid,undef?8:4);break;
@@ -82,20 +84,43 @@ const CombatRulesFactory=(H,R,Q)=>{
   }
   if(e?.id===102&&!s.players[pid].eliminated)task(s,'discardCharacter',pid,{});R.pump(s);resume(s);
  }
+ /* v0.16.10：声明式暗影解释器。shadowSpec 按 key 顺序执行：
+    atk（number｜{perDamaged:'defender'}｜{perQuestCard:true}｜{ifDarkActive:n}）、def、
+    threat（number｜{per:'engaged'}｜{ifUndefended:n,else:m}）、damage、exhaust、progress、
+    discard、returnToStaging、extraShadowCards:{perPlayer:true}、attach:'conditionToQuest'、custom（回落旧 switch）。 */
+ function applyShadow(s,a,c,pid,undef,e){
+  const need=(v,m)=>{if(!v&&v!==0)throw Error(m);};
+  const questCards=()=>1+s.staging.filter(y=>y.type==='Quest'||y.type==='Side Quest').length;
+  for(const k of Object.keys(c.shadowSpec)){const v=c.shadowSpec[k];
+   if(k==='atk')a.bonus+=typeof v==='number'?v:(v.perDamaged==='defender'?liveDefenders(s).filter(d=>(d.state.damage||0)>0).length:v.perQuestCard?questCards():(v.ifDarkActive&&s.active&&/Dark/.test(s.active.traits||'')?v.ifDarkActive:0));
+   else if(k==='def'){need(Number.isInteger(v)&&v>0,'shadowSpec.def 须为正整数');a.defPenalty=(a.defPenalty||0)+v;}
+   else if(k==='threat')R.changeThreat(s,pid,typeof v==='number'?v:(v.per==='engaged'?s.players[pid].engaged.length:(undef?v.ifUndefended:(v.else||0))));
+   else if(k==='damage'){const n=typeof v==='number'?v:v.amount;need(Number.isInteger(n)&&n>0,'shadowSpec.damage 须为正整数或 {amount}');const targets=(v.target&&v.target!=='defender')?own(s,pid):(undef?[...own(s,pid)].filter(d=>d.kind==='hero'):liveDefenders(s));for(const d of targets)if(R.find(s,d.uid))R.damageCharacter(s,d,n);}
+   else if(k==='exhaust'){const n=typeof v==='number'?v:v.count;task(s,'exhaust',pid,{left:n});}
+   else if(k==='progress')s.progress=Math.max(0,s.progress-v);
+   else if(k==='discard'){if(v==='attachment')task(s,'attachment',pid,{});else task(s,'shadowDiscard',pid,{left:v});}
+   else if(k==='returnToStaging')a.returnToStaging=true;
+   else if(k==='extraShadowCards'){if(v&&v.perPlayer&&e)for(let i=0;i<live(s).length;i++)dealOne(s,e);}
+   else if(k==='attach'){need(v==='conditionToQuest','未知 shadowSpec.attach：'+v);s.questAttachments??=[];s.questAttachments.push({card:c,round:s.round});if(e){e.shadows=(e.shadows||[]).filter(y=>y.uid!==c.uid);a.shadowIndex--;}}
+   else if(k==='custom'){switch(c.id){case 74:task(s,'exhaust',pid,{left:undef?2:1});break;case 75:for(const char of [...own(s,pid)])if(R.find(s,char.uid))R.damageCharacter(s,char,undef?2:1);break;case 76:R.changeThreat(s,pid,undef?8:4);break;default:throw Error('此基础暗影尚未登记：'+c.id);}}
+   else throw Error('未知 shadowSpec 键：'+k+'（'+c.name+'）');
+  }
+ }
  function engagedAttack(s){const a=current(s);return a&&(!s.players[a.player].eliminated)&&(a.rider?!!enemy(s,a.uid):s.players[a.player].engaged.some(e=>e.uid===a.uid));}
  function attackStrength(s){const a=current(s),e=enemy(s,a.uid);if(!e)return 0;return a.attackers.map(uid=>R.find(s,uid)).filter(c=>c&&['hero','ally'].includes(c.kind)).reduce((n,c)=>n+R.stats(s,c.uid).attack+(s.staging.some(e=>e.uid===a.uid)&&c.meta.code==='01009'?1:0)+((e.traits||'').includes('Orc.')?held(s,c.uid).filter(c=>c.meta.code==='01039').length:0),0);}
- function enemyDamage(s){const a=current(s),e=enemy(s,a.uid);if(!e||!engagedAttack(s)){abortAttack(s);return;}const ds=liveDefenders(s),def=a.ignoreDefense?0:ds.reduce((n,c)=>n+R.stats(s,c.uid).defense,0),amount=Math.max(0,R.stats(s,e.uid).attack+a.bonus-def);a.damage=amount;x(s).step='damageChoice';if(amount){const targets=ds.length?ds:own(s,a.player).filter(c=>c.kind==='hero');if(targets.length===1)applyDamage(s,targets[0].uid);else task(s,'combatDamage',a.player,{undef:!ds.length});}else afterAttack(s);R.pump(s);resume(s);}
+ function enemyDamage(s){const a=current(s),e=enemy(s,a.uid);if(!e||!engagedAttack(s)){abortAttack(s);return;}const ds=liveDefenders(s),def=a.ignoreDefense?0:Math.max(0,ds.reduce((n,c)=>n+R.stats(s,c.uid).defense,0)-(a.defPenalty||0)),amount=Math.max(0,R.stats(s,e.uid).attack+a.bonus-def);a.damage=amount;x(s).step='damageChoice';if(amount){const targets=ds.length?ds:own(s,a.player).filter(c=>c.kind==='hero');if(targets.length===1)applyDamage(s,targets[0].uid);else task(s,'combatDamage',a.player,{undef:!ds.length});}else afterAttack(s);R.pump(s);resume(s);}
  function applyDamage(s,uid){const a=current(s),e=enemy(s,a.uid),c=R.find(s,uid);need(c,'受伤角色已离场');const excess=e?.id===82?Math.max(0,a.damage-(R.stats(s,uid).health-(c.state.damage||0))):0;R.damageCharacter(s,c,a.damage);if(excess&&!s.players[a.player].eliminated)R.changeThreat(s,a.player,excess);log(s,'攻击伤害'+a.damage+(excess?'；山丘巨魔溢出增加'+excess+'威胁':''));afterAttack(s);}
- function afterAttack(s){const a=current(s),e=enemy(s,a.uid);if(e){if(e.id===90)e.resources=(e.resources||0)+1;if(e.id===111)s.progress=Math.max(0,s.progress-1);if(e.id===85&&!(e.shadows||[]).some(c=>c.shadow))returnToStaging(s,e);}
+ function afterAttack(s){const a=current(s),e=enemy(s,a.uid);if(e){if(e.id===90)e.resources=(e.resources||0)+1;if(e.id===111)s.progress=Math.max(0,s.progress-1);if(e.id===85&&!(e.shadows||[]).some(c=>c.shadow))returnToStaging(s,e);if(a.returnToStaging&&e.id!==85)returnToStaging(s,e);}
   if(a.rider){const virtual=x(s).riders.find(e=>e.uid===a.uid);if(virtual){for(const c of virtual.shadows||[])H.discardCard(s,c);x(s).riders=x(s).riders.filter(e=>e.uid!==a.uid);}const parent=x(s).stack.pop();x(s).attack=parent;x(s).step='shadowEffects';}else window(s,'afterEnemy');
  }
  function returnToStaging(s,e){for(const p of s.players){const at=p.engaged.findIndex(c=>c.uid===e.uid);if(at>=0){p.engaged.splice(at,1);if(e.synthetic){s.players[e.playerCard.owner].playerDiscard.push(e.playerCard);return;}s.staging.push(e);return;}}}
  function abortAttack(s){if(current(s)?.rider)afterAttack(s);else window(s,'afterEnemy');}
  function playerDamage(s){const a=current(s),e=enemy(s,a.uid);window(s,'afterPlayer');if(!e)return;const sources=a.attackers.map(uid=>R.find(s,uid)).filter(Boolean);const damage=Math.max(0,attackStrength(s)-R.stats(s,e.uid).defense);const killed=R.damageEnemy(s,e.uid,damage);log(s,'玩家攻击造成'+damage+'伤害');if(killed)for(const c of sources){const blades=held(s,c.uid).filter(a=>a.meta.code==='01039').map(a=>a.uid);if(c.meta.code==='01005'||blades.length)R.queue(s,'attackProgress',c.controller,{attacker:c.uid,legolas:c.meta.code==='01005',blades});}R.pump(s);resume(s);}
- function spec(s){const t=x(s)?.tasks[0];if(!t)return null;const d=t.payload;let items=[],message='';switch(t.kind){case'dealTie':message='由起始玩家选择同交战值敌人的暗影分配顺序（牌面仍隐藏）';items=d.uids.map(uid=>enemy(s,uid)).filter(Boolean);break;case'exhaust':message=s.players[t.actor].name+'再横置'+d.left+'名角色';items=own(s,t.actor).filter(c=>!c.state.exhausted);break;case'attachment':message='弃掉1张合法附属；目标卡返回探查区';items=attachmentItems(s,t.actor,d.targets);break;case'returnAlly':message='返回1名己方已横置盟友到拥有者手中';items=own(s,t.actor).filter(c=>c.kind==='ally'&&c.state.exhausted);break;case'discardCharacter':message='多尔哥多戒灵：弃掉1名己方角色';items=own(s,t.actor);break;case'combatDamage':message='所有'+current(s).damage+'伤害必须分配给同一名'+(d.undef?'己方英雄':'防御角色');items=d.undef?own(s,t.actor).filter(c=>c.kind==='hero'):liveDefenders(s);break;case'sniper':message='哥布林狙击手：对己方1名角色造成1伤害';items=own(s,t.actor);break;}return {task:t,message,fields:[field('target','选择目标',items)]};}
+ function spec(s){const t=x(s)?.tasks[0];if(!t)return null;const d=t.payload;let items=[],message='';switch(t.kind){case'dealTie':message='由起始玩家选择同交战值敌人的暗影分配顺序（牌面仍隐藏）';items=d.uids.map(uid=>enemy(s,uid)).filter(Boolean);break;case'exhaust':message=s.players[t.actor].name+'再横置'+d.left+'名角色';items=own(s,t.actor).filter(c=>!c.state.exhausted);break;case'shadowDiscard':message=s.players[t.actor].name+'弃掉1张手牌（还剩'+d.left+'张）';items=own(s,t.actor).map(c=>({...c,meta:R.data(s,c)}));break;case'attachment':message='弃掉1张合法附属；目标卡返回探查区';items=attachmentItems(s,t.actor,d.targets);break;case'returnAlly':message='返回1名己方已横置盟友到拥有者手中';items=own(s,t.actor).filter(c=>c.kind==='ally'&&c.state.exhausted);break;case'discardCharacter':message='多尔哥多戒灵：弃掉1名己方角色';items=own(s,t.actor);break;case'combatDamage':message='所有'+current(s).damage+'伤害必须分配给同一名'+(d.undef?'己方英雄':'防御角色');items=d.undef?own(s,t.actor).filter(c=>c.kind==='hero'):liveDefenders(s);break;case'sniper':message='哥布林狙击手：对己方1名角色造成1伤害';items=own(s,t.actor);break;}return {task:t,message,fields:[field('target','选择目标',items)]};}
  function choose(s,id,params){check(s);const sp=spec(s);need(sp&&sp.task.id===id,'选择已过期');need(sp.fields[0].options.some(o=>eq(o.value,params.target)),'请选择合法目标');const t=sp.task,uid=Number(params.target),d=t.payload;x(s).tasks.shift();
   if(t.kind==='dealTie'){dealOne(s,enemy(s,uid));x(s).dealDone.push(uid);deal(s);}
   if(t.kind==='exhaust'){R.find(s,uid).state.exhausted=true;if(d.left>1)x(s).tasks.unshift({...t,id:++s.serial,payload:{...d,left:d.left-1}});}
+  if(t.kind==='shadowDiscard'){const p=s.players[t.actor],i=p.hand.findIndex(c=>eq(c.uid,uid));need(i>=0,'该牌已不在手中');p.playerDiscard.push(p.hand.splice(i,1)[0]);if(d.left>1)x(s).tasks.unshift({...t,id:++s.serial,payload:{...d,left:d.left-1}});}
   if(t.kind==='attachment')discardItem(s,uid);if(t.kind==='returnAlly')R.leaveAlly(s,uid,'hand');if(t.kind==='discardCharacter')R.destroyCharacter(s,R.find(s,uid),false);if(t.kind==='combatDamage')applyDamage(s,uid);if(t.kind==='sniper')R.damageCharacter(s,R.find(s,uid),1);R.pump(s);resume(s);
  }
  function finish(s){check(s);need(x(s).step==='endAction','玩家攻击尚未结束');requirePassed(s);x(s).step='ending';for(const sniper of s.staging.filter(c=>c.id===83))for(const p of live(s))task(s,'sniper',p.id,{});resume(s);}
