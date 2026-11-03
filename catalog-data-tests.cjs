@@ -23,8 +23,13 @@ test('dataset header: schema/source/cardCount/packCount self-consistent', () => 
   assert.ok(/T\d\d:/.test(DATA.fetchedAt), 'fetchedAt 应是 ISO 时间戳');
   assert.equal(DATA.cardCount, DATA.cards.length, 'cardCount 必须与 cards 数组长度一致');
   assert.equal(DATA.packCount, new Set(DATA.cards.map(c => c.packCode)).size, 'packCount 必须与实际系列数一致');
-  assert.ok(Array.isArray(DATA.packs) && DATA.packs.length === DATA.packCount,
-    'packs 元数据应逐系列给出（含中文名映射的原料）');
+  /* v0.17.9 起 packs 元数据允许是 cards 系列的超集：收编的 4 个 starter 重印包
+   * （DoD/EoL/DoG/RoR）与既有 code 全部重合，去重后无独立卡条目，仅进 packs
+   * 元数据（详见 dataset packCoverageNote）。 */
+  const cardPacks = new Set(DATA.cards.map(c => c.packCode));
+  assert.ok(Array.isArray(DATA.packs) && DATA.packs.length >= DATA.packCount &&
+    cardPacks.isSubsetOf(new Set(DATA.packs.map(p => p.code))),
+    'packs 元数据必须覆盖 cards 全部系列（允许超集：重印包无独立卡条目）');
 });
 
 test('coverage: >=1300 unique player cards across 8 types', () => {
