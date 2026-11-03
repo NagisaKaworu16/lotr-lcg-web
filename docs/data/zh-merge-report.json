@@ -2761,7 +2761,7 @@
   ],
   "translationConflicts": []
  },
- "fetchedAt": "2026-11-03T08:18:29+00:00",
+ "fetchedAt": "2026-11-03T08:29:08+00:00",
  "note": "nameZh merge from docs/data/zh-overrides (EDGE 扩展导出，见该目录 README.md)；匹配顺序 code 精确（仅玩家卡）→ 规范化英文名；data.js 已有中文名/内置条目不覆盖；conflict=translation.json 内同一规范名对应多个不同中文值，该键整体排除不采用。",
  "encounter": {
   "matchedByCode": 0,
@@ -4285,15 +4285,31 @@
   "translationConflicts": []
  },
  "playerCoreText": {
+  "source": "core-text-zh.json",
   "entries": 73,
   "matched": 73,
   "nameZhBackfilled": 0,
   "nameZhKept": 73,
   "rulesTextZhFilled": 73,
   "traitsZhFilled": 73,
+  "overlap": 0,
   "unmatched": 0,
   "unmatchedList": [],
   "reviewed": false,
-  "note": "core-text-zh.json code 精确匹配；rulesTextZh/traitsZh 原样直写（** ** 与 \\n 不加工），nameZh 仅空时回填（Core 快照权威）。"
+  "note": "code 精确匹配；rulesTextZh/traitsZh 原样直写（** ** 与 \\n 不加工），nameZh 仅条目带键且卡现值为空时回填；机器辅助译文未人工复核（见产物 meta.reviewed）。"
+ },
+ "playerCycles1Text": {
+  "source": "cycles1-text-zh.json",
+  "entries": 133,
+  "matched": 133,
+  "nameZhBackfilled": 0,
+  "nameZhKept": 0,
+  "rulesTextZhFilled": 133,
+  "traitsZhFilled": 133,
+  "overlap": 0,
+  "unmatched": 0,
+  "unmatchedList": [],
+  "reviewed": false,
+  "note": "code 精确匹配；rulesTextZh/traitsZh 原样直写（** ** 与 \\n 不加工），nameZh 仅条目带键且卡现值为空时回填；机器辅助译文未人工复核（见产物 meta.reviewed）。"
  }
 }

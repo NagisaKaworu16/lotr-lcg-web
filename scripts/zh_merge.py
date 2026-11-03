@@ -175,18 +175,27 @@ def conflicts_names(conflicts):
 
 
 def merge_core_text(cards):
-    """第三译文来源（v0.17.7）：core-text-zh.json 按 code 精确匹配（Core 玩家卡
-    73 张，机器辅助译文 meta.reviewed=false）。rulesTextZh/traitsZh 为新字段，
-    直写原样保留（markdown 极简标记与 \\n 不做任何加工）；nameZh 仅现值为空时
-    回填——Core 卡的 nameZh 来自 ringsdb-snapshot（data.js 权威），正常应全部
-    nameZhKept，回填数为 0 是预期事实而非缺陷。返回报告节并写入 report。"""
-    ct = _read_json(CORE_TEXT_FILE).get('cards', {}) if os.path.exists(CORE_TEXT_FILE) else {}
+    """向后兼容包装：core-text-zh.json（试点批）走通用入口。"""
+    return merge_text_zh(cards, 'core-text-zh.json', 'playerCoreText')
+
+
+def merge_text_zh(cards, filename, report_key):
+    """规则文本译文通用入口（v0.17.7 core-text 试点 / v0.17.8 cycles1 批次2）：
+    docs/data/zh-overrides/<filename> 按 code 精确匹配。traitsZh/rulesTextZh
+    直写原样保留（markdown 极简标记与 \\n 不做任何加工，渲染归展示层）；
+    nameZh 仅「条目带该键且卡现值为空」时回填——Core 快照与 EDGE merge 权威，
+    批次2 产物整体无 nameZh 键，此路径自然跳过。多来源时后者覆盖前者字段，
+    覆盖数如实记入 overlap 供审计。返回报告节并写入 report。"""
+    path = os.path.join(ZH_DIR, filename)
+    ct = _read_json(path).get('cards', {}) if os.path.exists(path) else {}
     by_code = {str(c.get('code')): c for c in cards}
-    stats = {'entries': len(ct), 'matched': 0, 'nameZhBackfilled': 0, 'nameZhKept': 0,
-             'rulesTextZhFilled': 0, 'traitsZhFilled': 0, 'unmatched': 0,
+    stats = {'source': filename, 'entries': len(ct), 'matched': 0,
+             'nameZhBackfilled': 0, 'nameZhKept': 0, 'rulesTextZhFilled': 0,
+             'traitsZhFilled': 0, 'overlap': 0, 'unmatched': 0,
              'unmatchedList': [], 'reviewed': False,
-             'note': 'core-text-zh.json code 精确匹配；rulesTextZh/traitsZh 原样直写'
-                     '（** ** 与 \\n 不加工），nameZh 仅空时回填（Core 快照权威）。'}
+             'note': 'code 精确匹配；rulesTextZh/traitsZh 原样直写（** ** 与 \\n '
+                     '不加工），nameZh 仅条目带键且卡现值为空时回填；机器辅助译文'
+                     '未人工复核（见产物 meta.reviewed）。'}
     for code in sorted(ct, key=lambda x: (len(x), x)):
         e = ct[code] or {}
         c = by_code.get(code)
@@ -196,6 +205,8 @@ def merge_core_text(cards):
                 stats['unmatchedList'].append(code)
             continue
         stats['matched'] += 1
+        if 'rulesTextZh' in c or 'traitsZh' in c:
+            stats['overlap'] += 1  # 多译文来源覆盖同卡，审计用
         # 字段存在即直写（含空串：01013/01028 原文为空，空串与缺失语义不同）
         if 'rulesTextZh' in e:
             c['rulesTextZh'] = e['rulesTextZh'] or ''
@@ -209,11 +220,11 @@ def merge_core_text(cards):
             else:
                 c['nameZh'] = e['nameZh']
                 stats['nameZhBackfilled'] += 1
-    print(f"[zh-merge:coreText] entries={stats['entries']} matched={stats['matched']} "
+    print(f"[zh-merge:{report_key}] entries={stats['entries']} matched={stats['matched']} "
           f"rulesTextZh={stats['rulesTextZhFilled']} traitsZh={stats['traitsZhFilled']} "
           f"nameZhKept={stats['nameZhKept']} nameZhBackfilled={stats['nameZhBackfilled']} "
-          f"unmatched={stats['unmatched']}")
-    write_report('playerCoreText', stats)
+          f"overlap={stats['overlap']} unmatched={stats['unmatched']}")
+    write_report(report_key, stats)
     return stats
 
 
