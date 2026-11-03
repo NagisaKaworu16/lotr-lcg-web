@@ -60,6 +60,8 @@
 | threat cost / starting threat | 威胁费用 / 起始威胁 | 批次4 采用 |
 | set aside | 备置 | 批次4 采用（Ranger Summons 等设置类卡） |
 | threat display / victory display 语境 | 威胁 / 胜利展示区 | victory display 已裁决见上 |
+| The One Ring | 至尊戒 | 已裁决：data.js/carddata nameZh 既有口径一致（2026-11-03 批次6；初译"至尊魔戒"已废弃，harad-em 2 处已改） |
+| main quest | 主线探险 | 已裁决：Quest=探险对仗（2026-11-03 批次6；初译"主线任务"已废弃，harad-em 1 处已改） |
 
 ## 3. 特质（traits）对照表（25 词 Core 批 + 14 词批次2，均已落定）
 
