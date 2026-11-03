@@ -1,15 +1,16 @@
 {
  "schemaVersion": 1,
- "generatedAt": "2026-11-03T07:43:19+00:00",
+ "generatedAt": "2026-11-03T07:53:16+00:00",
  "source": "DragnCards S3 /cards/Chinese/<uuid>.jpg（cardDb.tsv name+packName 匹配，NFD 规范化 + numberInPack 尾数消歧）",
  "note": "安格玛觉醒（TLR 等）S3 无中文卡图为已知事实，对应记录 status=no-dragncards-row，不阻塞其他批次；status=pending=尚未下载（后续批次）。",
  "quality": 70,
  "maxSide": 560,
  "summary": {
   "ambiguous": 58,
+  "http-403/404": 77,
   "no-dragncards-row": 994,
-  "ok": 1847,
-  "pending": 2715
+  "ok": 2192,
+  "pending": 2293
  },
  "records": [
   {
@@ -13515,9 +13516,9 @@
    "pack": "TLoS",
    "uuid": "00d61652-9003-4278-af72-7d4fab3dfa7c",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/00d61652-9003-4278-af72-7d4fab3dfa7c.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh/22108.webp",
+   "sha256": "e9a0b8b604de06465ed83c0e40e3706a566e3758ec3dede71e4a3a0b9d26437c",
+   "status": "ok"
   },
   {
    "kind": "player",
@@ -13528,9 +13529,9 @@
    "pack": "TLoS",
    "uuid": "ff6ad982-2539-4ea3-ab76-fb5195bc7505",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/ff6ad982-2539-4ea3-ab76-fb5195bc7505.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh/22109.webp",
+   "sha256": "14401d00443fc00631a4efcca2f604c5ac69997af9077fbf5c23380ac222d764",
+   "status": "ok"
   },
   {
    "kind": "player",
@@ -13541,9 +13542,9 @@
    "pack": "TLoS",
    "uuid": "1cb9b7ce-c138-4de6-b983-68485fb4ea0b",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/1cb9b7ce-c138-4de6-b983-68485fb4ea0b.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh/22110.webp",
+   "sha256": "fb4f9e7be6ae8f589f1dd34af354a92349f2d8bdbf80d9a03bdfde3cc0c07219",
+   "status": "ok"
   },
   {
    "kind": "player",
@@ -13554,9 +13555,9 @@
    "pack": "TLoS",
    "uuid": "57615541-d34a-4fb8-950f-ce32867e4f6d",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/57615541-d34a-4fb8-950f-ce32867e4f6d.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh/22111.webp",
+   "sha256": "01f4e1f625c506478b1ed3a312a89ab203958c4a242a5a722944d684eb466665",
+   "status": "ok"
   },
   {
    "kind": "player",
@@ -13567,9 +13568,9 @@
    "pack": "TLoS",
    "uuid": "6cc4e51e-fc30-419f-aa2a-b74ba8e20861",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/6cc4e51e-fc30-419f-aa2a-b74ba8e20861.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh/22112.webp",
+   "sha256": "2880cc3ebc76faf94e66a2e3957c10298af0d59ff4db6d3307a5898b5cd90bca",
+   "status": "ok"
   },
   {
    "kind": "player",
@@ -13580,9 +13581,9 @@
    "pack": "TLoS",
    "uuid": "89a9b6e4-30ab-4113-b6e3-f58a819e6c69",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/89a9b6e4-30ab-4113-b6e3-f58a819e6c69.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh/22113.webp",
+   "sha256": "226c81ea2adea9bda77671496e1c1dc5c004184dc834ea0f47048e40566dc910",
+   "status": "ok"
   },
   {
    "kind": "player",
@@ -13593,9 +13594,9 @@
    "pack": "TLoS",
    "uuid": "c915a31d-d90d-4973-850b-b431224d1ef4",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/c915a31d-d90d-4973-850b-b431224d1ef4.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh/22114.webp",
+   "sha256": "ca1530e611142b34d71d0202543d1dc9cbece62b52ad47c550668f7dd2fe3c41",
+   "status": "ok"
   },
   {
    "kind": "player",
@@ -13606,9 +13607,9 @@
    "pack": "TLoS",
    "uuid": "ad26f445-5cba-461c-8226-26a75cdf1891",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/ad26f445-5cba-461c-8226-26a75cdf1891.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh/22115.webp",
+   "sha256": "7f7a728023ee6e6bb40eccd65f063af92e2241a935c02a29329aec2de635add0",
+   "status": "ok"
   },
   {
    "kind": "player",
@@ -13619,9 +13620,9 @@
    "pack": "TLoS",
    "uuid": "9f33a3f2-dc73-4c15-be88-24040bab91e7",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/9f33a3f2-dc73-4c15-be88-24040bab91e7.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh/22116.webp",
+   "sha256": "cba6038eb0ccfb3dd625a70e4c6beb1a9a1913083f5ecfde4cd373eb16cd402b",
+   "status": "ok"
   },
   {
    "kind": "player",
@@ -13632,9 +13633,9 @@
    "pack": "TLoS",
    "uuid": "0ce032eb-b94b-4b3e-b395-470e00ade31b",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/0ce032eb-b94b-4b3e-b395-470e00ade31b.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh/22117.webp",
+   "sha256": "74acd8ee31dcb39367c6471d6380295375bcd958b1ec3bab6e7bcf0896c21654",
+   "status": "ok"
   },
   {
    "kind": "player",
@@ -13645,9 +13646,9 @@
    "pack": "TLoS",
    "uuid": "1200dd24-3d0a-485d-baa3-6eac91f87779",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/1200dd24-3d0a-485d-baa3-6eac91f87779.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh/22134.webp",
+   "sha256": "16a544e2c66bfdaf132180db9e4353ebe6e1e1be0fd651aff932faf9d428aeba",
+   "status": "ok"
   },
   {
    "kind": "player",
@@ -16531,9 +16532,9 @@
    "pack": "VoI",
    "uuid": "21cfb9e9-6777-4bc6-ace6-08fe68e949a4",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/21cfb9e9-6777-4bc6-ace6-08fe68e949a4.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh/07001.webp",
+   "sha256": "e5dc249da8a9da53c6ca9d53e5aa1dba08fc18d112a682dfb4f41b15db6db423",
+   "status": "ok"
   },
   {
    "kind": "player",
@@ -16544,9 +16545,9 @@
    "pack": "VoI",
    "uuid": "b49c3563-b3cd-4f33-b706-c2a721028891",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/b49c3563-b3cd-4f33-b706-c2a721028891.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh/07002.webp",
+   "sha256": "ca80e324f13f484a7797c628078c20e26f6eb23fb71f6d4dd1e03fb723c2e0d0",
+   "status": "ok"
   },
   {
    "kind": "player",
@@ -16557,9 +16558,9 @@
    "pack": "VoI",
    "uuid": "20250f12-5bfc-4ffc-8e7e-4e3d71276509",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/20250f12-5bfc-4ffc-8e7e-4e3d71276509.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh/07003.webp",
+   "sha256": "66452674a7ca55f87dcef76da8e4bea93bda6d3f9c3fcb034a9009b42c889d61",
+   "status": "ok"
   },
   {
    "kind": "player",
@@ -16570,9 +16571,9 @@
    "pack": "VoI",
    "uuid": "6f333a3e-6c2f-4f69-9c93-c5f46dc4f339",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/6f333a3e-6c2f-4f69-9c93-c5f46dc4f339.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh/07004.webp",
+   "sha256": "591a1d0033d2eab4c16d5acc028b5be5afc41a05cf1739764d8c7e730aef080f",
+   "status": "ok"
   },
   {
    "kind": "player",
@@ -16583,9 +16584,9 @@
    "pack": "VoI",
    "uuid": "fe60620b-9ea1-4bf8-8d41-e7fd81a28427",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/fe60620b-9ea1-4bf8-8d41-e7fd81a28427.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh/07005.webp",
+   "sha256": "eef50ffc30f0f4e98bdd783febbebb55515d71f500488d62c72103fc8a9b9977",
+   "status": "ok"
   },
   {
    "kind": "player",
@@ -16596,9 +16597,9 @@
    "pack": "VoI",
    "uuid": "93a364f6-2a0f-4872-9770-aa7a1bd30d3d",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/93a364f6-2a0f-4872-9770-aa7a1bd30d3d.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh/07006.webp",
+   "sha256": "34c9083e26b7e4ff8cc39fe44aba0b3981b4a70c50970af4ed4538780caa0d6c",
+   "status": "ok"
   },
   {
    "kind": "player",
@@ -16609,9 +16610,9 @@
    "pack": "VoI",
    "uuid": "0567c2df-677c-4529-985a-54621088fe58",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/0567c2df-677c-4529-985a-54621088fe58.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh/07007.webp",
+   "sha256": "c13c06a73880c21186db678474985862ee65790e284c4ef9c5eebb80b1a4f84e",
+   "status": "ok"
   },
   {
    "kind": "player",
@@ -16622,9 +16623,9 @@
    "pack": "VoI",
    "uuid": "6f8508d7-bb11-4d5c-a077-80a35e00105e",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/6f8508d7-bb11-4d5c-a077-80a35e00105e.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh/07008.webp",
+   "sha256": "ee64a32796bffe7a36a7f7c23a220cc24629dc30c22336bb187b65c818fcb771",
+   "status": "ok"
   },
   {
    "kind": "player",
@@ -16635,9 +16636,9 @@
    "pack": "VoI",
    "uuid": "9463354a-3f6d-43e5-acee-0ea42f8b4403",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/9463354a-3f6d-43e5-acee-0ea42f8b4403.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh/07009.webp",
+   "sha256": "c269ae1fd5b538280e2cbcf511eed0db5ac79c1da5fe623ba293bd0c4894afad",
+   "status": "ok"
   },
   {
    "kind": "player",
@@ -16648,9 +16649,9 @@
    "pack": "VoI",
    "uuid": "e6ee53f4-36e4-4671-9d76-8974134d052e",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/e6ee53f4-36e4-4671-9d76-8974134d052e.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh/07010.webp",
+   "sha256": "585a535215e1907a2e400a3c083556b9b8f3e16946ed9e7023fed699bb90e6c5",
+   "status": "ok"
   },
   {
    "kind": "player",
@@ -16661,9 +16662,9 @@
    "pack": "VoI",
    "uuid": "b9e3d591-5973-4f35-90b8-d74d0aeabcc7",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/b9e3d591-5973-4f35-90b8-d74d0aeabcc7.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh/07011.webp",
+   "sha256": "7db71ca532475c4de094a1ef9336338dc84a098509fb563d726e260768e035f1",
+   "status": "ok"
   },
   {
    "kind": "player",
@@ -16674,9 +16675,9 @@
    "pack": "VoI",
    "uuid": "cfba1adb-5d73-4d46-b10b-b3af003f0e90",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/cfba1adb-5d73-4d46-b10b-b3af003f0e90.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh/07012.webp",
+   "sha256": "f09dbaa591e19d0ed51f1074acec105430ebe95b54144a1af3a9f01e1af3a54b",
+   "status": "ok"
   },
   {
    "kind": "player",
@@ -16700,9 +16701,9 @@
    "pack": "VoI",
    "uuid": "2867f4c6-b458-4caa-bde2-1a6266c094d6",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/2867f4c6-b458-4caa-bde2-1a6266c094d6.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh/07014.webp",
+   "sha256": "a597bd1f53d4f2f9f5cad01e05511d558dcdce963b33e1433dfc7fb6ed6ad85d",
+   "status": "ok"
   },
   {
    "kind": "player",
@@ -16713,9 +16714,9 @@
    "pack": "VoI",
    "uuid": "9de50e07-a3a3-4049-908c-c0463aabf91f",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/9de50e07-a3a3-4049-908c-c0463aabf91f.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh/07015.webp",
+   "sha256": "551432911d42636eeb3a69d44b0e99be2a27a55b218e46260c26242d97a76260",
+   "status": "ok"
   },
   {
    "kind": "player",
@@ -45989,9 +45990,9 @@
    "pack": "TFotW",
    "uuid": "926d92fd-b7b8-4f13-8018-3f632c84a3d7",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/926d92fd-b7b8-4f13-8018-3f632c84a3d7.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Overcome-by-Fear-TFotW.webp",
+   "sha256": "16c8335e67455696f6854b72e058bbfeba09ae5de3673ed1d15edd78e81010e5",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46002,9 +46003,9 @@
    "pack": "TFotW",
    "uuid": "4d904ec3-1c74-4091-861d-c543412b5443",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/4d904ec3-1c74-4091-861d-c543412b5443.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Stone-of-Erech-TFotW.webp",
+   "sha256": "7107f8097f334ac898a737502ce2b5cb766a71bb2d55e1d8b023c9d9116c098d",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46015,9 +46016,9 @@
    "pack": "TFotW",
    "uuid": "d4e4ab9d-d5ea-4d33-89f1-d8d24d166002",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/d4e4ab9d-d5ea-4d33-89f1-d8d24d166002.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Dark-Door-TFotW.webp",
+   "sha256": "336ca37bf6887575b80d795f534d0eeb04372a96ea02c7d87b895bfa9c913bdf",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46028,9 +46029,9 @@
    "pack": "TFotW",
    "uuid": "87ca18e7-934a-4da9-bbb0-3a66f3d1b4c3",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/87ca18e7-934a-4da9-bbb0-3a66f3d1b4c3.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Trysting-Place-TFotW.webp",
+   "sha256": "38c075fc2f9b76901ce400777c9f781ad230d63a57eb8a560ebd3e734a55d4eb",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46041,9 +46042,9 @@
    "pack": "TFotW",
    "uuid": "70fc56ec-dca4-485a-8c5e-7d0cf4e17038",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/70fc56ec-dca4-485a-8c5e-7d0cf4e17038.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Deadly-Road-TFotW.webp",
+   "sha256": "16e37e6289046b02186d4e135c83e4dc2cd3c3a614ebc9a985d37d9827342422",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46054,9 +46055,9 @@
    "pack": "TFotW",
    "uuid": "46e10da4-a188-4502-b53f-6644495a1319",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/46e10da4-a188-4502-b53f-6644495a1319.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Haunted-Path-TFotW.webp",
+   "sha256": "ffa01fa62b121bc2bc713f8db6f609a35257a85dc8413e3194232e9564ecceb9",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46067,9 +46068,9 @@
    "pack": "TFotW",
    "uuid": "78520dc7-5891-47f3-8782-ca930c434374",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/78520dc7-5891-47f3-8782-ca930c434374.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Dead-Man-of-Dunharrow-TFotW.webp",
+   "sha256": "174fc20efefcb95758fcab7c9316553c8212f1d1245e4e700470e3b806326507",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46080,9 +46081,9 @@
    "pack": "TFotW",
    "uuid": "abfe3930-7bca-4ce8-9594-038ad4846205",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/abfe3930-7bca-4ce8-9594-038ad4846205.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Faithless-Dead-TFotW.webp",
+   "sha256": "fba18f707cdeb22c7a29164a9bb629de379a4bbd8d504a9f32d06d3b4bb916ac",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46093,9 +46094,9 @@
    "pack": "TFotW",
    "uuid": "28b27afb-c966-4960-a4e7-5e5364e45c05",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/28b27afb-c966-4960-a4e7-5e5364e45c05.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Ghosts-of-Men-TFotW.webp",
+   "sha256": "9eaa238821cb499ba4a4f21b8e323bbbc5b53c13d9d361dde0d9217413249c7d",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46106,9 +46107,9 @@
    "pack": "TFotW",
    "uuid": "8a5f4d2e-9558-413f-9913-376ec6a0c184",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/8a5f4d2e-9558-413f-9913-376ec6a0c184.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Shadow-Host-TFotW.webp",
+   "sha256": "be14bff8eed96bf54edc525b72efab01137d46ea863788d0f6e4b0418bee6a6e",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46119,9 +46120,9 @@
    "pack": "TFotW",
    "uuid": "7cf91fea-06b4-43f3-ae5d-96f00884fd71",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/7cf91fea-06b4-43f3-ae5d-96f00884fd71.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Blood-Runs-Chill-TFotW.webp",
+   "sha256": "a33c024ace26f8f30d90b789d99f5ecc969ca19ec6e8bce7286b7dba551c3d80",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46132,9 +46133,9 @@
    "pack": "TFotW",
    "uuid": "faacffc1-0c11-42ea-aca9-96982cc80e7a",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/faacffc1-0c11-42ea-aca9-96982cc80e7a.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Way-is-Shut-TFotW.webp",
+   "sha256": "01c57ed35c48e055b66dfaea86a743b3be3b1b5754c51a23d50f2b42e7f03098",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46145,9 +46146,9 @@
    "pack": "TFotW",
    "uuid": "474616b8-11f2-44fe-bad3-a9d3e2bdd208",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/474616b8-11f2-44fe-bad3-a9d3e2bdd208.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Whispers-in-the-Dark-TFotW.webp",
+   "sha256": "5ecb653cbc934845addcf80a8fe2de1a8294c2103c3a2b3cdfa5270ab93435fb",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46158,9 +46159,9 @@
    "pack": "TFotW",
    "uuid": "06ff6757-f80c-499b-8450-1e85e793d02c",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/06ff6757-f80c-499b-8450-1e85e793d02c.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/No-Turning-Back-TFotW.webp",
+   "sha256": "70af5d4394c3313828977f72a55e104f2c7dc5ac93f293fab0bd0f69cea79ada",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46171,9 +46172,9 @@
    "pack": "TFotW",
    "uuid": "83dd1a59-118c-468d-a47e-e472b066ff3e",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/83dd1a59-118c-468d-a47e-e472b066ff3e.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Great-Corsair-Ship-TFotW.webp",
+   "sha256": "e770e4fe5e20ab13f59d266eb6f2289b8e4d25873e87d0aaa5e00704e1af6d5f",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46184,9 +46185,9 @@
    "pack": "TFotW",
    "uuid": "f3ffbb95-5024-41d4-b783-d5fbff5bfa32",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/f3ffbb95-5024-41d4-b783-d5fbff5bfa32.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Umbar-War-Galley-TFotW.webp",
+   "sha256": "9aa39cee918fd9e19354b604bcd197f83aa90db7f640a97035c6aa50ed7a4c63",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46197,9 +46198,9 @@
    "pack": "TFotW",
    "uuid": "9c6c003c-b9c7-4240-9e59-414d31b4be3c",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/9c6c003c-b9c7-4240-9e59-414d31b4be3c.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Corsair-Dromon-TFotW.webp",
+   "sha256": "eba02d5867fe0ddec5371e7ada20a606debbe3fcd2447afb2989db08a4f8206e",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46210,9 +46211,9 @@
    "pack": "TFotW",
    "uuid": "688d04e8-80d8-4ea8-9274-0712f26fac9b",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/688d04e8-80d8-4ea8-9274-0712f26fac9b.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Port-of-Pelargir-TFotW.webp",
+   "sha256": "33214ab3a075eabf213b7d9b3254443c56b60914da6b93eac27d4afe5b93a8b6",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46223,9 +46224,9 @@
    "pack": "TFotW",
    "uuid": "2251670c-c03c-4fd7-9621-c179c9ce79f8",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/2251670c-c03c-4fd7-9621-c179c9ce79f8.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Pelargir-Quays-TFotW.webp",
+   "sha256": "fc23c47fa8ac105774b72a554c955a743512f5fc9e03d077f2ca2bcccff55f02",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46236,9 +46237,9 @@
    "pack": "TFotW",
    "uuid": "87464aa2-e890-4151-8a93-55c2be3e44b2",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/87464aa2-e890-4151-8a93-55c2be3e44b2.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Corsair-Captain-TFotW.webp",
+   "sha256": "18350bcec17f7be0c9310ff09cb5794ed4c798c6e2d348483b2bbe8a78241376",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46249,9 +46250,9 @@
    "pack": "TFotW",
    "uuid": "22c55625-210c-4843-81ee-d8d6430885b0",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/22c55625-210c-4843-81ee-d8d6430885b0.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Corsair-of-Umbar-TFotW.webp",
+   "sha256": "edd5a2fec481dab7199e66698333073de3d0b737d6e14837ee1def068a66305b",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46262,9 +46263,9 @@
    "pack": "TFotW",
    "uuid": "8d3c19e0-28f2-4a3d-91b2-8e9911ac4c91",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/8d3c19e0-28f2-4a3d-91b2-8e9911ac4c91.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Umbar-Pirate-Crew-TFotW.webp",
+   "sha256": "729ea0d846336fff6d62746e45c8ee261779c52f9b411fb5641a54804cfa2a54",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46275,9 +46276,9 @@
    "pack": "TFotW",
    "uuid": "2c3f8a11-c7a5-4709-ab8d-7435763f558b",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/2c3f8a11-c7a5-4709-ab8d-7435763f558b.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Haradrim-Pirate-TFotW.webp",
+   "sha256": "b04fa374e1635517464f78f5e950790f85ee9a6605d7e010c27b7aa7e0ee16b0",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46288,9 +46289,9 @@
    "pack": "TFotW",
    "uuid": "a7ac2b78-52a7-4bd9-b37f-3d424876c7d8",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/a7ac2b78-52a7-4bd9-b37f-3d424876c7d8.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Fell-Folk-of-Umbar-TFotW.webp",
+   "sha256": "649217fa61eaab63aa1c3ccf54de5915ef47205d1d3cc89e0424b7865b3c7ad6",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46301,9 +46302,9 @@
    "pack": "TFotW",
    "uuid": "1600dd03-7b19-4dd2-924c-30c30b09cb9d",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/1600dd03-7b19-4dd2-924c-30c30b09cb9d.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Black-Sails-TFotW.webp",
+   "sha256": "0b5a17301d94cf0d7e1edf470d47a82883962564af45bb7fdd49a0e04aa8800f",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46314,9 +46315,9 @@
    "pack": "TFotW",
    "uuid": "a7a8a783-8a22-49fd-a1b7-42e92a44f78c",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/a7a8a783-8a22-49fd-a1b7-42e92a44f78c.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Raiding-the-Coasts-TFotW.webp",
+   "sha256": "e0a59759273532ac48eed1ea568a110002c0a441aeca98844407dece00cc04e7",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46327,9 +46328,9 @@
    "pack": "TFotW",
    "uuid": "1db13c26-879b-49cd-9f94-8ba1a0c4f5a4",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/1db13c26-879b-49cd-9f94-8ba1a0c4f5a4.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Driven-to-the-Brink-TFotW.webp",
+   "sha256": "53ebfbe698677f5ef16e98ea7cacc91191b039fbde1077460e12dafdbd5129e0",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46340,9 +46341,9 @@
    "pack": "TFotW",
    "uuid": "47360b1a-2428-4795-aec5-30f0a8805d76",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/47360b1a-2428-4795-aec5-30f0a8805d76.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Minas-Tirith-TFotW.webp",
+   "sha256": "8ba397c48ae8742ee3e196617f3d2bb6608c246b7548e9f0763572ace503fbd3",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46353,9 +46354,9 @@
    "pack": "TFotW",
    "uuid": "09b27f8f-60ab-4764-8c78-52fb09597921",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/09b27f8f-60ab-4764-8c78-52fb09597921.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Grond-TFotW.webp",
+   "sha256": "a0402660f6572d01caca726489125291e59bcb017a238d4fbd6d7684c33012b6",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46366,9 +46367,9 @@
    "pack": "TFotW",
    "uuid": "0002f646-cdaf-40cf-9993-faccb260c583",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/0002f646-cdaf-40cf-9993-faccb260c583.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Gate-of-Gondor-TFotW.webp",
+   "sha256": "92d7be9bed00bea31001b9649b25f1c21fb9c49cd5429fb30cb894e4f910d4ef",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46379,9 +46380,9 @@
    "pack": "TFotW",
    "uuid": "7c069b32-99b8-42b7-a310-893d925c8ca7",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/7c069b32-99b8-42b7-a310-893d925c8ca7.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/City-Wall-TFotW.webp",
+   "sha256": "44d70925b61f47b7344e1801250496911b76456d4a9c4b18d71ac79dc50e7b1f",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46392,9 +46393,9 @@
    "pack": "TFotW",
    "uuid": "3612e715-a474-4911-a247-58c76f2ef277",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/3612e715-a474-4911-a247-58c76f2ef277.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Pelennor-Field-TFotW.webp",
+   "sha256": "6a7d8a6f9410aad0149e1cbc35d8c0ce9bb65133b31d8d34644912f30919abd0",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46405,9 +46406,9 @@
    "pack": "TFotW",
    "uuid": "bf56e98f-1aa5-4e79-a116-d99bf2408e07",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/bf56e98f-1aa5-4e79-a116-d99bf2408e07.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Fire-filled-Trench-TFotW.webp",
+   "sha256": "936cbb7a3fd14f87ee24e00e5aad73780e96ec7416c55f10828dd08af57a21d6",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46418,9 +46419,9 @@
    "pack": "TFotW",
    "uuid": "b5afe22c-f57f-4e26-993f-ef40fba8e105",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/b5afe22c-f57f-4e26-993f-ef40fba8e105.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Siege-Tower-TFotW.webp",
+   "sha256": "c517cc8a68725779f010e79d4cf7f9954b5939ded35d217ef7c25df51fa72469",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46431,9 +46432,9 @@
    "pack": "TFotW",
    "uuid": "9be86dec-0c44-4468-ac29-260dedaca54b",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/9be86dec-0c44-4468-ac29-260dedaca54b.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Black-Serpent-TFotW.webp",
+   "sha256": "2e059ae63771161b4cfdf027bc3481cb1c2281348435f7229819669f61668e0f",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46444,9 +46445,9 @@
    "pack": "TFotW",
    "uuid": "ae16b39f-ed64-4aa9-b6b8-1fbfbda70e6f",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/ae16b39f-ed64-4aa9-b6b8-1fbfbda70e6f.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/War-Mumak-TFotW.webp",
+   "sha256": "b5de25d4dd2f9eef77d83d25d3f1955a03628553859d1617a4fdc686d47073f2",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46457,9 +46458,9 @@
    "pack": "TFotW",
    "uuid": "097b7d54-bfa9-4b13-a1b8-337b03cac21d",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/097b7d54-bfa9-4b13-a1b8-337b03cac21d.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Southron-Champion-TFotW.webp",
+   "sha256": "ae878b3af089d535af72e3c34b5c5c7089e9229077a3442536b71c58bf942c6c",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46470,9 +46471,9 @@
    "pack": "TFotW",
    "uuid": "b8d832c5-e9f8-4690-a60c-07c09980ea27",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/b8d832c5-e9f8-4690-a60c-07c09980ea27.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Morgul-Captain-TFotW.webp",
+   "sha256": "81f66bcc3cc482bdf0d4c37c6b090689cd4b5ffb6734728bd9010dc66d42fb0b",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46483,9 +46484,9 @@
    "pack": "TFotW",
    "uuid": "83d7214f-d8ae-47f8-bd0a-c48f9a187568",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/83d7214f-d8ae-47f8-bd0a-c48f9a187568.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Orc-of-the-Eye-TFotW.webp",
+   "sha256": "920d894701c3abbda4764cc9a3856258a747b30c06409d1f9c210cfcf518ee34",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46496,9 +46497,9 @@
    "pack": "TFotW",
    "uuid": "d7a51190-1d0e-4363-b71d-6bb44a133e1b",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/d7a51190-1d0e-4363-b71d-6bb44a133e1b.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Mordor-Orc-TFotW.webp",
+   "sha256": "e9231ecfd273716e75a5e29c6f5c3786b321fd8441e5b5c977cf350d98d8f315",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46509,9 +46510,9 @@
    "pack": "TFotW",
    "uuid": "a531dc43-7feb-4e63-96ad-a33cdb3b717a",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/a531dc43-7feb-4e63-96ad-a33cdb3b717a.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Rammas-is-Breached-TFotW.webp",
+   "sha256": "f7d13bed1f569c1a04a498bb58ced0cdb862d917bb0d0adabc76e086ce089fac",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46522,9 +46523,9 @@
    "pack": "TFotW",
    "uuid": "6e85113d-a2a6-44a7-895c-ca5115f7b7d2",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/6e85113d-a2a6-44a7-895c-ca5115f7b7d2.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Fell-Beast-TFotW.webp",
+   "sha256": "cbe4034f14d7dc0e2bdda8daf24e92c774f34b7f6e8d1f84161fb631d8229d10",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46535,9 +46536,9 @@
    "pack": "TFotW",
    "uuid": "9f1f5ce8-2fa6-40e3-ba7c-34fb94db014b",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/9f1f5ce8-2fa6-40e3-ba7c-34fb94db014b.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Black-Dart-TFotW.webp",
+   "sha256": "f41eace3dc5808ff3b37caead9d28d385a6176e536aee4baddb3ae579a860bfa",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46548,9 +46549,9 @@
    "pack": "TFotW",
    "uuid": "503d55b2-1f02-46d2-b672-230912c8563e",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/503d55b2-1f02-46d2-b672-230912c8563e.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Spells-of-Ruin-TFotW.webp",
+   "sha256": "94bcfb60ba2240b188aa32685bb6c0054bac416b8907327831e49f7a09a168c2",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46561,9 +46562,9 @@
    "pack": "TFotW",
    "uuid": "4a6539aa-2404-430f-94ab-0f674d965adc",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/4a6539aa-2404-430f-94ab-0f674d965adc.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Dread-and-Despair-TFotW.webp",
+   "sha256": "3dceeb0b33aa45569bb2190115dad89b0aeea153992684f32adacaa51afa7e3d",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46574,9 +46575,9 @@
    "pack": "TFotW",
    "uuid": "70e85866-2f0a-4f4b-b39d-34d36adfc7ab",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/70e85866-2f0a-4f4b-b39d-34d36adfc7ab.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Shadow-of-Mordor-TFotW.webp",
+   "sha256": "fa8b3978f3868f45e2e83adbf530518fbf829a9b12be0f9e75a2b1042978458e",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46587,9 +46588,9 @@
    "pack": "TFotW",
    "uuid": "0c030b4b-1012-4b80-a942-0177e3923903",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/0c030b4b-1012-4b80-a942-0177e3923903.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Wraith-on-Wings-TFotW.webp",
+   "sha256": "1cf4c3c04d1e7217dc4898f4579b37270e8198f807fcd52ba55db1d225821021",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46600,9 +46601,9 @@
    "pack": "TFotW",
    "uuid": "2878bd63-b20b-419a-85a2-dff419864e08",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/2878bd63-b20b-419a-85a2-dff419864e08.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Forbidden-Door-TFotW.webp",
+   "sha256": "77289d601d52811cd6ce75402a4b1f1317a58f8a5cee8d9f7b0778df4a60d8e7",
+   "status": "ok"
   },
   {
    "kind": "questB",
@@ -46613,9 +46614,9 @@
    "pack": "TFotW",
    "uuid": "2878bd63-b20b-419a-85a2-dff419864e08",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/2878bd63-b20b-419a-85a2-dff419864e08.B.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Forbidden-Door-TFotW.B.webp",
+   "sha256": "2116d38f09357bd63ecaa99709214a1dc1854d2441f276ee03b93d127b0bd067",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46626,9 +46627,9 @@
    "pack": "TFotW",
    "uuid": "820e2015-fc9c-4547-8e93-d4eb7cd79691",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/820e2015-fc9c-4547-8e93-d4eb7cd79691.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Paths-of-the-Dead-TFotW.webp",
+   "sha256": "472cd4896ef392c2ccb9fe4bea6d50d99e29c0b3433eb879663a4fe78c26ab93",
+   "status": "ok"
   },
   {
    "kind": "questB",
@@ -46639,9 +46640,9 @@
    "pack": "TFotW",
    "uuid": "820e2015-fc9c-4547-8e93-d4eb7cd79691",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/820e2015-fc9c-4547-8e93-d4eb7cd79691.B.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Paths-of-the-Dead-TFotW.B.webp",
+   "sha256": "b817c5f462d8dc358f31c984fc695b43139748547a8787a3bd56cf3cb5d1132f",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46652,9 +46653,9 @@
    "pack": "TFotW",
    "uuid": "90203b8d-a359-4f18-8314-12815090a9d0",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/90203b8d-a359-4f18-8314-12815090a9d0.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Dead-are-Following-TFotW.webp",
+   "sha256": "4e10b7af2bafc53cc56dad927cdd85971d080071e4ef487ef008b2770bd2422a",
+   "status": "ok"
   },
   {
    "kind": "questB",
@@ -46665,9 +46666,9 @@
    "pack": "TFotW",
    "uuid": "90203b8d-a359-4f18-8314-12815090a9d0",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/90203b8d-a359-4f18-8314-12815090a9d0.B.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Dead-are-Following-TFotW.B.webp",
+   "sha256": "42dbd54119b99b3a4ddf13fac4118a768bd175e3d5cb0ab2d57ada30fa6bfe1c",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46678,9 +46679,9 @@
    "pack": "TFotW",
    "uuid": "c444788b-73ea-4729-a07a-593220479639",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/c444788b-73ea-4729-a07a-593220479639.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Passing-of-the-Grey-Company-Campaign-TFotW.webp",
+   "sha256": "4b5f92fe8cac05d04563ddc4b7213e323291798544865e516ead4316fd2a5c5a",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46691,9 +46692,9 @@
    "pack": "TFotW",
    "uuid": "a25b4139-f1d0-4466-83f2-f06fa3e0c30b",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/a25b4139-f1d0-4466-83f2-f06fa3e0c30b.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Army-of-the-Dead-Enemy-TFotW.webp",
+   "sha256": "6ea9b0a020808d4a70b17bd4722afe1ad7bf36bf08b039799ba36de1cf8a5164",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46704,9 +46705,9 @@
    "pack": "TFotW",
    "uuid": "a25b4139-f1d0-4466-83f2-f06fa3e0c30b",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/a25b4139-f1d0-4466-83f2-f06fa3e0c30b.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Army-of-the-Dead-Objective-Ally-TFotW.webp",
+   "sha256": "6ea9b0a020808d4a70b17bd4722afe1ad7bf36bf08b039799ba36de1cf8a5164",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46717,9 +46718,9 @@
    "pack": "TFotW",
    "uuid": "7ea102d6-77de-431f-9475-c9be874a5195",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/7ea102d6-77de-431f-9475-c9be874a5195.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Attack-on-Pelargir-TFotW.webp",
+   "sha256": "676afb8487029928027166701bc24be4ef2040eaad0b89884f9c613a817dbd6b",
+   "status": "ok"
   },
   {
    "kind": "questB",
@@ -46730,9 +46731,9 @@
    "pack": "TFotW",
    "uuid": "7ea102d6-77de-431f-9475-c9be874a5195",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/7ea102d6-77de-431f-9475-c9be874a5195.B.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Attack-on-Pelargir-TFotW.B.webp",
+   "sha256": "42603b9f9279a7141f9c80a2425f13b9a23b1e84b48ceeadf079155691b5a890",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46743,9 +46744,9 @@
    "pack": "TFotW",
    "uuid": "949e2607-cbb5-4ae3-af26-f9d7e00e09d2",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/949e2607-cbb5-4ae3-af26-f9d7e00e09d2.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Siege-of-Gondor-Campaign-TFotW.webp",
+   "sha256": "9962e25a2d98b8056c7d47c61e7b9c05e89ed239de1e4ad22586ff3b308a5b63",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46756,9 +46757,9 @@
    "pack": "TFotW",
    "uuid": "0140d146-771e-4f19-9de8-d7cf0b4d8268",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/0140d146-771e-4f19-9de8-d7cf0b4d8268.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Corsair-Fleet-Corsair-TFotW.webp",
+   "sha256": "ba60eb089aae54f6fc67ab88526b94e68a6408ed1a9d8e9097a83362d2747e3c",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46769,9 +46770,9 @@
    "pack": "TFotW",
    "uuid": "b002c7a6-f827-4a7d-8432-c3f2f995089e",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/b002c7a6-f827-4a7d-8432-c3f2f995089e.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Corsair-Fleet-Gondor-TFotW.webp",
+   "sha256": "3d36bf1ddbf175f66596a1718fcae8746b15f492e1e50bb13bd8b1c42cd2d6d8",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46782,9 +46783,9 @@
    "pack": "TFotW",
    "uuid": "77a7f095-bd59-45a1-a866-d58e17e3bd6d",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/77a7f095-bd59-45a1-a866-d58e17e3bd6d.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Garrison-of-Gondor-TFotW.webp",
+   "sha256": "f1b7eabe2c72387de9f3d1075bf0b72287f631ee2e895e5c908cbd7af35f215d",
+   "status": "ok"
   },
   {
    "kind": "questB",
@@ -46795,9 +46796,9 @@
    "pack": "TFotW",
    "uuid": "77a7f095-bd59-45a1-a866-d58e17e3bd6d",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/77a7f095-bd59-45a1-a866-d58e17e3bd6d.B.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Garrison-of-Gondor-TFotW.B.webp",
+   "sha256": "3060d3d9c76444fefd82c0a4738c895c0d0340546d266021be0644de6e9204f3",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46808,9 +46809,9 @@
    "pack": "TFotW",
    "uuid": "58616050-8a7f-4a9b-a8dc-e0d09e383741",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/58616050-8a7f-4a9b-a8dc-e0d09e383741.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Retreat-from-Osgiliath-TFotW.webp",
+   "sha256": "c974b4953dd2b228f5f7cdeb4cddff35c4000f7252aac77808375e64dce86342",
+   "status": "ok"
   },
   {
    "kind": "questB",
@@ -46821,9 +46822,9 @@
    "pack": "TFotW",
    "uuid": "58616050-8a7f-4a9b-a8dc-e0d09e383741",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/58616050-8a7f-4a9b-a8dc-e0d09e383741.B.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Retreat-from-Osgiliath-TFotW.B.webp",
+   "sha256": "c34f39462e8dce9c064937995a7117d3d7607b6abba8a5ad82a78bc32533fc78",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46834,9 +46835,9 @@
    "pack": "TFotW",
    "uuid": "98a48eec-841f-48da-83e7-fa148a03de8b",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/98a48eec-841f-48da-83e7-fa148a03de8b.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-White-City-Besieged-TFotW.webp",
+   "sha256": "da1bbb562a807ed5aa8605012193cc964c9ab0d89ac049dc95c9de786619dd35",
+   "status": "ok"
   },
   {
    "kind": "questB",
@@ -46847,9 +46848,9 @@
    "pack": "TFotW",
    "uuid": "98a48eec-841f-48da-83e7-fa148a03de8b",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/98a48eec-841f-48da-83e7-fa148a03de8b.B.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-White-City-Besieged-TFotW.B.webp",
+   "sha256": "4d4f8d6b720f76ac6e6aa2d1d8af44786aacd4d26c49e55df06ce15e1dd7491d",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46860,9 +46861,9 @@
    "pack": "TFotW",
    "uuid": "0507932f-0030-4763-8478-29bb407103d4",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/0507932f-0030-4763-8478-29bb407103d4.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Rohan-has-Come-TFotW.webp",
+   "sha256": "5be2df35a812923940bc77dfa0f5207b085e460590c0ff2900891fa84e4c80c1",
+   "status": "ok"
   },
   {
    "kind": "questB",
@@ -46873,9 +46874,9 @@
    "pack": "TFotW",
    "uuid": "0507932f-0030-4763-8478-29bb407103d4",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/0507932f-0030-4763-8478-29bb407103d4.B.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Rohan-has-Come-TFotW.B.webp",
+   "sha256": "9c3958c5fa2df89d3a3e79a3909d5d0e4ab98713657c5f64fc275ffd059d72c3",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46886,9 +46887,9 @@
    "pack": "TFotW",
    "uuid": "7367d16a-2b23-4a95-9050-266e93d8ab50",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/7367d16a-2b23-4a95-9050-266e93d8ab50.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Fighting-in-the-Fields-TFotW.webp",
+   "sha256": "c8fc07eb52bdebbaa4deb1a1d7131a734c835f947a7776ccc8a044e6dda84007",
+   "status": "ok"
   },
   {
    "kind": "questB",
@@ -46899,9 +46900,9 @@
    "pack": "TFotW",
    "uuid": "7367d16a-2b23-4a95-9050-266e93d8ab50",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/7367d16a-2b23-4a95-9050-266e93d8ab50.B.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Fighting-in-the-Fields-TFotW.B.webp",
+   "sha256": "971d84b9136b4aa62ee266f8503062c35eb88630ebc9907f6cf9282e5a73159f",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46912,9 +46913,9 @@
    "pack": "TFotW",
    "uuid": "10557685-71b2-4f2e-b831-4b19d023ee46",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/10557685-71b2-4f2e-b831-4b19d023ee46.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Battle-of-the-Pelennor-Fields-Campaign-TFotW.webp",
+   "sha256": "30d3e4737ddc7eb2f06b5568f40284fed18b82c8af5ba8053b3fa8c8f619337a",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46925,9 +46926,9 @@
    "pack": "TFotW",
    "uuid": "15734584-04cf-41b7-8a86-d1a435d6f8dc",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/15734584-04cf-41b7-8a86-d1a435d6f8dc.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Witch-king-Captain-TFotW.webp",
+   "sha256": "e9764e6b54e7c0f3cbd837864c35691188fbe90e6355cd13689a3b2331dbe00f",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -46938,9 +46939,9 @@
    "pack": "TFotW",
    "uuid": "15734584-04cf-41b7-8a86-d1a435d6f8dc",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/15734584-04cf-41b7-8a86-d1a435d6f8dc.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Witch-king-Sorcerer-TFotW.webp",
+   "sha256": "e9764e6b54e7c0f3cbd837864c35691188fbe90e6355cd13689a3b2331dbe00f",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -52762,9 +52763,9 @@
    "pack": "TLoS",
    "uuid": "8b9b03e6-0036-473a-bdb7-d2d8e74edc69",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/8b9b03e6-0036-473a-bdb7-d2d8e74edc69.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Searching-Eye-TLoS.webp",
+   "sha256": "e2f3374d7eb5c7022f329e377a24fa76f9487480fe2ebf0819bab69687d9930c",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -52775,9 +52776,9 @@
    "pack": "TLoS",
    "uuid": "0e3ce28a-df4b-461e-b47a-299e4c730cc2",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/0e3ce28a-df4b-461e-b47a-299e4c730cc2.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Groping-Dead-TLoS.webp",
+   "sha256": "e7f6d7f67cfdccde42dd2f1d1038263cd214811598580fc5fe39b296f729784b",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -52788,9 +52789,9 @@
    "pack": "TLoS",
    "uuid": "73752e58-5dc1-40ea-b294-3c8f1998142d",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/73752e58-5dc1-40ea-b294-3c8f1998142d.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Dead-Things-TLoS.webp",
+   "sha256": "1cc03552d532a8ed545dbaba213c65dcf718999e738a281103471a3001aaf1e1",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -52801,9 +52802,9 @@
    "pack": "TLoS",
    "uuid": "c1554b49-597c-4d1b-8871-dfbe867253d5",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/c1554b49-597c-4d1b-8871-dfbe867253d5.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Candle-bearer-TLoS.webp",
+   "sha256": "d97e8cf8d87d9fc9130221ba2508342a7a83f47bb324f47b12477c1a98ab21f9",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -52814,9 +52815,9 @@
    "pack": "TLoS",
    "uuid": "e25328c2-1a6b-4dda-866e-02685eff4a88",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/e25328c2-1a6b-4dda-866e-02685eff4a88.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Evil-smelling-Fens-TLoS.webp",
+   "sha256": "a3aa1e4ba6bb3670e39162808489da066fbe25d639b8e33a89dc05606c66db97",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -52827,9 +52828,9 @@
    "pack": "TLoS",
    "uuid": "8893eba4-1f9c-4661-bfc2-bb485e023066",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/8893eba4-1f9c-4661-bfc2-bb485e023066.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Shifting-Quagmire-TLoS.webp",
+   "sha256": "10e8164f058d2458281e7ed59a5d470f3066f65f6ac16f135633720af05c365a",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -52840,9 +52841,9 @@
    "pack": "TLoS",
    "uuid": "1c765fa8-9cb8-4cf4-8e93-daac5bae4fce",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/1c765fa8-9cb8-4cf4-8e93-daac5bae4fce.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Haunted-Mere-TLoS.webp",
+   "sha256": "a4b4806513c5fe33cdb8ca831df24d5763234c7140fe3e14612a53b811d206b3",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -52853,9 +52854,9 @@
    "pack": "TLoS",
    "uuid": "39262ffc-6819-422c-a72a-9baed00f648a",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/39262ffc-6819-422c-a72a-9baed00f648a.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Stagnant-Pools-TLoS.webp",
+   "sha256": "7ded6311b81db1673b18499b2ef1d43bdcd03696131e076836a5c4e492d31bf9",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -52866,9 +52867,9 @@
    "pack": "TLoS",
    "uuid": "3254a776-09e5-4576-9b3c-164cc93e1e26",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/3254a776-09e5-4576-9b3c-164cc93e1e26.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Soft-Mires-TLoS.webp",
+   "sha256": "b2d4654d929f518d839f3c5f872903d8d9d278c9af5864ef9269c107529d5386",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -52879,9 +52880,9 @@
    "pack": "TLoS",
    "uuid": "f214f533-374b-423c-86b5-dca1ab5d048f",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/f214f533-374b-423c-86b5-dca1ab5d048f.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Creeping-Marshes-TLoS.webp",
+   "sha256": "b396018381b0b31cccf4acec6011369a3f5a8f77322109d0763599ee63a6e20c",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -52892,9 +52893,9 @@
    "pack": "TLoS",
    "uuid": "fcc8ad22-ca1f-4fd1-8f84-4955bb683f50",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/fcc8ad22-ca1f-4fd1-8f84-4955bb683f50.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Bitter-Reek-TLoS.webp",
+   "sha256": "5db164bb6e7c79c0ac6c4ce4b4a16df3c9e913f472f29ff3e5a346aa58d54cbc",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -52905,9 +52906,9 @@
    "pack": "TLoS",
    "uuid": "694650d0-9ba6-4573-bf13-10ca8eb7995d",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/694650d0-9ba6-4573-bf13-10ca8eb7995d.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/A-Fell-Light-TLoS.webp",
+   "sha256": "707440794ec9c70392fe6e17d542aa1441155781bc734c05ddb7f110162dc622",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -52918,9 +52919,9 @@
    "pack": "TLoS",
    "uuid": "2522fc59-6617-4c74-9723-4a120431aa3f",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/2522fc59-6617-4c74-9723-4a120431aa3f.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Black-Gate-TLoS.webp",
+   "sha256": "7eef686e0b4cfaa47dc92c1cddf7fb30830cc0d1c01908c38d136127fd9bb284",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -52931,9 +52932,9 @@
    "pack": "TLoS",
    "uuid": "62dea330-3ec7-4db0-bea7-382cb3454f83",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/62dea330-3ec7-4db0-bea7-382cb3454f83.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Man-of-Harad-TLoS.webp",
+   "sha256": "a501be2c86da3dc7db0cedcfaca2e14bbd85f33944ca20a0ea5369b9f16db760",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -52944,9 +52945,9 @@
    "pack": "TLoS",
    "uuid": "fc7041f2-b7f8-44a2-bf4c-beadd8016470",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/fc7041f2-b7f8-44a2-bf4c-beadd8016470.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Captain-of-Harad-TLoS.webp",
+   "sha256": "7be843d2be5aba2a29aa98b800c7a19ded4297a213692fe8a5e05c07a64f335b",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -52957,9 +52958,9 @@
    "pack": "TLoS",
    "uuid": "22f6fc49-6a00-4104-a9fa-4823435175a1",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/22f6fc49-6a00-4104-a9fa-4823435175a1.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Cross-roads-TLoS.webp",
+   "sha256": "bc7aadc7227dd62c82e2666cbd66288b2b0e3cc66598d9cb0b72b43c5c24fb5e",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -52970,9 +52971,9 @@
    "pack": "TLoS",
    "uuid": "62ceb94f-5838-4c5c-9547-8786c4c64051",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/62ceb94f-5838-4c5c-9547-8786c4c64051.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Henneth-Annun-TLoS.webp",
+   "sha256": "0d644a4203f3a3cdca70178f1ac544f4b0dd0ce9900b1136ba0e8640702f6472",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -52983,9 +52984,9 @@
    "pack": "TLoS",
    "uuid": "2b9c8fa1-a5c3-441e-95c1-c10c85948dc1",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/2b9c8fa1-a5c3-441e-95c1-c10c85948dc1.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Southward-Road-TLoS.webp",
+   "sha256": "a1b36e8f416648a47e1b555122fb09fad56a8cf5016cd0c0f1bb9e05462385d6",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -52996,9 +52997,9 @@
    "pack": "TLoS",
    "uuid": "8fa4b202-cb8e-470d-ae2b-aa945ac652c5",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/8fa4b202-cb8e-470d-ae2b-aa945ac652c5.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Foothills-of-Ephel-Duath-TLoS.webp",
+   "sha256": "0678cfe76de2eedde8c22ca692cdef0bbca3c638df7f2cafdf45330e387b51f5",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53009,9 +53010,9 @@
    "pack": "TLoS",
    "uuid": "808f60ad-a63f-4504-9b67-4fd45d630add",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/808f60ad-a63f-4504-9b67-4fd45d630add.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Ithilien-Woods-TLoS.webp",
+   "sha256": "7abe628620adf12ab6afc8e8d9380d93d7a8a0bb76769fafc8b74193bee94633",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53022,9 +53023,9 @@
    "pack": "TLoS",
    "uuid": "de09949d-6bc8-470c-a500-6b1fd4a5f391",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/de09949d-6bc8-470c-a500-6b1fd4a5f391.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Hills-of-Ithilien-TLoS.webp",
+   "sha256": "b7f1538ed9d580b37cbf3e7ce1fd6b3cbd58a07a8e19fa64343147bc3c697386",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53035,9 +53036,9 @@
    "pack": "TLoS",
    "uuid": "2591dde9-00c6-488e-a109-94136e4f9876",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/2591dde9-00c6-488e-a109-94136e4f9876.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Dark-Lord's-Summons-TLoS.webp",
+   "sha256": "1ccf8260a460553ca3e91c4547895b7ba33f06e4258a6f8776117b88637eee16",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53048,9 +53049,9 @@
    "pack": "TLoS",
    "uuid": "b774e6b4-461c-46eb-9398-dcb2af4cfab5",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/b774e6b4-461c-46eb-9398-dcb2af4cfab5.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Marching-Up-the-Road-TLoS.webp",
+   "sha256": "6c9e5e91a7722c055d0cec767d61563de77acf4dfe38f4b574c1cfb98237f982",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53061,9 +53062,9 @@
    "pack": "TLoS",
    "uuid": "d12e280f-44f3-469e-a2e8-e3bfd541f909",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/d12e280f-44f3-469e-a2e8-e3bfd541f909.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Fierce-Southrons-TLoS.webp",
+   "sha256": "755a3e37a39a711d977f1825093dc2accf7a9396e7a43a1bb14f35d020d0dac8",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53074,9 +53075,9 @@
    "pack": "TLoS",
    "uuid": "75c1d9eb-9ade-4c71-a918-74cf5b526ff2",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/75c1d9eb-9ade-4c71-a918-74cf5b526ff2.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Arrows-Thick-in-the-Air-TLoS.webp",
+   "sha256": "43b29595522c060ecf93aa44bc4c40c4d629449ede0c5d969ca12ee6efe5c7d6",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53087,9 +53088,9 @@
    "pack": "TLoS",
    "uuid": "c03a693c-4fcf-4df5-868b-88e1df8531d9",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/c03a693c-4fcf-4df5-868b-88e1df8531d9.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Shelob-TLoS.webp",
+   "sha256": "bc4a1a5b5177a6bb3ea28a3fead651102415711872f8857ecc12556f33a5e4a5",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53100,9 +53101,9 @@
    "pack": "TLoS",
    "uuid": "8ba47620-aead-42a5-a057-41cb038f5234",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/8ba47620-aead-42a5-a057-41cb038f5234.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Morgul-Orc-TLoS.webp",
+   "sha256": "f2533db3cded57c1aded6d2d7e1e522746ffa16ff41b0b38bf03e0b3e0fb2629",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53126,9 +53127,9 @@
    "pack": "TLoS",
    "uuid": "51b6030d-3ce7-4139-b3bc-a408949533e2",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/51b6030d-3ce7-4139-b3bc-a408949533e2.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Morgul-Vale-TLoS.webp",
+   "sha256": "341450417fa43362a633b528b8d0b5af2f80de182f04f75fce9471f4e4a36826",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53139,9 +53140,9 @@
    "pack": "TLoS",
    "uuid": "4a2696f1-65e1-41d5-8828-38ece23167df",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/4a2696f1-65e1-41d5-8828-38ece23167df.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Smeagol's-Secret-Way-TLoS.webp",
+   "sha256": "f36d935f4466ffd8de7bc6372835f9726b78c012f20a3d929811fb8a0c3391bc",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53152,9 +53153,9 @@
    "pack": "TLoS",
    "uuid": "32873634-3a91-4d6f-988a-fb8bb5c16ef3",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/32873634-3a91-4d6f-988a-fb8bb5c16ef3.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Cleft-of-Cirith-Ungol-TLoS.webp",
+   "sha256": "f7bbd52369f034174e1974465968db8dc12491fa5d512e9b09b179d5170b9977",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53165,9 +53166,9 @@
    "pack": "TLoS",
    "uuid": "6da65b9b-39a7-425d-baa1-00b406bcae36",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/6da65b9b-39a7-425d-baa1-00b406bcae36.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Spider's-Lair-TLoS.webp",
+   "sha256": "46b1ce4853daa7358f0630c802d59f9d9d7bacf38d248dcb4aac89e4307a31a1",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53178,9 +53179,9 @@
    "pack": "TLoS",
    "uuid": "31f8955f-40d5-41de-b886-77018b59d717",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/31f8955f-40d5-41de-b886-77018b59d717.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Under-way-TLoS.webp",
+   "sha256": "ee6aa9456ec57f7ca49dfcf205601076cae147eccadf8a4d4d4007892b3c4589",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53191,9 +53192,9 @@
    "pack": "TLoS",
    "uuid": "ae49e8e5-98f1-4562-935f-5e1ab64631e0",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/ae49e8e5-98f1-4562-935f-5e1ab64631e0.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Deep-Dark-Passage-TLoS.webp",
+   "sha256": "a55c88f053574fd77ad90b8e500972de8edb99e62ea8a99d5112083cd63b7be6",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53204,9 +53205,9 @@
    "pack": "TLoS",
    "uuid": "1e2560ab-00ce-45c3-a374-f7bb6a3e6889",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/1e2560ab-00ce-45c3-a374-f7bb6a3e6889.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Den-of-Night-TLoS.webp",
+   "sha256": "dc83d8353f0cc5417ecca40a158bf6eca1dc16f8e546f999517734e5a05557b8",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53217,9 +53218,9 @@
    "pack": "TLoS",
    "uuid": "f77579e7-23f0-4c27-a4e3-e1edcc529e1e",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/f77579e7-23f0-4c27-a4e3-e1edcc529e1e.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Exhalation-of-Decay-TLoS.webp",
+   "sha256": "37efcf641711286c1c82c09a99532d7f81ee397b21c42002efe01856a55cb004",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53230,9 +53231,9 @@
    "pack": "TLoS",
    "uuid": "65c93e63-0284-4449-8158-717d763b3023",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/65c93e63-0284-4449-8158-717d763b3023.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Many-Openings-TLoS.webp",
+   "sha256": "6de56554c294dfc78c61f72d50bc5a23f45e957e1533250e3b78a7eeca27ed19",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53243,9 +53244,9 @@
    "pack": "TLoS",
    "uuid": "a40aef89-ca91-467c-93f3-9afc97bdbc24",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/a40aef89-ca91-467c-93f3-9afc97bdbc24.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/A-Heavy-Burden-TLoS.webp",
+   "sha256": "92db9d3f7e8dc16163ccec884c9815ec716eebc0f0e25583818dd0351ddab691",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53256,9 +53257,9 @@
    "pack": "TLoS",
    "uuid": "74d1310a-6c88-49cd-bac1-a1d4b5bbbcdc",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/74d1310a-6c88-49cd-bac1-a1d4b5bbbcdc.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Morgul-Wraith-TLoS.webp",
+   "sha256": "1de37afb9d98c2abbb2cbcd23dcd3fe7af41a9d6ebb0e14e97a8072a2ffe3ec3",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53269,9 +53270,9 @@
    "pack": "TLoS",
    "uuid": "5e8714e3-0581-4b6f-bf45-414098819626",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/5e8714e3-0581-4b6f-bf45-414098819626.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Call-of-the-Ring-TLoS.webp",
+   "sha256": "8f8a4794716ee6ddf83617fba9d72cd126e289242e8abde29251ce7de426335c",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53282,9 +53283,9 @@
    "pack": "TLoS",
    "uuid": "42e22482-0281-4811-aa65-2b342319ee07",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/42e22482-0281-4811-aa65-2b342319ee07.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/We-Hates-Them-TLoS.webp",
+   "sha256": "4c05c98d22a651fec1c7f3239f9231a968e25193cb34cc28e474aa941397e453",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53295,9 +53296,9 @@
    "pack": "TLoS",
    "uuid": "2163f5ef-63a3-4afc-8084-fe730774d216",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/2163f5ef-63a3-4afc-8084-fe730774d216.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Oliphaunt-TLoS.webp",
+   "sha256": "39497023f742a69c58b8e8b2a2107cde8758aa0291b617b3667b574b36d9f9db",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53308,9 +53309,9 @@
    "pack": "TLoS",
    "uuid": "456329e9-c7c4-42ac-9edd-e769aea198ea",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/456329e9-c7c4-42ac-9edd-e769aea198ea.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Haradrim-Soldier-TLoS.webp",
+   "sha256": "eb15211747f2ce09a2df173a96b089b4deb510bf8e8c8c1c39add69fb8aea418",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53321,9 +53322,9 @@
    "pack": "TLoS",
    "uuid": "c04f4018-e001-4a31-a003-9914e3f585ee",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/c04f4018-e001-4a31-a003-9914e3f585ee.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Haradrim-Archer-TLoS.webp",
+   "sha256": "50a856f7df1889802025388a14faad0c69ab2e1e42746df0272fa36f568e43fa",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53334,9 +53335,9 @@
    "pack": "TLoS",
    "uuid": "e3de3669-64a9-4ab5-a21c-7805e6259267",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/e3de3669-64a9-4ab5-a21c-7805e6259267.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Blocked-Tunnel-TLoS.webp",
+   "sha256": "407fa718b14676dfd7322f60ca18ac8f2025d27e04d8e15f9e6183d0928af35f",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53347,9 +53348,9 @@
    "pack": "TLoS",
    "uuid": "35ea4640-1019-409c-b6a4-8a9906def475",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/35ea4640-1019-409c-b6a4-8a9906def475.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Shelob's-Poison-TLoS.webp",
+   "sha256": "a340579fab9b142e4e992b5648060dd91d8330b5bfaa657415e96e6f92e7676d",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53360,9 +53361,9 @@
    "pack": "TLoS",
    "uuid": "5497d938-1549-498c-abeb-2ed617222b76",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/5497d938-1549-498c-abeb-2ed617222b76.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Lurking-Malice-TLoS.webp",
+   "sha256": "efbd5f64e0d2947564e02150e07eb25e42d26dbf7c39732ff724aad2f901b3bf",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53373,9 +53374,9 @@
    "pack": "TLoS",
    "uuid": "5ce0a255-9914-4a4f-9630-d1fe8e00bbc0",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/5ce0a255-9914-4a4f-9630-d1fe8e00bbc0.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Rage-and-Hunger-TLoS.webp",
+   "sha256": "3587a6d39f9d323f46fbd5cba129ae4abedec3c0185719bc1002fcd08e299302",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53386,9 +53387,9 @@
    "pack": "TLoS",
    "uuid": "32267333-091c-4bbf-bb29-5f21c8b79188",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/32267333-091c-4bbf-bb29-5f21c8b79188.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-One-Ring-TLoS.webp",
+   "sha256": "35bef396569a423feda577d385137e0300a8100028147fe61517b106f5e342b4",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53399,9 +53400,9 @@
    "pack": "TLoS",
    "uuid": "7fdde250-5b13-4c94-a9b8-4a3a0029928a",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/7fdde250-5b13-4c94-a9b8-4a3a0029928a.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Taming-of-Smeagol-TLoS.webp",
+   "sha256": "799089d91d2475ab842ab94cb1dcf4dc1972ea454edcea607bc41e06ceeab9db",
+   "status": "ok"
   },
   {
    "kind": "questB",
@@ -53412,9 +53413,9 @@
    "pack": "TLoS",
    "uuid": "7fdde250-5b13-4c94-a9b8-4a3a0029928a",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/7fdde250-5b13-4c94-a9b8-4a3a0029928a.B.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Taming-of-Smeagol-TLoS.B.webp",
+   "sha256": "5d3577df73818229caa705777eeca2625644f1b5d57bc9566a780b0aa182ed4a",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53425,9 +53426,9 @@
    "pack": "TLoS",
    "uuid": "d63f87da-45b4-4c5c-b3b5-970a4277c263",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/d63f87da-45b4-4c5c-b3b5-970a4277c263.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Across-the-Marshes-TLoS.webp",
+   "sha256": "602f835ca176855935c96c14709ee8b09768556c9ad98c8dad2624b99405eb8b",
+   "status": "ok"
   },
   {
    "kind": "questB",
@@ -53438,9 +53439,9 @@
    "pack": "TLoS",
    "uuid": "d63f87da-45b4-4c5c-b3b5-970a4277c263",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/d63f87da-45b4-4c5c-b3b5-970a4277c263.B.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Across-the-Marshes-TLoS.B.webp",
+   "sha256": "09eb24e3dcb3d03a3b61a4e2baea61404e915122e03949f5952e16664dcf920f",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53451,9 +53452,9 @@
    "pack": "TLoS",
    "uuid": "e40770a1-7b1b-4257-afca-443c55701850",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/e40770a1-7b1b-4257-afca-443c55701850.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Don't-Look-at-the-Lights-TLoS.webp",
+   "sha256": "06be8c4830c4df95417e4da7b2448f31b0481f3b2c16bc0732d3760d01d12536",
+   "status": "ok"
   },
   {
    "kind": "questB",
@@ -53464,9 +53465,9 @@
    "pack": "TLoS",
    "uuid": "e40770a1-7b1b-4257-afca-443c55701850",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/e40770a1-7b1b-4257-afca-443c55701850.B.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Don't-Look-at-the-Lights-TLoS.B.webp",
+   "sha256": "c181ef6094d1a2ddd496e457f43a8d708113a5976cb2c8b9edc35df1c3f090a6",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53477,9 +53478,9 @@
    "pack": "TLoS",
    "uuid": "61963ddc-1260-471f-afdf-96581602a444",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/61963ddc-1260-471f-afdf-96581602a444.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Passage-of-the-Marshes-Campaign-TLoS.webp",
+   "sha256": "956cb6998b28333e70ff82e44c474cefe69abb0ec6d0aa4d9a8279431ccf4c17",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53490,9 +53491,9 @@
    "pack": "TLoS",
    "uuid": "b32e4536-aa58-4a09-8025-12028cd28288",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/b32e4536-aa58-4a09-8025-12028cd28288.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Ambush-the-Men-of-Harad-TLoS.webp",
+   "sha256": "9cee2d257666e978db3fc8253da7ba4ed4f59b50800faa268fe7161f0a1a9750",
+   "status": "ok"
   },
   {
    "kind": "questB",
@@ -53503,9 +53504,9 @@
    "pack": "TLoS",
    "uuid": "b32e4536-aa58-4a09-8025-12028cd28288",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/b32e4536-aa58-4a09-8025-12028cd28288.B.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Ambush-the-Men-of-Harad-TLoS.B.webp",
+   "sha256": "d69f33d0cdda7c039a5e80d3c7ac7b763c76f73dfbcca0dd8058c8a8d0dcafc2",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53516,9 +53517,9 @@
    "pack": "TLoS",
    "uuid": "2b93afb6-38fd-4ded-bf92-ed86bc03635d",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/2b93afb6-38fd-4ded-bf92-ed86bc03635d.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Journey-to-the-Cross-roads-Campaign-TLoS.webp",
+   "sha256": "890c05f51c79b4ff01e4640813ec9dda3d53dff9c31742d53921a70d1b8e2a07",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53529,9 +53530,9 @@
    "pack": "TLoS",
    "uuid": "da109a2a-65fe-410e-93b4-e09695966fe5",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/da109a2a-65fe-410e-93b4-e09695966fe5.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Stairs-of-Cirith-Ungol-TLoS.webp",
+   "sha256": "c0cb972d35cb0fbbec01612530510db5f05bbbe4e68c7ed8dbf4e8a14c59b841",
+   "status": "ok"
   },
   {
    "kind": "questB",
@@ -53542,9 +53543,9 @@
    "pack": "TLoS",
    "uuid": "da109a2a-65fe-410e-93b4-e09695966fe5",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/da109a2a-65fe-410e-93b4-e09695966fe5.B.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Stairs-of-Cirith-Ungol-TLoS.B.webp",
+   "sha256": "3c31b86fa5623136d20cbeb664fd25f7992e288c673418245a888950c6dc503a",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53555,9 +53556,9 @@
    "pack": "TLoS",
    "uuid": "540e3fbc-a066-4dc6-a156-598f1b2751c0",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/540e3fbc-a066-4dc6-a156-598f1b2751c0.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Spider's-Pass-TLoS.webp",
+   "sha256": "4e1f1ca5f810bdd3cb5fbaca1921c6711dc4e92b9583eb1703e4d4a4fb062388",
+   "status": "ok"
   },
   {
    "kind": "questB",
@@ -53568,9 +53569,9 @@
    "pack": "TLoS",
    "uuid": "540e3fbc-a066-4dc6-a156-598f1b2751c0",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/540e3fbc-a066-4dc6-a156-598f1b2751c0.B.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Spider's-Pass-TLoS.B.webp",
+   "sha256": "1d6b7b9bcf54a6f830444d8f6770bd99e2d99aa179e4bc43454a01f44a26b4d2",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53581,9 +53582,9 @@
    "pack": "TLoS",
    "uuid": "29a12054-527c-41a3-9dd8-25565288fb4d",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/29a12054-527c-41a3-9dd8-25565288fb4d.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Gollum's-Betrayal-TLoS.webp",
+   "sha256": "8e1d7da33cfcf04c93e7f6ebcc04859477a2bd696087fbb7be1aab0065a08bde",
+   "status": "ok"
   },
   {
    "kind": "questB",
@@ -53594,9 +53595,9 @@
    "pack": "TLoS",
    "uuid": "29a12054-527c-41a3-9dd8-25565288fb4d",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/29a12054-527c-41a3-9dd8-25565288fb4d.B.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Gollum's-Betrayal-TLoS.B.webp",
+   "sha256": "3a206328b303eb59b65566161c37754b0c74286bbf87e0516a7ee9eee11c0550",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53607,9 +53608,9 @@
    "pack": "TLoS",
    "uuid": "cc77ab8d-1968-4607-b18d-7db3c3c186c7",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/cc77ab8d-1968-4607-b18d-7db3c3c186c7.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Shelob's-Lair-Campaign-TLoS.webp",
+   "sha256": "33220dc410c00a92e11f96cd68f7ee61735ae962e24af6b031e6719b32d7488b",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53620,9 +53621,9 @@
    "pack": "TLoS",
    "uuid": "32993141-956c-4426-98d9-8705de6fee00",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/32993141-956c-4426-98d9-8705de6fee00.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Gollum-TLoS.webp",
+   "sha256": "838e4df4663cc178a045bcf964c0da5ae211758b6f483b8c1e6f9db5242bff46",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -53633,9 +53634,9 @@
    "pack": "TLoS",
    "uuid": "32993141-956c-4426-98d9-8705de6fee00",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/32993141-956c-4426-98d9-8705de6fee00.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Smeagol-TLoS.webp",
+   "sha256": "838e4df4663cc178a045bcf964c0da5ae211758b6f483b8c1e6f9db5242bff46",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -54816,9 +54817,9 @@
    "pack": "TMoF",
    "uuid": "ad4739ac-fd18-4add-9b83-860c1fcc2b54",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/ad4739ac-fd18-4add-9b83-860c1fcc2b54.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Last-of-the-Company-TMoF.webp",
+   "sha256": "c0094de40cc3990415d72e3055efd550368d1e98c7de12a57bf28df4d49722f0",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -54829,9 +54830,9 @@
    "pack": "TMoF",
    "uuid": "490a363e-2f00-4c66-9c6f-5bdfb83f6b08",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/490a363e-2f00-4c66-9c6f-5bdfb83f6b08.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Topmost-Chamber-TMoF.webp",
+   "sha256": "2570fa4807711cd451b91ce2450699e6d410cf271479e9631641e76de041f383",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -54842,9 +54843,9 @@
    "pack": "TMoF",
    "uuid": "e53df85c-f6e6-41df-9fd1-03dd2d2a1c65",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/e53df85c-f6e6-41df-9fd1-03dd2d2a1c65.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Echoing-Passage-TMoF.webp",
+   "sha256": "54f2e07325785f83073a212483c712015ce7339fc64fd3717a2993960ec80c6b",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -54855,9 +54856,9 @@
    "pack": "TMoF",
    "uuid": "46c6afb3-9a68-4f1a-acfa-e421c84da528",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/46c6afb3-9a68-4f1a-acfa-e421c84da528.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Bloodied-Courtyard-TMoF.webp",
+   "sha256": "d5ff18208f854721ce85461fb958abad5f709ad35165021a6347667f5ad33621",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -54868,9 +54869,9 @@
    "pack": "TMoF",
    "uuid": "cf74c777-dfe4-4cea-8b7f-4b09fc1aa5b2",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/cf74c777-dfe4-4cea-8b7f-4b09fc1aa5b2.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Winding-Stairs-TMoF.webp",
+   "sha256": "24ab8a3ac4c027d783eaa7dcf0fcc0f67fc64db1a860e69b40c8a4684d60dabb",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -54881,9 +54882,9 @@
    "pack": "TMoF",
    "uuid": "32706788-e37c-47b1-831b-40c7f711cb10",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/32706788-e37c-47b1-831b-40c7f711cb10.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Torch-lit-Hall-TMoF.webp",
+   "sha256": "8b116e9a8dc951caeb84c412edfdc502d93a49099d767c83f5837c7588f0d56d",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -54894,9 +54895,9 @@
    "pack": "TMoF",
    "uuid": "a246d29f-f370-4308-828d-c1ff09029b4a",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/a246d29f-f370-4308-828d-c1ff09029b4a.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Shagrat-TMoF.webp",
+   "sha256": "5e90d5ee93f2a8ac0e6e716db7f46940228b1cd05f6ade4bfbf9564c838c2c5b",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -54907,9 +54908,9 @@
    "pack": "TMoF",
    "uuid": "74f40d23-068a-40ea-9965-81df44294490",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/74f40d23-068a-40ea-9965-81df44294490.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Gorbag-TMoF.webp",
+   "sha256": "0164352bb5c3f9fd2b7061679a6fa2454af1e58dada0db15efce62f88d4fc8b7",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -54920,9 +54921,9 @@
    "pack": "TMoF",
    "uuid": "03abe728-0062-49bb-9a04-e78bff777e83",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/03abe728-0062-49bb-9a04-e78bff777e83.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Wounded-Uruk-TMoF.webp",
+   "sha256": "8f54c5bb7a272703ff1ab337c07fe24a41c2d5c252471e40d3452f3f945b8ad9",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -54933,9 +54934,9 @@
    "pack": "TMoF",
    "uuid": "66489fc6-7074-4cbb-8a60-37acd641f7a6",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/66489fc6-7074-4cbb-8a60-37acd641f7a6.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Orcish-Howls-TMoF.webp",
+   "sha256": "52f83a04eee968cc87f6c02a3aadc9f334cc6c714a6b4b9623e8eb4b708b8453",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -54946,9 +54947,9 @@
    "pack": "TMoF",
    "uuid": "c6b0a8d2-32fe-4750-9270-7270cd5f062b",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/c6b0a8d2-32fe-4750-9270-7270cd5f062b.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Black-Gate-TMoF.webp",
+   "sha256": "c315bfa22fd8a4b61624a8095cc992de5ebe56e5ff914b9f2072cda434d640ba",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -54959,9 +54960,9 @@
    "pack": "TMoF",
    "uuid": "e5b56e5a-3286-4ea6-bbdd-da7e47750125",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/e5b56e5a-3286-4ea6-bbdd-da7e47750125.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Towers-of-the-Teeth-TMoF.webp",
+   "sha256": "4619de13f1923d646c3efacb788469df662517b8cdab70d79c0ab35f82577730",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -54972,9 +54973,9 @@
    "pack": "TMoF",
    "uuid": "1eab8808-f8ee-4935-b456-7dd940afbc28",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/1eab8808-f8ee-4935-b456-7dd940afbc28.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Beleaguered-Hills-TMoF.webp",
+   "sha256": "3b0d6b81a52e36ce82c466ea41af0ae21662c58025e45e1e31c8497873546c6d",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -54985,9 +54986,9 @@
    "pack": "TMoF",
    "uuid": "77bcda70-5126-4e58-919e-447c03d7ab02",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/77bcda70-5126-4e58-919e-447c03d7ab02.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Waste-of-Dagorlad-TMoF.webp",
+   "sha256": "546a98f7eb09368abaddc395dbc37aac0bd666d718e3de36a140b032c309671e",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -54998,9 +54999,9 @@
    "pack": "TMoF",
    "uuid": "3551cf11-1670-46de-b404-7b8fd20d3aff",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/3551cf11-1670-46de-b404-7b8fd20d3aff.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Slopes-of-Cirith-Gorgor-TMoF.webp",
+   "sha256": "ad811ec1bef25bac9339cff0fdecd0ae3397751b2899dedea763dcac027b9f6e",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55011,9 +55012,9 @@
    "pack": "TMoF",
    "uuid": "f13a2e94-0ece-45c3-a7ce-0248f9ff92b3",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/f13a2e94-0ece-45c3-a7ce-0248f9ff92b3.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Reeking-Moat-TMoF.webp",
+   "sha256": "2386faf5d270d3a440fba92fbb83a93467c46d70b4f2a08cedb3da0ffe147949",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55024,9 +55025,9 @@
    "pack": "TMoF",
    "uuid": "6aaf94eb-c656-4589-acf1-c6637a755946",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/6aaf94eb-c656-4589-acf1-c6637a755946.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Wall-of-Morannon-TMoF.webp",
+   "sha256": "c58dce2908d84feef3be5e27e2fc46297689a7d94b4bd60878eb01cda27313c5",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55037,9 +55038,9 @@
    "pack": "TMoF",
    "uuid": "a3a28453-4292-49b3-9b78-fc958310a800",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/a3a28453-4292-49b3-9b78-fc958310a800.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Mouth-of-Sauron-TMoF.webp",
+   "sha256": "92fa96d49f80bfa58051f8306ad629d885a884229f0eb286951c22cd0a98effc",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55050,9 +55051,9 @@
    "pack": "TMoF",
    "uuid": "e62cec6d-6b96-4662-9a86-bcc0f5aee453",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/e62cec6d-6b96-4662-9a86-bcc0f5aee453.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Nazgul-of-Mordor-TMoF.webp",
+   "sha256": "a6d5e22cd3445b4dd283bb6db527829fd538f476e3e02a045b18beee3f28c63b",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55063,9 +55064,9 @@
    "pack": "TMoF",
    "uuid": "fafbd12c-b97e-41d8-a696-5c89566927ba",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/fafbd12c-b97e-41d8-a696-5c89566927ba.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Gorgoroth-Hill-troll-TMoF.webp",
+   "sha256": "27fec1fbccbfec916321538e03b6e2a6d8d4e7fc96ddade3497a2da039d97636",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55076,9 +55077,9 @@
    "pack": "TMoF",
    "uuid": "ce23920a-4b87-4015-88bf-8687a6d3f180",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/ce23920a-4b87-4015-88bf-8687a6d3f180.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Easterling-Bowman-TMoF.webp",
+   "sha256": "aaafcdd8aeab3f9cca3ec327ae1fc33475d82a797a7f6ad2ca243a34ee6514a5",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55089,9 +55090,9 @@
    "pack": "TMoF",
    "uuid": "7108bf9e-3e91-4cbd-977a-fbab0a464512",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/7108bf9e-3e91-4cbd-977a-fbab0a464512.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Warrior-of-Rhun-TMoF.webp",
+   "sha256": "a04ec71a265ed5c523de38f0afd0b7db8f22b8b4b4936a16b8e8ea65ba36a431",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55102,9 +55103,9 @@
    "pack": "TMoF",
    "uuid": "5003227b-ebc3-454a-88b4-2d6e20cc48f7",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/5003227b-ebc3-454a-88b4-2d6e20cc48f7.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Hell-hawk-TMoF.webp",
+   "sha256": "44cae397de703ec3e549daa0ff5174f64db18dd639f905a185dd8e04b33288b2",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55115,9 +55116,9 @@
    "pack": "TMoF",
    "uuid": "3f736d45-c2b3-429e-9a21-3f8073cdbd48",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/3f736d45-c2b3-429e-9a21-3f8073cdbd48.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Hour-of-Doom-TMoF.webp",
+   "sha256": "9078f40181ec7f626fcceda188a8e05a431b2a36e91c5121361af9a90129bead",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55128,9 +55129,9 @@
    "pack": "TMoF",
    "uuid": "d5286130-d03a-49f3-bd70-d40e9320c292",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/d5286130-d03a-49f3-bd70-d40e9320c292.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Jaws-of-Steel-TMoF.webp",
+   "sha256": "b188187321cb8131beeb7dc261ec50f8d5492869484f3edd3c0cee91ad25590f",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55141,9 +55142,9 @@
    "pack": "TMoF",
    "uuid": "218b6d77-2c40-4967-8487-2a383b4170ce",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/218b6d77-2c40-4967-8487-2a383b4170ce.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Rage-Filled-Him-TMoF.webp",
+   "sha256": "7e96bc4c98cef88bcb373d2e3146d7f0c0d705022d44070f7ad2e1042d48b778",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55154,9 +55155,9 @@
    "pack": "TMoF",
    "uuid": "60ac6ce9-7aad-415d-a4af-61f67db59454",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/60ac6ce9-7aad-415d-a4af-61f67db59454.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Onslaught-of-Mordor-TMoF.webp",
+   "sha256": "6c76153370b7d76e6452ea2d7f9b3aafc714a28382367c7044da13196168164b",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55167,9 +55168,9 @@
    "pack": "TMoF",
    "uuid": "5c1973bf-c331-4b8f-8872-4ead564476d3",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/5c1973bf-c331-4b8f-8872-4ead564476d3.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Gwaihir-TMoF.webp",
+   "sha256": "9f6cd02541b08ecdf55491fabbd44009a30a5855f0a9b02d2887acc9902576ee",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55180,9 +55181,9 @@
    "pack": "TMoF",
    "uuid": "bb6dd4a6-a72c-400a-9cc6-903d7260ea1b",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/bb6dd4a6-a72c-400a-9cc6-903d7260ea1b.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Tower-of-Barad-dur-TMoF.webp",
+   "sha256": "6d4207847174aa8a09e15abbd5b39877033cfa06ede3bbe01032cc06476ac327",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55193,9 +55194,9 @@
    "pack": "TMoF",
    "uuid": "2dc216a5-af92-44e5-b225-9cdc7bf47e73",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/2dc216a5-af92-44e5-b225-9cdc7bf47e73.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Mount-Doom-TMoF.webp",
+   "sha256": "738b01ba36293c0dd323c0edca29b5f95dbe77b2f0470f9697a477412ccc7e33",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55206,9 +55207,9 @@
    "pack": "TMoF",
    "uuid": "1a0189ae-b9ad-49c2-a217-a9c975536384",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/1a0189ae-b9ad-49c2-a217-a9c975536384.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Orc-hold-TMoF.webp",
+   "sha256": "819536c9ceac4ed095997b0924bc5b9cf3990a274b826ec4f4bd1bb0ee3d71f4",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55219,9 +55220,9 @@
    "pack": "TMoF",
    "uuid": "e9bdfb84-2f96-4288-bbed-31f52cc10b86",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/e9bdfb84-2f96-4288-bbed-31f52cc10b86.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Mordor-Road-TMoF.webp",
+   "sha256": "fb15a25ebee5d8658ccce773b812620bea3f2ab09bce2243032ca409dab7d84e",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55232,9 +55233,9 @@
    "pack": "TMoF",
    "uuid": "c88f14e5-1bd3-4829-ab70-02479df6cdfd",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/c88f14e5-1bd3-4829-ab70-02479df6cdfd.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Plain-of-Gorgoroth-TMoF.webp",
+   "sha256": "16a9dd1ba8e43d591fbf3dd2577100712ab06be791a49fe3dcfcb81ee9e063dc",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55245,9 +55246,9 @@
    "pack": "TMoF",
    "uuid": "cfe25792-3c08-4154-8770-821eee3c9e3f",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/cfe25792-3c08-4154-8770-821eee3c9e3f.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Brake-of-Thorns-TMoF.webp",
+   "sha256": "64dc6b56de3666d9ee4ea5f346254369b5ecaa307aa3bdc83f432bec1e45b516",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55258,9 +55259,9 @@
    "pack": "TMoF",
    "uuid": "13543061-b855-4e58-9190-e2f56c17cd32",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/13543061-b855-4e58-9190-e2f56c17cd32.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Old-Water-course-TMoF.webp",
+   "sha256": "4f8419367bfc31d932bb581363d665158d9c413bdbd85a09944d2d9ff4841159",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55271,9 +55272,9 @@
    "pack": "TMoF",
    "uuid": "eb232287-e39e-4358-b37f-23b2c45ca6a8",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/eb232287-e39e-4358-b37f-23b2c45ca6a8.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Gollum-TMoF.webp",
+   "sha256": "57d1a582752e4adc587ae8f5f28745eaa2c440d3692bb28cd8eba68e86922bda",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55284,9 +55285,9 @@
    "pack": "TMoF",
    "uuid": "c39c83bf-ee9e-4e4d-9689-b8f7559292bd",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/c39c83bf-ee9e-4e4d-9689-b8f7559292bd.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Ringwraith-of-Sauron-TMoF.webp",
+   "sha256": "9fe331b4ccf7480b7c7b7856813d2e333668b6398e9bca7573d08f638a854afe",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55297,9 +55298,9 @@
    "pack": "TMoF",
    "uuid": "ae4a4129-ed5d-4902-92e3-ae89e2795fb1",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/ae4a4129-ed5d-4902-92e3-ae89e2795fb1.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Orc-Captain-TMoF.webp",
+   "sha256": "4097715cc93b2af24d98b6ecd1403dabc2dc18f4645ab961f658e59beb5ff8df",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55310,9 +55311,9 @@
    "pack": "TMoF",
    "uuid": "6036efda-3456-45d2-817a-4ef8b310db5a",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/6036efda-3456-45d2-817a-4ef8b310db5a.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Big-Uruk-TMoF.webp",
+   "sha256": "5c1a1b04c1c04cab70535a9ad17aa66fa1a3f93f0ff8ba8f53abac9be7f86961",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55323,9 +55324,9 @@
    "pack": "TMoF",
    "uuid": "ad3509b5-b4b4-4fe5-bfdc-e655cc2470d3",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/ad3509b5-b4b4-4fe5-bfdc-e655cc2470d3.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Little-Snuffler-TMoF.webp",
+   "sha256": "4bcba4967694ec946d48bf588b88815388e46fbd9f8713e71ece39f66e6e5bdf",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55336,9 +55337,9 @@
    "pack": "TMoF",
    "uuid": "2ab79807-7f6b-4b8b-8295-fb8645cdee8a",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/2ab79807-7f6b-4b8b-8295-fb8645cdee8a.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/'Wicked-Master'-TMoF.webp",
+   "sha256": "1da08dfc0bf678284fef91f3c26b95bff1bd8ffe014595a439789a913f97ed92",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55349,9 +55350,9 @@
    "pack": "TMoF",
    "uuid": "d71de165-8632-4628-94ea-793a1c20e6f8",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/d71de165-8632-4628-94ea-793a1c20e6f8.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Lidless-Eye-TMoF.webp",
+   "sha256": "d1aaaea13436ed588be5ff89dba0d09afdcce82f42851be382f14dac2a014984",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55362,9 +55363,9 @@
    "pack": "TMoF",
    "uuid": "01a03d74-06d9-4fc8-afd7-2739fa900c32",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/01a03d74-06d9-4fc8-afd7-2739fa900c32.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Foul-Fumes-TMoF.webp",
+   "sha256": "b4c80b698e203833f15cfdebc45ee3ba7492e492ea9ec50daac47393793cf691",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55375,9 +55376,9 @@
    "pack": "TMoF",
    "uuid": "cdf7a6c5-23f6-4314-a122-3b7df1b97501",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/cdf7a6c5-23f6-4314-a122-3b7df1b97501.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Heavy-and-Tired-TMoF.webp",
+   "sha256": "416c70efa8d4d21d6fced5b51389a49187c640e4300a7b1b8e80efe5767cd25a",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55388,9 +55389,9 @@
    "pack": "TMoF",
    "uuid": "7d9a3914-bc46-40d6-b489-3157d7430382",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/7d9a3914-bc46-40d6-b489-3157d7430382.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Orc-of-Mordor-TMoF.webp",
+   "sha256": "6fca0ad4dfd9abfd14d9d0a021617bcb4c2abe8b37051708519d915218b6f17c",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55401,9 +55402,9 @@
    "pack": "TMoF",
    "uuid": "194ceae6-a5e2-4a52-ba07-76e6c2611e8e",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/194ceae6-a5e2-4a52-ba07-76e6c2611e8e.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Snaga-Archer-TMoF.webp",
+   "sha256": "d9eac411961553eb327bd9a0bf407f614e96665403d06d24fbdfdbdcedb491f9",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55414,9 +55415,9 @@
    "pack": "TMoF",
    "uuid": "50f294ff-ee4b-4685-b7e1-86cd7f2e0a59",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/50f294ff-ee4b-4685-b7e1-86cd7f2e0a59.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Uruk-Soldier-TMoF.webp",
+   "sha256": "a478f4938f11add36d256498a76c848a5a50393e65f41b64dd08c4e3564e852d",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55427,9 +55428,9 @@
    "pack": "TMoF",
    "uuid": "a442dbd4-ec18-44e6-b762-b0ebf94a8897",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/a442dbd4-ec18-44e6-b762-b0ebf94a8897.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Drawn-to-the-Ring-TMoF.webp",
+   "sha256": "66182b6549c3b83bbf17e3bc90f92318150c22e536629264bb0a512a8647f255",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55440,9 +55441,9 @@
    "pack": "TMoF",
    "uuid": "ef94d441-715f-42e8-bb3a-764592cdf44c",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/ef94d441-715f-42e8-bb3a-764592cdf44c.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Deep-Shadows-TMoF.webp",
+   "sha256": "9cc7a5e08ac95b52ac4b227f6c2c9f02778bdf9a8bf772a150c343af12ee28af",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55453,9 +55454,9 @@
    "pack": "TMoF",
    "uuid": "15f9c6b7-2bb0-48ea-9a5d-b8ec3b1a7e2d",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/15f9c6b7-2bb0-48ea-9a5d-b8ec3b1a7e2d.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Evil-Vigilance-TMoF.webp",
+   "sha256": "9b8a513b9c38f083612dfe77cd1d029442df6ea0ec2cf4bc1b87be96eb66b4e6",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55466,9 +55467,9 @@
    "pack": "TMoF",
    "uuid": "23402087-6d53-45c7-86be-3c6b9f5a651c",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/23402087-6d53-45c7-86be-3c6b9f5a651c.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/In-Darkness-Bind-Them-TMoF.webp",
+   "sha256": "7b4f2386798d5bdf69a52d302cae6f4126eeda77dacb9bbe49ca66eaf790f12f",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55479,9 +55480,9 @@
    "pack": "TMoF",
    "uuid": "06b1e27e-6493-4f05-9203-1835058073df",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/06b1e27e-6493-4f05-9203-1835058073df.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-One-Ring-TMoF.webp",
+   "sha256": "46ec806bb466853611def8cf1755fe11142ca807b6b04ee5cc20363810bc4734",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55492,9 +55493,9 @@
    "pack": "TMoF",
    "uuid": "22e79f71-9496-4f1a-bf7e-36834378d68c",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/22e79f71-9496-4f1a-bf7e-36834378d68c.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Pass-the-Two-Watchers-TMoF.webp",
+   "sha256": "acc6688ed87b67a5302905f5b62d1964a5f567759f14f7b99f7a34ded0288d1f",
+   "status": "ok"
   },
   {
    "kind": "questB",
@@ -55505,9 +55506,9 @@
    "pack": "TMoF",
    "uuid": "22e79f71-9496-4f1a-bf7e-36834378d68c",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/22e79f71-9496-4f1a-bf7e-36834378d68c.B.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Pass-the-Two-Watchers-TMoF.B.webp",
+   "sha256": "0b8783a1818850acc2c268d47e6a8c39d76fcbde4f10502e4d25bf9ad5cc0c1c",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55518,9 +55519,9 @@
    "pack": "TMoF",
    "uuid": "26eb433a-01e2-4b0e-83c4-680b0e0c4854",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/26eb433a-01e2-4b0e-83c4-680b0e0c4854.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Fighting-in-the-Tower-TMoF.webp",
+   "sha256": "21bdfbc3dd610ed95ee874cef38760c4ad3fe42fb1fa10befa5ed8f438fc9af7",
+   "status": "ok"
   },
   {
    "kind": "questB",
@@ -55531,9 +55532,9 @@
    "pack": "TMoF",
    "uuid": "26eb433a-01e2-4b0e-83c4-680b0e0c4854",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/26eb433a-01e2-4b0e-83c4-680b0e0c4854.B.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Fighting-in-the-Tower-TMoF.B.webp",
+   "sha256": "8c55acc841c7c4890ae039368a3e4020c662008a2e899d94f1fc54e6cf1cefaa",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55544,9 +55545,9 @@
    "pack": "TMoF",
    "uuid": "196dd43b-1df2-4eae-9dcf-2e8d2723af67",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/196dd43b-1df2-4eae-9dcf-2e8d2723af67.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Escape-from-Cirith-Ungol-TMoF.webp",
+   "sha256": "8b4f493cc3ddbc10e0cdaa04fb6ad0b5db14484b96f4c1fcca164b25edcf58c6",
+   "status": "ok"
   },
   {
    "kind": "questB",
@@ -55557,9 +55558,9 @@
    "pack": "TMoF",
    "uuid": "196dd43b-1df2-4eae-9dcf-2e8d2723af67",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/196dd43b-1df2-4eae-9dcf-2e8d2723af67.B.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Escape-from-Cirith-Ungol-TMoF.B.webp",
+   "sha256": "ade60a1bdccb15175d20eb51c9dc6e2426a3f49f8be32bef73aa696fe345845e",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55570,9 +55571,9 @@
    "pack": "TMoF",
    "uuid": "a27a3045-58aa-4cbe-ab36-90bc6e7a5cdb",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/a27a3045-58aa-4cbe-ab36-90bc6e7a5cdb.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Tower-of-Cirith-Ungol-Campaign-TMoF.webp",
+   "sha256": "8ea142e3e660e57c5cfcd8be34022fbc4c16a3595339ad1b2469686d03abd99e",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55583,9 +55584,9 @@
    "pack": "TMoF",
    "uuid": "78f780fd-fcc0-495e-b132-772ce71dbfa9",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/78f780fd-fcc0-495e-b132-772ce71dbfa9.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Two-Watchers-Location-TMoF.webp",
+   "sha256": "77413beb63d72da1e20829f0ea6da312b296a403a76fdd62d6d7ed7818813d3b",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55596,9 +55597,9 @@
    "pack": "TMoF",
    "uuid": "78f780fd-fcc0-495e-b132-772ce71dbfa9",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/78f780fd-fcc0-495e-b132-772ce71dbfa9.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Two-Watchers-Enemy-TMoF.webp",
+   "sha256": "77413beb63d72da1e20829f0ea6da312b296a403a76fdd62d6d7ed7818813d3b",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55609,9 +55610,9 @@
    "pack": "TMoF",
    "uuid": "0f31d397-55d8-4988-b6bb-3d4101977515",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/0f31d397-55d8-4988-b6bb-3d4101977515.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Embassy-from-the-Dark-Tower-TMoF.webp",
+   "sha256": "1f89d0ee3fc399664b11875656338b7ea2a703db20c92d7fbe942f2a267c06f7",
+   "status": "ok"
   },
   {
    "kind": "questB",
@@ -55622,9 +55623,9 @@
    "pack": "TMoF",
    "uuid": "0f31d397-55d8-4988-b6bb-3d4101977515",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/0f31d397-55d8-4988-b6bb-3d4101977515.B.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Embassy-from-the-Dark-Tower-TMoF.B.webp",
+   "sha256": "6a6482096d533121a5bcd0d40f7b7dc9d2c577c4fd60df7efcfcd164a2df135d",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55635,9 +55636,9 @@
    "pack": "TMoF",
    "uuid": "48c071bf-b00f-4677-b43f-aa119f736428",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/48c071bf-b00f-4677-b43f-aa119f736428.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Battle-of-the-Morannon-TMoF.webp",
+   "sha256": "d0e84995f0237609a17db6cc7622998ab4f68244bf6742969eec1c50fde81c39",
+   "status": "ok"
   },
   {
    "kind": "questB",
@@ -55648,9 +55649,9 @@
    "pack": "TMoF",
    "uuid": "48c071bf-b00f-4677-b43f-aa119f736428",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/48c071bf-b00f-4677-b43f-aa119f736428.B.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Battle-of-the-Morannon-TMoF.B.webp",
+   "sha256": "1e793d04166230b4f79c358fe7fbd5bc458732ea2380e4c60cf680085a522c26",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55661,9 +55662,9 @@
    "pack": "TMoF",
    "uuid": "9ffc1d82-10b3-4703-91e5-865407f0cc1e",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/9ffc1d82-10b3-4703-91e5-865407f0cc1e.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Black-Gate-Opens-Campaign-TMoF.webp",
+   "sha256": "6b03a509e207026c476675ac55f90a2cd502583443a30d09f819fab4cfd360aa",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55674,9 +55675,9 @@
    "pack": "TMoF",
    "uuid": "39a64a5a-7074-46a5-aacc-a42537fe0ddd",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/39a64a5a-7074-46a5-aacc-a42537fe0ddd.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Land-of-Mordor-TMoF.webp",
+   "sha256": "61b51080e79430b02486ff905eead6aadda15fa4bc4673d27394f03fdd3b2ebf",
+   "status": "ok"
   },
   {
    "kind": "questB",
@@ -55687,9 +55688,9 @@
    "pack": "TMoF",
    "uuid": "39a64a5a-7074-46a5-aacc-a42537fe0ddd",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/39a64a5a-7074-46a5-aacc-a42537fe0ddd.B.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Land-of-Mordor-TMoF.B.webp",
+   "sha256": "86cb5bfe98298fd166ff85836b090f630a7ff6e038ed6721ddde34b28765519a",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55700,9 +55701,9 @@
    "pack": "TMoF",
    "uuid": "6a24a5e8-80e9-4bba-af55-64be11742dde",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/6a24a5e8-80e9-4bba-af55-64be11742dde.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Road-to-Isenmouthe-TMoF.webp",
+   "sha256": "db066a383191492ce554a27cb5068bc35e7a44aec05888a1c8726271112e6a9c",
+   "status": "ok"
   },
   {
    "kind": "questB",
@@ -55713,9 +55714,9 @@
    "pack": "TMoF",
    "uuid": "6a24a5e8-80e9-4bba-af55-64be11742dde",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/6a24a5e8-80e9-4bba-af55-64be11742dde.B.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Road-to-Isenmouthe-TMoF.B.webp",
+   "sha256": "ac624822c790faff9a1e38392f360b1c43e42ec3ed784043bd2e7e12d2cc9ed4",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55726,9 +55727,9 @@
    "pack": "TMoF",
    "uuid": "ec2049ab-c950-46f7-9f1b-30ada69db857",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/ec2049ab-c950-46f7-9f1b-30ada69db857.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Last-Gasp-TMoF.webp",
+   "sha256": "29c38fa834933382dd6aca1edefc1c0937096b797495c16b102c72c38b21e2e0",
+   "status": "ok"
   },
   {
    "kind": "questB",
@@ -55739,9 +55740,9 @@
    "pack": "TMoF",
    "uuid": "ec2049ab-c950-46f7-9f1b-30ada69db857",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/ec2049ab-c950-46f7-9f1b-30ada69db857.B.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Last-Gasp-TMoF.B.webp",
+   "sha256": "12e567ab986f1aa7540e591a9580f5c247d7a8f45125d8b1c950be005ddf6ae6",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55752,9 +55753,9 @@
    "pack": "TMoF",
    "uuid": "ad73bb42-f0fb-4732-956d-e921140e99bb",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/ad73bb42-f0fb-4732-956d-e921140e99bb.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Crack-of-Doom-TMoF.webp",
+   "sha256": "56c174067d81df04355789f1a8908bc5139223e4c25873d56a5fba0638bf0a78",
+   "status": "ok"
   },
   {
    "kind": "questB",
@@ -55765,9 +55766,9 @@
    "pack": "TMoF",
    "uuid": "ad73bb42-f0fb-4732-956d-e921140e99bb",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/ad73bb42-f0fb-4732-956d-e921140e99bb.B.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Crack-of-Doom-TMoF.B.webp",
+   "sha256": "6765b2acaf1d3e22c41746c85b24a53d6556aa2cdc2e914ec6bab28c733c3290",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55778,9 +55779,9 @@
    "pack": "TMoF",
    "uuid": "2dc216a5-af92-44e5-b225-9cdc7bf47e73",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/2dc216a5-af92-44e5-b225-9cdc7bf47e73.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Mount-Doom-Campaign-TMoF.webp",
+   "sha256": "738b01ba36293c0dd323c0edca29b5f95dbe77b2f0470f9697a477412ccc7e33",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55791,9 +55792,9 @@
    "pack": "TMoF",
    "uuid": "477558e9-dc31-4766-b97d-311d5668aa1a",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/477558e9-dc31-4766-b97d-311d5668aa1a.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Epic-Multiplayer-Mode-Campaign-TMoF.webp",
+   "sha256": "a3f9973af84ddf8ed4c8b3c760c7b9fd730a33e1c338eca6eabf4d1627446319",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55804,9 +55805,9 @@
    "pack": "TMoF",
    "uuid": "c4b7ea64-91b2-4037-bfce-45e487a96b01",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/c4b7ea64-91b2-4037-bfce-45e487a96b01.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Eye-of-Sauron-Mount-Doom-TMoF.webp",
+   "sha256": "5be93256917decf01ada3852a2ed4c9084489af6bf81f3e0494a3d9c9f6e157e",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55817,9 +55818,9 @@
    "pack": "TMoF",
    "uuid": "2f6a81bb-951f-434a-9cfd-7605a7122fd2",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/2f6a81bb-951f-434a-9cfd-7605a7122fd2.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Eye-of-Sauron-The-Black-Gate-Opens-TMoF.webp",
+   "sha256": "3ad18ae5e4df8e957c8473c9c8e83f859143a6e727b26c849b7dda7fbbeab2b8",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55830,9 +55831,9 @@
    "pack": "TMoM",
    "uuid": "92058ab4-7e65-4c78-9124-7338bca432fd",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/92058ab4-7e65-4c78-9124-7338bca432fd.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/To-the-West-door-TMoM.webp",
+   "sha256": "4c3042d430f6264a28693ef90c1386d726736488bfb4fd02207f585c81a47d64",
+   "status": "ok"
   },
   {
    "kind": "questB",
@@ -55843,9 +55844,9 @@
    "pack": "TMoM",
    "uuid": "92058ab4-7e65-4c78-9124-7338bca432fd",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/92058ab4-7e65-4c78-9124-7338bca432fd.B.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/To-the-West-door-TMoM.B.webp",
+   "sha256": "d0af16b2eac39615585c9cc1ab1e26ced89fac93d1dc5a311c2810858a72dc81",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55856,9 +55857,9 @@
    "pack": "TMoM",
    "uuid": "ed68974c-45ea-4378-9fe3-818cae03f9ea",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/ed68974c-45ea-4378-9fe3-818cae03f9ea.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Journey-in-the-Black-Pit-A-Presence-in-the-Dark-TMoM.webp",
+   "sha256": "89642d1df660fd851a99aa4bdea20ff21375fa7f01271c907449bc99730dacc6",
+   "status": "ok"
   },
   {
    "kind": "questB",
@@ -55869,9 +55870,9 @@
    "pack": "TMoM",
    "uuid": "ed68974c-45ea-4378-9fe3-818cae03f9ea",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/ed68974c-45ea-4378-9fe3-818cae03f9ea.B.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Journey-in-the-Black-Pit-A-Presence-in-the-Dark-TMoM.B.webp",
+   "sha256": "8e92c39e663e67db350ab8b57506dfc42a90c733567bc6cc58361df5fa7b7662",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55882,9 +55883,9 @@
    "pack": "TMoM",
    "uuid": "35caf8b5-dc14-4b56-827c-d2d85a1d13df",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/35caf8b5-dc14-4b56-827c-d2d85a1d13df.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Journey-in-the-Black-Pit-The-Long-Dark-of-Moria-TMoM.webp",
+   "sha256": "89642d1df660fd851a99aa4bdea20ff21375fa7f01271c907449bc99730dacc6",
+   "status": "ok"
   },
   {
    "kind": "questB",
@@ -55895,9 +55896,9 @@
    "pack": "TMoM",
    "uuid": "35caf8b5-dc14-4b56-827c-d2d85a1d13df",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/35caf8b5-dc14-4b56-827c-d2d85a1d13df.B.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Journey-in-the-Black-Pit-The-Long-Dark-of-Moria-TMoM.B.webp",
+   "sha256": "470362516ff2ee31168a3c88aafcbf74864f9c87e2b966b3124fbd0816260d98",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55908,9 +55909,9 @@
    "pack": "TMoM",
    "uuid": "1920b1cc-8392-4fb6-9c9c-22b8bfd8d539",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/1920b1cc-8392-4fb6-9c9c-22b8bfd8d539.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Journey-in-the-Black-Pit-Narrow-Paths-TMoM.webp",
+   "sha256": "89642d1df660fd851a99aa4bdea20ff21375fa7f01271c907449bc99730dacc6",
+   "status": "ok"
   },
   {
    "kind": "questB",
@@ -55921,9 +55922,9 @@
    "pack": "TMoM",
    "uuid": "1920b1cc-8392-4fb6-9c9c-22b8bfd8d539",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/1920b1cc-8392-4fb6-9c9c-22b8bfd8d539.B.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Journey-in-the-Black-Pit-Narrow-Paths-TMoM.B.webp",
+   "sha256": "fa316882c76142762e5ed11f827f6692b6f1456d6fd61358415109f9cd650212",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55934,9 +55935,9 @@
    "pack": "TMoM",
    "uuid": "4b339e45-503d-4eb9-b7a5-fb7dbe887c03",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/4b339e45-503d-4eb9-b7a5-fb7dbe887c03.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Search-for-the-Chamber-Drums-in-the-Deep-TMoM.webp",
+   "sha256": "ed745ad21ed19d7d965341d98b04046bd6e4ac986f217db5e88c85a51d5e5e91",
+   "status": "ok"
   },
   {
    "kind": "questB",
@@ -55947,9 +55948,9 @@
    "pack": "TMoM",
    "uuid": "4b339e45-503d-4eb9-b7a5-fb7dbe887c03",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/4b339e45-503d-4eb9-b7a5-fb7dbe887c03.B.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Search-for-the-Chamber-Drums-in-the-Deep-TMoM.B.webp",
+   "sha256": "880513327f172d144b82ca5879f0013e320cfdb530ddaa5a86f70c793b7213dc",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55960,9 +55961,9 @@
    "pack": "TMoM",
    "uuid": "287fb255-d104-450c-8159-4fa36e37ca93",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/287fb255-d104-450c-8159-4fa36e37ca93.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Search-for-the-Chamber-The-Fate-of-Balin-TMoM.webp",
+   "sha256": "ed745ad21ed19d7d965341d98b04046bd6e4ac986f217db5e88c85a51d5e5e91",
+   "status": "ok"
   },
   {
    "kind": "questB",
@@ -55973,9 +55974,9 @@
    "pack": "TMoM",
    "uuid": "287fb255-d104-450c-8159-4fa36e37ca93",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/287fb255-d104-450c-8159-4fa36e37ca93.B.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Search-for-the-Chamber-The-Fate-of-Balin-TMoM.B.webp",
+   "sha256": "a2d7c08f8d6c8c99a9ddb27e092e5cd622dd898379cde193063a1809fe124d03",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -55986,9 +55987,9 @@
    "pack": "TMoM",
    "uuid": "aee4d9fb-2ef9-43b0-8459-1a390421052b",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/aee4d9fb-2ef9-43b0-8459-1a390421052b.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Search-for-the-Chamber-Continuing-Eastward-TMoM.webp",
+   "sha256": "ed745ad21ed19d7d965341d98b04046bd6e4ac986f217db5e88c85a51d5e5e91",
+   "status": "ok"
   },
   {
    "kind": "questB",
@@ -55999,9 +56000,9 @@
    "pack": "TMoM",
    "uuid": "aee4d9fb-2ef9-43b0-8459-1a390421052b",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/aee4d9fb-2ef9-43b0-8459-1a390421052b.B.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Search-for-the-Chamber-Continuing-Eastward-TMoM.B.webp",
+   "sha256": "0c01d6a2b8bbedec57a9e392c9498b0ccdb12c7111e198b2291ff68f184d6a26",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56012,9 +56013,9 @@
    "pack": "TMoM",
    "uuid": "ecb91fb3-6ae6-4a96-9bb7-71abeb0a7ec5",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/ecb91fb3-6ae6-4a96-9bb7-71abeb0a7ec5.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Watcher-TMoM.webp",
+   "sha256": "e19d38819c32da6901e353bf50a61f63543e3ca08d0fff84571b2840353d1c81",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56025,9 +56026,9 @@
    "pack": "TMoM",
    "uuid": "ecb91fb3-6ae6-4a96-9bb7-71abeb0a7ec5",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/ecb91fb3-6ae6-4a96-9bb7-71abeb0a7ec5.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Chamber-of-Mazarbul-TMoM.webp",
+   "sha256": "e19d38819c32da6901e353bf50a61f63543e3ca08d0fff84571b2840353d1c81",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56038,9 +56039,9 @@
    "pack": "TMoM",
    "uuid": "88e75969-9e5d-4b83-a535-d58409a473b2",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/88e75969-9e5d-4b83-a535-d58409a473b2.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Savage-Werewolf-TMoM.webp",
+   "sha256": "19b9e605afb9bf46b15af133b8dc90326b2d97bb415ccb99cca4c8e4e0af2217",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56051,9 +56052,9 @@
    "pack": "TMoM",
    "uuid": "df7789f2-e7fd-45bd-a64f-fbd98a9ee146",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/df7789f2-e7fd-45bd-a64f-fbd98a9ee146.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Many-pillared-Hall-TMoM.webp",
+   "sha256": "1ec40cd7e59bfa825952760dd7ae89f25b77b556774affd97db441d7106a23d7",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56064,9 +56065,9 @@
    "pack": "TMoM",
    "uuid": "f1b632df-ecaa-410a-b2c2-e037adc0ef2c",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/f1b632df-ecaa-410a-b2c2-e037adc0ef2c.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Shadow-of-Fear-TMoM.webp",
+   "sha256": "643d0c82ad0b16c5ce6cb1084c3207259ace4b8c3d78ea904894d20866f72e6e",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56077,9 +56078,9 @@
    "pack": "TMoM",
    "uuid": "bdfa990f-381b-4df3-bce6-71c46380223f",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/bdfa990f-381b-4df3-bce6-71c46380223f.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Deep-dweller-TMoM.webp",
+   "sha256": "d1238be627b964d82a924ded19dbac8258dce028163a5ecc6b29f5d920f9a20b",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56090,9 +56091,9 @@
    "pack": "TMoM",
    "uuid": "e99d2892-b6c4-422f-b630-4bf156a3f776",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/e99d2892-b6c4-422f-b630-4bf156a3f776.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Darkened-Stairway-TMoM.webp",
+   "sha256": "c3780aab68a53388cee8589cd03398142050daff5a973c771841d8c2c0ebbed1",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56103,9 +56104,9 @@
    "pack": "TMoM",
    "uuid": "9fdacc4b-5de7-4b03-af30-cee4d09769d7",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/9fdacc4b-5de7-4b03-af30-cee4d09769d7.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/We-Cannot-Get-Out-TMoM.webp",
+   "sha256": "2b7d8cccb5053083b250a32344fb2bd51b2ac0737620eed76f606bb45b76a58b",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56116,9 +56117,9 @@
    "pack": "TMoM",
    "uuid": "3ad34bfd-3f2b-4b23-b09d-232f4640ddeb",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/3ad34bfd-3f2b-4b23-b09d-232f4640ddeb.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Spider-Broodling-TMoM.webp",
+   "sha256": "6251cc124354fe4e521c4abcc11c721994e343d9ef0da8c6965246e4b402a971",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56129,9 +56130,9 @@
    "pack": "TMoM",
    "uuid": "ff23f4ed-4fc9-4835-91f1-16e8ab0870f0",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/ff23f4ed-4fc9-4835-91f1-16e8ab0870f0.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Spider-Burrow-TMoM.webp",
+   "sha256": "2a0ef16a5e413e0b538834ec90dd584de6084290f4d702c11358af14ad398f6d",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56142,9 +56143,9 @@
    "pack": "TMoM",
    "uuid": "aaa16a82-e6b6-4563-a523-b8d61e40e273",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/aaa16a82-e6b6-4563-a523-b8d61e40e273.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Grabbed-by-Spiders-TMoM.webp",
+   "sha256": "7864aece7854fefb755de8f43183657986bb1406593cbd37240fcc2f58bbcc14",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56155,9 +56156,9 @@
    "pack": "TMoM",
    "uuid": "43777005-d391-48bc-b84d-d40932ffc66b",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/43777005-d391-48bc-b84d-d40932ffc66b.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Moria-Bats-TMoM.webp",
+   "sha256": "db8cda95b27a36fca14663644062b840dd9a92a791e1857e4185421039a4ea67",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56168,9 +56169,9 @@
    "pack": "TMoM",
    "uuid": "8ad1ecf9-3c76-46d6-b65f-9dad403c0960",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/8ad1ecf9-3c76-46d6-b65f-9dad403c0960.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Ancient-Guardroom-TMoM.webp",
+   "sha256": "9a9767e2bc707f8539e69e17733a77e641a7fdc7d671c54abc53dc53e6022b3a",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56181,9 +56182,9 @@
    "pack": "TMoM",
    "uuid": "0b0ab8a2-f531-4a68-96f8-408cc0b87924",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/0b0ab8a2-f531-4a68-96f8-408cc0b87924.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Denizen-of-the-Deep-TMoM.webp",
+   "sha256": "bade40e07172495b02a190b5c00e7e9a52c7b04779dc9e3184fe07678b9b2a2e",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56194,9 +56195,9 @@
    "pack": "TMoM",
    "uuid": "bb5afc96-9b41-4a8d-933d-1906e550243b",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/bb5afc96-9b41-4a8d-933d-1906e550243b.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Werewolf-TMoM.webp",
+   "sha256": "8a24a5f0919f73a6b7228dcf77fae366ea250a8155894743fafcf45c3bfac437",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56207,9 +56208,9 @@
    "pack": "TMoM",
    "uuid": "948774da-a350-40cc-bb09-aca2c3ad8dcd",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/948774da-a350-40cc-bb09-aca2c3ad8dcd.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Fouled-Well-TMoM.webp",
+   "sha256": "3231ba496d460043d332cf4fab5efa7054c5bba5862e65c31e5bae5f107657b6",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56220,9 +56221,9 @@
    "pack": "TMoM",
    "uuid": "23008103-17e0-4108-ac5c-966f4ddd3469",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/23008103-17e0-4108-ac5c-966f4ddd3469.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Cave-In-TMoM.webp",
+   "sha256": "5a7f10b5e087e3859e5b721fa40286bd07b7105ddd3edcd97fca1b999f016b94",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56233,9 +56234,9 @@
    "pack": "TMoM",
    "uuid": "ff5c0c83-0791-48ad-b4c4-e3437470263c",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/ff5c0c83-0791-48ad-b4c4-e3437470263c.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Hive-Guardian-TMoM.webp",
+   "sha256": "70c6c32c63dc8b1c11bf37a0345644b5e3dbd8515eac3d85248116a8b6df6b43",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56246,9 +56247,9 @@
    "pack": "TMoM",
    "uuid": "dab3229d-aadc-4c6d-a8a6-32a65d4e743b",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/dab3229d-aadc-4c6d-a8a6-32a65d4e743b.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Abandoned-Mines-TMoM.webp",
+   "sha256": "1b778b9768093b970fb64aabc5e31ee312751ad0282bf122fb5f7822a93137cf",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56259,9 +56260,9 @@
    "pack": "TMoM",
    "uuid": "e723be8b-ba65-4aaa-ba56-825ee9311a0e",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/e723be8b-ba65-4aaa-ba56-825ee9311a0e.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Sudden-Pitfall-TMoM.webp",
+   "sha256": "eed120551eecfbd57bcf6efc1dc77c1b769f8de8b862246e203fbd666f8d25f9",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56272,9 +56273,9 @@
    "pack": "TMoM",
    "uuid": "5d8db3c0-31da-4981-af11-1da3c6585bd8",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/5d8db3c0-31da-4981-af11-1da3c6585bd8.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Web-spinner-TMoM.webp",
+   "sha256": "f2c3a298cd1a1d27e2cf6bd1b1e0a06155d11930fecd643734719618799d16ee",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56285,9 +56286,9 @@
    "pack": "TMoM",
    "uuid": "03b041ad-049a-44bb-9079-12b666e1afbc",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/03b041ad-049a-44bb-9079-12b666e1afbc.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Cobwebbed-Cavern-TMoM.webp",
+   "sha256": "8b737b69e8bd18a8abcde42955f5cc1dfcca9fe5eccaaf4c6476e4e4faf7ecbd",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56298,9 +56299,9 @@
    "pack": "TMoM",
    "uuid": "fb897d38-fce6-4061-aaa5-9311eaadd8e5",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/fb897d38-fce6-4061-aaa5-9311eaadd8e5.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Foul-Air-TMoM.webp",
+   "sha256": "6e3e186d91582c5e7330b638d4de8520a6d023c540b2c49fc42636ee707155fe",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56311,9 +56312,9 @@
    "pack": "TMoM",
    "uuid": "f1a07644-9fe2-4764-9999-091fb8fc05b7",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/f1a07644-9fe2-4764-9999-091fb8fc05b7.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Brood-Mother-TMoM.webp",
+   "sha256": "8dbe81db107eec7e2a395ef6382669a8dce8914212e29d73727bbd9b81407150",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56324,9 +56325,9 @@
    "pack": "TMoM",
    "uuid": "67221212-2af6-4729-a8d7-3ea575befcbb",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/67221212-2af6-4729-a8d7-3ea575befcbb.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Lightless-Passage-TMoM.webp",
+   "sha256": "fbca2abf68f5a4d7a397f284d3ddac39143b8a307a49b31c65ad1022044eca39",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56337,9 +56338,9 @@
    "pack": "TMoM",
    "uuid": "986225d5-6fbb-4860-9fce-af74dd4eb551",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/986225d5-6fbb-4860-9fce-af74dd4eb551.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Lurking-Malice-TMoM.webp",
+   "sha256": "201360064f7572de343c74cd3afadc36e90c408a214ddf7906ab56c30f702112",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56350,9 +56351,9 @@
    "pack": "TMoM",
    "uuid": "0c7a9790-0c68-47c0-bcf8-ed4e04b14a25",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/0c7a9790-0c68-47c0-bcf8-ed4e04b14a25.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Great-Cave-troll-TMoM.webp",
+   "sha256": "329419a8e1ab4a0a91dcffb93d8394a348e26f8b5643db3d0636010d78bd5e6f",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56363,9 +56364,9 @@
    "pack": "TMoM",
    "uuid": "736cf1d8-54bd-4bb1-8901-8b6f348a0355",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/736cf1d8-54bd-4bb1-8901-8b6f348a0355.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Zigil-Mineshaft-TMoM.webp",
+   "sha256": "e5ad80d1bc95783ff285beb581119b463f2b60618e3af0a05d7b0eb38e2b77de",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56376,9 +56377,9 @@
    "pack": "TMoM",
    "uuid": "6bd6a282-9f43-4b12-a4bb-501f554daf2b",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/6bd6a282-9f43-4b12-a4bb-501f554daf2b.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Dark-and-Dreadful-TMoM.webp",
+   "sha256": "dcd1aa09ae02f99e51b3a7111fedac3b5974a81d5ce49930f2ebc52c568990f2",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56389,9 +56390,9 @@
    "pack": "TMoM",
    "uuid": "569c0cc8-58e0-46ef-97b3-6d3aef65ed8b",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/569c0cc8-58e0-46ef-97b3-6d3aef65ed8b.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Goblin-Follower-TMoM.webp",
+   "sha256": "7531caf05e27d84aa727c80b4d40b8173e46fac25a2ef786055167a5b25aa928",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56402,9 +56403,9 @@
    "pack": "TMoM",
    "uuid": "c07b0737-1a39-45b9-a08a-879e741e2526",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/c07b0737-1a39-45b9-a08a-879e741e2526.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Stairs-of-Nain-TMoM.webp",
+   "sha256": "2bfda9facee840d022dcd5af86ff506c55fbf7d280d679dad64efd1412032ffa",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56415,9 +56416,9 @@
    "pack": "TMoM",
    "uuid": "027c61dd-3d54-4e11-af5f-19d4a63dd38e",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/027c61dd-3d54-4e11-af5f-19d4a63dd38e.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Hidden-Threat-TMoM.webp",
+   "sha256": "ad8b41383638ee1bbf619be44724d5e85b07416735facd4e0d20ced92e7db85a",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56428,9 +56429,9 @@
    "pack": "TMoM",
    "uuid": "0e6b6b6b-a58b-4e9d-8e9b-9e2ddb4592d9",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/0e6b6b6b-a58b-4e9d-8e9b-9e2ddb4592d9.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Goblin-Warlord-TMoM.webp",
+   "sha256": "83f80b8f009dee2c737ece706112b73dece4a223f183639f657d551d9b6e233f",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56441,9 +56442,9 @@
    "pack": "TMoM",
    "uuid": "95f27b98-6375-48ff-bf2b-3f625b3d1b0d",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/95f27b98-6375-48ff-bf2b-3f625b3d1b0d.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Dwarven-Forge-TMoM.webp",
+   "sha256": "1cf0fd2019c718f2df42979cef00d706057d90d6f487b6329a1685898abea852",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56454,9 +56455,9 @@
    "pack": "TMoM",
    "uuid": "c67cae2c-941e-40ad-8c14-3cfc50267359",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/c67cae2c-941e-40ad-8c14-3cfc50267359.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Signs-of-Conflict-TMoM.webp",
+   "sha256": "964ec121b40db712b97c5db00e477193a913c2368fe919e3a8ffec51ff9730bc",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56467,9 +56468,9 @@
    "pack": "TMoM",
    "uuid": "d3eee887-e9fd-40f9-bd09-47a7b0732ee2",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/d3eee887-e9fd-40f9-bd09-47a7b0732ee2.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Goblin-Archer-TMoM.webp",
+   "sha256": "f44d570acd20dcb102e70fd5e717ad59c277eec6e3df303da50b8ccf6ffcee2d",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56480,9 +56481,9 @@
    "pack": "TMoM",
    "uuid": "32ac489f-7e40-47a0-acba-f199f3f5d8f7",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/32ac489f-7e40-47a0-acba-f199f3f5d8f7.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Narrow-Fissure-TMoM.webp",
+   "sha256": "57943f1e8da716015882ecc73861da0e008a041f10a270ec7c30b0380024f90e",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56493,9 +56494,9 @@
    "pack": "TMoM",
    "uuid": "b58d7e13-ee6b-4986-91f8-f4583490d364",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/b58d7e13-ee6b-4986-91f8-f4583490d364.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Crumbling-Ruin-TMoM.webp",
+   "sha256": "8ffadab454720909f1ac192a632c3c1d4a8ce7cb173a56d4634dd456bd7ffcc6",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56506,9 +56507,9 @@
    "pack": "TMoM",
    "uuid": "262f58ac-0e34-4d1c-b61b-1cae8358b2c7",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/262f58ac-0e34-4d1c-b61b-1cae8358b2c7.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Goblin-Sneak-TMoM.webp",
+   "sha256": "a09063a8e0324587847fb94e63a2b52339c81fd6972795662ff057af25a7ef25",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56519,9 +56520,9 @@
    "pack": "TMoM",
    "uuid": "1e6bff06-79b2-4571-b584-c5b837176ded",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/1e6bff06-79b2-4571-b584-c5b837176ded.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Plundered-Armoury-TMoM.webp",
+   "sha256": "4b9c6b326ff56a507fa8d58d0ff0d0188ef5dcc3e8edd4a18dc960d084e1ac31",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56532,9 +56533,9 @@
    "pack": "TMoM",
    "uuid": "86180e01-76fb-4103-977c-0d55bbfc2250",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/86180e01-76fb-4103-977c-0d55bbfc2250.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/They-Are-Coming-TMoM.webp",
+   "sha256": "08155557948a6dd5db6d0ec5b15df948b215655306789f522735d5b5f88667d7",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56545,9 +56546,9 @@
    "pack": "TMoM",
    "uuid": "2122c049-2c7d-470a-970c-f5a2a26ac66f",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/2122c049-2c7d-470a-970c-f5a2a26ac66f.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Swarming-Goblins-TMoM.webp",
+   "sha256": "66ab60709386302b0117f073436d9568a8bc5b1a0a30de6e00c831845997c112",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56558,9 +56559,9 @@
    "pack": "TMoM",
    "uuid": "533a076a-be76-4528-9684-483d765bb2a3",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/533a076a-be76-4528-9684-483d765bb2a3.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Goblin-Tunnels-TMoM.webp",
+   "sha256": "9350b3f55e03409ce2dbbffd695f6c58cb667440f5681f6fc6fdae628a82b72b",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -56571,9 +56572,9 @@
    "pack": "TMoM",
    "uuid": "a643c446-15e1-4dc0-95f7-9146a59991b3",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/a643c446-15e1-4dc0-95f7-9146a59991b3.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Massing-in-the-Deep-TMoM.webp",
+   "sha256": "a1e05f2c1d44a4aca5a10d9616b87b858d53ebd4dc20ad10d3817e9169938d4a",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -66700,7 +66701,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/79666b89-ec7b-4bc8-98d9-9c517f8ca6ed.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "questB",
@@ -66713,7 +66714,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/79666b89-ec7b-4bc8-98d9-9c517f8ca6ed.B.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -66726,7 +66727,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/35d72889-370e-4ee3-99c0-b7d0a605ec49.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "questB",
@@ -66739,7 +66740,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/35d72889-370e-4ee3-99c0-b7d0a605ec49.B.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -66752,7 +66753,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/4ce7c4e4-c96c-4ee7-ae98-cfb497303cd0.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "questB",
@@ -66765,7 +66766,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/4ce7c4e4-c96c-4ee7-ae98-cfb497303cd0.B.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -66778,7 +66779,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/b446fa27-d5f8-40e0-8985-fe15478cd79b.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "questB",
@@ -66791,7 +66792,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/b446fa27-d5f8-40e0-8985-fe15478cd79b.B.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -66804,7 +66805,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/7d71a43e-a7ae-49bb-930c-437101a12d82.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "questB",
@@ -66817,7 +66818,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/7d71a43e-a7ae-49bb-930c-437101a12d82.B.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -66830,7 +66831,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/b717f5f9-cd1a-4852-aa1d-36acd1f8d3b1.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "questB",
@@ -66843,7 +66844,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/b717f5f9-cd1a-4852-aa1d-36acd1f8d3b1.B.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -66856,7 +66857,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/85409c38-e188-46f7-b844-42716266ea83.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "questB",
@@ -66869,7 +66870,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/85409c38-e188-46f7-b844-42716266ea83.B.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -66882,7 +66883,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/1a3c69f9-c973-4e4e-aa00-435c1f615393.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -66895,7 +66896,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/1a3c69f9-c973-4e4e-aa00-435c1f615393.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -66908,7 +66909,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/9f29199a-f40a-4198-b355-4d5e75d910e2.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -66921,7 +66922,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/ad36bbe2-646e-4ac1-983b-e2d8a651dd0e.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -66934,7 +66935,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/60fe85d1-4dae-4c74-8776-424b4a306054.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -66947,7 +66948,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/996158ae-41aa-457e-99c4-97640796d6e0.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -66960,7 +66961,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/678fe922-7c1f-4270-aaec-002d916fc52a.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -66973,7 +66974,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/826b71a9-3f90-454a-8009-24afa9a94ec8.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -66986,7 +66987,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/2899ad24-ba7e-4c24-9d20-dabe8f4fce71.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -66999,7 +67000,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/a662bccc-025c-48dd-9c13-0eb47a91236c.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -67012,7 +67013,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/ad6a6843-b482-43a8-8d1f-771ac69c9ab5.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -67025,7 +67026,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/d801e97a-0cb8-44f0-a28f-de9546200967.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -67038,7 +67039,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/14a944ab-8301-4006-8e2a-d607eb614fab.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -67051,7 +67052,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/15e06e00-8d82-4590-b2ae-6e615330d78a.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -67064,7 +67065,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/a880b0ab-79d4-42b4-81b1-5ad9a8054c27.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -67077,7 +67078,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/e7100f6a-bdbd-4605-86e2-67d4479d227d.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -67090,7 +67091,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/764c89bc-d212-401f-acfa-a971cd0e5e17.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -67103,7 +67104,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/3f7b681f-f1c0-4771-8e7b-b6e804d0bf88.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -67116,7 +67117,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/79a2b4c2-7d0c-41a5-aa5f-1ec29644caab.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -67129,7 +67130,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/1b036c00-55cc-4538-a659-6d86aaf8ce20.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -67142,7 +67143,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/e7a6c9c3-9d45-478c-81e5-7811d43deb0e.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -67155,7 +67156,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/fd9398a9-9f4f-4134-875b-5527f3533c7d.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -67168,7 +67169,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/ac78aadc-9a58-42a6-a328-60dbb1e2191c.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -67181,7 +67182,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/e763a539-7fc8-49ab-8f8f-879070aa0e03.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -67194,7 +67195,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/058c4067-9b8c-4631-ae6b-6cee784e71df.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -67207,7 +67208,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/008bcdb1-bac6-4c45-86c5-6bcfb0bf12cc.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -67220,7 +67221,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/85cf554d-25c5-47f4-96bb-c11f4e764155.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -67233,7 +67234,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/90c7e192-2a1e-480c-96a2-7c643f0562d1.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -67246,7 +67247,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/0b215acb-56e1-4653-9cbf-38171c4af9c9.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -67259,7 +67260,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/88efb537-cea8-4c20-8b73-e51f0742f769.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -67272,7 +67273,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/93e61cb5-2bde-420e-aebd-79a1c4111838.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -67285,7 +67286,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/6c456def-a38c-409c-a085-37f027e9c7b0.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -67298,7 +67299,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/59724478-f4c5-4f9b-99bd-288dd8fc1b43.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -67311,7 +67312,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/05119d55-73f5-4973-ada5-d0cc73a2eb4b.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -67324,7 +67325,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/763643f4-fb17-43d0-a165-ae0b0b10bc46.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -67337,7 +67338,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/66391b37-52bb-4461-97e7-e24fd3aaa3d5.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -67350,7 +67351,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/c37069a2-1a82-4a67-a08a-d79f5525c547.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -67363,7 +67364,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/2108c366-c09a-4952-9920-398f8d84b5a9.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -67376,7 +67377,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/2e005552-a0a2-4a70-bd96-9d1b21601261.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -67389,7 +67390,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/5c4188a5-5767-4c8c-8dfd-0b3f7c55e4a1.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -67402,7 +67403,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/98fe6f91-977f-41a0-b7a4-a89d24836239.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -67415,7 +67416,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/5f2bf8db-d56f-4353-b9be-fd25b7b0650e.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -67428,7 +67429,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/929a0f96-a029-4327-b8e5-03cb78293bdf.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -67441,7 +67442,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/f75180d3-29c9-4184-85ce-8b805b9aa8c6.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -67454,7 +67455,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/c4aea786-9987-451a-8924-e63c628be505.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -71885,9 +71886,9 @@
    "pack": "VoI",
    "uuid": "5542dd91-98bd-4a72-bd19-f706f3440ab8",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/5542dd91-98bd-4a72-bd19-f706f3440ab8.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Grima-Objective-Ally-VoI.webp",
+   "sha256": "35ebb789c7084b31e85b88fe90ffcdb235bce9f3a7196b5e1b4e19c4bee43a71",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -71898,9 +71899,9 @@
    "pack": "VoI",
    "uuid": "3f8e889e-db35-4044-ac19-43fd146bffd1",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/3f8e889e-db35-4044-ac19-43fd146bffd1.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Islet-VoI.webp",
+   "sha256": "76c466795cde9410c013a2a590cab52d9ee3e65c820afcc7f13e9b2f05ff8737",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -71911,9 +71912,9 @@
    "pack": "VoI",
    "uuid": "db1ee7dd-d43c-40a0-9e89-89a5b233af70",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/db1ee7dd-d43c-40a0-9e89-89a5b233af70.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Fords-of-Isen-VoI.webp",
+   "sha256": "dbcf2d107887daaf05a755f22f2442e452201f1bc88da1ad05a979ef83a62beb",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -71924,9 +71925,9 @@
    "pack": "VoI",
    "uuid": "2c7e2c6c-ecaa-48dc-a19e-4477d4fc693d",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/2c7e2c6c-ecaa-48dc-a19e-4477d4fc693d.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-King's-Road-VoI.webp",
+   "sha256": "cf7ddef6a6075486f2a4e2c814005b716a2089971db552b841efadd68450b3e7",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -71937,9 +71938,9 @@
    "pack": "VoI",
    "uuid": "200ec48a-dd14-41c4-994b-2f5b753f47de",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/200ec48a-dd14-41c4-994b-2f5b753f47de.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Gap-of-Rohan-VoI.webp",
+   "sha256": "4066bfd6005f948010a6bbdd333646bd39cea29394d1927a395b7b86d1398b47",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -71950,9 +71951,9 @@
    "pack": "VoI",
    "uuid": "0ae9f4f9-eec9-404f-ae93-7a54287d1bc2",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/0ae9f4f9-eec9-404f-ae93-7a54287d1bc2.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Pillaging-and-Burning-VoI.webp",
+   "sha256": "2fce4f6af1a99bdd6e9a3072a64fc8a61fdd5421d364891bb6f043d6cad96abd",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -71963,9 +71964,9 @@
    "pack": "VoI",
    "uuid": "10e7e890-727f-49ae-bd5d-d769812d9dce",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/10e7e890-727f-49ae-bd5d-d769812d9dce.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Down-from-the-Hills-VoI.webp",
+   "sha256": "2c8f4f12fc46e03516b0a1eef32e62b9be0ed1cb4236d2fc97d632a471c4a47b",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -71976,9 +71977,9 @@
    "pack": "VoI",
    "uuid": "4362ef23-0ade-4eea-974b-2959803f8528",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/4362ef23-0ade-4eea-974b-2959803f8528.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Ill-Tidings-VoI.webp",
+   "sha256": "8358039f39dffa8c58f4799514458f4faace148c94d42f01e4cc6c5eeb17ef62",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -71989,9 +71990,9 @@
    "pack": "VoI",
    "uuid": "16b71211-85c1-4ad4-8879-831bc7b50ac4",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/16b71211-85c1-4ad4-8879-831bc7b50ac4.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Mugash-Enemy-VoI.webp",
+   "sha256": "b2934e4755610ac97354e433ed5487e189c723d9de0142ac0db9ca194bcbfbb6",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -72002,9 +72003,9 @@
    "pack": "VoI",
    "uuid": "7d55e738-cc23-4e78-9a88-2a25fa4f3ca4",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/7d55e738-cc23-4e78-9a88-2a25fa4f3ca4.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Mugash's-Guard-VoI.webp",
+   "sha256": "498b1dbb30d8081d70ce40704d66e9d3b587699ea54db2b13d5ad4737a63638d",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -72015,9 +72016,9 @@
    "pack": "VoI",
    "uuid": "cd883a3f-65b8-473e-97f7-b8ac12f91194",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/cd883a3f-65b8-473e-97f7-b8ac12f91194.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Methedras-Orc-VoI.webp",
+   "sha256": "b9675b130c35cbc87e5d88e826cfcae4ad9a770f6b2e71061c8582a4017f08f8",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -72028,9 +72029,9 @@
    "pack": "VoI",
    "uuid": "05a0e539-e140-4dfc-a151-21cd8aaef094",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/05a0e539-e140-4dfc-a151-21cd8aaef094.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Methedras-VoI.webp",
+   "sha256": "7441e27c5a8493074e8c27d8cf2afa21b95324f6cf916ac2e662266b61962787",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -72041,9 +72042,9 @@
    "pack": "VoI",
    "uuid": "de212258-f124-4cda-baab-4f696c2b5766",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/de212258-f124-4cda-baab-4f696c2b5766.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Orc-Cave-VoI.webp",
+   "sha256": "67cb83af7a2929719fe50ffcda4676400d65d7824e3e934ce968f86a0d077c4e",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -72054,9 +72055,9 @@
    "pack": "VoI",
    "uuid": "8dad9a85-eae9-4a39-a823-1c58d8c0f86b",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/8dad9a85-eae9-4a39-a823-1c58d8c0f86b.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Mugash's-Lair-VoI.webp",
+   "sha256": "a0138f313fe46383329779737e04e97b430d50059132c2c03f30d4959efa76ca",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -72067,9 +72068,9 @@
    "pack": "VoI",
    "uuid": "87c80644-57bb-4c66-8df6-c60cadc32d32",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/87c80644-57bb-4c66-8df6-c60cadc32d32.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Orc-Territory-VoI.webp",
+   "sha256": "ee9ee6ae398aab9962c9620838403094cfdc57decf9be2954dd0aced2c26be1d",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -72080,9 +72081,9 @@
    "pack": "VoI",
    "uuid": "16b71211-85c1-4ad4-8879-831bc7b50ac4",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/16b71211-85c1-4ad4-8879-831bc7b50ac4.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Mugash-Objective-VoI.webp",
+   "sha256": "b2934e4755610ac97354e433ed5487e189c723d9de0142ac0db9ca194bcbfbb6",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -72093,9 +72094,9 @@
    "pack": "VoI",
    "uuid": "20c5f7b7-cfc4-44e1-aaf5-0010ceb9a1b9",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/20c5f7b7-cfc4-44e1-aaf5-0010ceb9a1b9.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Edge-of-Fangorn-VoI.webp",
+   "sha256": "f49033e277045c352a6961175e0938398f94f40c4cfbbb68fb42d47f9ba76846",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -72106,9 +72107,9 @@
    "pack": "VoI",
    "uuid": "eccef05c-0f43-4cfa-91c6-e9eaf0eff7c9",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/eccef05c-0f43-4cfa-91c6-e9eaf0eff7c9.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Dark-Hearted-Huorn-VoI.webp",
+   "sha256": "5800fe4826321441d7a6380e369b5da3afc07d76b4daf3512dfd376175ddb0a5",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -72119,9 +72120,9 @@
    "pack": "VoI",
    "uuid": "25ae9bce-b4c0-4ff8-aeb3-d0b57d3914d2",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/25ae9bce-b4c0-4ff8-aeb3-d0b57d3914d2.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Angry-Huorn-VoI.webp",
+   "sha256": "fc3a0cfbb16ed4b51a85bc85057c208943eee86af077e4d35eedc26b8457b072",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -72132,9 +72133,9 @@
    "pack": "VoI",
    "uuid": "cd628acc-acdf-48c5-a9cc-136eb9bc3095",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/cd628acc-acdf-48c5-a9cc-136eb9bc3095.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Deadly-Huorn-VoI.webp",
+   "sha256": "73182d8e3a9445ff90ac8159f46e6abe6535dd59e43c8fbc8877146feff81a5f",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -72145,9 +72146,9 @@
    "pack": "VoI",
    "uuid": "c3907d39-6fd7-4b33-8fe2-215fd9f90be2",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/c3907d39-6fd7-4b33-8fe2-215fd9f90be2.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Heart-of-Fangorn-VoI.webp",
+   "sha256": "671ffc19744d05b753c2d3c956c345ad87c2312a51fb4c95c0dae87a7b8787e5",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -72158,9 +72159,9 @@
    "pack": "VoI",
    "uuid": "3bc03452-6c37-45e2-9241-e626ea51f382",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/3bc03452-6c37-45e2-9241-e626ea51f382.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/The-Forest's-Malice-VoI.webp",
+   "sha256": "e170d56bef0825d25dd0d679943b2780d00e79ca5a8e2bd242e794d337d480ca",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -72171,9 +72172,9 @@
    "pack": "VoI",
    "uuid": "ded946a7-99f0-42bf-92f6-a2c46ca64d98",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/ded946a7-99f0-42bf-92f6-a2c46ca64d98.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Orc-Skirmisher-VoI.webp",
+   "sha256": "8f477d2d8b349992b3ab4b3a0a57f93a14a98bdc06e10d2d34c22100b718a6dc",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -72184,9 +72185,9 @@
    "pack": "VoI",
    "uuid": "a835576b-6a6c-4407-8f40-0151b70f5902",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/a835576b-6a6c-4407-8f40-0151b70f5902.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Orc-Hunter-VoI.webp",
+   "sha256": "81aed0ca3901895ae89937f5cb99047be095d18d2cc2842d2ace69ec8dadfb6a",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -72197,9 +72198,9 @@
    "pack": "VoI",
    "uuid": "119cfabc-2cbf-4ffd-a25e-00ec140b8f26",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/119cfabc-2cbf-4ffd-a25e-00ec140b8f26.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Orc-Hound-VoI.webp",
+   "sha256": "5ce97f01393e0ccfff5a139a43d70b86f1555ca02af9cb90ccb0c23747eb5213",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -72210,9 +72211,9 @@
    "pack": "VoI",
    "uuid": "bc041e0b-dd7f-4b82-8eb0-d155b1b08398",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/bc041e0b-dd7f-4b82-8eb0-d155b1b08398.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Orc-Hunting-Party-VoI.webp",
+   "sha256": "51eee2a102a278ac1cfcda2ee21f802e7809f7f3d919fe7436cd2683c968c510",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -72223,9 +72224,9 @@
    "pack": "VoI",
    "uuid": "d80a5ca5-20d8-4c4b-814c-0c91bba40d43",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/d80a5ca5-20d8-4c4b-814c-0c91bba40d43.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Dunland-Prowler-VoI.webp",
+   "sha256": "2d6536352ec34504c940972a4d02784af657e29e1ae7cede009e7e364c3671be",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -72236,9 +72237,9 @@
    "pack": "VoI",
    "uuid": "8ab3701c-7814-403c-be93-21cdff4283ed",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/8ab3701c-7814-403c-be93-21cdff4283ed.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Dunlending-Bandit-VoI.webp",
+   "sha256": "92586e7e92bf39629b264e1abaa1ea19a622b100a4f7fe61eb77a3ee931383ad",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -72249,9 +72250,9 @@
    "pack": "VoI",
    "uuid": "7b491dcc-668a-431f-b0a1-ec2bf34840a7",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/7b491dcc-668a-431f-b0a1-ec2bf34840a7.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Dunland-Raider-VoI.webp",
+   "sha256": "d54062989ac3457737ef84dd24d00d5ea3798d1374ff3c2f6d46c5af80fd2ff8",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -72262,9 +72263,9 @@
    "pack": "VoI",
    "uuid": "a0d5be90-8618-4fe4-a917-d8d969c11264",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/a0d5be90-8618-4fe4-a917-d8d969c11264.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Old-Hatreds-VoI.webp",
+   "sha256": "13f8a1b574c5c56fe44f03467c7c2aa34704f07489b460097513681ac0d6aeda",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -72275,9 +72276,9 @@
    "pack": "VoI",
    "uuid": "c749f16f-1b34-48ce-ba8e-45f36b8b8229",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/c749f16f-1b34-48ce-ba8e-45f36b8b8229.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Dunland-Tribesman-VoI.webp",
+   "sha256": "f4df39a9815702ba6ab9d33576d82add35851ffaf5f3337dc2aca34c5a874a46",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -72288,9 +72289,9 @@
    "pack": "VoI",
    "uuid": "ceb5ede8-0acc-40b6-ac43-b9f1ff006d9e",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/ceb5ede8-0acc-40b6-ac43-b9f1ff006d9e.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Dunland-Chieftain-VoI.webp",
+   "sha256": "986b15ef07bc1e221fc1658f679663198cb5f78ec82b50e969e2df8d3b05d6f2",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -72301,9 +72302,9 @@
    "pack": "VoI",
    "uuid": "def7d5a8-3af5-428d-ac94-485c33388ff9",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/def7d5a8-3af5-428d-ac94-485c33388ff9.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Dunland-Berserker-VoI.webp",
+   "sha256": "2adda71d413cf91efcbcefe6181c2cd9b238a40f9dffde9f03147e98025eb81f",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -72314,9 +72315,9 @@
    "pack": "VoI",
    "uuid": "ef975c81-544a-4f1b-a3c4-d0bc42ef636c",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/ef975c81-544a-4f1b-a3c4-d0bc42ef636c.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Wild-Men-of-Dunland-VoI.webp",
+   "sha256": "2117c9c49220b03977978ac785f2c685d6caac51276d93fec6376f83a5eb5dcd",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -72327,9 +72328,9 @@
    "pack": "VoI",
    "uuid": "c319315a-e506-45a2-8ec0-c98e4bd9bad5",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/c319315a-e506-45a2-8ec0-c98e4bd9bad5.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Ancient-Forest-Location-VoI.webp",
+   "sha256": "70f73d8eac08653da34650118c056cbd49d58e2ba5877a6f6a58d51f51119d44",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -72340,9 +72341,9 @@
    "pack": "VoI",
    "uuid": "be6cf29d-bb8b-494a-9635-85ee9322a690",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/be6cf29d-bb8b-494a-9635-85ee9322a690.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Tangled-Woods-VoI.webp",
+   "sha256": "0072de25f55e758f072de1e9faab964eb7a4d0f3e3b70f3bce185a88cc42a643",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -72353,9 +72354,9 @@
    "pack": "VoI",
    "uuid": "6fe8d036-9b7a-4ca4-bab4-272d2a6a8949",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/6fe8d036-9b7a-4ca4-bab4-272d2a6a8949.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Turned-Around-VoI.webp",
+   "sha256": "72e613ddc89bb8455a87749aca733f148aabdaae30948c2b7611b0ec1cc8009e",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -72366,9 +72367,9 @@
    "pack": "VoI",
    "uuid": "7c463bf7-9a1a-4d8a-879b-f966f19d0695",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/7c463bf7-9a1a-4d8a-879b-f966f19d0695.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Prowling-Wolf-VoI.webp",
+   "sha256": "6f5cf0a36ac9f5a8e3b191359d29382e9b8eff0daa1cf18321948f15d3ae383b",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -72379,9 +72380,9 @@
    "pack": "VoI",
    "uuid": "838eebac-81db-4f00-aaba-024d70a1582d",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/838eebac-81db-4f00-aaba-024d70a1582d.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Broken-Lands-Location-VoI.webp",
+   "sha256": "9000b466960b945a69be19e8733df491b79d828182c3ad7e3db3c7f9ba6a1d58",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -72392,9 +72393,9 @@
    "pack": "VoI",
    "uuid": "8f3395ff-bccf-4620-beec-581c585682f2",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/8f3395ff-bccf-4620-beec-581c585682f2.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Take-Cover-VoI.webp",
+   "sha256": "e215374a5fa4f673ac45194725df0ca9d1657a3f60d95e5074c5ec95e30bc52e",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -72405,9 +72406,9 @@
    "pack": "VoI",
    "uuid": "5f18c4ca-fcda-46d2-874b-3a1a73ef7c53",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/5f18c4ca-fcda-46d2-874b-3a1a73ef7c53.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Low-on-Provisions-VoI.webp",
+   "sha256": "1c42d2a1c399f1e1183bf671292a511833f22a49f0f0c7179724d7923e5de3a0",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -72418,9 +72419,9 @@
    "pack": "VoI",
    "uuid": "7fc629f3-3115-47df-b997-4a5026d97d2b",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/7fc629f3-3115-47df-b997-4a5026d97d2b.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/Off-Track-VoI.webp",
+   "sha256": "0b78bbe08aca190b889b6d844780a66f406ab0ea081a27af23043f108b5339d7",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -72431,9 +72432,9 @@
    "pack": "VoI",
    "uuid": "3a8869dc-077e-4b8c-b3d5-474e4f9c14ba",
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/3a8869dc-077e-4b8c-b3d5-474e4f9c14ba.jpg",
-   "local": null,
-   "sha256": null,
-   "status": "pending"
+   "local": "assets/cards-zh-enc/In-Need-of-Rest-VoI.webp",
+   "sha256": "c9246466937aa57a0a737d17534365fca75a1bc073106879c8b2bfe5f7252a30",
+   "status": "ok"
   },
   {
    "kind": "encounter",
@@ -72446,7 +72447,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/74f297ed-3cb6-4c2d-83d8-c27b447a9250.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "questB",
@@ -72459,7 +72460,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/74f297ed-3cb6-4c2d-83d8-c27b447a9250.B.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -72472,7 +72473,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/93ece501-fae4-46e8-9720-316383b86688.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "questB",
@@ -72485,7 +72486,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/93ece501-fae4-46e8-9720-316383b86688.B.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -72498,7 +72499,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/0cdc4034-738d-487d-9a8c-8ef364772076.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "questB",
@@ -72511,7 +72512,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/0cdc4034-738d-487d-9a8c-8ef364772076.B.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -72524,7 +72525,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/0e0b125c-ffed-4473-9a64-7d709b16cca5.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "questB",
@@ -72537,7 +72538,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/0e0b125c-ffed-4473-9a64-7d709b16cca5.B.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -72550,7 +72551,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/8472068c-fdd7-4197-8046-b9da12c29135.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "questB",
@@ -72563,7 +72564,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/8472068c-fdd7-4197-8046-b9da12c29135.B.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -72576,7 +72577,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/c71fa40c-524e-43ec-b058-7ea239fdfd1d.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "questB",
@@ -72589,7 +72590,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/c71fa40c-524e-43ec-b058-7ea239fdfd1d.B.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -72602,7 +72603,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/99bdb330-27f2-4534-a355-0bb9f1682a8d.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "questB",
@@ -72615,7 +72616,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/99bdb330-27f2-4534-a355-0bb9f1682a8d.B.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -72628,7 +72629,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/c7e3bde9-8348-41d6-8272-aa733f60a108.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "questB",
@@ -72641,7 +72642,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/c7e3bde9-8348-41d6-8272-aa733f60a108.B.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
@@ -72654,7 +72655,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/d8c6d8df-9856-4fad-ba85-a96d17b67cfd.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "questB",
@@ -72667,7 +72668,7 @@
    "url": "https://dragncards-lotrlcg.s3.amazonaws.com/cards/Chinese/d8c6d8df-9856-4fad-ba85-a96d17b67cfd.B.jpg",
    "local": null,
    "sha256": null,
-   "status": "pending"
+   "status": "http-403/404"
   },
   {
    "kind": "encounter",
