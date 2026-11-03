@@ -1,3 +1,14 @@
+# v0.16.8 · 遭遇侧全量数据批次：3820 卡 / 154 剧本落地（2026-11-02）
+
+fetch-encounter-data.py `--packs all` 全量重建 encounter-carddata（HoB /Export 批量导出），供 v0.16.7 接线层直接生效：
+
+- **数据规模**：3820 张遭遇侧卡（hallofbeorn 3730 + ringsdb 宝物 90）、168 个系列、154 个剧本全部有 questCards 统计与遭遇组数量行（easy/normal 合计，nightmareSet 卡带标记不计入 normal 总量）。产物：encounter-carddata.json（6,497,349 字节）/ .js（5,629,646 字节）/ encounter-missing-report.json（153,109 字节）。
+- **uid 唯一键**：每卡物化 `uid`（HoB 详情页 slug，ringsdb 行为 `ringsdb-<code>`，slug 缺失回退 `packCode-code-position`），**3820/3820 全局唯一**。`packCode,code` 复合键仍有 103 个重复组（经逐一核实：85 组为 HoB 编号 bug 下真正不同的卡，18 组为同名双行，均为合法独立条目）——任何按 (pod, code) 的查找必须改用 uid，数据内 `uniqueKeyNote` 已声明此契约。
+- **体积优化**：`flavor` 字段整体移除（占载荷 10-15%，引擎无需），已写入脚本注释与 CHANGELOG 双处备案。
+- **剧本侧**：154 个 slug 全量抓取（增量缓存 enc-scenario-*.json，失败 0）；quest front/back 按 Side A/B 标记拆分；同题多印本 quest 统计继承改用「未分配优先」排序修复（95 处 stage 缺失 → 90 处真缺失，为 16 组同题冲突印本，自动继承不安全，记为已知缺口）。
+- **missing-report 要点**：391 行缺字段（173 objective 意志力 HoB 导出缺口、90 quest stage、127 front/back、1 questPoints）+ 886 次 ALeP `-FA` slug 对账失败（第一纪元同人剧本卡，不在官方导出内，均为已知缺口，如实报告不编造）。
+- 回归：catalog-data-tests 9/9 绿（含 fe 的形状/去重/权威性断言）、check_project 全绿。脚本与产物提交，**不推送**。
+
 # v0.16.7 · fetched 遭遇卡接入卡牌库显示层（2026-11-02）
 
 docs/data/encounter-carddata.js（HoB /Export 抓取产物）接入卡牌库，data.js 恒为权威：

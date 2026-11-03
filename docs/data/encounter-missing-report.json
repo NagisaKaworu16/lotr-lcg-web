@@ -1,0 +1,3450 @@
+{
+ "fetchedAt": "2026-11-03T02:31:09+00:00",
+ "cardCount": 3820,
+ "problems": [
+  "objective 10158 Arnor Ravaged: missing willpower (HoB export gap)",
+  "objective 10168 Thaurdir's Legacy: missing willpower (HoB export gap)",
+  "objective 10169 Thaurdir's Majesty: missing willpower (HoB export gap)",
+  "objective 10170 Thaurdir's Spite: missing willpower (HoB export gap)",
+  "quest 02060 The Wounded Eagle: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 02061 Radagast's Request: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 02062 Return to Rhosgobel: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "objective 02063 Athelas: missing willpower (HoB export gap)",
+  "objective 21012 Easterling Pursuit: missing willpower (HoB export gap)",
+  "objective 21033 Bribes: missing willpower (HoB export gap)",
+  "objective 21034 Submit or Die: missing willpower (HoB export gap)",
+  "objective 21035 Sauron Worship: missing willpower (HoB export gap)",
+  "objective 21036 Evidence of the Cult: missing willpower (HoB export gap)",
+  "objective 21068 Under the Watchful Eye: missing willpower (HoB export gap)",
+  "objective 21069 The Armies of Mordor: missing willpower (HoB export gap)",
+  "objective 21070 Covered in Darkness: missing willpower (HoB export gap)",
+  "objective 12134 Sea-ward Tower: missing willpower (HoB export gap)",
+  "objective 12135 Tower of the Gull: missing willpower (HoB export gap)",
+  "objective 12136 The Beacon: missing willpower (HoB export gap)",
+  "objective 12137 Tower of the Heron: missing willpower (HoB export gap)",
+  "objective 12002 Aearlang: missing willpower (HoB export gap)",
+  "objective 12003 Docks of Dol Amroth: missing willpower (HoB export gap)",
+  "quest 00004 The Tower of Sorcery: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 00005 Battle Under the Trees: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 00006 Dungeons of the Necromancer: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "objective 00007 Dol Guldur: missing willpower (HoB export gap)",
+  "objective 00008 Power of Lórien: missing willpower (HoB export gap)",
+  "quest 10064 Into the Ettenmoors: missing stage (scenario merge failed?)",
+  "objective 17079 Off Track: missing willpower (HoB export gap)",
+  "objective 17080 On Track: missing willpower (HoB export gap)",
+  "objective 08125 The Orcs' Search: missing willpower (HoB export gap)",
+  "objective 08127 Celebrimbor's Mould: missing willpower (HoB export gap)",
+  "quest 02036 Against the Trolls: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "objective 01108 Gandalf's Map: missing willpower (HoB export gap)",
+  "objective 01109 Dungeon Torch: missing willpower (HoB export gap)",
+  "objective 01110 Shadow Key: missing willpower (HoB export gap)",
+  "quest 01119 Flies and Spiders: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 01120 A Fork in the Road: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 01121 A Chosen Path: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 01122 A Chosen Path: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 01124 Through the Caverns: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 01125 Out of the Dungeons: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 01127 Anduin Passage: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 01128 Ambush on the Shore: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "objective 22064 The Wainriders: missing willpower (HoB export gap)",
+  "objective 22065 The Challengers: missing willpower (HoB export gap)",
+  "quest 22076 First Sprint: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 22077 The Turnaround: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 22078 The Farthest Edge: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 22079 Last Climb: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 22080 Home Stretch: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "objective 12078 Gate Key: missing willpower (HoB export gap)",
+  "objective 12078 Gate Key: missing willpower (HoB export gap)",
+  "objective 12192 Black Key: missing willpower (HoB export gap)",
+  "objective 12192 Black Key: missing willpower (HoB export gap)",
+  "objective 12216 The Black Sword: missing willpower (HoB export gap)",
+  "objective 12217 Hard Mode: missing willpower (HoB export gap)",
+  "objective 12217 Expert Mode: missing willpower (HoB export gap)",
+  "objective 17119 The Captives of Cirith Gurat: missing willpower (HoB export gap)",
+  "objective 19172 The Threat to Wilderland: missing willpower (HoB export gap)",
+  "objective 19190 Ashen Brazier: missing willpower (HoB export gap)",
+  "objective 06068 Rescued Villagers: missing willpower (HoB export gap)",
+  "objective 06069 Dead Villagers: missing willpower (HoB export gap)",
+  "quest 00004 Search for an Exit: missing stage (scenario merge failed?)",
+  "quest 00009 Nearing the Gate: missing stage (scenario merge failed?)",
+  "quest 04112 The Water's Edge: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 04113 Washed Away!: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 04114 Below the Mines: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 04115 Below the Mines: missing stage (scenario merge failed?)",
+  "quest 04115 Below the Mines: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 04116 Below the Mines: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 04117 Below the Mines: missing stage (scenario merge failed?)",
+  "quest 04117 Below the Mines: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 04118 Out of the Depths: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "objective 04119 Durin's Axe: missing willpower (HoB export gap)",
+  "objective 04120 Durin's Helm: missing willpower (HoB export gap)",
+  "quest 12014 The Weather Turns Foul: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 12016 Full Sail Ahead: missing stage (scenario merge failed?)",
+  "quest 12016 Full Sail Ahead: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 12017 The Weather Turns Foul: missing stage (scenario merge failed?)",
+  "quest 12017 The Weather Turns Foul: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 12018 The Cape of Andrast: missing stage (scenario merge failed?)",
+  "quest 12018 The Cape of Andrast: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "objective 05019 Alcaron's Scroll: missing willpower (HoB export gap)",
+  "objective 05025 Celador: missing willpower (HoB export gap)",
+  "objective 05026 Ithilien Guardian: missing willpower (HoB export gap)",
+  "quest 05066 Fighting in the Streets: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 05069 Southron Counter-attack: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 05070 The Hidden Way: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 05071 Approaching Cair Andros: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 05073 Reinforcing the Banks: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 05074 Breakthrough at the Approach: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 05075 Breakthrough at the Citadel: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 05076 The Last Battle: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "objective 03024 Book of Mazarbul: missing willpower (HoB export gap)",
+  "objective 03029 Abandoned Tools: missing willpower (HoB export gap)",
+  "objective 03041 Cave Torch: missing willpower (HoB export gap)",
+  "quest 03065 Goblin Patrol: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 03066 A Way Up: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 03068 The Fate of Balin: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 03070 Search for an Exit: missing stage (scenario merge failed?)",
+  "quest 03074 Search for an Exit: missing stage (scenario merge failed?)",
+  "quest 03074 Search for an Exit: missing questPoints",
+  "quest 19137 Exploring Gundabad: missing stage (scenario merge failed?)",
+  "quest 19137 Exploring Gundabad: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 19138 Exploring Gundabad: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 19139 Exploring Gundabad: missing stage (scenario merge failed?)",
+  "quest 19139 Exploring Gundabad: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 19140 Exploring Gundabad: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 19141 Exploring Gundabad: missing stage (scenario merge failed?)",
+  "quest 19141 Exploring Gundabad: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 19142 Exploring Gundabad: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "objective 19143 Wormsbane: missing willpower (HoB export gap)",
+  "objective 19144 Wormsbane: missing willpower (HoB export gap)",
+  "quest 08095 Through the Marsh: missing stage (scenario merge failed?)",
+  "quest 08097 Through the Marsh: missing stage (scenario merge failed?)",
+  "quest 08098 Lost in the Swanfleet: missing stage (scenario merge failed?)",
+  "quest 08100 Lost in the Swanfleet: missing stage (scenario merge failed?)",
+  "objective 19036 Durin's Key: missing willpower (HoB export gap)",
+  "objective 19037 Urdug's Horn: missing willpower (HoB export gap)",
+  "quest 19048 Rescue Tiny: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 142021 The Nine Walkers: front ok / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "objective 142043 Doom, Doom, Doom: missing willpower (HoB export gap)",
+  "objective 142068 Frodo's Choice: missing willpower (HoB export gap)",
+  "objective 142087 Overcome by Grief: missing willpower (HoB export gap)",
+  "objective 142088 Grievous Wound: missing willpower (HoB export gap)",
+  "objective 142091 The One Ring: missing willpower (HoB export gap)",
+  "quest 17051 Setting Out: missing stage (scenario merge failed?)",
+  "quest 17051 Setting Out: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 17052 Racing North: missing stage (scenario merge failed?)",
+  "quest 17052 Racing North: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 17053 Hunted in Harad: missing stage (scenario merge failed?)",
+  "quest 17053 Hunted in Harad: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 17054 The Ford of Harnen: missing stage (scenario merge failed?)",
+  "quest 17054 The Ford of Harnen: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "objective 01108 Gandalf's Map: missing willpower (HoB export gap)",
+  "objective 01109 Dungeon Torch: missing willpower (HoB export gap)",
+  "objective 01110 Shadow Key: missing willpower (HoB export gap)",
+  "quest 01119 Flies and Spiders: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 01120 A Fork in the Road: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 01121 A Chosen Path: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 01122 A Chosen Path: missing stage (scenario merge failed?)",
+  "quest 01122 A Chosen Path: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 01123 The Necromancer's Tower: missing stage (scenario merge failed?)",
+  "quest 01124 Through the Caverns: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 01125 Out of the Dungeons: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 01127 Anduin Passage: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 01128 Ambush on the Shore: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "objective 01138 Scarred: missing willpower (HoB export gap)",
+  "quest 02126 Through the Forest: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 02127 Escape Attempt: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 02128 To the Elvin King's Halls: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 02129 Ambush: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 04038 Along the Misty Mountains: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 04039 Orc Outpost: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 04040 Approaching Rivendell: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 04139 The Rear Guard: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 04140 Last Lord of Moria: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 141023 A Shortcut to Mushrooms: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 141026 Into the Wild: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 141029 Race to Rivendell: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "objective 141057 An Evil Wound: missing willpower (HoB export gap)",
+  "objective 141078 Gandalf's Delay: missing willpower (HoB export gap)",
+  "objective 141085 The One Ring: missing willpower (HoB export gap)",
+  "objective 17091 Banner of the Serpent: missing willpower (HoB export gap)",
+  "objective 17092 The Serpent's Garb: missing willpower (HoB export gap)",
+  "objective 17093 Summons from Mordor: missing willpower (HoB export gap)",
+  "quest 00002 Fire and Water: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 00003 The Dragon's Wrath: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "objective 00007 Lake-town: missing willpower (HoB export gap)",
+  "objective 00008 The Old Thrush: missing willpower (HoB export gap)",
+  "quest 12149 The Haven of Umbar: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "objective 12007 The Cursed Sword: missing willpower (HoB export gap)",
+  "quest 06043 An Untimely End: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 02105 Into the Marshes: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 02106 The Capture: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "objective 02107 Gollum: missing willpower (HoB export gap)",
+  "quest 02001 After the Raid: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 02002 Mirkwood Forest: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "objective 02029 Cave Torch: missing willpower (HoB export gap)",
+  "objective 19155 The Goblins' Assault: missing willpower (HoB export gap)",
+  "objective 19156 The Heroes' Defense: missing willpower (HoB export gap)",
+  "quest 00028 Three is Company: missing stage (scenario merge failed?)",
+  "quest 00029 A Shortcut to Mushrooms: missing stage (scenario merge failed?)",
+  "quest 00029 A Shortcut to Mushrooms: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 00030 Escape to Buckland: missing stage (scenario merge failed?)",
+  "objective 00046 Gandalf's Delay: missing willpower (HoB export gap)",
+  "quest 00049 Trouble in Bree: missing stage (scenario merge failed?)",
+  "quest 00050 Into the Wild: missing stage (scenario merge failed?)",
+  "quest 00050 Into the Wild: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 00051 The Ringwraiths Attack: missing stage (scenario merge failed?)",
+  "quest 00068 Pursued by the Enemy: missing stage (scenario merge failed?)",
+  "quest 00069 Race to Rivendell: missing stage (scenario merge failed?)",
+  "quest 00069 Race to Rivendell: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "objective 00070 An Evil Wound: missing willpower (HoB export gap)",
+  "quest 00087 The Council of Elrond: missing stage (scenario merge failed?)",
+  "quest 00088 The Nine Walkers: missing stage (scenario merge failed?)",
+  "quest 00088 The Nine Walkers: front ok / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 00089 The Hunt is Up!: missing stage (scenario merge failed?)",
+  "quest 00090 The Gates of Moria: missing stage (scenario merge failed?)",
+  "quest 00112 The Long Dark of Moria: missing stage (scenario merge failed?)",
+  "quest 00113 Drums in the Deep: missing stage (scenario merge failed?)",
+  "quest 00114 The Bridge of Khazad-dûm: missing stage (scenario merge failed?)",
+  "objective 00115 Doom, Doom, Doom: missing willpower (HoB export gap)",
+  "objective 00134 Overcome by Grief: missing willpower (HoB export gap)",
+  "objective 00135 Grievous Wound: missing willpower (HoB export gap)",
+  "quest 00137 The Great River: missing stage (scenario merge failed?)",
+  "quest 00138 The Company Divided: missing stage (scenario merge failed?)",
+  "quest 00139 Searching the Woods: missing stage (scenario merge failed?)",
+  "quest 00140 Guard the Hobbits: missing stage (scenario merge failed?)",
+  "quest 00141 The Seat of Amon Hen: missing stage (scenario merge failed?)",
+  "quest 00142 Orc Hunting: missing stage (scenario merge failed?)",
+  "quest 00143 The Ring-bearer Sets Out: missing stage (scenario merge failed?)",
+  "objective 00144 Frodo's Choice: missing willpower (HoB export gap)",
+  "objective 00166 The One Ring: missing willpower (HoB export gap)",
+  "objective 145016 Overcome by Fear: missing willpower (HoB export gap)",
+  "objective 145043 Minas Tirith: missing willpower (HoB export gap)",
+  "quest 145063 The Forbidden Door: missing stage (scenario merge failed?)",
+  "quest 145064 The Paths of the Dead: missing stage (scenario merge failed?)",
+  "quest 145065 The Dead are Following: missing stage (scenario merge failed?)",
+  "quest 145069 Attack on Pelargir: missing stage (scenario merge failed?)",
+  "objective 145071 The Corsair Fleet: missing willpower (HoB export gap)",
+  "objective 145072 The Corsair Fleet: missing willpower (HoB export gap)",
+  "quest 145073 The Garrison of Gondor: missing stage (scenario merge failed?)",
+  "quest 145074 Retreat from Osgiliath: missing stage (scenario merge failed?)",
+  "quest 145075 The White City Besieged: missing stage (scenario merge failed?)",
+  "quest 145076 Rohan has Come!: missing stage (scenario merge failed?)",
+  "quest 145077 Fighting in the Fields: missing stage (scenario merge failed?)",
+  "quest 11037 Sahír's Advance: missing stage (scenario merge failed?)",
+  "objective 11038 The Havens Burn: missing willpower (HoB export gap)",
+  "objective 11084 Navigation: missing willpower (HoB export gap)",
+  "objective 19094 Crypt Key: missing willpower (HoB export gap)",
+  "objective 19095 Old Lantern: missing willpower (HoB export gap)",
+  "objective 19096 Scatha's Teeth: missing willpower (HoB export gap)",
+  "quest 131023 An Unexpected Party: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 131025 Dawn Take You All: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 131027 The Mountain Pass: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 131031 Into the Fire: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "objective 131042 Troll Purse: missing willpower (HoB export gap)",
+  "objective 131043 Troll Key: missing willpower (HoB export gap)",
+  "objective 131044 A Smelly Sack: missing willpower (HoB export gap)",
+  "objective 131045 A Strong Sack: missing willpower (HoB export gap)",
+  "objective 131046 A Tough Sack: missing willpower (HoB export gap)",
+  "objective 131047 A Large Sack: missing willpower (HoB export gap)",
+  "objective 131048 A Deep Sack: missing willpower (HoB export gap)",
+  "objective 131049 A Foul Sack: missing willpower (HoB export gap)",
+  "objective 131050 A Worn Sack: missing willpower (HoB export gap)",
+  "objective 131079 Bilbo's Magic Ring: missing willpower (HoB export gap)",
+  "objective 132039 A Bare Patch: missing willpower (HoB export gap)",
+  "quest 132068 Lost in the Dark: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 132072 The Burglar's Turn: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 132075 The Gathering of Clouds: missing stage (scenario merge failed?)",
+  "quest 132076 The Eastern Spur: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 132077 Battle in the Dale: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 132078 The Defense of Ravenhill: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 132079 The Clouds Burst: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 02012 A New Terror Abroad: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 02013 On the Trail: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "objective 02014 Signs of Gollum: missing willpower (HoB export gap)",
+  "quest 40004 Searching the High Seas: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 04087 Continuing Eastward: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "objective 04088 Durin's Greaves: missing willpower (HoB export gap)",
+  "objective 09071 Hunting the Orcs: missing willpower (HoB export gap)",
+  "objective 09072 Savage Counter-attack: missing willpower (HoB export gap)",
+  "objective 144027 The Black Gate: missing willpower (HoB export gap)",
+  "objective 144052 A Heavy Burden: missing willpower (HoB export gap)",
+  "objective 144063 The One Ring: missing willpower (HoB export gap)",
+  "objective 06147 To the Tower: missing willpower (HoB export gap)",
+  "quest 00017 Through the Ruins: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 00018 Anduin Crossing: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 00019 Race to Minas Tirith: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "objective 17011 Horse-hair Lasso: missing willpower (HoB export gap)",
+  "objective 17012 Poisoned Spear: missing willpower (HoB export gap)",
+  "objective 17013 Pit Trap: missing willpower (HoB export gap)",
+  "objective 17014 Noose of Vines: missing willpower (HoB export gap)",
+  "objective 146014 Last of the Company: missing willpower (HoB export gap)",
+  "objective 146042 The Tower of Barad-dûr: missing willpower (HoB export gap)",
+  "objective 146065 The One Ring: missing willpower (HoB export gap)",
+  "quest 146066 Pass the Two Watchers: missing stage (scenario merge failed?)",
+  "quest 146067 Fighting in the Tower: missing stage (scenario merge failed?)",
+  "quest 146068 Escape from Cirith Ungol: missing stage (scenario merge failed?)",
+  "quest 146072 Embassy from the Dark Tower: missing stage (scenario merge failed?)",
+  "quest 146073 The Battle of the Morannon: missing stage (scenario merge failed?)",
+  "quest 146075 The Land of Mordor: missing stage (scenario merge failed?)",
+  "quest 146076 The Road to Isenmouthe: missing stage (scenario merge failed?)",
+  "quest 146077 The Last Gasp: missing stage (scenario merge failed?)",
+  "quest 146078 The Crack of Doom: missing stage (scenario merge failed?)",
+  "objective 146081 The Eye of Sauron: missing willpower (HoB export gap)",
+  "objective 146082 The Eye of Sauron: missing willpower (HoB export gap)",
+  "quest 00005 Journey in the Black Pit: missing stage (scenario merge failed?)",
+  "quest 00009 Search for the Chamber: missing stage (scenario merge failed?)",
+  "quest 147003 The Living Forest: missing stage (scenario merge failed?)",
+  "quest 147005 The Living Forest: missing stage (scenario merge failed?)",
+  "quest 147006 The Wiched Willow: missing stage (scenario merge failed?)",
+  "objective 20084 Cave Torch: missing willpower (HoB export gap)",
+  "quest 20095 After the Raid: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 20096 Mirkwood Forest: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 04012 Snowdrifts: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 04013 The Mountains' Peaks: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 00003 Deeper into the Past: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 00005 The Roots of Ered Luin: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 00006 The Mines of Belegost: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "objective 00008 Stalking the Ruins: missing willpower (HoB export gap)",
+  "objective 00009 Sword of Belegost: missing willpower (HoB export gap)",
+  "objective 00010 Map of Ered Luin: missing willpower (HoB export gap)",
+  "objective 00011 Keys of Belegost: missing willpower (HoB export gap)",
+  "objective 00012 Book of Aulë's Children: missing willpower (HoB export gap)",
+  "objective 00013 Dwarven Torch: missing willpower (HoB export gap)",
+  "objective 00014 Blue Mountain Gem: missing willpower (HoB export gap)",
+  "objective 00014 Last of the Company: missing willpower (HoB export gap)",
+  "objective 00016 Overcome by Fear: missing willpower (HoB export gap)",
+  "objective 00042 The Tower of Barad-dûr: missing willpower (HoB export gap)",
+  "objective 00043 Minas Tirith: missing willpower (HoB export gap)",
+  "objective 00065 The One Ring: missing willpower (HoB export gap)",
+  "objective 00071 The Corsair Fleet: missing willpower (HoB export gap)",
+  "objective 00072 The Corsair Fleet: missing willpower (HoB export gap)",
+  "objective 00081 The Eye of Sauron: missing willpower (HoB export gap)",
+  "objective 00082 The Eye of Sauron: missing willpower (HoB export gap)",
+  "objective 06026 A Scrap of History: missing willpower (HoB export gap)",
+  "objective 06027 Secret Map: missing willpower (HoB export gap)",
+  "objective 06028 A Prisoner: missing willpower (HoB export gap)",
+  "objective 06029 Unholy Alliance: missing willpower (HoB export gap)",
+  "objective 06030 Up in Flames: missing willpower (HoB export gap)",
+  "objective 06031 Poisoned Counsels: missing willpower (HoB export gap)",
+  "objective 06002 Rise to Power: missing willpower (HoB export gap)",
+  "objective 06003 Assassination: missing willpower (HoB export gap)",
+  "objective 06010 The Cabal's Champion: missing willpower (HoB export gap)",
+  "quest 00006 Raise the Levee: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 00007 Guard the Gate: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 00008 Rescue the Captives: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 00009 Delay the Enemy: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 00010 Man the Walls: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 00011 Stop the Attack: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "objective 00012 Annúminas: missing willpower (HoB export gap)",
+  "objective 00008 Eventide: missing willpower (HoB export gap)",
+  "objective 00009 Dusk: missing willpower (HoB export gap)",
+  "objective 00010 Midnight: missing willpower (HoB export gap)",
+  "objective 00011 Relic from the Dark Years: missing willpower (HoB export gap)",
+  "objective 16014 \"Seize Them!\": missing willpower (HoB export gap)",
+  "quest 16072 Find the Others: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "objective 08043 Key of the Boar: missing willpower (HoB export gap)",
+  "objective 08044 Key of the Wolf: missing willpower (HoB export gap)",
+  "objective 08045 Key of the Raven: missing willpower (HoB export gap)",
+  "quest 12040 Change of Plans: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "objective 10110 Daechanar's Brand: missing willpower (HoB export gap)",
+  "objective 10112 Heirloom of Iârchon: missing willpower (HoB export gap)",
+  "objective 10114 Orders from Angmar: missing willpower (HoB export gap)",
+  "objective 00031 To Isengard!: missing willpower (HoB export gap)",
+  "objective 00053 The Defense of Helm's Deep: missing willpower (HoB export gap)",
+  "objective 00073 Saruman's Staff: missing willpower (HoB export gap)",
+  "quest 00091 The Taming of Sméagol: missing stage (scenario merge failed?)",
+  "quest 00092 Across the Marshes: missing stage (scenario merge failed?)",
+  "quest 00093 Don't Look at the Lights!: missing stage (scenario merge failed?)",
+  "quest 00107 Ambush the Men of Harad: missing stage (scenario merge failed?)",
+  "objective 00108 The Black Gate: missing willpower (HoB export gap)",
+  "quest 00123 The Stairs of Cirith Ungol: missing stage (scenario merge failed?)",
+  "quest 00124 The Spider's Pass: missing stage (scenario merge failed?)",
+  "quest 00125 Gollum's Betrayal: missing stage (scenario merge failed?)",
+  "objective 00138 A Heavy Burden: missing willpower (HoB export gap)",
+  "objective 00139 The One Ring: missing willpower (HoB export gap)",
+  "objective 19012 Dragon Sign: missing willpower (HoB export gap)",
+  "quest 00005 Mirkwood Forest: missing stage (scenario merge failed?)",
+  "quest 00009 The Necromancer's Tower: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 00009 On the Trail: missing stage (scenario merge failed?)",
+  "quest 04063 To the West-door: missing stage (scenario merge failed?)",
+  "quest 04064 The Seething Lake: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "objective 10011 Daybreak: missing willpower (HoB export gap)",
+  "objective 10012 Nightfall: missing willpower (HoB export gap)",
+  "objective 18028 Searching for a Way Out: missing willpower (HoB export gap)",
+  "quest 18073 Dol Guldur Orcs: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 18075 Truly Lost: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 18077 Escape from Taur-nu-fuin: front MISSING / back MISSING (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "objective 143022 To Isengard!: missing willpower (HoB export gap)",
+  "objective 143033 The Defense of Helm's Deep: missing willpower (HoB export gap)",
+  "objective 143048 Saruman's Staff: missing willpower (HoB export gap)",
+  "quest 143069 Follow the Orcs: missing stage (scenario merge failed?)",
+  "quest 143070 Rescue the Captives: missing stage (scenario merge failed?)",
+  "quest 143072 The King of the Golden Hall: missing stage (scenario merge failed?)",
+  "quest 143073 Assault on Helm's Deep: missing stage (scenario merge failed?)",
+  "quest 143074 The Hosts of Isengard: missing stage (scenario merge failed?)",
+  "quest 143075 The Wall is Breached!: missing stage (scenario merge failed?)",
+  "quest 143076 The King Rides Out: missing stage (scenario merge failed?)",
+  "quest 143078 Rouse the Ents: missing stage (scenario merge failed?)",
+  "quest 143079 Breaking Isengard: missing stage (scenario merge failed?)",
+  "quest 143080 The Voice of Saruman: missing stage (scenario merge failed?)",
+  "objective 12071 Gate Key: missing willpower (HoB export gap)",
+  "objective 07031 Mugash: missing willpower (HoB export gap)",
+  "quest 07060 Dunlending Attack: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 07063 Searching for Mugash: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 07064 The Wizard's Prize: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)",
+  "quest 07067 The Angry Forest: front MISSING / back ok (no Side A/B markers in HoB text; scenario QuestCards.Text similarly incomplete — engine needs a manual-text overlay)"
+ ],
+ "failed": [
+  "Hunting-of-the-Wolf: unknown card slug A-Doom-Fulfilled-FA",
+  "Hunting-of-the-Wolf: unknown card slug Banks-of-the-Esgalduin-FA",
+  "Hunting-of-the-Wolf: unknown card slug Beleg-Strongbow-FA",
+  "Hunting-of-the-Wolf: unknown card slug Brethil-Dwelling-FA",
+  "Hunting-of-the-Wolf: unknown card slug Carcharoth-the-Devouring-Spirit-FA",
+  "Hunting-of-the-Wolf: unknown card slug Carcharoth-the-Red-Maw-FA",
+  "Hunting-of-the-Wolf: unknown card slug Carcharoth-the-Tormented-FA",
+  "Hunting-of-the-Wolf: unknown card slug Carcharoth-the-Wolf-of-Angband-FA",
+  "Hunting-of-the-Wolf: unknown card slug Dark-Valley-FA",
+  "Hunting-of-the-Wolf: unknown card slug Devil's-Cunning-FA",
+  "Hunting-of-the-Wolf: unknown card slug Dimbar-Field-FA",
+  "Hunting-of-the-Wolf: unknown card slug Eaves-of-Region-FA",
+  "Hunting-of-the-Wolf: unknown card slug Espied-from-Afar-FA",
+  "Hunting-of-the-Wolf: unknown card slug Evil-Days-FA",
+  "Hunting-of-the-Wolf: unknown card slug Flame-of-Anguish-FA",
+  "Hunting-of-the-Wolf: unknown card slug Fled-in-Fear-FA",
+  "Hunting-of-the-Wolf: unknown card slug Gates-of-Menegroth-FA",
+  "Hunting-of-the-Wolf: unknown card slug Hunting-of-the-Wolf-FA",
+  "Hunting-of-the-Wolf: unknown card slug Iant-Iaur-FA",
+  "Hunting-of-the-Wolf: unknown card slug Neldoreth-Settlement-FA",
+  "Hunting-of-the-Wolf: unknown card slug Pass-of-Anach-FA",
+  "Hunting-of-the-Wolf: unknown card slug Stood-Now-in-Wrath-FA",
+  "Hunting-of-the-Wolf: unknown card slug Taur-nu-Fuin-FA",
+  "The-Isle-of-Werewolves: unknown card slug Bridge-to-the-Isle-FA",
+  "The-Isle-of-Werewolves: unknown card slug Crazed-Thrall-FA",
+  "The-Isle-of-Werewolves: unknown card slug Dark-Hills-FA",
+  "The-Isle-of-Werewolves: unknown card slug Deep-Pit-FA",
+  "The-Isle-of-Werewolves: unknown card slug Devouring-Werewolf-FA",
+  "The-Isle-of-Werewolves: unknown card slug Draugluin-FA",
+  "The-Isle-of-Werewolves: unknown card slug Eyes-in-the-Dark-FA",
+  "The-Isle-of-Werewolves: unknown card slug Finrod-Felagund-Objective-Ally-FA",
+  "The-Isle-of-Werewolves: unknown card slug Foul-Vapour-FA",
+  "The-Isle-of-Werewolves: unknown card slug Gates-of-Tol-in-Gaurhoth-FA",
+  "The-Isle-of-Werewolves: unknown card slug Guard-Wolf-FA",
+  "The-Isle-of-Werewolves: unknown card slug High-Tower-FA",
+  "The-Isle-of-Werewolves: unknown card slug Hunting-Wolf-FA",
+  "The-Isle-of-Werewolves: unknown card slug Lord-of-Werewolves-FA",
+  "The-Isle-of-Werewolves: unknown card slug Master-of-Shadows-FA",
+  "The-Isle-of-Werewolves: unknown card slug Monstrous-Bat-FA",
+  "The-Isle-of-Werewolves: unknown card slug No-Living-Creature-FA",
+  "The-Isle-of-Werewolves: unknown card slug Ravenous-Werewolf-FA",
+  "The-Isle-of-Werewolves: unknown card slug Song-of-Wizardry-FA",
+  "The-Isle-of-Werewolves: unknown card slug The-Isle-of-Werewolves-FA",
+  "The-Isle-of-Werewolves: unknown card slug Thuringwethil-FA",
+  "The-Isle-of-Werewolves: unknown card slug Vacant-Pit-FA",
+  "The-Isle-of-Werewolves: unknown card slug Walls-of-Stone-FA",
+  "The-Isle-of-Werewolves: unknown card slug Weight-of-Horror-FA",
+  "The-Isle-of-Werewolves: unknown card slug Wolf-Sauron-FA",
+  "The-Seat-of-Morgoth: unknown card slug Angband-Orc-FA",
+  "The-Seat-of-Morgoth: unknown card slug Angband-Sword-FA",
+  "The-Seat-of-Morgoth: unknown card slug Balrog-of-Angband-FA",
+  "The-Seat-of-Morgoth: unknown card slug Carcharoth-FA",
+  "The-Seat-of-Morgoth: unknown card slug Clumsy-Step-FA",
+  "The-Seat-of-Morgoth: unknown card slug Devouring-Spirit-FA",
+  "The-Seat-of-Morgoth: unknown card slug Dreadful-Garments-FA",
+  "The-Seat-of-Morgoth: unknown card slug Echoing-Corridor-FA",
+  "The-Seat-of-Morgoth: unknown card slug Element-of-Surprise-FA",
+  "The-Seat-of-Morgoth: unknown card slug Evil-Lust-FA",
+  "The-Seat-of-Morgoth: unknown card slug Filth-and-Desolation-FA",
+  "The-Seat-of-Morgoth: unknown card slug Fire-drake-FA",
+  "The-Seat-of-Morgoth: unknown card slug Foolish-Ruckus-FA",
+  "The-Seat-of-Morgoth: unknown card slug Gothmog-FA",
+  "The-Seat-of-Morgoth: unknown card slug Heroic-Diversion-FA",
+  "The-Seat-of-Morgoth: unknown card slug Labyrinthine-Stairs-FA",
+  "The-Seat-of-Morgoth: unknown card slug Long-worm-FA",
+  "The-Seat-of-Morgoth: unknown card slug Morgoth-FA",
+  "The-Seat-of-Morgoth: unknown card slug Nethermost-Hall-FA",
+  "The-Seat-of-Morgoth: unknown card slug Orc-Armory-FA",
+  "The-Seat-of-Morgoth: unknown card slug Orc-Captain-FA",
+  "The-Seat-of-Morgoth: unknown card slug Pits-of-Angband-FA",
+  "The-Seat-of-Morgoth: unknown card slug Silmaril-FA",
+  "The-Seat-of-Morgoth: unknown card slug Subterranean-Furnace-FA",
+  "The-Seat-of-Morgoth: unknown card slug The-Seat-of-Morgoth-FA",
+  "The-Seat-of-Morgoth: unknown card slug Thrall-Quarters-FA",
+  "The-Seat-of-Morgoth: unknown card slug Torturer's-Dungeon-FA",
+  "The-Seat-of-Morgoth: unknown card slug Trackless-Cavern-FA",
+  "The-Seat-of-Morgoth: unknown card slug Troll-of-Angband-FA",
+  "The-Seat-of-Morgoth: unknown card slug Tunnels-of-Shadow-FA",
+  "Trial-Upon-the-Marches: unknown card slug An-Ill-Fate-TUtM",
+  "Trial-Upon-the-Marches: unknown card slug Angband-Assassin-TUtM",
+  "Trial-Upon-the-Marches: unknown card slug Azrat-TUtM",
+  "Trial-Upon-the-Marches: unknown card slug Burning-Abode-TUtM",
+  "Trial-Upon-the-Marches: unknown card slug Colossal-Orc-TUtM",
+  "Trial-Upon-the-Marches: unknown card slug Crooked-Blades-TUtM",
+  "Trial-Upon-the-Marches: unknown card slug Curse-of-Morgoth-TUtM",
+  "Trial-Upon-the-Marches: unknown card slug Deeds-of-Daring-TUtM",
+  "Trial-Upon-the-Marches: unknown card slug For-Good-Or-For-Ill-TUtM",
+  "Trial-Upon-the-Marches: unknown card slug Hidden-Grove-TUtM",
+  "Trial-Upon-the-Marches: unknown card slug March-Outpost-TUtM",
+  "Trial-Upon-the-Marches: unknown card slug March-Road-TUtM",
+  "Trial-Upon-the-Marches: unknown card slug Mighty-in-Arms-TUtM",
+  "Trial-Upon-the-Marches: unknown card slug Mirth-of-Morgoth-TUtM",
+  "Trial-Upon-the-Marches: unknown card slug Not-So-High-Is-Your-Destiny-TUtM",
+  "Trial-Upon-the-Marches: unknown card slug Orc-Archer-TUtM",
+  "Trial-Upon-the-Marches: unknown card slug Orc-Burner-TUtM",
+  "Trial-Upon-the-Marches: unknown card slug Orc-Follower-TUtM",
+  "Trial-Upon-the-Marches: unknown card slug Orc-Infiltration-TUtM",
+  "Trial-Upon-the-Marches: unknown card slug Orc-Marauders-TUtM",
+  "Trial-Upon-the-Marches: unknown card slug Orc-Raiding-Party-TUtM",
+  "Trial-Upon-the-Marches: unknown card slug Orcish-Mischief-TUtM",
+  "Trial-Upon-the-Marches: unknown card slug Raider-Camp-TUtM",
+  "Trial-Upon-the-Marches: unknown card slug Renewed-Grief-TUtM",
+  "Trial-Upon-the-Marches: unknown card slug Trial-Upon-the-Marches-Campaign-TUtM",
+  "Trial-Upon-the-Marches: unknown card slug Trial-Upon-the-Marches-TUtM",
+  "Among-the-Outlaws: unknown card slug Among-the-Outlaws-Campaign-AtO",
+  "Among-the-Outlaws: unknown card slug Among-the-Outlaws-AtO",
+  "Among-the-Outlaws: unknown card slug Androg-Enemy-AtO",
+  "Among-the-Outlaws: unknown card slug Androg-Objective-Ally-AtO",
+  "Among-the-Outlaws: unknown card slug Banded-Attack-AtO",
+  "Among-the-Outlaws: unknown card slug Bitterness-of-Exile-AtO",
+  "Among-the-Outlaws: unknown card slug Blood-Upon-the-Grass-AtO",
+  "Among-the-Outlaws: unknown card slug Cruel-of-Heart-AtO",
+  "Among-the-Outlaws: unknown card slug Cruel-Robber-AtO",
+  "Among-the-Outlaws: unknown card slug Cull-the-Weak-AtO",
+  "Among-the-Outlaws: unknown card slug Desperate-Outlaw-AtO",
+  "Among-the-Outlaws: unknown card slug Dogs-and-Fences-AtO",
+  "Among-the-Outlaws: unknown card slug Driven-Outcast-AtO",
+  "Among-the-Outlaws: unknown card slug Fellowship-with-the-Outlaws-AtO",
+  "Among-the-Outlaws: unknown card slug Forest-Clearing-AtO",
+  "Among-the-Outlaws: unknown card slug Forweg-Enemy-AtO",
+  "Among-the-Outlaws: unknown card slug Forweg-Objective-Ally-AtO",
+  "Among-the-Outlaws: unknown card slug Hedge-and-Stockade-AtO",
+  "Among-the-Outlaws: unknown card slug Homestead-Defender-AtO",
+  "Among-the-Outlaws: unknown card slug Horn-calls-AtO",
+  "Among-the-Outlaws: unknown card slug Hound-of-the-Woodmen-AtO",
+  "Among-the-Outlaws: unknown card slug Larnach's-Daughter-AtO",
+  "Among-the-Outlaws: unknown card slug No-Law-But-Their-Needs-AtO",
+  "Among-the-Outlaws: unknown card slug Punish-the-Trespassers-AtO",
+  "Among-the-Outlaws: unknown card slug Raid-the-Homestead-AtO",
+  "Among-the-Outlaws: unknown card slug Scattered-Homestead-AtO",
+  "Among-the-Outlaws: unknown card slug Teiglin-Hunter-AtO",
+  "Among-the-Outlaws: unknown card slug Tilled-Field-AtO",
+  "Among-the-Outlaws: unknown card slug Turn-a-Blind-Eye-AtO",
+  "Among-the-Outlaws: unknown card slug Wolf-men-of-the-Winter-AtO",
+  "Among-the-Outlaws: unknown card slug Woods-of-Teiglin-AtO",
+  "The-Betrayal-of-Mîm: unknown card slug Amon-Rudh-Discovered-TBoM",
+  "The-Betrayal-of-Mîm: unknown card slug Amon-Rudh-Hidden-TBoM",
+  "The-Betrayal-of-Mîm: unknown card slug Angband-Spy-TBoM",
+  "The-Betrayal-of-Mîm: unknown card slug Angband-Warrior-TBoM",
+  "The-Betrayal-of-Mîm: unknown card slug Bound-TBoM",
+  "The-Betrayal-of-Mîm: unknown card slug Broken-Land-TBoM",
+  "The-Betrayal-of-Mîm: unknown card slug Captive-Son-TBoM",
+  "The-Betrayal-of-Mîm: unknown card slug Curse-of-a-Dwarf-TBoM",
+  "The-Betrayal-of-Mîm: unknown card slug Dark-Dells-TBoM",
+  "The-Betrayal-of-Mîm: unknown card slug Gate-of-the-Garth-TBoM",
+  "The-Betrayal-of-Mîm: unknown card slug Holly-thicket-TBoM",
+  "The-Betrayal-of-Mîm: unknown card slug Ill-content-TBoM",
+  "The-Betrayal-of-Mîm: unknown card slug Khim-TBoM",
+  "The-Betrayal-of-Mîm: unknown card slug Mim-Enemy-TBoM",
+  "The-Betrayal-of-Mîm: unknown card slug Mim-Objective-Ally-TBoM",
+  "The-Betrayal-of-Mîm: unknown card slug More-Hunted-Than-Hunters-TBoM",
+  "The-Betrayal-of-Mîm: unknown card slug Orc-Scout-TBoM",
+  "The-Betrayal-of-Mîm: unknown card slug Poison-Archer-TBoM",
+  "The-Betrayal-of-Mîm: unknown card slug Rains-Out-of-Season-TBoM",
+  "The-Betrayal-of-Mîm: unknown card slug Sack-of-Roots-TBoM",
+  "The-Betrayal-of-Mîm: unknown card slug Secret-Stair-TBoM",
+  "The-Betrayal-of-Mîm: unknown card slug Sleepless-Eyes-TBoM",
+  "The-Betrayal-of-Mîm: unknown card slug Steep-Slopes-TBoM",
+  "The-Betrayal-of-Mîm: unknown card slug Stony-Heath-TBoM",
+  "The-Betrayal-of-Mîm: unknown card slug The-Betrayal-of-Mim-Campaign-TBoM",
+  "The-Betrayal-of-Mîm: unknown card slug The-Betrayal-of-Mim-TBoM",
+  "The-Betrayal-of-Mîm: unknown card slug Unfading-Grief-TBoM",
+  "The-Betrayal-of-Mîm: unknown card slug Wolf-sentinel-TBoM",
+  "The-Fall-of-Nargothrond: unknown card slug A-Grave-Wound-TFoN",
+  "The-Fall-of-Nargothrond: unknown card slug Besieged-Defenses-TFoN",
+  "The-Fall-of-Nargothrond: unknown card slug Child-of-Nargothrond-TFoN",
+  "The-Fall-of-Nargothrond: unknown card slug Coiling-Swiftly-TFoN",
+  "The-Fall-of-Nargothrond: unknown card slug Dark-Doom-TFoN",
+  "The-Fall-of-Nargothrond: unknown card slug Deep-River-TFoN",
+  "The-Fall-of-Nargothrond: unknown card slug Doom-Mastered-Objective-TFoN",
+  "The-Fall-of-Nargothrond: unknown card slug Dreadful-Spell-TFoN",
+  "The-Fall-of-Nargothrond: unknown card slug Driven-Back-TFoN",
+  "The-Fall-of-Nargothrond: unknown card slug Fateful-Words-TFoN",
+  "The-Fall-of-Nargothrond: unknown card slug Fell-Voice-TFoN",
+  "The-Fall-of-Nargothrond: unknown card slug Field-of-Tumhalad-TFoN",
+  "The-Fall-of-Nargothrond: unknown card slug Finduilas-TFoN",
+  "The-Fall-of-Nargothrond: unknown card slug Full-Fire-TFoN",
+  "The-Fall-of-Nargothrond: unknown card slug Glaurung-TFoN",
+  "The-Fall-of-Nargothrond: unknown card slug Great-Host-TFoN",
+  "The-Fall-of-Nargothrond: unknown card slug Leaderless-Archers-TFoN",
+  "The-Fall-of-Nargothrond: unknown card slug Maiden-of-Nargothrond-TFoN",
+  "The-Fall-of-Nargothrond: unknown card slug Mighty-Bridge-TFoN",
+  "The-Fall-of-Nargothrond: unknown card slug Mustered-Strength-TFoN",
+  "The-Fall-of-Nargothrond: unknown card slug Not-All-Can-Fight-TFoN",
+  "The-Fall-of-Nargothrond: unknown card slug Retreating-Soldiers-TFoN",
+  "The-Fall-of-Nargothrond: unknown card slug The-Fall-of-Nargothrond-Campaign-TFoN",
+  "The-Fall-of-Nargothrond: unknown card slug The-Fall-of-Nargothrond-TFoN",
+  "The-Fall-of-Nargothrond: unknown card slug The-Hate-of-Morgoth-TFoN",
+  "The-Fall-of-Nargothrond: unknown card slug The-Hopes-of-Nargothrond-TFoN",
+  "The-Fall-of-Nargothrond: unknown card slug The-Ruin-of-Nargothrond-TFoN",
+  "The-Fall-of-Nargothrond: unknown card slug Unmanned-Ballista-TFoN",
+  "The-Fall-of-Nargothrond: unknown card slug Your-Shadow-Lies-Upon-Them-TFoN",
+  "The-Fall-of-Nargothrond: unknown card slug An-Ill-Fate-TUtM",
+  "The-Fall-of-Nargothrond: unknown card slug Angband-Assassin-TUtM",
+  "The-Fall-of-Nargothrond: unknown card slug Azrat-TUtM",
+  "The-Fall-of-Nargothrond: unknown card slug Burning-Abode-TUtM",
+  "The-Fall-of-Nargothrond: unknown card slug Colossal-Orc-TUtM",
+  "The-Fall-of-Nargothrond: unknown card slug Crooked-Blades-TUtM",
+  "The-Fall-of-Nargothrond: unknown card slug Curse-of-Morgoth-TUtM",
+  "The-Fall-of-Nargothrond: unknown card slug Deeds-of-Daring-TUtM",
+  "The-Fall-of-Nargothrond: unknown card slug For-Good-Or-For-Ill-TUtM",
+  "The-Fall-of-Nargothrond: unknown card slug Hidden-Grove-TUtM",
+  "The-Fall-of-Nargothrond: unknown card slug March-Outpost-TUtM",
+  "The-Fall-of-Nargothrond: unknown card slug March-Road-TUtM",
+  "The-Fall-of-Nargothrond: unknown card slug Mighty-in-Arms-TUtM",
+  "The-Fall-of-Nargothrond: unknown card slug Mirth-of-Morgoth-TUtM",
+  "The-Fall-of-Nargothrond: unknown card slug Not-So-High-Is-Your-Destiny-TUtM",
+  "The-Fall-of-Nargothrond: unknown card slug Orc-Archer-TUtM",
+  "The-Fall-of-Nargothrond: unknown card slug Orc-Burner-TUtM",
+  "The-Fall-of-Nargothrond: unknown card slug Orc-Follower-TUtM",
+  "The-Fall-of-Nargothrond: unknown card slug Orc-Infiltration-TUtM",
+  "The-Fall-of-Nargothrond: unknown card slug Orc-Marauders-TUtM",
+  "The-Fall-of-Nargothrond: unknown card slug Orc-Raiding-Party-TUtM",
+  "The-Fall-of-Nargothrond: unknown card slug Orcish-Mischief-TUtM",
+  "The-Fall-of-Nargothrond: unknown card slug Raider-Camp-TUtM",
+  "The-Fall-of-Nargothrond: unknown card slug Renewed-Grief-TUtM",
+  "The-Fall-of-Nargothrond: unknown card slug Trial-Upon-the-Marches-Campaign-TUtM",
+  "The-Fall-of-Nargothrond: unknown card slug Trial-Upon-the-Marches-TUtM",
+  "Ambush-at-Erelas: unknown card slug Brigand-Ringleader-CoE",
+  "Ambush-at-Erelas: unknown card slug Chaos-in-the-Hills-CoE",
+  "Ambush-at-Erelas: unknown card slug Crossroads-CoE",
+  "Ambush-at-Erelas: unknown card slug Erelas-Gates-CoE",
+  "Ambush-at-Erelas: unknown card slug Erelas-Stables-CoE",
+  "Ambush-at-Erelas: unknown card slug Grasping-Slaver-CoE",
+  "Ambush-at-Erelas: unknown card slug Looted-Weapons-CoE",
+  "Ambush-at-Erelas: unknown card slug Pillaging-Swordsman-CoE",
+  "Ambush-at-Erelas: unknown card slug Plundered-Goods-CoE",
+  "Ambush-at-Erelas: unknown card slug Sneaky-Thief-CoE",
+  "Ambush-at-Erelas: unknown card slug Stockpile-Barricade-CoE",
+  "Ambush-at-Erelas: unknown card slug Vengeful-Bowman-CoE",
+  "Ambush-at-Erelas: unknown card slug Abandoned-Mill-CoE",
+  "Ambush-at-Erelas: unknown card slug Old-Farmhouse-CoE",
+  "Ambush-at-Erelas: unknown card slug Cold-from-the-Mountains-CoE",
+  "Ambush-at-Erelas: unknown card slug Exhausting-Winds-CoE",
+  "Ambush-at-Erelas: unknown card slug Exposed-to-the-Elements-CoE",
+  "Ambush-at-Erelas: unknown card slug Tired-and-Hungry-CoE",
+  "The-Battle-for-the-Beacon: unknown card slug A-History-of-Strife-CoE",
+  "The-Battle-for-the-Beacon: unknown card slug Dunland-Chieftain-CoE",
+  "The-Battle-for-the-Beacon: unknown card slug Dunlending-Berserker-CoE",
+  "The-Battle-for-the-Beacon: unknown card slug Hillman-Scout-CoE",
+  "The-Battle-for-the-Beacon: unknown card slug Surprise-Attack-CoE",
+  "The-Battle-for-the-Beacon: unknown card slug Wild-Ravager-CoE",
+  "The-Battle-for-the-Beacon: unknown card slug Deadly-Defector-CoE",
+  "The-Battle-for-the-Beacon: unknown card slug Recreant-Rider-CoE",
+  "The-Battle-for-the-Beacon: unknown card slug Another-Wave-CoE",
+  "The-Battle-for-the-Beacon: unknown card slug Assault-Upon-Erelas-CoE",
+  "The-Battle-for-the-Beacon: unknown card slug Bald-Hill-CoE",
+  "The-Battle-for-the-Beacon: unknown card slug Defend-the-Beacon-CoE",
+  "The-Battle-for-the-Beacon: unknown card slug Enraged-Dunlending-CoE",
+  "The-Battle-for-the-Beacon: unknown card slug Erelas-Beacon-CoE",
+  "The-Battle-for-the-Beacon: unknown card slug From-All-Sides-CoE",
+  "The-Battle-for-the-Beacon: unknown card slug Host-of-Rohan-CoE",
+  "The-Battle-for-the-Beacon: unknown card slug Narrow-Stair-CoE",
+  "The-Battle-for-the-Beacon: unknown card slug Reclaim-the-Beacon-CoE",
+  "The-Battle-for-the-Beacon: unknown card slug Rocky-Slope-CoE",
+  "The-Battle-for-the-Beacon: unknown card slug Surrounding-Grassland-CoE",
+  "The-Battle-for-the-Beacon: unknown card slug Wooden-Barricade-CoE",
+  "The-Horse-Lord's-Ire: unknown card slug Black-Land-Scouts-CoE",
+  "The-Horse-Lord's-Ire: unknown card slug Crimson-Banner-CoE",
+  "The-Horse-Lord's-Ire: unknown card slug Orc-Battalion-CoE",
+  "The-Horse-Lord's-Ire: unknown card slug Orcish-Horse-butcher-CoE",
+  "The-Horse-Lord's-Ire: unknown card slug Servant-of-the-Eye-CoE",
+  "The-Horse-Lord's-Ire: unknown card slug White-Mountain-Reinforcements-CoE",
+  "The-Horse-Lord's-Ire: unknown card slug Endless-Grasslands-CoE",
+  "The-Horse-Lord's-Ire: unknown card slug Humpbacked-Downs-CoE",
+  "The-Horse-Lord's-Ire: unknown card slug Ride-Through-the-Night-CoE",
+  "The-Horse-Lord's-Ire: unknown card slug The-Green-Sea-CoE",
+  "The-Horse-Lord's-Ire: unknown card slug Wild-Country-CoE",
+  "The-Horse-Lord's-Ire: unknown card slug Windworn-Villages-CoE",
+  "The-Horse-Lord's-Ire: unknown card slug Bridle-biter-CoE",
+  "The-Horse-Lord's-Ire: unknown card slug Brightmane-CoE",
+  "The-Horse-Lord's-Ire: unknown card slug Felarof-CoE",
+  "The-Horse-Lord's-Ire: unknown card slug Flinthoof-CoE",
+  "The-Horse-Lord's-Ire: unknown card slug Horse-Lord's-Lodge-CoE",
+  "The-Horse-Lord's-Ire: unknown card slug Horse-Thieves'-Hovel-CoE",
+  "The-Horse-Lord's-Ire: unknown card slug Overburdened-CoE",
+  "The-Horse-Lord's-Ire: unknown card slug Pommel-pouncer-CoE",
+  "The-Horse-Lord's-Ire: unknown card slug Rein-ripper-CoE",
+  "The-Horse-Lord's-Ire: unknown card slug Saddle-slasher-CoE",
+  "The-Horse-Lord's-Ire: unknown card slug Spoiled-Pasture-CoE",
+  "The-Horse-Lord's-Ire: unknown card slug Stolen-Steeds-CoE",
+  "The-Horse-Lord's-Ire: unknown card slug Thirst-for-Horse-Blood-CoE",
+  "The-Horse-Lord's-Ire: unknown card slug Thruk-CoE",
+  "The-Aldburg-Plot: unknown card slug Deadly-Defector-CoE",
+  "The-Aldburg-Plot: unknown card slug Recreant-Rider-CoE",
+  "The-Aldburg-Plot: unknown card slug Abandoned-Mill-CoE",
+  "The-Aldburg-Plot: unknown card slug Old-Farmhouse-CoE",
+  "The-Aldburg-Plot: unknown card slug A-Case-of-Identity-TAP",
+  "The-Aldburg-Plot: unknown card slug A-Fire-Rises-TAP",
+  "The-Aldburg-Plot: unknown card slug Aldburg-Malcontent-TAP",
+  "The-Aldburg-Plot: unknown card slug Decrepit-Hovel-TAP",
+  "The-Aldburg-Plot: unknown card slug Dunlending-Agents-TAP",
+  "The-Aldburg-Plot: unknown card slug False-Lead-TAP",
+  "The-Aldburg-Plot: unknown card slug Garrison-Barracks-TAP",
+  "The-Aldburg-Plot: unknown card slug Great-Mead-Hall-TAP",
+  "The-Aldburg-Plot: unknown card slug Letter-from-Dunland-TAP",
+  "The-Aldburg-Plot: unknown card slug Misty-Street-TAP",
+  "The-Aldburg-Plot: unknown card slug Ossian-TAP",
+  "The-Aldburg-Plot: unknown card slug Prison-Key-TAP",
+  "The-Aldburg-Plot: unknown card slug Raven-Signet-Ring-TAP",
+  "The-Aldburg-Plot: unknown card slug Red-Fletched-Arrow-TAP",
+  "The-Aldburg-Plot: unknown card slug Red-Harvest-TAP",
+  "The-Aldburg-Plot: unknown card slug Rohirric-Coins-TAP",
+  "The-Aldburg-Plot: unknown card slug Ruby-Cloak-pin-TAP",
+  "The-Aldburg-Plot: unknown card slug Silver-Dagger-TAP",
+  "The-Aldburg-Plot: unknown card slug Spreading-Inferno-TAP",
+  "The-Aldburg-Plot: unknown card slug Sudden-Ambush-TAP",
+  "The-Aldburg-Plot: unknown card slug Taken-by-the-Night-TAP",
+  "The-Aldburg-Plot: unknown card slug The-Armoury-TAP",
+  "The-Aldburg-Plot: unknown card slug The-Horse's-Tail-TAP",
+  "The-Aldburg-Plot: unknown card slug The-Man-with-the-Twisted-Lip-TAP",
+  "The-Aldburg-Plot: unknown card slug The-Prisoner-in-White-TAP",
+  "The-Aldburg-Plot: unknown card slug The-Spy-Master-TAP",
+  "The-Aldburg-Plot: unknown card slug The-Whisperer-TAP",
+  "The-Aldburg-Plot: unknown card slug Town-Guard-TAP",
+  "The-Aldburg-Plot: unknown card slug Traitor's-Confession-TAP",
+  "The-Aldburg-Plot: unknown card slug Well-lit-Hall-TAP",
+  "The-Aldburg-Plot: unknown card slug Whisperer-in-the-Darkness-TAP",
+  "Fire-on-the-Eastemnet: unknown card slug Captured-Steeds-FotE",
+  "Fire-on-the-Eastemnet: unknown card slug Cracking-Horse-Whip-FotE",
+  "Fire-on-the-Eastemnet: unknown card slug Eastemnet-Pasture-FotE",
+  "Fire-on-the-Eastemnet: unknown card slug Entwash-Crossings-FotE",
+  "Fire-on-the-Eastemnet: unknown card slug Exhausted-Pursuit-FotE",
+  "Fire-on-the-Eastemnet: unknown card slug Expanded-Search-FotE",
+  "Fire-on-the-Eastemnet: unknown card slug Hidden-Orc-Camp-FotE",
+  "Fire-on-the-Eastemnet: unknown card slug Morgahk-FotE",
+  "Fire-on-the-Eastemnet: unknown card slug Open-Meadows-FotE",
+  "Fire-on-the-Eastemnet: unknown card slug Orc-Lookout-FotE",
+  "Fire-on-the-Eastemnet: unknown card slug Orcish-Wrangler-FotE",
+  "Fire-on-the-Eastemnet: unknown card slug Panicked-Horses-FotE",
+  "Fire-on-the-Eastemnet: unknown card slug Pillaged-Stables-FotE",
+  "Fire-on-the-Eastemnet: unknown card slug Shores-of-Anduin-FotE",
+  "Fire-on-the-Eastemnet: unknown card slug White-Mountain-Beastmaster-FotE",
+  "Fire-on-the-Eastemnet: unknown card slug Wild-Steeds-FotE",
+  "Fire-on-the-Eastemnet: unknown card slug Black-Land-Scouts-CoE",
+  "Fire-on-the-Eastemnet: unknown card slug Crimson-Banner-CoE",
+  "Fire-on-the-Eastemnet: unknown card slug Orc-Battalion-CoE",
+  "Fire-on-the-Eastemnet: unknown card slug Orcish-Horse-butcher-CoE",
+  "Fire-on-the-Eastemnet: unknown card slug Servant-of-the-Eye-CoE",
+  "Fire-on-the-Eastemnet: unknown card slug White-Mountain-Reinforcements-CoE",
+  "The-Gap-of-Rohan: unknown card slug Deadly-Defector-CoE",
+  "The-Gap-of-Rohan: unknown card slug Recreant-Rider-CoE",
+  "The-Gap-of-Rohan: unknown card slug Cold-from-the-Mountains-CoE",
+  "The-Gap-of-Rohan: unknown card slug Exhausting-Winds-CoE",
+  "The-Gap-of-Rohan: unknown card slug Exposed-to-the-Elements-CoE",
+  "The-Gap-of-Rohan: unknown card slug Tired-and-Hungry-CoE",
+  "The-Gap-of-Rohan: unknown card slug Dunlending-Rearguard-TGoR",
+  "The-Gap-of-Rohan: unknown card slug Exposed-Ridge-TGoR",
+  "The-Gap-of-Rohan: unknown card slug Frantic-Dunlending-TGoR",
+  "The-Gap-of-Rohan: unknown card slug Frozen-Lake-TGoR",
+  "The-Gap-of-Rohan: unknown card slug Frozen-Solid-TGoR",
+  "The-Gap-of-Rohan: unknown card slug Galmod-TGoR",
+  "The-Gap-of-Rohan: unknown card slug Galmod's-Escort-TGoR",
+  "The-Gap-of-Rohan: unknown card slug Slippery-Hill-TGoR",
+  "The-Gap-of-Rohan: unknown card slug Snow-Squall-TGoR",
+  "The-Gap-of-Rohan: unknown card slug Snowbank-TGoR",
+  "The-Gap-of-Rohan: unknown card slug Stumble-in-the-Snow-TGoR",
+  "The-Gap-of-Rohan: unknown card slug Unnatural-Cold-TGoR",
+  "The-Gap-of-Rohan: unknown card slug White-Wall-TGoR",
+  "The-Glittering-Caves: unknown card slug A-History-of-Strife-CoE",
+  "The-Glittering-Caves: unknown card slug Dunland-Chieftain-CoE",
+  "The-Glittering-Caves: unknown card slug Dunlending-Berserker-CoE",
+  "The-Glittering-Caves: unknown card slug Hillman-Scout-CoE",
+  "The-Glittering-Caves: unknown card slug Surprise-Attack-CoE",
+  "The-Glittering-Caves: unknown card slug Wild-Ravager-CoE",
+  "The-Glittering-Caves: unknown card slug Cave-Opening-TGC",
+  "The-Glittering-Caves: unknown card slug Crossroads-TGC",
+  "The-Glittering-Caves: unknown card slug Dark-Pit-TGC",
+  "The-Glittering-Caves: unknown card slug Dead-End-TGC",
+  "The-Glittering-Caves: unknown card slug Fork-TGC",
+  "The-Glittering-Caves: unknown card slug Guarded-Hall-TGC",
+  "The-Glittering-Caves: unknown card slug Jewelled-Cavern-TGC",
+  "The-Glittering-Caves: unknown card slug Locked-Door-TGC",
+  "The-Glittering-Caves: unknown card slug Secret-Passage-TGC",
+  "The-Glittering-Caves: unknown card slug Stairwell-TGC",
+  "The-Glittering-Caves: unknown card slug Tunnel-TGC",
+  "The-Glittering-Caves: unknown card slug Vast-Cave-TGC",
+  "The-Glittering-Caves: unknown card slug Echoes-in-the-Deep-Dark-Pit-TGC",
+  "The-Glittering-Caves: unknown card slug Echoes-in-the-Deep-Secret-Passage-TGC",
+  "The-Glittering-Caves: unknown card slug Forgotten-Shade-Dead-End-TGC",
+  "The-Glittering-Caves: unknown card slug Forgotten-Shade-Fork-TGC",
+  "The-Glittering-Caves: unknown card slug Forgotten-Shade-Tunnel-TGC",
+  "The-Glittering-Caves: unknown card slug Killing-With-Fear-Cave-Opening-TGC",
+  "The-Glittering-Caves: unknown card slug Killing-With-Fear-Guarded-Hall-TGC",
+  "The-Glittering-Caves: unknown card slug Killing-With-Fear-Stairwell-TGC",
+  "The-Glittering-Caves: unknown card slug Radiant-Caverns-Crossroads-TGC",
+  "The-Glittering-Caves: unknown card slug Radiant-Caverns-Jewelled-Cavern-TGC",
+  "The-Glittering-Caves: unknown card slug Radiant-Caverns-Vast-Cave-TGC",
+  "The-Glittering-Caves: unknown card slug Twisting-Paths-TGC",
+  "The-Glittering-Caves: unknown card slug Alluring-Paths-TGC",
+  "The-Glittering-Caves: unknown card slug Guard-the-Entrance-TGC",
+  "The-Glittering-Caves: unknown card slug Helm-Hammerhand-A-TGC",
+  "The-Glittering-Caves: unknown card slug Helm-Hammerhand-B-TGC",
+  "The-Glittering-Caves: unknown card slug Helm's-Horn-TGC",
+  "The-Glittering-Caves: unknown card slug Lurking-Ghul-TGC",
+  "The-Glittering-Caves: unknown card slug Small-Stream-TGC",
+  "The-Glittering-Caves: unknown card slug Wonders-of-Aglarond-TGC",
+  "Mustering-of-the-Rohirrim: unknown card slug Aldburg-Provocateur-MotR",
+  "Mustering-of-the-Rohirrim: unknown card slug Assassin-at-Edoras-MotR",
+  "Mustering-of-the-Rohirrim: unknown card slug Bitter-Betrayal-MotR",
+  "Mustering-of-the-Rohirrim: unknown card slug Coup-MotR",
+  "Mustering-of-the-Rohirrim: unknown card slug Curuwyn-The-Whisperer-MotR",
+  "Mustering-of-the-Rohirrim: unknown card slug Cutthroat's-Strike-MotR",
+  "Mustering-of-the-Rohirrim: unknown card slug Deeping-stream-MotR",
+  "Mustering-of-the-Rohirrim: unknown card slug Devoted-Determination-MotR",
+  "Mustering-of-the-Rohirrim: unknown card slug Felberen-Scion-of-Freca-MotR",
+  "Mustering-of-the-Rohirrim: unknown card slug Folcwine-MotR",
+  "Mustering-of-the-Rohirrim: unknown card slug Host-of-Rohan-MotR",
+  "Mustering-of-the-Rohirrim: unknown card slug Irensaga-MotR",
+  "Mustering-of-the-Rohirrim: unknown card slug Massing-at-the-Isen-MotR",
+  "Mustering-of-the-Rohirrim: unknown card slug Orator's-Hall-MotR",
+  "Mustering-of-the-Rohirrim: unknown card slug Orc-host-Remnant-MotR",
+  "Mustering-of-the-Rohirrim: unknown card slug Pernicious-Plotter-MotR",
+  "Mustering-of-the-Rohirrim: unknown card slug Plains-of-Strife-MotR",
+  "Mustering-of-the-Rohirrim: unknown card slug Raven-Clan-Sharpshooter-MotR",
+  "Mustering-of-the-Rohirrim: unknown card slug Raven-Clan-Warchief-MotR",
+  "Mustering-of-the-Rohirrim: unknown card slug Road-to-Ruin-MotR",
+  "Mustering-of-the-Rohirrim: unknown card slug Scattered-to-the-Winds-MotR",
+  "Mustering-of-the-Rohirrim: unknown card slug Smeohbrand-Rogue-of-Orthanc-MotR",
+  "Mustering-of-the-Rohirrim: unknown card slug Sniveling-Courtier-MotR",
+  "Mustering-of-the-Rohirrim: unknown card slug Spiteful-Hunter-MotR",
+  "Mustering-of-the-Rohirrim: unknown card slug The-Far-Bank-MotR",
+  "Mustering-of-the-Rohirrim: unknown card slug Traitor's-Redoubt-MotR",
+  "Mustering-of-the-Rohirrim: unknown card slug Winter-in-Westemnet-MotR",
+  "Mustering-of-the-Rohirrim: unknown card slug Endless-Grasslands-CoE",
+  "Mustering-of-the-Rohirrim: unknown card slug Humpbacked-Downs-CoE",
+  "Mustering-of-the-Rohirrim: unknown card slug Ride-Through-the-Night-CoE",
+  "Mustering-of-the-Rohirrim: unknown card slug The-Green-Sea-CoE",
+  "Mustering-of-the-Rohirrim: unknown card slug Wild-Country-CoE",
+  "Mustering-of-the-Rohirrim: unknown card slug Windworn-Villages-CoE",
+  "Mustering-of-the-Rohirrim: unknown card slug Cold-from-the-Mountains-CoE",
+  "Mustering-of-the-Rohirrim: unknown card slug Exhausting-Winds-CoE",
+  "Mustering-of-the-Rohirrim: unknown card slug Exposed-to-the-Elements-CoE",
+  "Mustering-of-the-Rohirrim: unknown card slug Tired-and-Hungry-CoE",
+  "Blood-in-the-Isen: unknown card slug Chaos-and-Confusion-BitI",
+  "Blood-in-the-Isen: unknown card slug Contested-Battleground-BitI",
+  "Blood-in-the-Isen: unknown card slug Coordinated-Assault-BitI",
+  "Blood-in-the-Isen: unknown card slug Defensive-Outcrop-BitI",
+  "Blood-in-the-Isen: unknown card slug Dunland-Axe-hand-BitI",
+  "Blood-in-the-Isen: unknown card slug Ealdwulf-BitI",
+  "Blood-in-the-Isen: unknown card slug Fleet-footed-Dunlending-BitI",
+  "Blood-in-the-Isen: unknown card slug Grimrede-BitI",
+  "Blood-in-the-Isen: unknown card slug Hasty-Pursuit-BitI",
+  "Blood-in-the-Isen: unknown card slug Heavy-Losses-BitI",
+  "Blood-in-the-Isen: unknown card slug Narrow-Crossing-BitI",
+  "Blood-in-the-Isen: unknown card slug North-South-Road-BitI",
+  "Blood-in-the-Isen: unknown card slug Open-Rebellion-BitI",
+  "Blood-in-the-Isen: unknown card slug Rohan-Renegade-BitI",
+  "Blood-in-the-Isen: unknown card slug Spurned-Hillman-BitI",
+  "Blood-in-the-Isen: unknown card slug West-Bank-BitI",
+  "Blood-in-the-Isen: unknown card slug A-History-of-Strife-CoE",
+  "Blood-in-the-Isen: unknown card slug Dunland-Chieftain-CoE",
+  "Blood-in-the-Isen: unknown card slug Dunlending-Berserker-CoE",
+  "Blood-in-the-Isen: unknown card slug Hillman-Scout-CoE",
+  "Blood-in-the-Isen: unknown card slug Surprise-Attack-CoE",
+  "Blood-in-the-Isen: unknown card slug Wild-Ravager-CoE",
+  "Pies-for-the-Party: unknown card slug Perfect-Smoke-Spot-TSR",
+  "Pies-for-the-Party: unknown card slug Sleepy-Hillside-TSR",
+  "Pies-for-the-Party: unknown card slug Tookland-Tavern-TSR",
+  "Pies-for-the-Party: unknown card slug We've-Got-Time-TSR",
+  "Pies-for-the-Party: unknown card slug Berry-Pies-TSR",
+  "Pies-for-the-Party: unknown card slug Bywater-Burglar-TSR",
+  "Pies-for-the-Party: unknown card slug Cottage-Pies-TSR",
+  "Pies-for-the-Party: unknown card slug East-Road-Toll-TSR",
+  "Pies-for-the-Party: unknown card slug Hankering-Hobbit-TSR",
+  "Pies-for-the-Party: unknown card slug Mince-Pies-TSR",
+  "Pies-for-the-Party: unknown card slug Mutton-Pies-TSR",
+  "Pies-for-the-Party: unknown card slug Pork-Pies-TSR",
+  "Pies-for-the-Party: unknown card slug Protector-of-the-Pies-TSR",
+  "Pies-for-the-Party: unknown card slug Tattling-Took-TSR",
+  "Pies-for-the-Party: unknown card slug The-East-Road-TSR",
+  "Pies-for-the-Party: unknown card slug The-Party-Tree-TSR",
+  "Pies-for-the-Party: unknown card slug Waymeet-Market-TSR",
+  "Pies-for-the-Party: unknown card slug Westfarthing-Rascals-TSR",
+  "Pies-for-the-Party: unknown card slug Burly-Bouncer-TSR",
+  "Pies-for-the-Party: unknown card slug Girded-Gangster-TSR",
+  "Pies-for-the-Party: unknown card slug Ruffians-on-the-Rise-TSR",
+  "Pies-for-the-Party: unknown card slug Sneering-Snooper-TSR",
+  "Pies-for-the-Party: unknown card slug Thuggish-Thrower-TSR",
+  "Sundown-on-the-Shire: unknown card slug Perfect-Smoke-Spot-TSR",
+  "Sundown-on-the-Shire: unknown card slug Sleepy-Hillside-TSR",
+  "Sundown-on-the-Shire: unknown card slug Tookland-Tavern-TSR",
+  "Sundown-on-the-Shire: unknown card slug We've-Got-Time-TSR",
+  "Sundown-on-the-Shire: unknown card slug Brandy-stream-TSR",
+  "Sundown-on-the-Shire: unknown card slug Buckland-Homestead-TSR",
+  "Sundown-on-the-Shire: unknown card slug Watchful-Wood-TSR",
+  "Sundown-on-the-Shire: unknown card slug 'Short'-Conversation-TSR",
+  "Sundown-on-the-Shire: unknown card slug Biddy-TSR",
+  "Sundown-on-the-Shire: unknown card slug Bloodfeather-TSR",
+  "Sundown-on-the-Shire: unknown card slug Duchess-TSR",
+  "Sundown-on-the-Shire: unknown card slug Edith-TSR",
+  "Sundown-on-the-Shire: unknown card slug Fowl-Attention-TSR",
+  "Sundown-on-the-Shire: unknown card slug Hungry-Wolf-TSR",
+  "Sundown-on-the-Shire: unknown card slug It-Ate-What-TSR",
+  "Sundown-on-the-Shire: unknown card slug Mertle-TSR",
+  "Sundown-on-the-Shire: unknown card slug Midday-TSR",
+  "Sundown-on-the-Shire: unknown card slug Morning-TSR",
+  "Sundown-on-the-Shire: unknown card slug Night-TSR",
+  "Sundown-on-the-Shire: unknown card slug Packleader-TSR",
+  "Sundown-on-the-Shire: unknown card slug Peck-and-Scratch-TSR",
+  "Sundown-on-the-Shire: unknown card slug Pig-TSR",
+  "Sundown-on-the-Shire: unknown card slug Sly-Fox-TSR",
+  "Sundown-on-the-Shire: unknown card slug Sundown-on-the-Shire-Treachery-TSR",
+  "Sundown-on-the-Shire: unknown card slug Sunset-TSR",
+  "Sundown-on-the-Shire: unknown card slug Woody-End-TSR",
+  "Sundown-on-the-Shire: unknown card slug Great-Wolf-TSR",
+  "Sundown-on-the-Shire: unknown card slug Hunter-Wolf-TSR",
+  "Sundown-on-the-Shire: unknown card slug Pack-Defender-TSR",
+  "Sundown-on-the-Shire: unknown card slug Savage-Pup-TSR",
+  "Sundown-on-the-Shire: unknown card slug Scout-Wolf-TSR",
+  "Secrets-of-the-Old-Forest: unknown card slug Drawing-Attention-Treachery-TSR",
+  "Secrets-of-the-Old-Forest: unknown card slug Droppin'-Eaves-TSR",
+  "Secrets-of-the-Old-Forest: unknown card slug Get-Off-the-Road-TSR",
+  "Secrets-of-the-Old-Forest: unknown card slug Hasty-Retreat-TSR",
+  "Secrets-of-the-Old-Forest: unknown card slug Choking-Brambles-TSR",
+  "Secrets-of-the-Old-Forest: unknown card slug Claw-Marks-TSR",
+  "Secrets-of-the-Old-Forest: unknown card slug Farmer-Maggot-TSR",
+  "Secrets-of-the-Old-Forest: unknown card slug Grey-Lady-Poplar-TSR",
+  "Secrets-of-the-Old-Forest: unknown card slug Ill-Will-of-the-Wood-TSR",
+  "Secrets-of-the-Old-Forest: unknown card slug Nameless-Tree-TSR",
+  "Secrets-of-the-Old-Forest: unknown card slug Oaks-and-Ashes-TSR",
+  "Secrets-of-the-Old-Forest: unknown card slug Old-Man-Willow-TSR",
+  "Secrets-of-the-Old-Forest: unknown card slug Old-Tom-Bombadil-TSR",
+  "Secrets-of-the-Old-Forest: unknown card slug Pines-and-Firs-TSR",
+  "Secrets-of-the-Old-Forest: unknown card slug Sea-of-Trees-TSR",
+  "Secrets-of-the-Old-Forest: unknown card slug Song-of-Sleep-TSR",
+  "Secrets-of-the-Old-Forest: unknown card slug Swaying-Without-Wind-TSR",
+  "Secrets-of-the-Old-Forest: unknown card slug The-Living-Woods-TSR",
+  "Secrets-of-the-Old-Forest: unknown card slug Willow-Scion-TSR",
+  "Secrets-of-the-Old-Forest: unknown card slug Withywindle-Valley-TSR",
+  "Secrets-of-the-Old-Forest: unknown card slug Wolf-Tracks-TSR",
+  "Strange-News-in-Bree: unknown card slug Drawing-Attention-Treachery-TSR",
+  "Strange-News-in-Bree: unknown card slug Droppin'-Eaves-TSR",
+  "Strange-News-in-Bree: unknown card slug Get-Off-the-Road-TSR",
+  "Strange-News-in-Bree: unknown card slug Hasty-Retreat-TSR",
+  "Strange-News-in-Bree: unknown card slug A-Web-of-Lies-SNiB",
+  "Strange-News-in-Bree: unknown card slug All-According-to-Plan-SNiB",
+  "Strange-News-in-Bree: unknown card slug Bree-Crowd-SNiB",
+  "Strange-News-in-Bree: unknown card slug Bree-Guardhouse-SNiB",
+  "Strange-News-in-Bree: unknown card slug Bree-Market-SNiB",
+  "Strange-News-in-Bree: unknown card slug Bree-Vigilante-SNiB",
+  "Strange-News-in-Bree: unknown card slug Control-the-Market-SNiB",
+  "Strange-News-in-Bree: unknown card slug Control-the-Town-SNiB",
+  "Strange-News-in-Bree: unknown card slug Dark-Alleyway-SNiB",
+  "Strange-News-in-Bree: unknown card slug Isolated-and-Lost-SNiB",
+  "Strange-News-in-Bree: unknown card slug Orc-eyes-SNiB",
+  "Strange-News-in-Bree: unknown card slug Riot-SNiB",
+  "Strange-News-in-Bree: unknown card slug Rumors-of-Gaur-SNiB",
+  "Strange-News-in-Bree: unknown card slug Seditious-Rumors-SNiB",
+  "Strange-News-in-Bree: unknown card slug Shady-Collector-SNiB",
+  "Strange-News-in-Bree: unknown card slug Susie-the-Spider-SNiB",
+  "Strange-News-in-Bree: unknown card slug Tavern-SNiB",
+  "Strange-News-in-Bree: unknown card slug The-Prancing-Pony-SNiB",
+  "Strange-News-in-Bree: unknown card slug They're-Everywhere-SNiB",
+  "Strange-News-in-Bree: unknown card slug Thieves-in-the-Night-SNiB",
+  "Strange-News-in-Bree: unknown card slug Town-Square-SNiB",
+  "Strange-News-in-Bree: unknown card slug Tribute-to-Gaur-SNiB",
+  "Strange-News-in-Bree: unknown card slug Wolfsbane-Jack-SNiB",
+  "Strange-News-in-Bree: unknown card slug Barrow-thief-TSR",
+  "Strange-News-in-Bree: unknown card slug Shire-Stalker-TSR",
+  "Strange-News-in-Bree: unknown card slug Twilight-Harbinger-TSR",
+  "Strange-News-in-Bree: unknown card slug Wolf-Priestess-TSR",
+  "Fangs-in-the-Dark: unknown card slug Bree-landers-FitD",
+  "Fangs-in-the-Dark: unknown card slug Buckland-Adventurer-FitD",
+  "Fangs-in-the-Dark: unknown card slug Northern-Hunter-FitD",
+  "Fangs-in-the-Dark: unknown card slug Vigilant-Road-warden-FitD",
+  "Fangs-in-the-Dark: unknown card slug White-Wolf-pelt-Cloak-FitD",
+  "Fangs-in-the-Dark: unknown card slug Wolf-biter-FitD",
+  "Fangs-in-the-Dark: unknown card slug Wolfsbane-Jack-FitD",
+  "Fangs-in-the-Dark: unknown card slug Woman-of-the-Woods-FitD",
+  "Fangs-in-the-Dark: unknown card slug Ancient-Dwarven-Post-FitD",
+  "Fangs-in-the-Dark: unknown card slug Bone-white-Cliffs-FitD",
+  "Fangs-in-the-Dark: unknown card slug Cover-of-Darkness-FitD",
+  "Fangs-in-the-Dark: unknown card slug Eyes-in-the-Moonlight-FitD",
+  "Fangs-in-the-Dark: unknown card slug Follow-the-Trail-FitD",
+  "Fangs-in-the-Dark: unknown card slug Girdley-Island-FitD",
+  "Fangs-in-the-Dark: unknown card slug Hunting-Grounds-FitD",
+  "Fangs-in-the-Dark: unknown card slug Midnight-Ambush-FitD",
+  "Fangs-in-the-Dark: unknown card slug Orc-eyes-FitD",
+  "Fangs-in-the-Dark: unknown card slug Pack-Matriarch-FitD",
+  "Fangs-in-the-Dark: unknown card slug Stalking-Wolf-FitD",
+  "Fangs-in-the-Dark: unknown card slug Tracked-by-Scent-FitD",
+  "Fangs-in-the-Dark: unknown card slug Unnatural-Aggression-FitD",
+  "Fangs-in-the-Dark: unknown card slug Brandy-stream-TSR",
+  "Fangs-in-the-Dark: unknown card slug Buckland-Homestead-TSR",
+  "Fangs-in-the-Dark: unknown card slug Watchful-Wood-TSR",
+  "Fangs-in-the-Dark: unknown card slug Great-Wolf-TSR",
+  "Fangs-in-the-Dark: unknown card slug Hunter-Wolf-TSR",
+  "Fangs-in-the-Dark: unknown card slug Pack-Defender-TSR",
+  "Fangs-in-the-Dark: unknown card slug Savage-Pup-TSR",
+  "Fangs-in-the-Dark: unknown card slug Scout-Wolf-TSR",
+  "The-Scouring-of-the-Shire: unknown card slug Against-the-Rules-TSotS",
+  "The-Scouring-of-the-Shire: unknown card slug Ambush-Sharkey's-Men-TSotS",
+  "The-Scouring-of-the-Shire: unknown card slug Awake-Fire-Foes-Awake-TSotS",
+  "The-Scouring-of-the-Shire: unknown card slug Brandywine-Gate-TSotS",
+  "The-Scouring-of-the-Shire: unknown card slug Brick-Building-TSotS",
+  "The-Scouring-of-the-Shire: unknown card slug Curse-Upon-the-Shire-TSotS",
+  "The-Scouring-of-the-Shire: unknown card slug East-Road-TSotS",
+  "The-Scouring-of-the-Shire: unknown card slug Feather-capped-Shirriff-TSotS",
+  "The-Scouring-of-the-Shire: unknown card slug Find-the-Gaffer-TSotS",
+  "The-Scouring-of-the-Shire: unknown card slug Gang-of-Ruffians-TSotS",
+  "The-Scouring-of-the-Shire: unknown card slug Grima's-Choice-TSotS",
+  "The-Scouring-of-the-Shire: unknown card slug Hidden-Blade-TSotS",
+  "The-Scouring-of-the-Shire: unknown card slug Highway-Robber-TSotS",
+  "The-Scouring-of-the-Shire: unknown card slug Hobbiton-Road-TSotS",
+  "The-Scouring-of-the-Shire: unknown card slug Muster-the-Tooks-TSotS",
+  "The-Scouring-of-the-Shire: unknown card slug Once-Beloved-Place-TSotS",
+  "The-Scouring-of-the-Shire: unknown card slug One-Ill-Turn-TSotS",
+  "The-Scouring-of-the-Shire: unknown card slug Rouse-the-Cottons-TSotS",
+  "The-Scouring-of-the-Shire: unknown card slug Roused-Hobbits-TSotS",
+  "The-Scouring-of-the-Shire: unknown card slug Roused-Hobbits-2-TSotS",
+  "The-Scouring-of-the-Shire: unknown card slug Roused-Hobbits-3-TSotS",
+  "The-Scouring-of-the-Shire: unknown card slug Roused-Hobbits-4-TSotS",
+  "The-Scouring-of-the-Shire: unknown card slug Roused-Hobbits-5-TSotS",
+  "The-Scouring-of-the-Shire: unknown card slug Roused-Hobbits-6-TSotS",
+  "The-Scouring-of-the-Shire: unknown card slug Roused-Hobbits-7-TSotS",
+  "The-Scouring-of-the-Shire: unknown card slug Saruman-TSotS",
+  "The-Scouring-of-the-Shire: unknown card slug Set-up-Barriers-TSotS",
+  "The-Scouring-of-the-Shire: unknown card slug Sharkey's-Men-TSotS",
+  "The-Scouring-of-the-Shire: unknown card slug Shirriff-House-TSotS",
+  "The-Scouring-of-the-Shire: unknown card slug Take-Him-Lads-TSotS",
+  "The-Scouring-of-the-Shire: unknown card slug The-Lockholes-TSotS",
+  "The-Scouring-of-the-Shire: unknown card slug The-Scouring-of-the-Shire-Campaign-TSotS",
+  "The-Scouring-of-the-Shire: unknown card slug Thieving-Ruffian-TSotS",
+  "The-Scouring-of-the-Shire: unknown card slug Three-Farthing-Stone-TSotS",
+  "The-Scouring-of-the-Shire: unknown card slug To-the-Road-Again-Worm-TSotS",
+  "The-Scouring-of-the-Shire: unknown card slug Voice-of-Saruman-TSotS",
+  "The-Scouring-of-the-Shire: unknown card slug Watch-the-East-Road-TSotS",
+  "The-Scouring-of-the-Shire: unknown card slug Wooden-Shed-TSotS",
+  "The-Nine-are-Abroad: unknown card slug Arnor-TNaA",
+  "The-Nine-are-Abroad: unknown card slug Enedwaith-TNaA",
+  "The-Nine-are-Abroad: unknown card slug Eriador-TNaA",
+  "The-Nine-are-Abroad: unknown card slug Gondor-TNaA",
+  "The-Nine-are-Abroad: unknown card slug Harlindon-TNaA",
+  "The-Nine-are-Abroad: unknown card slug Mirkwood-TNaA",
+  "The-Nine-are-Abroad: unknown card slug Rhovanion-TNaA",
+  "The-Nine-are-Abroad: unknown card slug Rohan-TNaA",
+  "The-Nine-are-Abroad: unknown card slug The-Blue-Mountains-TNaA",
+  "The-Nine-are-Abroad: unknown card slug The-Outlands-TNaA",
+  "The-Nine-are-Abroad: unknown card slug Agh-Burzum-ishi-Krimpatul-TNaA",
+  "The-Nine-are-Abroad: unknown card slug Anfalas-Pillager-TNaA",
+  "The-Nine-are-Abroad: unknown card slug Ash-Nazg-Durbatuluk-TNaA",
+  "The-Nine-are-Abroad: unknown card slug Ash-Nazg-Gimbatul-TNaA",
+  "The-Nine-are-Abroad: unknown card slug Ash-Nazg-Thrakatuluk-TNaA",
+  "The-Nine-are-Abroad: unknown card slug Barrow-wight-TNaA",
+  "The-Nine-are-Abroad: unknown card slug Birds-of-Ill-Omen-TNaA",
+  "The-Nine-are-Abroad: unknown card slug Charter-the-Dream-chaser-TNaA",
+  "The-Nine-are-Abroad: unknown card slug Chief-of-the-Nine-TNaA",
+  "The-Nine-are-Abroad: unknown card slug Dunedain-Tracker-Epic-TNaA",
+  "The-Nine-are-Abroad: unknown card slug Dunedain-Tracker-Standard-TNaA",
+  "The-Nine-are-Abroad: unknown card slug Dunlending-Warband-TNaA",
+  "The-Nine-are-Abroad: unknown card slug Gladden-Fields-TNaA",
+  "The-Nine-are-Abroad: unknown card slug Icebay-of-Forochel-TNaA",
+  "The-Nine-are-Abroad: unknown card slug Johnny-Goblin-fingers-TNaA",
+  "The-Nine-are-Abroad: unknown card slug Late-for-Tea-TNaA",
+  "The-Nine-are-Abroad: unknown card slug Lost-in-Goblin-Town-TNaA",
+  "The-Nine-are-Abroad: unknown card slug Mordor-TNaA",
+  "The-Nine-are-Abroad: unknown card slug Morgul-Scout-TNaA",
+  "The-Nine-are-Abroad: unknown card slug Nameless-Fear-TNaA",
+  "The-Nine-are-Abroad: unknown card slug Old-North-South-Road-TNaA",
+  "The-Nine-are-Abroad: unknown card slug Old-Pukel-Land-TNaA",
+  "The-Nine-are-Abroad: unknown card slug Paths-of-the-Dead-TNaA",
+  "The-Nine-are-Abroad: unknown card slug Pursuing-Wargs-TNaA",
+  "The-Nine-are-Abroad: unknown card slug Rhun-TNaA",
+  "The-Nine-are-Abroad: unknown card slug Roaming-Easterling-TNaA",
+  "The-Nine-are-Abroad: unknown card slug Shadows-of-Terror-Abroad-TNaA",
+  "The-Nine-are-Abroad: unknown card slug Shadows-of-Terror-Found-TNaA",
+  "The-Nine-are-Abroad: unknown card slug Shores-of-Belegaer-TNaA",
+  "The-Nine-are-Abroad: unknown card slug South-Downs-Troll-TNaA",
+  "The-Nine-are-Abroad: unknown card slug The-Anduin-River-TNaA",
+  "The-Nine-are-Abroad: unknown card slug The-Carrock-TNaA",
+  "The-Nine-are-Abroad: unknown card slug The-Eighth-Rider-TNaA",
+  "The-Nine-are-Abroad: unknown card slug The-Fifth-Rider-TNaA",
+  "The-Nine-are-Abroad: unknown card slug The-First-Rider-TNaA",
+  "The-Nine-are-Abroad: unknown card slug The-Fourth-Rider-TNaA",
+  "The-Nine-are-Abroad: unknown card slug The-Nine-are-Abroad-Treachery-TNaA",
+  "The-Nine-are-Abroad: unknown card slug The-Ninth-Rider-TNaA",
+  "The-Nine-are-Abroad: unknown card slug The-Second-Rider-TNaA",
+  "The-Nine-are-Abroad: unknown card slug The-Seventh-Rider-TNaA",
+  "The-Nine-are-Abroad: unknown card slug The-Sixth-Rider-TNaA",
+  "The-Nine-are-Abroad: unknown card slug The-Third-Rider-TNaA",
+  "The-Siege-of-Erebor: unknown card slug Balchoth-Avenger-TSoE",
+  "The-Siege-of-Erebor: unknown card slug City-Gates-TSoE",
+  "The-Siege-of-Erebor: unknown card slug City-Streets-TSoE",
+  "The-Siege-of-Erebor: unknown card slug City-Walls-TSoE",
+  "The-Siege-of-Erebor: unknown card slug Dale-Besieger-TSoE",
+  "The-Siege-of-Erebor: unknown card slug Driven-by-the-Eye-TSoE",
+  "The-Siege-of-Erebor: unknown card slug Easterling-Archer-TSoE",
+  "The-Siege-of-Erebor: unknown card slug Easterling-Supply-Camp-TSoE",
+  "The-Siege-of-Erebor: unknown card slug Eastern-Assault-Easy-TSoE",
+  "The-Siege-of-Erebor: unknown card slug Eastern-Assault-Normal-TSoE",
+  "The-Siege-of-Erebor: unknown card slug Eaves-of-Mirkwood-TSoE",
+  "The-Siege-of-Erebor: unknown card slug Erebor-Besieger-TSoE",
+  "The-Siege-of-Erebor: unknown card slug Esgaroth-TSoE",
+  "The-Siege-of-Erebor: unknown card slug Fight-or-Flight-TSoE",
+  "The-Siege-of-Erebor: unknown card slug Flanked-TSoE",
+  "The-Siege-of-Erebor: unknown card slug Focused-Onslaught-TSoE",
+  "The-Siege-of-Erebor: unknown card slug Gate-of-Erebor-TSoE",
+  "The-Siege-of-Erebor: unknown card slug Hold-the-North-TSoE",
+  "The-Siege-of-Erebor: unknown card slug Iron-Hills-Reinforcements-TSoE",
+  "The-Siege-of-Erebor: unknown card slug Lonely-Mountain-Armoury-TSoE",
+  "The-Siege-of-Erebor: unknown card slug News-from-the-South-TSoE",
+  "The-Siege-of-Erebor: unknown card slug Ravenhill-TSoE",
+  "The-Siege-of-Erebor: unknown card slug Rhun-Rearguard-TSoE",
+  "The-Siege-of-Erebor: unknown card slug Rhun-Vanguard-TSoE",
+  "The-Siege-of-Erebor: unknown card slug The-Desolation-of-Smaug-TSoE",
+  "The-Siege-of-Erebor: unknown card slug The-North-Burns-TSoE",
+  "The-Siege-of-Erebor: unknown card slug The-River-Running-TSoE",
+  "The-Siege-of-Erebor: unknown card slug Treasure-Hoard-TSoE",
+  "The-Siege-of-Erebor: unknown card slug Wainriders-TSoE",
+  "The-Hobbit: unknown card slug Angry-Warg-TH",
+  "The-Hobbit: unknown card slug Barrel-rider-TH",
+  "The-Hobbit: unknown card slug Battle-Warg-TH",
+  "The-Hobbit: unknown card slug Beorn-Objective-Ally-TH",
+  "The-Hobbit: unknown card slug Bilbo's-Magic-Ring-TH",
+  "The-Hobbit: unknown card slug Bolg-TH",
+  "The-Hobbit: unknown card slug Caught-in-Webs-TH",
+  "The-Hobbit: unknown card slug Crazy-Cob-TH",
+  "The-Hobbit: unknown card slug Dark-TH",
+  "The-Hobbit: unknown card slug Dark-Dense-Cobwebs-TH",
+  "The-Hobbit: unknown card slug Drowner-of-Friends-TH",
+  "The-Hobbit: unknown card slug Dwarves-of-Dain-TH",
+  "The-Hobbit: unknown card slug Eggses-TH",
+  "The-Hobbit: unknown card slug Elves-of-Mirkwood-TH",
+  "The-Hobbit: unknown card slug Enchanted-Stream-TH",
+  "The-Hobbit: unknown card slug Fish-TH",
+  "The-Hobbit: unknown card slug Friend-of-Bears-TH",
+  "The-Hobbit: unknown card slug Giant-sized-Wrath-TH",
+  "The-Hobbit: unknown card slug Goblin-Driver-TH",
+  "The-Hobbit: unknown card slug Goblins-from-the-Mountains-TH",
+  "The-Hobbit: unknown card slug Great-Eagles-TH",
+  "The-Hobbit: unknown card slug Guest-of-Eagles-TH",
+  "The-Hobbit: unknown card slug He-that-Walks-Unseen-TH",
+  "The-Hobbit: unknown card slug Hoarwell-River-TH",
+  "The-Hobbit: unknown card slug Lazy-Lob-TH",
+  "The-Hobbit: unknown card slug Lone-lands-TH",
+  "The-Hobbit: unknown card slug Longing-for-Home-TH",
+  "The-Hobbit: unknown card slug Lower-Gate-Sentries-TH",
+  "The-Hobbit: unknown card slug Lucky-Number-TH",
+  "The-Hobbit: unknown card slug Men-of-the-Lake-TH",
+  "The-Hobbit: unknown card slug Merrymaking-Elves-TH",
+  "The-Hobbit: unknown card slug Mince-Them-Fine-TH",
+  "The-Hobbit: unknown card slug Mountain-TH",
+  "The-Hobbit: unknown card slug Mountain-Warg-TH",
+  "The-Hobbit: unknown card slug Muck-Adder-TH",
+  "The-Hobbit: unknown card slug No-Bag-Went-Over-Me-TH",
+  "The-Hobbit: unknown card slug No-Campfire-TH",
+  "The-Hobbit: unknown card slug Old-Fat-Spider-TH",
+  "The-Hobbit: unknown card slug Riddles-in-the-Dark-TH",
+  "The-Hobbit: unknown card slug Roaring-Pines-TH",
+  "The-Hobbit: unknown card slug Smaug-the-Wealthy-TH",
+  "The-Hobbit: unknown card slug Spider-venom-TH",
+  "The-Hobbit: unknown card slug Sting-TH",
+  "The-Hobbit: unknown card slug Stone-from-Above-TH",
+  "The-Hobbit: unknown card slug Swarming-Goblins-TH",
+  "The-Hobbit: unknown card slug Swarms-of-Bats-TH",
+  "The-Hobbit: unknown card slug Teeth-TH",
+  "The-Hobbit: unknown card slug Terms-TH",
+  "The-Hobbit: unknown card slug The-Arkenstone-TH",
+  "The-Hobbit: unknown card slug The-Stinging-Fly-TH",
+  "The-Hobbit: unknown card slug The-Web-cutter-TH",
+  "The-Hobbit: unknown card slug Thror's-Golden-Cup-TH",
+  "The-Hobbit: unknown card slug Time-TH",
+  "The-Hobbit: unknown card slug Tom-Bert-and-William-TH",
+  "The-Hobbit: unknown card slug Treetops-TH",
+  "The-Hobbit: unknown card slug Troll-Sacks-TH",
+  "The-Hobbit: unknown card slug Two-by-Two-TH",
+  "The-Hobbit: unknown card slug Waylaid-TH",
+  "The-Hobbit: unknown card slug We-Must-Away-TH",
+  "The-Hobbit: unknown card slug Wild-Wolves-TH",
+  "The-Hobbit: unknown card slug Wind-TH",
+  "The-Hobbit: unknown card slug Without-a-Hat-TH",
+  "Skirmish-in-the-Shire: unknown card slug Great-East-West-Road-LoF",
+  "Skirmish-in-the-Shire: unknown card slug Narrowing-Gap-LoF",
+  "Skirmish-in-the-Shire: unknown card slug Secluded-Valley-LoF",
+  "Skirmish-in-the-Shire: unknown card slug Slopes-of-Emyn-Beraid-LoF",
+  "Skirmish-in-the-Shire: unknown card slug Divided-Attention-LoF",
+  "Skirmish-in-the-Shire: unknown card slug Dragaz-Pursuer-LoF",
+  "Skirmish-in-the-Shire: unknown card slug Exhausted-by-Desire-LoF",
+  "Skirmish-in-the-Shire: unknown card slug Falain-Dying-LoF",
+  "Skirmish-in-the-Shire: unknown card slug Falain-Wounded-LoF",
+  "Skirmish-in-the-Shire: unknown card slug Fear-of-Dragaz-LoF",
+  "Skirmish-in-the-Shire: unknown card slug Foul-Wolfrider-LoF",
+  "Skirmish-in-the-Shire: unknown card slug Handwritten-Note-Objective-LoF",
+  "Skirmish-in-the-Shire: unknown card slug Heavy-Load-LoF",
+  "Skirmish-in-the-Shire: unknown card slug Leather-Scroll-Case-LoF",
+  "Skirmish-in-the-Shire: unknown card slug Losing-Strength-LoF",
+  "Skirmish-in-the-Shire: unknown card slug Memories-of-Thane-Ulchor-LoF",
+  "Skirmish-in-the-Shire: unknown card slug North-Moors-Wolfpack-LoF",
+  "Skirmish-in-the-Shire: unknown card slug Shirebourn-Shore-LoF",
+  "Skirmish-in-the-Shire: unknown card slug Skirmish-in-the-Shire-Campaign-LoF",
+  "Skirmish-in-the-Shire: unknown card slug South-Farthing-LoF",
+  "Skirmish-in-the-Shire: unknown card slug Surprise-Assault-LoF",
+  "Skirmish-in-the-Shire: unknown card slug Three-Farthing-Stone-LoF",
+  "Skirmish-in-the-Shire: unknown card slug Tookland-LoF",
+  "Skirmish-in-the-Shire: unknown card slug Unnecessary-Delay-LoF",
+  "Skirmish-in-the-Shire: unknown card slug Willowbottom-LoF",
+  "Skirmish-in-the-Shire: unknown card slug Wolf-Pursuer-LoF",
+  "Skirmish-in-the-Shire: unknown card slug Robin-Smallburrow-LoF",
+  "Skirmish-in-the-Shire: unknown card slug Arthedain-Wolf-Captain-LoF",
+  "Skirmish-in-the-Shire: unknown card slug Eyes-of-Fire-LoF",
+  "Skirmish-in-the-Shire: unknown card slug Impossible-to-Hide-LoF",
+  "Skirmish-in-the-Shire: unknown card slug Lethally-Wounded-LoF",
+  "Skirmish-in-the-Shire: unknown card slug Quick-Target-LoF",
+  "Skirmish-in-the-Shire: unknown card slug White-Wolf-Cubs-LoF",
+  "Skirmish-in-the-Shire: unknown card slug White-Wolves-from-the-North-LoF",
+  "Skirmish-in-the-Shire: unknown card slug Wolf-Scent-LoF",
+  "Down-the-Baranduin: unknown card slug Ancient-Mountain-Troll-LoF",
+  "Down-the-Baranduin: unknown card slug Angry-Orc-LoF",
+  "Down-the-Baranduin: unknown card slug Orc-Scavenger-LoF",
+  "Down-the-Baranduin: unknown card slug Ambush-Leader-LoF",
+  "Down-the-Baranduin: unknown card slug Balance-Balanced-LoF",
+  "Down-the-Baranduin: unknown card slug Balance-Capsized-LoF",
+  "Down-the-Baranduin: unknown card slug Baranduin-LoF",
+  "Down-the-Baranduin: unknown card slug Cascade-Approaching-LoF",
+  "Down-the-Baranduin: unknown card slug Damaged-Raft-LoF",
+  "Down-the-Baranduin: unknown card slug Dark-Water-LoF",
+  "Down-the-Baranduin: unknown card slug Deephallow-LoF",
+  "Down-the-Baranduin: unknown card slug Deteriorating-River-LoF",
+  "Down-the-Baranduin: unknown card slug Down-the-Baranduin-Campaign-LoF",
+  "Down-the-Baranduin: unknown card slug Dragaz-BR-LoF",
+  "Down-the-Baranduin: unknown card slug Following-Orc-LoF",
+  "Down-the-Baranduin: unknown card slug Green-Peninsula-LoF",
+  "Down-the-Baranduin: unknown card slug Horrible-Conditions-LoF",
+  "Down-the-Baranduin: unknown card slug Instability-LoF",
+  "Down-the-Baranduin: unknown card slug Island-Among-Water-LoF",
+  "Down-the-Baranduin: unknown card slug Overbourn-Waterfront-LoF",
+  "Down-the-Baranduin: unknown card slug Parted-by-Peril-LoF",
+  "Down-the-Baranduin: unknown card slug Rapids-of-the-Baranduin-LoF",
+  "Down-the-Baranduin: unknown card slug Sarn-Ford-LoF",
+  "Down-the-Baranduin: unknown card slug Shallow-and-Slippery-LoF",
+  "Down-the-Baranduin: unknown card slug Splashing-Waves-LoF",
+  "Down-the-Baranduin: unknown card slug Storm-LoF",
+  "Down-the-Baranduin: unknown card slug Strong-Side-Wind-LoF",
+  "Down-the-Baranduin: unknown card slug Sudden-Attack-LoF",
+  "Down-the-Baranduin: unknown card slug Troubled-Waters-LoF",
+  "Down-the-Baranduin: unknown card slug Cold-and-Tired-LoF",
+  "Down-the-Baranduin: unknown card slug Great-Snow-Wolf-LoF",
+  "Down-the-Baranduin: unknown card slug Hope-Seems-Lost-LoF",
+  "Down-the-Baranduin: unknown card slug Reckless-Bear-LoF",
+  "Down-the-Baranduin: unknown card slug Arrows-from-Above-LoF",
+  "Down-the-Baranduin: unknown card slug Dragaz-OM-LoF",
+  "Down-the-Baranduin: unknown card slug Marsh-Serpent-LoF",
+  "Down-the-Baranduin: unknown card slug Overbourn-Marshes-LoF",
+  "Down-the-Baranduin: unknown card slug Overgrown-Bog-LoF",
+  "Down-the-Baranduin: unknown card slug Stuck-in-the-Marshes-LoF",
+  "Down-the-Baranduin: unknown card slug Robin-Smallburrow-LoF",
+  "Down-the-Baranduin: unknown card slug Arthedain-Wolf-Captain-LoF",
+  "Down-the-Baranduin: unknown card slug Eyes-of-Fire-LoF",
+  "Down-the-Baranduin: unknown card slug Impossible-to-Hide-LoF",
+  "Down-the-Baranduin: unknown card slug Lethally-Wounded-LoF",
+  "Down-the-Baranduin: unknown card slug Quick-Target-LoF",
+  "Down-the-Baranduin: unknown card slug White-Wolf-Cubs-LoF",
+  "Down-the-Baranduin: unknown card slug White-Wolves-from-the-North-LoF",
+  "Down-the-Baranduin: unknown card slug Wolf-Scent-LoF",
+  "Dwarf-Lord-Battle: unknown card slug Ancient-Mountain-Troll-LoF",
+  "Dwarf-Lord-Battle: unknown card slug Angry-Orc-LoF",
+  "Dwarf-Lord-Battle: unknown card slug Orc-Scavenger-LoF",
+  "Dwarf-Lord-Battle: unknown card slug Great-East-West-Road-LoF",
+  "Dwarf-Lord-Battle: unknown card slug Narrowing-Gap-LoF",
+  "Dwarf-Lord-Battle: unknown card slug Secluded-Valley-LoF",
+  "Dwarf-Lord-Battle: unknown card slug Slopes-of-Emyn-Beraid-LoF",
+  "Dwarf-Lord-Battle: unknown card slug Cutting-Wind-LoF",
+  "Dwarf-Lord-Battle: unknown card slug Heavy-Hail-LoF",
+  "Dwarf-Lord-Battle: unknown card slug Lightning-Strikes-LoF",
+  "Dwarf-Lord-Battle: unknown card slug Winding-Wind-LoF",
+  "Dwarf-Lord-Battle: unknown card slug Armoured-Troll-LoF",
+  "Dwarf-Lord-Battle: unknown card slug Axe-of-the-Firebeards-Objective-LoF",
+  "Dwarf-Lord-Battle: unknown card slug Dwarf-Lord-Battle-Campaign-LoF",
+  "Dwarf-Lord-Battle: unknown card slug Ered-Luin-Winefields-LoF",
+  "Dwarf-Lord-Battle: unknown card slug Eroc-Boon-LoF",
+  "Dwarf-Lord-Battle: unknown card slug Eroc-Objective-LoF",
+  "Dwarf-Lord-Battle: unknown card slug Hidden-Archer-LoF",
+  "Dwarf-Lord-Battle: unknown card slug Mace-of-the-Firebeards-Objective-LoF",
+  "Dwarf-Lord-Battle: unknown card slug No-Help-Came-That-Day-LoF",
+  "Dwarf-Lord-Battle: unknown card slug Outrun-by-the-Dwarf-LoF",
+  "Dwarf-Lord-Battle: unknown card slug Self-Sacrificing-Orc-LoF",
+  "Dwarf-Lord-Battle: unknown card slug Sword-of-the-Firebeards-Objective-LoF",
+  "Dwarf-Lord-Battle: unknown card slug Troll-Desolation-LoF",
+  "Dwarf-Lord-Battle: unknown card slug Silent-Cavern-LoF",
+  "Dwarf-Lord-Battle: unknown card slug Steep-Mountain-Slope-LoF",
+  "Dwarf-Lord-Battle: unknown card slug Unreliable-Ledge-LoF",
+  "Dwarf-Lord-Battle: unknown card slug Chieftain-of-the-Trollriders-LoF",
+  "Dwarf-Lord-Battle: unknown card slug Furious-Defence-LoF",
+  "Dwarf-Lord-Battle: unknown card slug Troll-Follower-LoF",
+  "Dwarf-Lord-Battle: unknown card slug Troll-Offspring-LoF"
+ ],
+ "packCodeCodeDuplicates": [
+  {
+   "packCode": "AAC",
+   "code": "10158",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Protect-the-Innocent-AAC",
+     "name": "Protect the Innocent",
+     "type": "encounter-side-quest",
+     "encounterSet": "Intruders in Chetwood Campaign",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Arnor-Ravaged-AAC",
+     "name": "Arnor Ravaged",
+     "type": "objective",
+     "encounterSet": "Intruders in Chetwood Campaign",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "CotW",
+   "code": "22073",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Wainrider-Chariot-CotW",
+     "name": "Wainrider Chariot",
+     "type": "treachery",
+     "encounterSet": "Challenge of the Wainriders",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "The-Champion's-Cunning-CotW",
+     "name": "The Champion's Cunning",
+     "type": "treachery",
+     "encounterSet": "Challenge of the Wainriders",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "DCC",
+   "code": "12042",
+   "kind": "same-name",
+   "cards": [
+    {
+     "uid": "Stormcaller-DCC",
+     "name": "Stormcaller",
+     "type": "ship-enemy",
+     "encounterSet": "Flight of the Stormcaller Campaign",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Stormcaller-Campaign-DCC",
+     "name": "Stormcaller",
+     "type": "ship-enemy",
+     "encounterSet": "Flight of the Stormcaller Campaign",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "DCC",
+   "code": "12063",
+   "kind": "same-name",
+   "cards": [
+    {
+     "uid": "The-Thing-in-the-Depths-Enemy-DCC",
+     "name": "The Thing in the Depths",
+     "type": "enemy",
+     "encounterSet": "The Thing in the Depths Campaign",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "The-Thing-in-the-Depths-Enemy-Campaign-DCC",
+     "name": "The Thing in the Depths",
+     "type": "enemy",
+     "encounterSet": "The Thing in the Depths Campaign",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "DCC",
+   "code": "12077",
+   "kind": "same-name",
+   "cards": [
+    {
+     "uid": "Temple-Guardian-DCC",
+     "name": "Temple Guardian",
+     "type": "enemy",
+     "encounterSet": "The Fate of Númenor Campaign",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Temple-Guardian-Campaign-DCC",
+     "name": "Temple Guardian",
+     "type": "enemy",
+     "encounterSet": "The Fate of Númenor Campaign",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "DCC",
+   "code": "12078",
+   "kind": "same-name",
+   "cards": [
+    {
+     "uid": "Gate-Key-DCC",
+     "name": "Gate Key",
+     "type": "objective",
+     "encounterSet": "Temple of the Deceived Campaign",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Gate-Key-Upgraded-DCC",
+     "name": "Gate Key",
+     "type": "objective",
+     "encounterSet": "Temple of the Deceived Campaign",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "DCC",
+   "code": "12136",
+   "kind": "same-name",
+   "cards": [
+    {
+     "uid": "Dream-chaser-DCC",
+     "name": "Dream-chaser",
+     "type": "ship-objective",
+     "encounterSet": "The Dream-chaser's Fleet Campaign",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Dream-chaser-Upgraded-DCC",
+     "name": "Dream-chaser",
+     "type": "ship-objective",
+     "encounterSet": "The Dream-chaser's Fleet Campaign",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "DCC",
+   "code": "12137",
+   "kind": "same-name",
+   "cards": [
+    {
+     "uid": "Dawn-Star-DCC",
+     "name": "Dawn Star",
+     "type": "ship-objective",
+     "encounterSet": "The Dream-chaser's Fleet Campaign",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Dawn-Star-Upgraded-DCC",
+     "name": "Dawn Star",
+     "type": "ship-objective",
+     "encounterSet": "The Dream-chaser's Fleet Campaign",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "DCC",
+   "code": "12140",
+   "kind": "same-name",
+   "cards": [
+    {
+     "uid": "Narelenya-DCC",
+     "name": "Nárelenya",
+     "type": "ship-objective",
+     "encounterSet": "The Dream-chaser's Fleet Campaign",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Narelenya-Upgraded-DCC",
+     "name": "Nárelenya",
+     "type": "ship-objective",
+     "encounterSet": "The Dream-chaser's Fleet Campaign",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "DCC",
+   "code": "12141",
+   "kind": "same-name",
+   "cards": [
+    {
+     "uid": "Silver-Wing-DCC",
+     "name": "Silver Wing",
+     "type": "ship-objective",
+     "encounterSet": "The Dream-chaser's Fleet Campaign",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Silver-Wing-Upgraded-DCC",
+     "name": "Silver Wing",
+     "type": "ship-objective",
+     "encounterSet": "The Dream-chaser's Fleet Campaign",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "DCC",
+   "code": "12192",
+   "kind": "same-name",
+   "cards": [
+    {
+     "uid": "Black-Key-Objective-DCC",
+     "name": "Black Key",
+     "type": "objective",
+     "encounterSet": "Flight of the Stormcaller Campaign",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Black-Key-Objective-Upgraded-DCC",
+     "name": "Black Key",
+     "type": "objective",
+     "encounterSet": "Flight of the Stormcaller Campaign",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "DCC",
+   "code": "12193",
+   "kind": "same-name",
+   "cards": [
+    {
+     "uid": "Calaerion-DCC",
+     "name": "Calaerion",
+     "type": "objective-ally",
+     "encounterSet": "",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Calaerion-Upgraded-DCC",
+     "name": "Calaerion",
+     "type": "objective-ally",
+     "encounterSet": "",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "DCC",
+   "code": "12196",
+   "kind": "same-name",
+   "cards": [
+    {
+     "uid": "Sea-Serpent-Menacing-DCC",
+     "name": "Sea Serpent",
+     "type": "enemy",
+     "encounterSet": "The Thing in the Depths Campaign",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Sea-Serpent-Enraged-DCC",
+     "name": "Sea Serpent",
+     "type": "enemy",
+     "encounterSet": "The Thing in the Depths Campaign",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "DCC",
+   "code": "12217",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Hard-Mode-DCC",
+     "name": "Hard Mode",
+     "type": "objective",
+     "encounterSet": "",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Expert-Mode-DCC",
+     "name": "Expert Mode",
+     "type": "objective",
+     "encounterSet": "",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "FaSN",
+   "code": "00001",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Flies-and-Spiders-Nightmare-FaSN",
+     "name": "Flies and Spiders Nightmare",
+     "type": "nightmare-setup",
+     "encounterSet": "Flies and Spiders Nightmare",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "The-Battle-of-Five-Armies-Nightmare-FaSN",
+     "name": "The Battle of Five Armies Nightmare",
+     "type": "nightmare-setup",
+     "encounterSet": "The Battle of Five Armies Nightmare",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "FaSN",
+   "code": "00002",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Attercop-FaSN",
+     "name": "Attercop",
+     "type": "enemy",
+     "encounterSet": "Flies and Spiders Nightmare",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Great-Warg-FaSN",
+     "name": "Great Warg",
+     "type": "enemy",
+     "encounterSet": "The Battle of Five Armies Nightmare",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "FaSN",
+   "code": "00003",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Venomous-Spider-FaSN",
+     "name": "Venomous Spider",
+     "type": "enemy",
+     "encounterSet": "Flies and Spiders Nightmare",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Frenzied-Warg-Rider-FaSN",
+     "name": "Frenzied Warg-Rider",
+     "type": "enemy",
+     "encounterSet": "The Battle of Five Armies Nightmare",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "FaSN",
+   "code": "00004",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Dark-Colony-FaSN",
+     "name": "Dark Colony",
+     "type": "location",
+     "encounterSet": "Flies and Spiders Nightmare",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Gundabad-Elite-FaSN",
+     "name": "Gundabad Elite",
+     "type": "enemy",
+     "encounterSet": "The Battle of Five Armies Nightmare",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "FaSN",
+   "code": "00005",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Mirkwood-Path-FaSN",
+     "name": "Mirkwood Path",
+     "type": "location",
+     "encounterSet": "Flies and Spiders Nightmare",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Embattled-Valley-FaSN",
+     "name": "Embattled Valley",
+     "type": "location",
+     "encounterSet": "The Battle of Five Armies Nightmare",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "FaSN",
+   "code": "00006",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Patch-of-Midnight-FaSN",
+     "name": "Patch of Midnight",
+     "type": "location",
+     "encounterSet": "Flies and Spiders Nightmare",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Eastern-Ridge-FaSN",
+     "name": "Eastern Ridge",
+     "type": "location",
+     "encounterSet": "The Battle of Five Armies Nightmare",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "FaSN",
+   "code": "00007",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "A-Horrible-Battle-FaSN",
+     "name": "A Horrible Battle",
+     "type": "treachery",
+     "encounterSet": "Flies and Spiders Nightmare",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Dread-Has-Come-FaSN",
+     "name": "Dread Has Come!",
+     "type": "treachery",
+     "encounterSet": "The Battle of Five Armies Nightmare",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TCaON",
+   "code": "08001",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "To-Catch-an-Orc-Nightmare-TCaON",
+     "name": "To Catch an Orc Nightmare",
+     "type": "nightmare-setup",
+     "encounterSet": "To Catch an Orc Nightmare",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Into-Fangorn-Nightmare-TCaON",
+     "name": "Into Fangorn Nightmare",
+     "type": "nightmare-setup",
+     "encounterSet": "Into Fangorn Nightmare",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TCaON",
+   "code": "08002",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Vigilant-Orc-TCaON",
+     "name": "Vigilant Orc",
+     "type": "enemy",
+     "encounterSet": "To Catch an Orc Nightmare",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Huorn-of-Fangorn-TCaON",
+     "name": "Huorn of Fangorn",
+     "type": "enemy",
+     "encounterSet": "Into Fangorn Nightmare",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TCaON",
+   "code": "08003",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Methedras-Lookout-TCaON",
+     "name": "Methedras Lookout",
+     "type": "enemy",
+     "encounterSet": "To Catch an Orc Nightmare",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Blocking-Huorn-TCaON",
+     "name": "Blocking Huorn",
+     "type": "enemy",
+     "encounterSet": "Into Fangorn Nightmare",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TCaON",
+   "code": "08004",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Guard-Warg-TCaON",
+     "name": "Guard Warg",
+     "type": "enemy",
+     "encounterSet": "To Catch an Orc Nightmare",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Wicked-Huorn-TCaON",
+     "name": "Wicked Huorn",
+     "type": "enemy",
+     "encounterSet": "Into Fangorn Nightmare",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TCaON",
+   "code": "08005",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Methedras-Peak-TCaON",
+     "name": "Methedras Peak",
+     "type": "location",
+     "encounterSet": "To Catch an Orc Nightmare",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Tangled-Forest-TCaON",
+     "name": "Tangled Forest",
+     "type": "location",
+     "encounterSet": "Into Fangorn Nightmare",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TCaON",
+   "code": "08006",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Orc-Trail-TCaON",
+     "name": "Orc Trail",
+     "type": "location",
+     "encounterSet": "To Catch an Orc Nightmare",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Entwood-TCaON",
+     "name": "Entwood",
+     "type": "location",
+     "encounterSet": "Into Fangorn Nightmare",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TCaON",
+   "code": "08007",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Mugash's-Cunning-TCaON",
+     "name": "Mugash's Cunning",
+     "type": "treachery",
+     "encounterSet": "To Catch an Orc Nightmare",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Dark-Corner-of-Fangorn-TCaON",
+     "name": "Dark Corner of Fangorn",
+     "type": "location",
+     "encounterSet": "Into Fangorn Nightmare",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TCaON",
+   "code": "08008",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Patrolling-Orcs-TCaON",
+     "name": "Patrolling Orcs",
+     "type": "treachery",
+     "encounterSet": "To Catch an Orc Nightmare",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Stifling-Woods-TCaON",
+     "name": "Stifling Woods",
+     "type": "treachery",
+     "encounterSet": "Into Fangorn Nightmare",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TCaON",
+   "code": "08009",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Mugash's-Rage-TCaON",
+     "name": "Mugash's Rage",
+     "type": "treachery",
+     "encounterSet": "To Catch an Orc Nightmare",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Fangorn's-Anger-TCaON",
+     "name": "Fangorn's Anger",
+     "type": "treachery",
+     "encounterSet": "Into Fangorn Nightmare",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "THftD",
+   "code": "40006",
+   "kind": "same-name",
+   "cards": [
+    {
+     "uid": "Eithiliant-THftD",
+     "name": "Eithiliant",
+     "type": "ship-objective",
+     "encounterSet": "The Hunt for the Dreadnaught",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Eithiliant-Upgraded-THftD",
+     "name": "Eithiliant",
+     "type": "ship-objective",
+     "encounterSet": "The Hunt for the Dreadnaught",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "THftD",
+   "code": "40007",
+   "kind": "same-name",
+   "cards": [
+    {
+     "uid": "Golden-Wing-THftD",
+     "name": "Golden Wing",
+     "type": "ship-objective",
+     "encounterSet": "The Hunt for the Dreadnaught",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Golden-Wing-Upgraded-THftD",
+     "name": "Golden Wing",
+     "type": "ship-objective",
+     "encounterSet": "The Hunt for the Dreadnaught",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "THftD",
+   "code": "40008",
+   "kind": "same-name",
+   "cards": [
+    {
+     "uid": "Pride-of-Lebennin-THftD",
+     "name": "Pride of Lebennin",
+     "type": "ship-objective",
+     "encounterSet": "The Hunt for the Dreadnaught",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Pride-of-Lebennin-Upgraded-THftD",
+     "name": "Pride of Lebennin",
+     "type": "ship-objective",
+     "encounterSet": "The Hunt for the Dreadnaught",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "THftD",
+   "code": "40009",
+   "kind": "same-name",
+   "cards": [
+    {
+     "uid": "Silent-Mist-THftD",
+     "name": "Silent Mist",
+     "type": "ship-objective",
+     "encounterSet": "The Hunt for the Dreadnaught",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Silent-Mist-Upgraded-THftD",
+     "name": "Silent Mist",
+     "type": "ship-objective",
+     "encounterSet": "The Hunt for the Dreadnaught",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "THftD",
+   "code": "40010",
+   "kind": "same-name",
+   "cards": [
+    {
+     "uid": "Swan-Ship-of-Dol-Amroth-THftD",
+     "name": "Swan Ship of Dol Amroth",
+     "type": "ship-objective",
+     "encounterSet": "The Hunt for the Dreadnaught",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Swan-Ship-of-Dol-Amroth-Upgraded-THftD",
+     "name": "Swan Ship of Dol Amroth",
+     "type": "ship-objective",
+     "encounterSet": "The Hunt for the Dreadnaught",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "THftD",
+   "code": "40011",
+   "kind": "same-name",
+   "cards": [
+    {
+     "uid": "Twilight's-Call-THftD",
+     "name": "Twilight's Call",
+     "type": "ship-objective",
+     "encounterSet": "The Hunt for the Dreadnaught",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Twilight's-Call-Upgraded-THftD",
+     "name": "Twilight's Call",
+     "type": "ship-objective",
+     "encounterSet": "The Hunt for the Dreadnaught",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "THftD",
+   "code": "40013",
+   "kind": "same-name",
+   "cards": [
+    {
+     "uid": "Dreadnaught-THftD",
+     "name": "Dreadnaught",
+     "type": "ship-enemy",
+     "encounterSet": "The Hunt for the Dreadnaught",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Dreadnaught-Damaged-THftD",
+     "name": "Dreadnaught",
+     "type": "ship-enemy",
+     "encounterSet": "The Hunt for the Dreadnaught",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00016",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Overcome-by-Fear-TRotK",
+     "name": "Overcome by Fear",
+     "type": "objective",
+     "encounterSet": "The Passing of the Grey Company",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Echoing-Passage-TRotK",
+     "name": "Echoing Passage",
+     "type": "location",
+     "encounterSet": "The Tower of Cirith Ungol",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00017",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "The-Stone-of-Erech-TRotK",
+     "name": "The Stone of Erech",
+     "type": "location",
+     "encounterSet": "The Passing of the Grey Company",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Bloodied-Courtyard-TRotK",
+     "name": "Bloodied Courtyard",
+     "type": "location",
+     "encounterSet": "The Tower of Cirith Ungol",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00018",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Dark-Door-TRotK",
+     "name": "Dark Door",
+     "type": "location",
+     "encounterSet": "The Passing of the Grey Company",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Winding-Stairs-TRotK",
+     "name": "Winding Stairs",
+     "type": "location",
+     "encounterSet": "The Tower of Cirith Ungol",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00019",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Trysting-Place-TRotK",
+     "name": "Trysting Place",
+     "type": "location",
+     "encounterSet": "The Passing of the Grey Company",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Torch-lit-Hall-TRotK",
+     "name": "Torch-lit Hall",
+     "type": "location",
+     "encounterSet": "The Tower of Cirith Ungol",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00020",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Deadly-Road-TRotK",
+     "name": "Deadly Road",
+     "type": "location",
+     "encounterSet": "The Passing of the Grey Company",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Shagrat-TRotK",
+     "name": "Shagrat",
+     "type": "enemy",
+     "encounterSet": "The Tower of Cirith Ungol",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00021",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Haunted-Path-TRotK",
+     "name": "Haunted Path",
+     "type": "location",
+     "encounterSet": "The Passing of the Grey Company",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Gorbag-TRotK",
+     "name": "Gorbag",
+     "type": "enemy",
+     "encounterSet": "The Tower of Cirith Ungol",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00022",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Dead-Man-of-Dunharrow-TRotK",
+     "name": "Dead Man of Dunharrow",
+     "type": "enemy",
+     "encounterSet": "The Passing of the Grey Company",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Wounded-Uruk-TRotK",
+     "name": "Wounded Uruk",
+     "type": "enemy",
+     "encounterSet": "The Tower of Cirith Ungol",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00023",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Faithless-Dead-TRotK",
+     "name": "Faithless Dead",
+     "type": "enemy",
+     "encounterSet": "The Passing of the Grey Company",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Orcish-Howls-TRotK",
+     "name": "Orcish Howls",
+     "type": "treachery",
+     "encounterSet": "The Tower of Cirith Ungol",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00024",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Ghosts-of-Men-TRotK",
+     "name": "Ghosts of Men",
+     "type": "enemy",
+     "encounterSet": "The Passing of the Grey Company",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "The-Black-Gate-TRotK",
+     "name": "The Black Gate",
+     "type": "location",
+     "encounterSet": "The Black Gate Opens",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00025",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Shadow-Host-TRotK",
+     "name": "Shadow Host",
+     "type": "enemy",
+     "encounterSet": "The Passing of the Grey Company",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Towers-of-the-Teeth-TRotK",
+     "name": "Towers of the Teeth",
+     "type": "location",
+     "encounterSet": "The Black Gate Opens",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00026",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Blood-Runs-Chill-TRotK",
+     "name": "Blood Runs Chill",
+     "type": "treachery",
+     "encounterSet": "The Passing of the Grey Company",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Beleaguered-Hills-TRotK",
+     "name": "Beleaguered Hills",
+     "type": "location",
+     "encounterSet": "The Black Gate Opens",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00027",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "The-Way-is-Shut-TRotK",
+     "name": "The Way is Shut",
+     "type": "treachery",
+     "encounterSet": "The Passing of the Grey Company",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Waste-of-Dagorlad-TRotK",
+     "name": "Waste of Dagorlad",
+     "type": "location",
+     "encounterSet": "The Black Gate Opens",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00028",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Whispers-in-the-Dark-TRotK",
+     "name": "Whispers in the Dark",
+     "type": "treachery",
+     "encounterSet": "The Passing of the Grey Company",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Slopes-of-Cirith-Gorgor-TRotK",
+     "name": "Slopes of Cirith Gorgor",
+     "type": "location",
+     "encounterSet": "The Black Gate Opens",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00029",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "No-Turning-Back-TRotK",
+     "name": "No Turning Back",
+     "type": "treachery",
+     "encounterSet": "The Passing of the Grey Company",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Reeking-Moat-TRotK",
+     "name": "Reeking Moat",
+     "type": "location",
+     "encounterSet": "The Black Gate Opens",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00030",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Great-Corsair-Ship-TRotK",
+     "name": "Great Corsair Ship",
+     "type": "location",
+     "encounterSet": "The Siege of Gondor",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Wall-of-Morannon-TRotK",
+     "name": "Wall of Morannon",
+     "type": "location",
+     "encounterSet": "The Black Gate Opens",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00031",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Umbar-War-Galley-TRotK",
+     "name": "Umbar War Galley",
+     "type": "location",
+     "encounterSet": "The Siege of Gondor",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "The-Mouth-of-Sauron-TRotK",
+     "name": "The Mouth of Sauron",
+     "type": "enemy",
+     "encounterSet": "The Black Gate Opens",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00032",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Corsair-Dromon-TRotK",
+     "name": "Corsair Dromon",
+     "type": "location",
+     "encounterSet": "The Siege of Gondor",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Nazgul-of-Mordor-TRotK",
+     "name": "Nazgûl of Mordor",
+     "type": "enemy",
+     "encounterSet": "The Black Gate Opens",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00033",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Port-of-Pelargir-TRotK",
+     "name": "Port of Pelargir",
+     "type": "location",
+     "encounterSet": "The Siege of Gondor",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Gorgoroth-Hill-troll-TRotK",
+     "name": "Gorgoroth Hill-troll",
+     "type": "enemy",
+     "encounterSet": "The Black Gate Opens",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00034",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Pelargir-Quays-TRotK",
+     "name": "Pelargir Quays",
+     "type": "location",
+     "encounterSet": "The Siege of Gondor",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Easterling-Bowman-TRotK",
+     "name": "Easterling Bowman",
+     "type": "enemy",
+     "encounterSet": "The Black Gate Opens",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00035",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Corsair-Captain-TRotK",
+     "name": "Corsair Captain",
+     "type": "enemy",
+     "encounterSet": "The Siege of Gondor",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Warrior-of-Rhun-TRotK",
+     "name": "Warrior of Rhûn",
+     "type": "enemy",
+     "encounterSet": "The Black Gate Opens",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00036",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Corsair-of-Umbar-TRotK",
+     "name": "Corsair of Umbar",
+     "type": "enemy",
+     "encounterSet": "The Siege of Gondor",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Hell-hawk-TRotK",
+     "name": "Hell-hawk",
+     "type": "treachery",
+     "encounterSet": "The Black Gate Opens",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00037",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Umbar-Pirate-Crew-TRotK",
+     "name": "Umbar Pirate Crew",
+     "type": "enemy",
+     "encounterSet": "The Siege of Gondor",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "The-Hour-of-Doom-TRotK",
+     "name": "The Hour of Doom",
+     "type": "treachery",
+     "encounterSet": "The Black Gate Opens",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00038",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Haradrim-Pirate-TRotK",
+     "name": "Haradrim Pirate",
+     "type": "enemy",
+     "encounterSet": "The Siege of Gondor",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Jaws-of-Steel-TRotK",
+     "name": "Jaws of Steel",
+     "type": "treachery",
+     "encounterSet": "The Black Gate Opens",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00039",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Fell-Folk-of-Umbar-TRotK",
+     "name": "Fell Folk of Umbar",
+     "type": "treachery",
+     "encounterSet": "The Siege of Gondor",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Rage-Filled-Him-TRotK",
+     "name": "Rage Filled Him",
+     "type": "treachery",
+     "encounterSet": "The Black Gate Opens",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00040",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Black-Sails-TRotK",
+     "name": "Black Sails",
+     "type": "treachery",
+     "encounterSet": "The Siege of Gondor",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Onslaught-of-Mordor-TRotK",
+     "name": "Onslaught of Mordor",
+     "type": "treachery",
+     "encounterSet": "The Black Gate Opens",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00041",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Raiding-the-Coasts-TRotK",
+     "name": "Raiding the Coasts",
+     "type": "treachery",
+     "encounterSet": "The Siege of Gondor",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Gwaihir-TRotK",
+     "name": "Gwaihir",
+     "type": "objective-ally",
+     "encounterSet": "",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00042",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Driven-to-the-Brink-TRotK",
+     "name": "Driven to the Brink",
+     "type": "treachery",
+     "encounterSet": "The Siege of Gondor",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "The-Tower-of-Barad-dur-TRotK",
+     "name": "The Tower of Barad-dûr",
+     "type": "objective",
+     "encounterSet": "Mount Doom",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00043",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Minas-Tirith-TRotK",
+     "name": "Minas Tirith",
+     "type": "objective",
+     "encounterSet": "The Battle of the Pelennor Fields",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Mount-Doom-TRotK",
+     "name": "Mount Doom",
+     "type": "location",
+     "encounterSet": "Mount Doom",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00044",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Grond-TRotK",
+     "name": "Grond",
+     "type": "location",
+     "encounterSet": "The Battle of the Pelennor Fields",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Orc-hold-TRotK",
+     "name": "Orc-hold",
+     "type": "location",
+     "encounterSet": "Mount Doom",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00045",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Gate-of-Gondor-TRotK",
+     "name": "Gate of Gondor",
+     "type": "location",
+     "encounterSet": "The Battle of the Pelennor Fields",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Mordor-Road-TRotK",
+     "name": "Mordor Road",
+     "type": "location",
+     "encounterSet": "Mount Doom",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00046",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "City-Wall-TRotK",
+     "name": "City Wall",
+     "type": "location",
+     "encounterSet": "The Battle of the Pelennor Fields",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Plain-of-Gorgoroth-TRotK",
+     "name": "Plain of Gorgoroth",
+     "type": "location",
+     "encounterSet": "Mount Doom",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00047",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Pelennor-Field-TRotK",
+     "name": "Pelennor Field",
+     "type": "location",
+     "encounterSet": "The Battle of the Pelennor Fields",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Brake-of-Thorns-TRotK",
+     "name": "Brake of Thorns",
+     "type": "location",
+     "encounterSet": "Mount Doom",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00048",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Fire-filled-Trench-TRotK",
+     "name": "Fire-filled Trench",
+     "type": "location",
+     "encounterSet": "The Battle of the Pelennor Fields",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Old-Water-course-TRotK",
+     "name": "Old Water-course",
+     "type": "location",
+     "encounterSet": "Mount Doom",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00049",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Siege-Tower-TRotK",
+     "name": "Siege Tower",
+     "type": "location",
+     "encounterSet": "The Battle of the Pelennor Fields",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Gollum-TRotK",
+     "name": "Gollum",
+     "type": "enemy",
+     "encounterSet": "Mount Doom",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00050",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "The-Black-Serpent-TRotK",
+     "name": "The Black Serpent",
+     "type": "enemy",
+     "encounterSet": "The Battle of the Pelennor Fields",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Ringwraith-of-Sauron-TRotK",
+     "name": "Ringwraith of Sauron",
+     "type": "enemy",
+     "encounterSet": "Mount Doom",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00051",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "War-Mumak-TRotK",
+     "name": "War Mûmak",
+     "type": "enemy",
+     "encounterSet": "The Battle of the Pelennor Fields",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Orc-Captain-TRotK",
+     "name": "Orc Captain",
+     "type": "enemy",
+     "encounterSet": "Mount Doom",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00052",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Southron-Champion-TRotK",
+     "name": "Southron Champion",
+     "type": "enemy",
+     "encounterSet": "The Battle of the Pelennor Fields",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Big-Uruk-TRotK",
+     "name": "Big Uruk",
+     "type": "enemy",
+     "encounterSet": "Mount Doom",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00053",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Morgul-Captain-TRotK",
+     "name": "Morgul Captain",
+     "type": "enemy",
+     "encounterSet": "The Battle of the Pelennor Fields",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Little-Snuffler-TRotK",
+     "name": "Little Snuffler",
+     "type": "enemy",
+     "encounterSet": "Mount Doom",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00054",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Orc-of-the-Eye-TRotK",
+     "name": "Orc of the Eye",
+     "type": "enemy",
+     "encounterSet": "The Battle of the Pelennor Fields",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "'Wicked-Master'-TRotK",
+     "name": "'Wicked Master!'",
+     "type": "treachery",
+     "encounterSet": "Mount Doom",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00055",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Mordor-Orc-TRotK",
+     "name": "Mordor Orc",
+     "type": "enemy",
+     "encounterSet": "The Battle of the Pelennor Fields",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "The-Lidless-Eye-TRotK",
+     "name": "The Lidless Eye",
+     "type": "treachery",
+     "encounterSet": "Mount Doom",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00056",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "The-Rammas-is-Breached-TRotK",
+     "name": "The Rammas is Breached",
+     "type": "treachery",
+     "encounterSet": "The Battle of the Pelennor Fields",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Foul-Fumes-TRotK",
+     "name": "Foul Fumes",
+     "type": "treachery",
+     "encounterSet": "Mount Doom",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00057",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Fell-Beast-TRotK",
+     "name": "Fell Beast",
+     "type": "treachery",
+     "encounterSet": "The Battle of the Pelennor Fields",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Heavy-and-Tired-TRotK",
+     "name": "Heavy and Tired",
+     "type": "treachery",
+     "encounterSet": "Mount Doom",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00058",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Black-Dart-TRotK",
+     "name": "Black Dart",
+     "type": "treachery",
+     "encounterSet": "The Battle of the Pelennor Fields",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Orc-of-Mordor-TRotK",
+     "name": "Orc of Mordor",
+     "type": "enemy",
+     "encounterSet": "Orcs of Mordor",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00059",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Spells-of-Ruin-TRotK",
+     "name": "Spells of Ruin",
+     "type": "treachery",
+     "encounterSet": "The Battle of the Pelennor Fields",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Snaga-Archer-TRotK",
+     "name": "Snaga Archer",
+     "type": "enemy",
+     "encounterSet": "Orcs of Mordor",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00060",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Dread-and-Despair-TRotK",
+     "name": "Dread and Despair",
+     "type": "treachery",
+     "encounterSet": "The Battle of the Pelennor Fields",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Uruk-Soldier-TRotK",
+     "name": "Uruk Soldier",
+     "type": "enemy",
+     "encounterSet": "Orcs of Mordor",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00061",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Shadow-of-Mordor-TRotK",
+     "name": "Shadow of Mordor",
+     "type": "treachery",
+     "encounterSet": "The Battle of the Pelennor Fields",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Drawn-to-the-Ring-TRotK",
+     "name": "Drawn to the Ring",
+     "type": "treachery",
+     "encounterSet": "Deep Shadows",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00062",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Wraith-on-Wings-TRotK",
+     "name": "Wraith on Wings",
+     "type": "enemy",
+     "encounterSet": "The Battle of the Pelennor Fields",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Deep-Shadows-TRotK",
+     "name": "Deep Shadows",
+     "type": "treachery",
+     "encounterSet": "Deep Shadows",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00063",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "The-Forbidden-Door-TRotK",
+     "name": "The Forbidden Door",
+     "type": "quest",
+     "encounterSet": "The Passing of the Grey Company",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Evil-Vigilance-TRotK",
+     "name": "Evil Vigilance",
+     "type": "treachery",
+     "encounterSet": "Deep Shadows",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00064",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "The-Paths-of-the-Dead-TRotK",
+     "name": "The Paths of the Dead",
+     "type": "quest",
+     "encounterSet": "The Passing of the Grey Company",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "In-Darkness-Bind-Them-TRotK",
+     "name": "In Darkness Bind Them",
+     "type": "treachery",
+     "encounterSet": "Mountain of Fire Epic Multiplayer",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00065",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "The-Dead-are-Following-TRotK",
+     "name": "The Dead are Following",
+     "type": "quest",
+     "encounterSet": "The Passing of the Grey Company",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "The-One-Ring-TRotK",
+     "name": "The One Ring",
+     "type": "objective",
+     "encounterSet": "",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00066",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "The-Passing-of-the-Grey-Company-Campaign-TRotK",
+     "name": "The Passing of the Grey Company",
+     "type": "campaign",
+     "encounterSet": "The Passing of the Grey Company",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Pass-the-Two-Watchers-TRotK",
+     "name": "Pass the Two Watchers",
+     "type": "quest",
+     "encounterSet": "The Tower of Cirith Ungol",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00067",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Army-of-the-Dead-Enemy-TRotK",
+     "name": "Army of the Dead",
+     "type": "enemy",
+     "encounterSet": "The Passing of the Grey Company",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Fighting-in-the-Tower-TRotK",
+     "name": "Fighting in the Tower",
+     "type": "quest",
+     "encounterSet": "The Tower of Cirith Ungol",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00068",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Army-of-the-Dead-Objective-Ally-TRotK",
+     "name": "Army of the Dead",
+     "type": "objective-ally",
+     "encounterSet": "The Passing of the Grey Company",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Escape-from-Cirith-Ungol-TRotK",
+     "name": "Escape from Cirith Ungol",
+     "type": "quest",
+     "encounterSet": "The Tower of Cirith Ungol",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00069",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Attack-on-Pelargir-TRotK",
+     "name": "Attack on Pelargir",
+     "type": "quest",
+     "encounterSet": "The Siege of Gondor",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "The-Tower-of-Cirith-Ungol-Campaign-TRotK",
+     "name": "The Tower of Cirith Ungol",
+     "type": "campaign",
+     "encounterSet": "The Tower of Cirith Ungol",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00070",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "The-Siege-of-Gondor-Campaign-TRotK",
+     "name": "The Siege of Gondor",
+     "type": "campaign",
+     "encounterSet": "The Siege of Gondor",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "The-Two-Watchers-Location-TRotK",
+     "name": "The Two Watchers",
+     "type": "location",
+     "encounterSet": "The Tower of Cirith Ungol",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00071",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "The-Corsair-Fleet-Corsair-TRotK",
+     "name": "The Corsair Fleet",
+     "type": "objective",
+     "encounterSet": "The Siege of Gondor",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "The-Two-Watchers-Enemy-TRotK",
+     "name": "The Two Watchers",
+     "type": "enemy",
+     "encounterSet": "The Tower of Cirith Ungol",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00072",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "The-Corsair-Fleet-Gondor-TRotK",
+     "name": "The Corsair Fleet",
+     "type": "objective",
+     "encounterSet": "The Siege of Gondor",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Embassy-from-the-Dark-Tower-TRotK",
+     "name": "Embassy from the Dark Tower",
+     "type": "quest",
+     "encounterSet": "The Black Gate Opens",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00073",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "The-Garrison-of-Gondor-TRotK",
+     "name": "The Garrison of Gondor",
+     "type": "quest",
+     "encounterSet": "The Battle of the Pelennor Fields",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "The-Battle-of-the-Morannon-TRotK",
+     "name": "The Battle of the Morannon",
+     "type": "quest",
+     "encounterSet": "The Black Gate Opens",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00074",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Retreat-from-Osgiliath-TRotK",
+     "name": "Retreat from Osgiliath",
+     "type": "quest",
+     "encounterSet": "The Battle of the Pelennor Fields",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "The-Black-Gate-Opens-Campaign-TRotK",
+     "name": "The Black Gate Opens",
+     "type": "campaign",
+     "encounterSet": "The Black Gate Opens",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00075",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "The-White-City-Besieged-TRotK",
+     "name": "The White City Besieged",
+     "type": "quest",
+     "encounterSet": "The Battle of the Pelennor Fields",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "The-Land-of-Mordor-TRotK",
+     "name": "The Land of Mordor",
+     "type": "quest",
+     "encounterSet": "Mount Doom",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00076",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Rohan-has-Come-TRotK",
+     "name": "Rohan has Come!",
+     "type": "quest",
+     "encounterSet": "The Battle of the Pelennor Fields",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "The-Road-to-Isenmouthe-TRotK",
+     "name": "The Road to Isenmouthe",
+     "type": "quest",
+     "encounterSet": "Mount Doom",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00077",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Fighting-in-the-Fields-TRotK",
+     "name": "Fighting in the Fields",
+     "type": "quest",
+     "encounterSet": "The Battle of the Pelennor Fields",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "The-Last-Gasp-TRotK",
+     "name": "The Last Gasp",
+     "type": "quest",
+     "encounterSet": "Mount Doom",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00078",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "The-Battle-of-the-Pelennor-Fields-Campaign-TRotK",
+     "name": "The Battle of the Pelennor Fields",
+     "type": "campaign",
+     "encounterSet": "The Battle of the Pelennor Fields",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "The-Crack-of-Doom-TRotK",
+     "name": "The Crack of Doom",
+     "type": "quest",
+     "encounterSet": "Mount Doom",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00079",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "The-Witch-king-Captain-TRotK",
+     "name": "The Witch-king",
+     "type": "enemy",
+     "encounterSet": "The Battle of the Pelennor Fields",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Mount-Doom-Campaign-TRotK",
+     "name": "Mount Doom",
+     "type": "campaign",
+     "encounterSet": "Mount Doom",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TRotK",
+   "code": "00080",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "The-Witch-king-Sorcerer-TRotK",
+     "name": "The Witch-king",
+     "type": "enemy",
+     "encounterSet": "The Battle of the Pelennor Fields",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Epic-Multiplayer-Mode-Campaign-TRotK",
+     "name": "Epic Multiplayer Mode",
+     "type": "campaign",
+     "encounterSet": "Mountain of Fire Epic Multiplayer",
+     "rulesTextIdentical": false
+    }
+   ]
+  },
+  {
+   "packCode": "TTwT",
+   "code": "00147",
+   "kind": "distinct-cards",
+   "cards": [
+    {
+     "uid": "Gollum-TTwT",
+     "name": "Gollum",
+     "type": "enemy",
+     "encounterSet": "Gollum",
+     "rulesTextIdentical": false
+    },
+    {
+     "uid": "Smeagol-TTwT",
+     "name": "Sméagol",
+     "type": "objective-ally",
+     "encounterSet": "Gollum",
+     "rulesTextIdentical": false
+    }
+   ]
+  }
+ ]
+}
