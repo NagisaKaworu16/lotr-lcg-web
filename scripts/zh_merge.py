@@ -40,6 +40,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ZH_DIR = os.path.join(ROOT, 'docs', 'data', 'zh-overrides')
 TRANSLATION_FILE = os.path.join(ZH_DIR, 'edge-translation.json')
 PACK_FILE = os.path.join(ZH_DIR, 'edge-pack.json')
+CORE_TEXT_FILE = os.path.join(ZH_DIR, 'core-text-zh.json')
 DATA_JS = os.path.join(ROOT, 'data.js')
 REPORT_FILE = os.path.join(ROOT, 'docs', 'data', 'zh-merge-report.json')
 # 特质/包名条目混在 translation.json 里；除特质自证守卫外，这里是手工甄别出的
@@ -171,6 +172,49 @@ def merge(cards, pipeline, code_layer=False, skip_names=frozenset()):
 
 def conflicts_names(conflicts):
     return {c['normalizedEn'] for c in conflicts}
+
+
+def merge_core_text(cards):
+    """第三译文来源（v0.17.7）：core-text-zh.json 按 code 精确匹配（Core 玩家卡
+    73 张，机器辅助译文 meta.reviewed=false）。rulesTextZh/traitsZh 为新字段，
+    直写原样保留（markdown 极简标记与 \\n 不做任何加工）；nameZh 仅现值为空时
+    回填——Core 卡的 nameZh 来自 ringsdb-snapshot（data.js 权威），正常应全部
+    nameZhKept，回填数为 0 是预期事实而非缺陷。返回报告节并写入 report。"""
+    ct = _read_json(CORE_TEXT_FILE).get('cards', {}) if os.path.exists(CORE_TEXT_FILE) else {}
+    by_code = {str(c.get('code')): c for c in cards}
+    stats = {'entries': len(ct), 'matched': 0, 'nameZhBackfilled': 0, 'nameZhKept': 0,
+             'rulesTextZhFilled': 0, 'traitsZhFilled': 0, 'unmatched': 0,
+             'unmatchedList': [], 'reviewed': False,
+             'note': 'core-text-zh.json code 精确匹配；rulesTextZh/traitsZh 原样直写'
+                     '（** ** 与 \\n 不加工），nameZh 仅空时回填（Core 快照权威）。'}
+    for code in sorted(ct, key=lambda x: (len(x), x)):
+        e = ct[code] or {}
+        c = by_code.get(code)
+        if c is None:
+            stats['unmatched'] += 1
+            if len(stats['unmatchedList']) < LIST_CAP:
+                stats['unmatchedList'].append(code)
+            continue
+        stats['matched'] += 1
+        # 字段存在即直写（含空串：01013/01028 原文为空，空串与缺失语义不同）
+        if 'rulesTextZh' in e:
+            c['rulesTextZh'] = e['rulesTextZh'] or ''
+            stats['rulesTextZhFilled'] += 1
+        if 'traitsZh' in e:
+            c['traitsZh'] = e['traitsZh'] or ''
+            stats['traitsZhFilled'] += 1
+        if e.get('nameZh'):
+            if c.get('nameZh'):
+                stats['nameZhKept'] += 1
+            else:
+                c['nameZh'] = e['nameZh']
+                stats['nameZhBackfilled'] += 1
+    print(f"[zh-merge:coreText] entries={stats['entries']} matched={stats['matched']} "
+          f"rulesTextZh={stats['rulesTextZhFilled']} traitsZh={stats['traitsZhFilled']} "
+          f"nameZhKept={stats['nameZhKept']} nameZhBackfilled={stats['nameZhBackfilled']} "
+          f"unmatched={stats['unmatched']}")
+    write_report('playerCoreText', stats)
+    return stats
 
 
 def write_report(pipeline, stats):

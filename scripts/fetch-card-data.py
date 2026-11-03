@@ -237,6 +237,9 @@ def main():
     # authoritative); empty slots filled from the EDGE zh-overrides —
     # edge-pack code layer first, then normalized-EN translation layer.
     zh_stats = zh_merge.merge(cards, 'player', code_layer=True)
+    # 第三译文来源: core-text-zh.json（Core 玩家卡 73 张，rulesTextZh/traitsZh
+    # 新字段 code 精确直写，nameZh 仅空时回填）。
+    ct_stats = zh_merge.merge_core_text(cards)
 
     dataset = {
         'schemaVersion': 1,
@@ -244,7 +247,9 @@ def main():
         'nameZhNote': 'nameZh: Core 卡来自 ringsdb-snapshot.js（data.js 权威，不覆盖）；'
                       '其余由 docs/data/zh-overrides（EDGE 扩展导出）merge——先 '
                       'edge-pack code 精确匹配，再规范化英文名（详见 scripts/zh-merge.py '
-                      '与 docs/data/zh-merge-report.json）。',
+                      '与 docs/data/zh-merge-report.json）。rulesTextZh/traitsZh 来自 '
+                      'core-text-zh.json（code 精确匹配、原样直写，机器辅助译文未人工'
+                      '复核），仅 Core 玩家卡有值；rulesTextZh 渲染归展示层。',
         'endpoint': 'https://ringsdb.com/api/public/cards/{packCode}.json',
         'fetchedAt': time.strftime('%Y-%m-%dT%H:%M:%S+00:00', time.gmtime()),
         'cardCount': len(cards),
