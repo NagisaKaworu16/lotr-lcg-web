@@ -184,12 +184,24 @@ def main():
     print(f'zh sources: {len(zh_cards)} card names (Core snapshot), {len(zh_titles)} pack titles')
 
     os.makedirs(CACHE_DIR, exist_ok=True)
-    # pack list gives name/known/total — cross-check against image-index, best effort
+    # pack list gives name/known/total — cross-check against image-index,
+    # BOTH directions (v0.17.9: 反向缺口曾静默——15 个官方包不在 image-index
+    # 引用里，其中 4 个有数据的 starter 重印包漏抓、11 个 ALeP 包 RingsDB 无数据)
     try:
         listing = http_json(PACKS_URL, args.proxy, args.retries)
         by_code = {p['code']: p for p in listing}
         missing = [p['code'] for p in packs if p['code'] not in by_code]
         print(f'RingsDB pack list: {len(listing)} packs; not in list: {missing or "none"}')
+        reverse = [p for p in listing if p['code'] not in {q['code'] for q in packs}]
+        no_data = [p['code'] for p in reverse if not p.get('known')]
+        fetchable = [p for p in reverse if p.get('known')]
+        if no_data:
+            print(f'RingsDB lists {len(no_data)} packs with ZERO card data '
+                  f'(ALeP 等，无法抓取，如实留缺): {no_data}')
+        if fetchable:
+            print(f'RingsDB packs not covered by image-index, with data (收编): '
+                  f'{[(p["code"], p["known"]) for p in fetchable]}')
+            packs.extend(fetchable)
         time.sleep(interval)
     except Exception as exc:  # noqa: BLE001
         by_code = {}
@@ -258,6 +270,11 @@ def main():
         'fetchedAt': time.strftime('%Y-%m-%dT%H:%M:%S+00:00', time.gmtime()),
         'cardCount': len(cards),
         'packCount': len({c['packCode'] for c in cards}),
+        'packCoverageNote': 'packs 数组=抓取范围（含 RingsDB 有数据的重印 starter 包 '
+                            'DoD/EoL/DoG/RoR，其卡与既有 code 全部重合、去重后归原包，'
+                            '故 packCount=含卡包数 98）；RingsDB 清单另列 11 个 ALeP 包'
+                            '（known=0 无卡数据，无法抓取）与 The Siege of Cair Andros'
+                            '（清单/接口均不存在，源站缺口）——两者如实留缺。',
         'packs': [{'code': p['code'], 'name': by_code.get(p['code'], {}).get('name', p['name']),
                    'known': by_code.get(p['code'], {}).get('known'), 'total': by_code.get(p['code'], {}).get('total'),
                    'cyclePosition': by_code.get(p['code'], {}).get('cycle_position'),
