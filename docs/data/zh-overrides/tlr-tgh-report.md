@@ -100,6 +100,6 @@
 
 ## 6. 后续
 
-- 缺包汇总（供 data 侧）：SCA、FfM、DD、VAB（均为源站/抓取缺口，涉及本批前各循环）；
+- 缺包汇总勘误（2026-11-03，fe2 实测 RingsDB 官方清单与 cards 接口 404×4）：SCA/FfM/DD/VAB 四包并非漏抓，而是源站无独立玩家包数据——FfM/VaB 为豪华盒内任务（卡归父包 KD/TGH，本已随 deluxe 覆盖）；DD 的遭遇卡已随安格玛批次1 进 data.js；SCA 3 张玩家卡挂账待 HoB 源评估。四包补译整体挂起等换源派单。
 - 待裁决：§4 的 7 条新术语，确认后入 TERMS.md；
 - 待命，可接下一循环批次（候选：Ring-lore 传奇三部曲 / Harad / Ered Mithrin / Angmar Awakened Campaign Expansions）。
