@@ -40,8 +40,15 @@
 | sphere of influence | 势力范围 |
 | Limit once per round / Limit 3 times per phase | 每轮限一次 / 每阶段限3次 |
 | Orc | 兽人 |
+| Secrecy X | 隐秘X | 已裁决：data.js「隐秘」2 处 + app.js 先例（2026-11-03 批次2 复核） |
+| unique / non-unique | 独特 / 非独特 | 已裁决：app.js 帮助「独特和受限限制」先例（2026-11-03） |
+| Song（特质） | 歌谣 | 已裁决：批次2 复核维持（2026-11-03） |
+| Signal（特质） | 信号 | 已裁决：批次2 复核维持（2026-11-03） |
+| victory display | 胜利展示区 | 已裁决：批次2 复核维持（2026-11-03） |
+| engagement cost / engagement check | 交战费用 / 交战检定 | 与 Engage=交战 成对 |
+| staging step | 探查步骤 | 随探查区派生 |
 
-## 3. 特质（traits）对照表（25 词，Core 批已全落）
+## 3. 特质（traits）对照表（25 词 Core 批 + 14 词批次2，均已落定）
 
 | 英文 | 中文 | | 英文 | 中文 |
 |---|---|---|---|---|
@@ -57,7 +64,14 @@
 | Noldor | 诺多 | | Minstrel | 吟游诗人 |
 | Scout | 侦察兵 | | Trap | 陷阱 |
 | Archer | 弓手 | | Skill | 技艺 |
-| Istari | 伊斯塔瑞 | | | |
+| Istari | 伊斯塔瑞 | | Signal | 信号 |
+| Song | 歌谣 | | Mount | 坐骑 |
+| Boon | 恩惠 | | Mathom | 马松 |
+| Creature | 生物 | | Eagle | 鹰 |
+| Forest | 森林 | | Underground | 地下 |
+| Dark | 黑暗 | | Mountain | 山地 |
+| Healer | 医者 | | Dale | 谷地 |
+| Shirriff | 治安官 | | Ring | 魔戒 |
 
 ## 4. 译文格式规范
 
