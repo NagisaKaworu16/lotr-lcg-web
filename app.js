@@ -62,16 +62,25 @@ const escape=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>'
 const enc=escape;
 /* v0.17.7：fetched 卡牌 rulesText/shadow 净化富文本渲染（用户反馈 <b>Action:</b> 字面显示）。
    管线：解码常见实体 → 全量转义 → 白名单标签还原（b/strong→strong、i/em→em、u→u、br→br）
-   → RingsDB 图标 token 转可读文本。绝不把原文直接 innerHTML：白名单外的任何标签都以转义文本
-   原样显示（fail visible），不猜不放行。data.js 内置卡已是中文纯文本，继续走 enc() 不经此管线。 */
-const RICH_TOKENS={'[attack]':'[攻]','[defense]':'[防]','[willpower]':'[意]','[threat]':'[胁]','[surge]':'[涌]','[leadership]':'[领]','[tactics]':'[战]','[spirit]':'[灵]','[lore]':'[识]'};
+   → 译文标记（**加粗**、\n 分段）→ RingsDB 图标 token 转可读文本。绝不把原文直接
+   innerHTML：白名单外的任何标签都以转义文本原样显示（fail visible），不猜不放行。
+   v0.17.8：接入 rulesTextZh 译文（fe2 实扫 token 全集 13 种——11 种映射 + 2 种容错）：
+   · [Defense] 大小写噪声（17084）→ token 匹配大小写归一；
+   · [pp]（503011）无定义 → 不猜图标，原样显示，等 research-zhdata 核实后再定；
+   · **text** 与 \n 是译文批次的加粗/分段标记（escape 不吃 * 与换行，转义后处理安全）。 */
+const RICH_TOKENS={'[attack]':'[攻]','[defense]':'[防]','[willpower]':'[意]','[threat]':'[胁]','[surge]':'[涌]','[leadership]':'[领]','[tactics]':'[战]','[spirit]':'[灵]','[lore]':'[识]','[fellowship]':'[护戒]','[baggins]':'[巴金斯]'};
 function rich(text){let s=String(text??'');
  s=s.replace(/&(amp|lt|gt|quot|#39|nbsp);/g,m=>({'&amp;':'&','&lt;':'<','&gt;':'>','&quot;':'"','&#39;':"'",'&nbsp;':'\u00a0'}[m]));
  s=escape(s);
  s=s.replace(/&lt;(\/?)(b|strong|i|em|u)&gt;/g,(m,slash,tag)=>{const out=tag==='b'?'strong':tag==='i'?'em':tag;return slash?`</${out}>`:`<${out}>`;});
  s=s.replace(/&lt;br\s*\/?&gt;/gi,'<br>');
- for(const k of Object.keys(RICH_TOKENS))s=s.split(k).join(RICH_TOKENS[k]);
+ s=s.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+ s=s.replace(/\r?\n/g,'<br>');
+ s=s.replace(/\[([a-z]+)\]/gi,(m,t)=>RICH_TOKENS['['+t.toLowerCase()+']']??m);
  return s;}
+/* v0.17.8：rulesTextZh/traitsZh 优先显示（Core 73 + 批次2/3 共 350 张，fe2 9932923 / 0be9d70）。
+   有译文走同一 rich() 净化管线并以小字标注「机器辅助译文」；无译文回退英文原文（同样净化）。 */
+function rulesBody(zh,en){return zh?`<p>${rich(zh)}</p><p class="small muted">机器辅助译文</p>`:`<p>${rich(en||'（暂无规则文本）')}</p>`;}
 try{let s=localStorage.getItem('lotr-core-v02');if(s){let v=JSON.parse(s);if(v.version===1){state=v;if(state.phase===2&&state.questing)E.questing.enableDiscussion(state);}}}catch{}
 function save(){try{if(state)localStorage.setItem('lotr-core-v02',JSON.stringify(state));else localStorage.removeItem('lotr-core-v02');}catch{toast('浏览器未允许本地保存，可使用导出存档。');}}
 function toast(t){$('#toast').textContent=t;$('#toast').style.display='block';clearTimeout(toast.timer);toast.timer=setTimeout(()=>$('#toast').style.display='none',5000);}
@@ -353,8 +362,8 @@ function catalogDetail(face,code,pod){
   const c=((typeof PLAYER_CARDS_DATA!=='undefined'&&PLAYER_CARDS_DATA.cards)||((typeof RINGSDB_SNAPSHOT!=='undefined'&&RINGSDB_SNAPSHOT.cards)||[])).find(x=>x.code===code);if(!c)return '';
   /* hero 五维可能为 null（307002 Tom Bombadil 等变值属性）→ 显示 'X' */
   const st=n=>n===null||n===undefined?'X':n;
-  const rows=[['类型',PLAYER_TYPES[c.type]||c.type],['球色',SPHERE_NAMES[c.sphere]||c.sphereName||'—'],...(typeof c.cost==='number'||c.cost==='X'?[['费用',c.cost]]:[]),['初始威胁',c.startingThreat],['意志／攻击／防御／生命',c.type==='hero'?`${st(c.willpower)}／${st(c.attack)}／${st(c.defense)}／${st(c.health)}`:null],['特性',c.traits],['卡包',c.packName],['编号',c.code]];
-  return `<div class="cat-detail">${ImageLibrary.art(code)}<div class="cat-text">${catalogFacts(rows)}<p>${rich(c.rulesText||'（暂无规则文本）')}</p></div></div>`;
+  const rows=[['类型',PLAYER_TYPES[c.type]||c.type],['球色',SPHERE_NAMES[c.sphere]||c.sphereName||'—'],...(typeof c.cost==='number'||c.cost==='X'?[['费用',c.cost]]:[]),['初始威胁',c.startingThreat],['意志／攻击／防御／生命',c.type==='hero'?`${st(c.willpower)}／${st(c.attack)}／${st(c.defense)}／${st(c.health)}`:null],['特性',c.traitsZh||c.traits],['卡包',c.packName],['编号',c.code]];
+  return `<div class="cat-detail">${ImageLibrary.art(code)}<div class="cat-text">${catalogFacts(rows)}${rulesBody(c.rulesTextZh,c.rulesText)}</div></div>`;
  }
  if(face==='quest'){
   const q=D.quests.find(x=>x.id===Number(code));
@@ -385,8 +394,9 @@ function catalogDetail(face,code,pod){
   if(f.type==='enemy')rows.push(['交战／威胁',`${f.engagement??'—'}／${f.threat??0}`],['攻击／防御／生命',`${f.attack??'—'}／${f.defense??'—'}／${f.health??'—'}`]);
   if(f.type==='location')rows.push(['威胁／探索',`${f.threat??'—'}／${f.questPoints??'—'}`]);
   if(f.victory)rows.push(['胜利点',f.victory]);
-  rows.push(['特性',f.traits],['关键词',f.keywords],['卡包',f.packNameZh||f.packName],['编号',f.code]);
-  return `<div class="cat-detail">${ImageLibrary.encounterArt(f.code)}<div class="cat-text">${catalogFacts(rows)}<p>${rich(f.rulesText||'（暂无规则文本）')}</p>${f.shadow?`<p><b>暗影效果</b><br>${rich(f.shadow)}</p>`:''}</div></div>`;
+  rows.push(['特性',f.traitsZh||f.traits],['关键词',f.keywords],['卡包',f.packNameZh||f.packName],['编号',f.code]);
+  /* 遭遇卡数据侧暂无 rulesTextZh/traitsZh——同一接线先行铺好，译文批次落地即点亮 */
+  return `<div class="cat-detail">${ImageLibrary.encounterArt(f.code)}<div class="cat-text">${catalogFacts(rows)}${rulesBody(f.rulesTextZh,f.rulesText)}${f.shadow?`<p><b>暗影效果</b><br>${rich(f.shadow)}</p>`:''}</div></div>`;
  }
  return '';
 }
