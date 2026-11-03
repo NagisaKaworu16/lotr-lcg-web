@@ -20,5 +20,9 @@ Thumbs.db
 
 # local workspace memory (not part of the deliverable)
 .workbuddy/
+WORKBUDDY_LOTR_LCG_MEMORY.md
+
+# fetch pipeline caches (rebuildable via scripts/fetch-*.py)
+docs/data/cache/
 assets/fonts/_src/
 assets/fonts/_corpus.txt
