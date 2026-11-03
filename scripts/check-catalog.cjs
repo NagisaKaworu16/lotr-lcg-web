@@ -223,7 +223,7 @@ const ACCEPT=path.join(ROOT,'docs','browser-acceptance');
    const dn=new Set(D.cards.map(x=>norm(x.en||x.name)));
    const fresh=ENCOUNTER_CARDS_DATA.cards.filter(k=>k.type!=='quest'&&!dn.has(norm(k.name)));
    const sample=fresh.find(k=>k.type==='enemy'&&k.rulesText)||fresh[0];
-   return {total:catalogStats().total,fresh:fresh.length,sample:sample?{name:sample.name,code:sample.slug||sample.code,pod:sample.packCode}:null};
+   return {total:catalogStats().total,fresh:fresh.length,sample:sample?{name:sample.name,code:sample.uid||sample.slug||sample.code,pod:sample.packCode}:null};
  });
  check('fetched 净增条目全部入库（徽标=现算总数）',await page.evaluate(n=>document.querySelector('#catalogTab span').textContent===String(n),fetchedInfo.total),fetchedInfo);
  check('抽样新卡可搜索可显示',!fetchedInfo.sample||await (async()=>{
