@@ -270,6 +270,7 @@ def main():
     ar_stats = zh_merge.merge_text_zh(cards, 'ats-rm-text-zh.json', 'playerAtsRmText')
     tg_stats = zh_merge.merge_text_zh(cards, 'tlr-tgh-text-zh.json', 'playerTlrTghText')
     he_stats = zh_merge.merge_text_zh(cards, 'harad-em-text-zh.json', 'playerHaradEmText')
+    vm_stats = zh_merge.merge_text_zh(cards, 'vom-text-zh.json', 'playerVomText')
 
     dataset = {
         'schemaVersion': 1,
