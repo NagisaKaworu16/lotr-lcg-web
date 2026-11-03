@@ -40,6 +40,8 @@ import unicodedata
 import urllib.error
 import urllib.request
 
+from PIL import Image  # to_webp 直接落盘统一口径 webp（v0.17.5）
+
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _spec = importlib.util.spec_from_file_location(
     'optimize_card_images', os.path.join(_HERE, 'optimize-card-images.py'))
@@ -151,19 +153,15 @@ def fetch_face(url, dest_jpg, proxy):
     return 'ok'
 
 
-def to_webp(jpg_path, dest_webp, quality, max_side):
-    """复用 optimize-card-images.convert() 的压缩口径（quality 80 / 长边 620），
-    但禁用其源图删除（原始 jpg 保留在 gitignored 缓存目录，避免批量删除护栏
-    中断批次），webp 产出到目标 assets 目录。"""
-    real_remove = os.remove
-    os.remove = lambda p: None  # noqa: 单线程内临时禁删，finally 恢复
-    try:
-        out = opt.convert(jpg_path, quality, max_side)
-    finally:
-        os.remove = real_remove
-    os.makedirs(os.path.dirname(dest_webp), exist_ok=True)
-    if os.path.abspath(out) != os.path.abspath(dest_webp):
-        os.replace(out, dest_webp)
+def to_webp(src, dest_webp, quality, max_side):
+    """直接用 PIL 落盘统一口径的 webp（quality/长边见参数，method 6 与英文图管线一致）。
+
+    v0.17.5 修复：此前复用 opt.convert()，其「webp 不比 jpg 小就删除输出、返回 jpg
+    原件」的回退路径会把 raw jpg 被 os.replace 成 .webp 资产（331 张假 webp，实为
+    JPEG 字节），并在缓存留下 webp 残留。改为无条件下巴不比对，永远产出真 webp。"""
+    with Image.open(src) as im:
+        out = opt.fit(im.convert('RGB'), max_side)
+        out.save(dest_webp, 'WEBP', quality=quality, method=6)
     return dest_webp
 
 
@@ -174,8 +172,8 @@ def main():
     ap.add_argument('--refetch', action='store_true', help='重新下载 cardDb.tsv')
     ap.add_argument('--packs', default='Core', help='本批下载的 packCode（玩家/遭遇共用）')
     ap.add_argument('--no-download', action='store_true', help='只重建清单，不下载')
-    ap.add_argument('--quality', type=int, default=80)
-    ap.add_argument('--max-side', type=int, default=620)
+    ap.add_argument('--quality', type=int, default=70, help='v0.17.5 起默认 70（体积护栏口径）')
+    ap.add_argument('--max-side', type=int, default=560, help='v0.17.5 起默认 560（体积护栏口径）')
     args = ap.parse_args()
     if args.refetch and os.path.exists(args.carddb):
         os.remove(args.carddb)
