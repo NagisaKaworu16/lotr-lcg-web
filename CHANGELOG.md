@@ -1,3 +1,14 @@
+# v0.16.9 · nameZh merge：EDGE 中文覆盖层接入两条 fetch 管线（2026-11-02）
+
+docs/data/zh-overrides（银星 EDGE 扩展导出，见该目录 README.md）接入 carddata 产出收尾：
+
+- **新共享层 scripts/zh_merge.py**：加载 override 构建「code 精确 + 规范化英文名」两层查找（normalize=小写+去非字母数字），匹配顺序 code → name；命中写 `nameZh`，绝不编造、绝不覆盖已有中文名。报告落 `docs/data/zh-merge-report.json`（各管线 matchedByCode/matchedByName/unmatched 计数与清单，清单截断 200 条）。
+- **甄别守卫**：translation.json 混含特质/包名条目——同名规范键对应多个不同中文值时整键排除（conflict 上报）；命中串与卡自身特质 token 相同则跳过（特质译名不进卡名）；遭遇管线再跳过 data.js 内置条目（Core 遭遇卡 / HfG 132-142 / quest）——data.js 权威，展示层先读它，nameZh 不回写。
+- **实测命中**：玩家卡 1039/1315（79.0%，byCode 149 + byName 817 + Core 快照 alreadyZh 73，unmatched 276 如实留空）；遭遇侧极弱 byName 101/3820（enemy 16/890、location 1/981、treachery 4/811、quest 10/517，与 override README 实测一致），其余 3719 张如实留空待后续数据源。
+- **数据不变性**：卡数/uid/剧本数全部不变（玩家 1315、遭遇 3820/154、uid 3820/3820 唯一、(packCode,code) 103 组重复键结论不变），仅新增 nameZh 字段；两个 dataset 各加 nameZhNote 声明来源与不覆盖契约。
+- 连带：desktop-ui.js APP_VERSION 徽标 v0.16.7→v0.16.9（planning-dom-tests 强制徽标=CHANGELOG 最新条目）。
+- 回归：check_project 全绿；node 抽查 16005→半身人边界守卫（ALeP name 层）、17033→杜内丹寻路者（edge-pack code 层）、内置卡 02014/01105 nameZh 保持为空未被覆盖。
+
 # v0.16.8 · 遭遇侧全量数据批次：3820 卡 / 154 剧本落地（2026-11-02）
 
 fetch-encounter-data.py `--packs all` 全量重建 encounter-carddata（HoB /Export 批量导出），供 v0.16.7 接线层直接生效：

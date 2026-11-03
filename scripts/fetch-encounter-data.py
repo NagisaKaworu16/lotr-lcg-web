@@ -66,6 +66,8 @@ import time
 import urllib.parse
 import urllib.request
 
+import zh_merge  # shared nameZh merge layer (scripts/ dir is sys.path[0])
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ZH_TITLES = os.path.join(ROOT, 'product-zh.json')
 OUT_DIR = os.path.join(ROOT, 'docs', 'data')
@@ -607,6 +609,15 @@ def main():
         extra = [f for f in c if f not in CARD_FIELDS]
         if missing or extra:
             raise SystemExit(f'field projection drift for {c.get("code")}: missing={missing} extra={extra}')
+
+    # nameZh merge (EDGE zh-overrides, normalized-EN layer only — edge-pack
+    # carries player-pack codes that do not apply here). data.js built-in
+    # entries (Core encounter cards, HfG 132-142 block, quests) are skipped:
+    # data.js is authoritative for those and the display layer reads it first,
+    # so their nameZh stays empty rather than diverging from data.js.
+    zh_stats = zh_merge.merge(cards, 'encounter', code_layer=False,
+                              skip_names=zh_merge.load_datajs_names())
+
     per_pack = {}
     for c in cards:
         per_pack[c['packCode']] = per_pack.get(c['packCode'], 0) + 1
@@ -627,6 +638,10 @@ def main():
                          'packCodeCodeDuplicates for the full audit. Display-side lookups '
                          'by (pod, code) MUST switch to uid.',
         'fetchedAt': time.strftime('%Y-%m-%dT%H:%M:%S+00:00', time.gmtime()),
+        'nameZhNote': 'nameZh 来自 docs/data/zh-overrides（EDGE 扩展导出）规范化英文名匹配，'
+                      '遭遇侧覆盖极弱（如实留空，不编造）；data.js 内置条目'
+                      '（Core 遭遇卡 / HfG 132-142 / quest）不回写——展示层以 data.js '
+                      '为准。详见 scripts/zh-merge.py 与 docs/data/zh-merge-report.json。',
         'cardCount': len(cards),
         'packCount': len({c['packCode'] for c in cards}),
         'packs': ([{'code': k, 'name': pack_names.get(k), 'cards': v}

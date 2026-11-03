@@ -40,6 +40,8 @@ import sys
 import time
 import urllib.request
 
+import zh_merge  # shared nameZh merge layer (scripts/ dir is sys.path[0])
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 IMAGE_INDEX = os.path.join(ROOT, 'image-index.js')
 CORE_SNAPSHOT = os.path.join(ROOT, 'ringsdb-snapshot.js')
@@ -231,9 +233,18 @@ def main():
         cards.append(project(raw, zh_cards, zh_titles))
     cards.sort(key=lambda c: (c['packCode'], c['position'] or 0, c['code']))
 
+    # nameZh merge: Core-snapshot names stay untouched (data.js is
+    # authoritative); empty slots filled from the EDGE zh-overrides —
+    # edge-pack code layer first, then normalized-EN translation layer.
+    zh_stats = zh_merge.merge(cards, 'player', code_layer=True)
+
     dataset = {
         'schemaVersion': 1,
         'source': 'RingsDB',
+        'nameZhNote': 'nameZh: Core 卡来自 ringsdb-snapshot.js（data.js 权威，不覆盖）；'
+                      '其余由 docs/data/zh-overrides（EDGE 扩展导出）merge——先 '
+                      'edge-pack code 精确匹配，再规范化英文名（详见 scripts/zh-merge.py '
+                      '与 docs/data/zh-merge-report.json）。',
         'endpoint': 'https://ringsdb.com/api/public/cards/{packCode}.json',
         'fetchedAt': time.strftime('%Y-%m-%dT%H:%M:%S+00:00', time.gmtime()),
         'cardCount': len(cards),

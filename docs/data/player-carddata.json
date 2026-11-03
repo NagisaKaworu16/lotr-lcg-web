@@ -1,8 +1,9 @@
 {
  "schemaVersion": 1,
  "source": "RingsDB",
+ "nameZhNote": "nameZh: Core 卡来自 ringsdb-snapshot.js（data.js 权威，不覆盖）；其余由 docs/data/zh-overrides（EDGE 扩展导出）merge——先 edge-pack code 精确匹配，再规范化英文名（详见 scripts/zh-merge.py 与 docs/data/zh-merge-report.json）。",
  "endpoint": "https://ringsdb.com/api/public/cards/{packCode}.json",
- "fetchedAt": "2026-10-30T03:17:50+00:00",
+ "fetchedAt": "2026-11-03T03:45:33+00:00",
  "cardCount": 1315,
  "packCount": 98,
  "packs": [
@@ -2513,7 +2514,7 @@
   {
    "code": "21001",
    "name": "The One Ring",
-   "nameZh": "",
+   "nameZh": "至尊戒",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -2549,7 +2550,7 @@
   {
    "code": "21002",
    "name": "Frodo Baggins",
-   "nameZh": "",
+   "nameZh": "弗罗多·巴金斯",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "leadership",
@@ -2591,7 +2592,7 @@
   {
    "code": "21003",
    "name": "Merry",
-   "nameZh": "",
+   "nameZh": "梅里",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -2627,7 +2628,7 @@
   {
    "code": "21004",
    "name": "Pippin",
-   "nameZh": "",
+   "nameZh": "皮平",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -2663,7 +2664,7 @@
   {
    "code": "21005",
    "name": "Faramir",
-   "nameZh": "",
+   "nameZh": "法拉米尔",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -2699,7 +2700,7 @@
   {
    "code": "21006",
    "name": "Derufin",
-   "nameZh": "",
+   "nameZh": "德茹芬",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -2735,7 +2736,7 @@
   {
    "code": "21007",
    "name": "The Gathering Storm",
-   "nameZh": "",
+   "nameZh": "风暴聚集",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -2771,7 +2772,7 @@
   {
    "code": "21008",
    "name": "Put Off Pursuit",
-   "nameZh": "",
+   "nameZh": "摆脱追击",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -2807,7 +2808,7 @@
   {
    "code": "21009",
    "name": "The Master Ring",
-   "nameZh": "",
+   "nameZh": "主宰之戒",
    "type": "event",
    "typeName": "Event",
    "sphere": "neutral",
@@ -2843,7 +2844,7 @@
   {
    "code": "21010",
    "name": "The Ruling Ring",
-   "nameZh": "",
+   "nameZh": "统御之戒",
    "type": "event",
    "typeName": "Event",
    "sphere": "neutral",
@@ -2879,7 +2880,7 @@
   {
    "code": "21011",
    "name": "The Ring of Power",
-   "nameZh": "",
+   "nameZh": "力量之戒",
    "type": "event",
    "typeName": "Event",
    "sphere": "neutral",
@@ -2915,7 +2916,7 @@
   {
    "code": "21071",
    "name": "Stinker",
-   "nameZh": "",
+   "nameZh": "缺德鬼",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -2951,7 +2952,7 @@
   {
    "code": "21072",
    "name": "Sméagol",
-   "nameZh": "",
+   "nameZh": "斯密戈",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "lore",
@@ -2987,7 +2988,7 @@
   {
    "code": "21074",
    "name": "Fellowship",
-   "nameZh": "",
+   "nameZh": "同盟队",
    "type": "contract",
    "typeName": "Contract",
    "sphere": "neutral",
@@ -3023,7 +3024,7 @@
   {
    "code": "06081",
    "name": "Faramir",
-   "nameZh": "",
+   "nameZh": "法拉米尔",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "lore",
@@ -3065,7 +3066,7 @@
   {
    "code": "06082",
    "name": "Sword of Morthond",
-   "nameZh": "",
+   "nameZh": "墨松德之剑",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -3101,7 +3102,7 @@
   {
    "code": "06083",
    "name": "Men of the West",
-   "nameZh": "",
+   "nameZh": "西方的战士",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -3137,7 +3138,7 @@
   {
    "code": "06084",
    "name": "Knight of Minas Tirith",
-   "nameZh": "",
+   "nameZh": "米那斯提力斯骑士",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -3173,7 +3174,7 @@
   {
    "code": "06085",
    "name": "Gondorian Fire",
-   "nameZh": "",
+   "nameZh": "刚铎之火",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -3209,7 +3210,7 @@
   {
    "code": "06086",
    "name": "Pelargir Shipwright",
-   "nameZh": "",
+   "nameZh": "佩拉基尔船木工",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -3245,7 +3246,7 @@
   {
    "code": "06087",
    "name": "Map of Earnil",
-   "nameZh": "",
+   "nameZh": "埃雅尼尔地图",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -3281,7 +3282,7 @@
   {
    "code": "06088",
    "name": "Ranger Bow",
-   "nameZh": "",
+   "nameZh": "尖兵弓",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -3317,7 +3318,7 @@
   {
    "code": "06089",
    "name": "Forest Patrol",
-   "nameZh": "",
+   "nameZh": "森林巡逻",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -3353,7 +3354,7 @@
   {
    "code": "06090",
    "name": "Palantir",
-   "nameZh": "",
+   "nameZh": "真知晶球",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -3389,7 +3390,7 @@
   {
    "code": "10054",
    "name": "Dori",
-   "nameZh": "",
+   "nameZh": "多瑞",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "tactics",
@@ -3425,7 +3426,7 @@
   {
    "code": "10055",
    "name": "Ranger Provisions",
-   "nameZh": "",
+   "nameZh": "游民的补给",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -3461,7 +3462,7 @@
   {
    "code": "10056",
    "name": "Dúnedain Message",
-   "nameZh": "",
+   "nameZh": "杜内丹人的口信",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -3497,7 +3498,7 @@
   {
    "code": "10057",
    "name": "Longbeard Sentry",
-   "nameZh": "",
+   "nameZh": "长须哨兵",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -3533,7 +3534,7 @@
   {
    "code": "10058",
    "name": "Delay the Enemy",
-   "nameZh": "",
+   "nameZh": "拖延敌人",
    "type": "player-side-quest",
    "typeName": "Player Side Quest",
    "sphere": "tactics",
@@ -3569,7 +3570,7 @@
   {
    "code": "10059",
    "name": "Steed of Imladris",
-   "nameZh": "",
+   "nameZh": "伊姆拉缀斯骏马",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -3605,7 +3606,7 @@
   {
    "code": "10060",
    "name": "Fair and Perilous",
-   "nameZh": "",
+   "nameZh": "美丽又危险",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -3641,7 +3642,7 @@
   {
    "code": "10061",
    "name": "Wellinghall Preserver",
-   "nameZh": "",
+   "nameZh": "涌泉厅维护者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -3677,7 +3678,7 @@
   {
    "code": "10062",
    "name": "None Return",
-   "nameZh": "",
+   "nameZh": "有来无回",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -3713,7 +3714,7 @@
   {
    "code": "10063",
    "name": "Hope Rekindled",
-   "nameZh": "",
+   "nameZh": "重燃希望",
    "type": "event",
    "typeName": "Event",
    "sphere": "neutral",
@@ -3749,7 +3750,7 @@
   {
    "code": "306182",
    "name": "Gilraen",
-   "nameZh": "",
+   "nameZh": "吉尔蕾恩",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "spirit",
@@ -3785,7 +3786,7 @@
   {
    "code": "306183",
    "name": "Aragorn",
-   "nameZh": "",
+   "nameZh": "阿拉贡",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "neutral",
@@ -3821,7 +3822,7 @@
   {
    "code": "306184",
    "name": "A Fair Exchange",
-   "nameZh": "",
+   "nameZh": "公平的交换",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -3857,7 +3858,7 @@
   {
    "code": "306185",
    "name": "Elessar",
-   "nameZh": "",
+   "nameZh": "埃莱萨",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -3893,7 +3894,7 @@
   {
    "code": "306186",
    "name": "The Renewer",
-   "nameZh": "",
+   "nameZh": "复兴者",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -3929,7 +3930,7 @@
   {
    "code": "306187",
    "name": "Elendilmir",
-   "nameZh": "",
+   "nameZh": "埃兰迪尔米尔",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -3965,7 +3966,7 @@
   {
    "code": "306188",
    "name": "Estel",
-   "nameZh": "",
+   "nameZh": "埃斯泰尔",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -4001,7 +4002,7 @@
   {
    "code": "306189",
    "name": "Chieftain of the North",
-   "nameZh": "",
+   "nameZh": "北方的族长",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -4037,7 +4038,7 @@
   {
    "code": "306190",
    "name": "Grey Companion",
-   "nameZh": "",
+   "nameZh": "灰衣劲旅",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "neutral",
@@ -4073,7 +4074,7 @@
   {
    "code": "306191",
    "name": "Andúril",
-   "nameZh": "",
+   "nameZh": "安督利尔",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -4109,7 +4110,7 @@
   {
    "code": "10115",
    "name": "Amarthiúl",
-   "nameZh": "",
+   "nameZh": "阿玛希乌",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "leadership",
@@ -4145,7 +4146,7 @@
   {
    "code": "10116",
    "name": "Guardian of Arnor",
-   "nameZh": "",
+   "nameZh": "阿尔诺守卫",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -4181,7 +4182,7 @@
   {
    "code": "10117",
    "name": "Doom Hangs Still",
-   "nameZh": "",
+   "nameZh": "存亡之秋",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -4217,7 +4218,7 @@
   {
    "code": "10118",
    "name": "Beechbone",
-   "nameZh": "",
+   "nameZh": "榉骨",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -4253,7 +4254,7 @@
   {
    "code": "10119",
    "name": "Hold Your Ground!",
-   "nameZh": "",
+   "nameZh": "坚守阵地！",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -4289,7 +4290,7 @@
   {
    "code": "10120",
    "name": "Lindir",
-   "nameZh": "",
+   "nameZh": "林迪尔",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -4325,7 +4326,7 @@
   {
    "code": "10121",
    "name": "Lords of the Eldar",
-   "nameZh": "",
+   "nameZh": "埃尔达领主",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -4361,7 +4362,7 @@
   {
    "code": "10122",
    "name": "The Long Defeat",
-   "nameZh": "",
+   "nameZh": "长久的失败",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -4403,7 +4404,7 @@
   {
    "code": "10123",
    "name": "Quick Ears",
-   "nameZh": "",
+   "nameZh": "敏锐的耳朵",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -4439,7 +4440,7 @@
   {
    "code": "10124",
    "name": "Favor of the Valar",
-   "nameZh": "",
+   "nameZh": "维拉的看重",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -4475,7 +4476,7 @@
   {
    "code": "06107",
    "name": "Caldara",
-   "nameZh": "",
+   "nameZh": "卡尔达拉",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "spirit",
@@ -4511,7 +4512,7 @@
   {
    "code": "06108",
    "name": "Squire of the Citadel",
-   "nameZh": "",
+   "nameZh": "王城侍从",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -4553,7 +4554,7 @@
   {
    "code": "06109",
    "name": "Tome of Atanatar",
-   "nameZh": "",
+   "nameZh": "阿塔那塔典籍",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -4589,7 +4590,7 @@
   {
    "code": "06110",
    "name": "Guthlaf",
-   "nameZh": "",
+   "nameZh": "古斯拉夫",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -4631,7 +4632,7 @@
   {
    "code": "06111",
    "name": "The Hammer-stroke",
-   "nameZh": "",
+   "nameZh": "一夫当关",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -4667,7 +4668,7 @@
   {
    "code": "06112",
    "name": "Emery",
-   "nameZh": "",
+   "nameZh": "埃梅瑞",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -4703,7 +4704,7 @@
   {
    "code": "06113",
    "name": "Children of the Sea",
-   "nameZh": "",
+   "nameZh": "大海的子民",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -4739,7 +4740,7 @@
   {
    "code": "06114",
    "name": "Anborn",
-   "nameZh": "",
+   "nameZh": "安博恩",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -4775,7 +4776,7 @@
   {
    "code": "06115",
    "name": "Poisoned Stakes",
-   "nameZh": "",
+   "nameZh": "剧毒木桩",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -4811,7 +4812,7 @@
   {
    "code": "06116",
    "name": "Well-Equipped",
-   "nameZh": "",
+   "nameZh": "装备精良",
    "type": "event",
    "typeName": "Event",
    "sphere": "neutral",
@@ -4847,7 +4848,7 @@
   {
    "code": "17055",
    "name": "Hirgon",
-   "nameZh": "",
+   "nameZh": "希尔巩",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "tactics",
@@ -4889,7 +4890,7 @@
   {
    "code": "17056",
    "name": "Haradrim Spear",
-   "nameZh": "",
+   "nameZh": "哈拉德长矛",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -4925,7 +4926,7 @@
   {
    "code": "17057",
    "name": "Hunting Party",
-   "nameZh": "",
+   "nameZh": "狩猎队",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -4961,7 +4962,7 @@
   {
    "code": "17058",
    "name": "The Red Arrow",
-   "nameZh": "",
+   "nameZh": "红箭",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -5003,7 +5004,7 @@
   {
    "code": "17059",
    "name": "Keep Watch",
-   "nameZh": "",
+   "nameZh": "持续守望",
    "type": "player-side-quest",
    "typeName": "Player Side Quest",
    "sphere": "tactics",
@@ -5039,7 +5040,7 @@
   {
    "code": "17060",
    "name": "Rider of Rohan",
-   "nameZh": "",
+   "nameZh": "洛汗骑士",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -5075,7 +5076,7 @@
   {
    "code": "17061",
    "name": "Fireside Song",
-   "nameZh": "",
+   "nameZh": "炉火边的歌谣",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -5111,7 +5112,7 @@
   {
    "code": "17062",
    "name": "Dunedain Lookout",
-   "nameZh": "",
+   "nameZh": "杜内丹守望者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -5153,7 +5154,7 @@
   {
    "code": "17063",
    "name": "Doughty Ranger",
-   "nameZh": "",
+   "nameZh": "刚强的游民",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -5189,7 +5190,7 @@
   {
    "code": "17064",
    "name": "The Free Peoples",
-   "nameZh": "",
+   "nameZh": "自由人民",
    "type": "event",
    "typeName": "Event",
    "sphere": "neutral",
@@ -5225,7 +5226,7 @@
   {
    "code": "08112",
    "name": "Galadriel",
-   "nameZh": "",
+   "nameZh": "加拉德瑞尔",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "spirit",
@@ -5273,7 +5274,7 @@
   {
    "code": "08113",
    "name": "Heir of Mardil",
-   "nameZh": "",
+   "nameZh": "马迪尔的后裔",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -5315,7 +5316,7 @@
   {
    "code": "08114",
    "name": "Orophin",
-   "nameZh": "",
+   "nameZh": "欧洛芬",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -5363,7 +5364,7 @@
   {
    "code": "08115",
    "name": "Henneth Annûn Guard",
-   "nameZh": "",
+   "nameZh": "汉奈斯安努恩禁卫",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -5399,7 +5400,7 @@
   {
    "code": "08116",
    "name": "Charge of the Rohirrim",
-   "nameZh": "",
+   "nameZh": "洛希尔人冲锋",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -5441,7 +5442,7 @@
   {
    "code": "08117",
    "name": "Galadriel's Handmaiden",
-   "nameZh": "",
+   "nameZh": "加拉德瑞尔的侍女",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -5483,7 +5484,7 @@
   {
    "code": "08118",
    "name": "Mirror of Galadriel",
-   "nameZh": "",
+   "nameZh": "加拉德瑞尔的水镜",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -5519,7 +5520,7 @@
   {
    "code": "08119",
    "name": "Wandering Ent",
-   "nameZh": "",
+   "nameZh": "游荡的恩特",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -5555,7 +5556,7 @@
   {
    "code": "08120",
    "name": "Cloak of Lórien",
-   "nameZh": "",
+   "nameZh": "罗瑞恩斗篷",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -5591,7 +5592,7 @@
   {
    "code": "08121",
    "name": "Nenya",
-   "nameZh": "",
+   "nameZh": "能雅",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -5633,7 +5634,7 @@
   {
    "code": "02025",
    "name": "Frodo Baggins",
-   "nameZh": "",
+   "nameZh": "弗罗多·巴金斯",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "spirit",
@@ -5669,7 +5670,7 @@
   {
    "code": "02026",
    "name": "Dúnedain Warning",
-   "nameZh": "",
+   "nameZh": "杜内丹人的警告",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -5705,7 +5706,7 @@
   {
    "code": "02027",
    "name": "Second Breakfast",
-   "nameZh": "",
+   "nameZh": "第二顿早餐",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -5741,7 +5742,7 @@
   {
    "code": "02028",
    "name": "Beorning Beekeeper",
-   "nameZh": "",
+   "nameZh": "贝奥恩养蜂人",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -5777,7 +5778,7 @@
   {
    "code": "02029",
    "name": "Born Aloft",
-   "nameZh": "",
+   "nameZh": "空中重生",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -5813,7 +5814,7 @@
   {
    "code": "02030",
    "name": "Éomund",
-   "nameZh": "",
+   "nameZh": "伊奥蒙德",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -5855,7 +5856,7 @@
   {
    "code": "02031",
    "name": "Nor am I a Stranger",
-   "nameZh": "",
+   "nameZh": "我并不是陌生人",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -5891,7 +5892,7 @@
   {
    "code": "02032",
    "name": "Longbeard Map-Maker",
-   "nameZh": "",
+   "nameZh": "长须制图者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -5927,7 +5928,7 @@
   {
    "code": "02033",
    "name": "A Burning Brand",
-   "nameZh": "",
+   "nameZh": "燃烧的火把",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -5963,7 +5964,7 @@
   {
    "code": "02034",
    "name": "Song of Wisdom",
-   "nameZh": "",
+   "nameZh": "智慧之歌",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -5999,7 +6000,7 @@
   {
    "code": "12138",
    "name": "Prince Imrahil",
-   "nameZh": "",
+   "nameZh": "伊姆拉希尔亲王",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "tactics",
@@ -6035,7 +6036,7 @@
   {
    "code": "12139",
    "name": "Knight of the White Tower",
-   "nameZh": "",
+   "nameZh": "白塔骑士",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -6071,7 +6072,7 @@
   {
    "code": "12140",
    "name": "Hold the Line",
-   "nameZh": "",
+   "nameZh": "坚守战线",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -6107,7 +6108,7 @@
   {
    "code": "12141",
    "name": "Soldier of Dol Amroth",
-   "nameZh": "",
+   "nameZh": "多阿姆洛斯士兵",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -6143,7 +6144,7 @@
   {
    "code": "12142",
    "name": "Súlien",
-   "nameZh": "",
+   "nameZh": "苏利恩",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -6179,7 +6180,7 @@
   {
    "code": "12143",
    "name": "Inspiring Presence",
-   "nameZh": "",
+   "nameZh": "振奋人心",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -6215,7 +6216,7 @@
   {
    "code": "12144",
    "name": "Guardian of Ithilien",
-   "nameZh": "",
+   "nameZh": "伊希利恩守卫",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -6251,7 +6252,7 @@
   {
    "code": "12145",
    "name": "Ranger Spear",
-   "nameZh": "",
+   "nameZh": "尖兵长矛",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -6287,7 +6288,7 @@
   {
    "code": "12146",
    "name": "Prince of Dol Amroth",
-   "nameZh": "",
+   "nameZh": "多阿姆洛斯亲王",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -6323,7 +6324,7 @@
   {
    "code": "300001",
    "name": "Ingold",
-   "nameZh": "",
+   "nameZh": "英戈尔德",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "leadership",
@@ -6359,7 +6360,7 @@
   {
    "code": "300002",
    "name": "Celador",
-   "nameZh": "",
+   "nameZh": "凯拉多",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "lore",
@@ -6395,7 +6396,7 @@
   {
    "code": "300003",
    "name": "Thengel",
-   "nameZh": "",
+   "nameZh": "森格尔",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "spirit",
@@ -6431,7 +6432,7 @@
   {
    "code": "300004",
    "name": "Herubrand",
-   "nameZh": "",
+   "nameZh": "赫鲁布兰德",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "tactics",
@@ -6467,7 +6468,7 @@
   {
    "code": "300005",
    "name": "Deeping Bowman",
-   "nameZh": "",
+   "nameZh": "深谷箭手",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -6503,7 +6504,7 @@
   {
    "code": "300006",
    "name": "Open the Gates",
-   "nameZh": "",
+   "nameZh": "打开大门",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -6539,7 +6540,7 @@
   {
    "code": "300007",
    "name": "Wealth of Adventure",
-   "nameZh": "",
+   "nameZh": "冒险的财富",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -6575,7 +6576,7 @@
   {
    "code": "300008",
    "name": "Feast of Plenty",
-   "nameZh": "",
+   "nameZh": "丰盛的宴会",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -6611,7 +6612,7 @@
   {
    "code": "300009",
    "name": "Deeping Defender",
-   "nameZh": "",
+   "nameZh": "深谷防御者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -6647,7 +6648,7 @@
   {
    "code": "300010",
    "name": "Morwen Steelsheen",
-   "nameZh": "",
+   "nameZh": "“钢泽”墨玟",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -6683,7 +6684,7 @@
   {
    "code": "300011",
    "name": "It Should Be Spared",
-   "nameZh": "",
+   "nameZh": "饶它一命",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -6719,7 +6720,7 @@
   {
    "code": "300012",
    "name": "Spring the Trap",
-   "nameZh": "",
+   "nameZh": "环伺在侧",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -6755,7 +6756,7 @@
   {
    "code": "300013",
    "name": "Squire of the Mark",
-   "nameZh": "",
+   "nameZh": "马克侍从",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -6791,7 +6792,7 @@
   {
    "code": "300014",
    "name": "Rammas Lookout",
-   "nameZh": "",
+   "nameZh": "拉马斯守望者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -6827,7 +6828,7 @@
   {
    "code": "300015",
    "name": "Théodwyn",
-   "nameZh": "",
+   "nameZh": "希奥德温",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -6863,7 +6864,7 @@
   {
    "code": "300016",
    "name": "Light-footed Steed",
-   "nameZh": "",
+   "nameZh": "风驰电掣的骏马",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -6899,7 +6900,7 @@
   {
    "code": "300017",
    "name": "Rammas Sentry",
-   "nameZh": "",
+   "nameZh": "拉马斯哨兵",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -6935,7 +6936,7 @@
   {
    "code": "300018",
    "name": "Live Bait",
-   "nameZh": "",
+   "nameZh": "活饵",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -6971,7 +6972,7 @@
   {
    "code": "300019",
    "name": "Worthy of Remembrance",
-   "nameZh": "",
+   "nameZh": "念兹在兹",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -7007,7 +7008,7 @@
   {
    "code": "300020",
    "name": "Need Brooks No Delay",
-   "nameZh": "",
+   "nameZh": "需求刻不容缓",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -7043,7 +7044,7 @@
   {
    "code": "300085",
    "name": "The Last Alliance",
-   "nameZh": "",
+   "nameZh": "最后的联盟",
    "type": "contract",
    "typeName": "Contract",
    "sphere": "neutral",
@@ -7079,7 +7080,7 @@
   {
    "code": "17135",
    "name": "Quickbeam",
-   "nameZh": "",
+   "nameZh": "急楸",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "tactics",
@@ -7115,7 +7116,7 @@
   {
    "code": "17136",
    "name": "Halfast Gamgee",
-   "nameZh": "",
+   "nameZh": "哈尔法斯特·甘姆吉",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -7151,7 +7152,7 @@
   {
    "code": "17137",
    "name": "Bulwark of the West",
-   "nameZh": "",
+   "nameZh": "西方堡垒",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -7187,7 +7188,7 @@
   {
    "code": "17138",
    "name": "Beorning Guardian",
-   "nameZh": "",
+   "nameZh": "贝奥恩守卫",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -7223,7 +7224,7 @@
   {
    "code": "17139",
    "name": "Followed",
-   "nameZh": "",
+   "nameZh": "尾随",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -7259,7 +7260,7 @@
   {
    "code": "17140",
    "name": "Flight to the Sea",
-   "nameZh": "",
+   "nameZh": "飞向大海",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -7295,7 +7296,7 @@
   {
    "code": "17141",
    "name": "Emyn Arnen Ranger",
-   "nameZh": "",
+   "nameZh": "埃敏阿尔能尖兵",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -7337,7 +7338,7 @@
   {
    "code": "17142",
    "name": "The Dam Bursts",
-   "nameZh": "",
+   "nameZh": "怒气决堤",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -7373,7 +7374,7 @@
   {
    "code": "17143",
    "name": "Magic Ring",
-   "nameZh": "",
+   "nameZh": "魔法戒指",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -7415,7 +7416,7 @@
   {
    "code": "17144",
    "name": "Wind from the Sea",
-   "nameZh": "",
+   "nameZh": "海上来的风",
    "type": "event",
    "typeName": "Event",
    "sphere": "neutral",
@@ -10739,7 +10740,7 @@
   {
    "code": "22054",
    "name": "Saruman",
-   "nameZh": "",
+   "nameZh": "萨茹曼",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "lore",
@@ -10775,7 +10776,7 @@
   {
    "code": "22055",
    "name": "Power of Command",
-   "nameZh": "",
+   "nameZh": "号令天下",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -10811,7 +10812,7 @@
   {
    "code": "22056",
    "name": "Horns! Horns! Horns!",
-   "nameZh": "",
+   "nameZh": "无数的号角声！",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -10847,7 +10848,7 @@
   {
    "code": "22057",
    "name": "Soldier of Isengard",
-   "nameZh": "",
+   "nameZh": "艾森加德士兵",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -10883,7 +10884,7 @@
   {
    "code": "22058",
    "name": "Far-sighted",
-   "nameZh": "",
+   "nameZh": "视力好",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -10919,7 +10920,7 @@
   {
    "code": "22059",
    "name": "Nori",
-   "nameZh": "",
+   "nameZh": "诺瑞",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -10955,7 +10956,7 @@
   {
    "code": "22060",
    "name": "Golden Belt",
-   "nameZh": "",
+   "nameZh": "黄金腰带",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -10991,7 +10992,7 @@
   {
    "code": "22061",
    "name": "Rohirrim Scout",
-   "nameZh": "",
+   "nameZh": "洛汗斥候",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -11027,7 +11028,7 @@
   {
    "code": "22062",
    "name": "The Muster of Rohan",
-   "nameZh": "",
+   "nameZh": "洛汗全军集结",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -11069,7 +11070,7 @@
   {
    "code": "22063",
    "name": "Saruman's Staff",
-   "nameZh": "",
+   "nameZh": "萨茹曼的手杖",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -11105,7 +11106,7 @@
   {
    "code": "22074",
    "name": "The Grey Wanderer",
-   "nameZh": "",
+   "nameZh": "灰袍漫游者",
    "type": "contract",
    "typeName": "Contract",
    "sphere": "neutral",
@@ -12257,7 +12258,7 @@
   {
    "code": "11210",
    "name": "Gavin",
-   "nameZh": "",
+   "nameZh": "加文",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -12473,7 +12474,7 @@
   {
    "code": "12082",
    "name": "Argalad",
-   "nameZh": "",
+   "nameZh": "阿尔加拉德",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "lore",
@@ -12509,7 +12510,7 @@
   {
    "code": "12083",
    "name": "Dwarven Sellsword",
-   "nameZh": "",
+   "nameZh": "矮人雇佣兵",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -12551,7 +12552,7 @@
   {
    "code": "12084",
    "name": "Dúnedain Remedy",
-   "nameZh": "",
+   "nameZh": "杜内丹人的疗法",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -12587,7 +12588,7 @@
   {
    "code": "12085",
    "name": "Marksman of Lórien",
-   "nameZh": "",
+   "nameZh": "罗瑞恩神射手",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -12623,7 +12624,7 @@
   {
    "code": "12086",
    "name": "Battle-fury",
-   "nameZh": "",
+   "nameZh": "战斗狂热",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -12659,7 +12660,7 @@
   {
    "code": "12087",
    "name": "Woodland Courier",
-   "nameZh": "",
+   "nameZh": "森林信差",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -12701,7 +12702,7 @@
   {
    "code": "12088",
    "name": "Hithlain",
-   "nameZh": "",
+   "nameZh": "希斯莱恩",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -12737,7 +12738,7 @@
   {
    "code": "12089",
    "name": "Robin Smallburrow",
-   "nameZh": "",
+   "nameZh": "罗宾·掘小洞",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -12773,7 +12774,7 @@
   {
    "code": "12090",
    "name": "Interrogation",
-   "nameZh": "",
+   "nameZh": "审讯",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -12809,7 +12810,7 @@
   {
    "code": "12091",
    "name": "Strider",
-   "nameZh": "",
+   "nameZh": "大步佬",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -12845,7 +12846,7 @@
   {
    "code": "17109",
    "name": "Folco Boffin",
-   "nameZh": "",
+   "nameZh": "福尔科·博芬",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "lore",
@@ -12881,7 +12882,7 @@
   {
    "code": "17110",
    "name": "Knight of Dale",
-   "nameZh": "",
+   "nameZh": "河谷邦骑士",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -12917,7 +12918,7 @@
   {
    "code": "17111",
    "name": "Diligent Noble",
-   "nameZh": "",
+   "nameZh": "勤勉的贵族",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -12953,7 +12954,7 @@
   {
    "code": "17112",
    "name": "Riddermark Knight",
-   "nameZh": "",
+   "nameZh": "里德马克骑士",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -12995,7 +12996,7 @@
   {
    "code": "17113",
    "name": "Fierce Defense",
-   "nameZh": "",
+   "nameZh": "愤怒的防御",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -13031,7 +13032,7 @@
   {
    "code": "17114",
    "name": "Eregion Survivor",
-   "nameZh": "",
+   "nameZh": "埃瑞吉安幸存者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -13067,7 +13068,7 @@
   {
    "code": "17115",
    "name": "Heirs of Earendil",
-   "nameZh": "",
+   "nameZh": "埃雅仁迪尔的后裔",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -13103,7 +13104,7 @@
   {
    "code": "17116",
    "name": "Leaflock",
-   "nameZh": "",
+   "nameZh": "树叶王",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -13139,7 +13140,7 @@
   {
    "code": "17117",
    "name": "Legacy Blade",
-   "nameZh": "",
+   "nameZh": "传承之剑",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -13175,7 +13176,7 @@
   {
    "code": "17118",
    "name": "Open the Armory",
-   "nameZh": "",
+   "nameZh": "打开军械库",
    "type": "event",
    "typeName": "Event",
    "sphere": "neutral",
@@ -14327,7 +14328,7 @@
   {
    "code": "06056",
    "name": "Pippin",
-   "nameZh": "",
+   "nameZh": "皮平",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "spirit",
@@ -14363,7 +14364,7 @@
   {
    "code": "06057",
    "name": "Denethor",
-   "nameZh": "",
+   "nameZh": "德内梭尔",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -14399,7 +14400,7 @@
   {
    "code": "06058",
    "name": "Lord of Morthond",
-   "nameZh": "",
+   "nameZh": "墨松德领主",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -14435,7 +14436,7 @@
   {
    "code": "06059",
    "name": "Book of Eldacar",
-   "nameZh": "",
+   "nameZh": "埃尔达卡之书",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -14471,7 +14472,7 @@
   {
    "code": "06060",
    "name": "Gondorian Discipline",
-   "nameZh": "",
+   "nameZh": "刚铎军戒",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -14507,7 +14508,7 @@
   {
    "code": "06061",
    "name": "Minas Tirith Lampwright",
-   "nameZh": "",
+   "nameZh": "米那斯提力斯制灯匠",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -14543,7 +14544,7 @@
   {
    "code": "06062",
    "name": "Small Target",
-   "nameZh": "",
+   "nameZh": "目标过小",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -14579,7 +14580,7 @@
   {
    "code": "06063",
    "name": "Ithilien Archer",
-   "nameZh": "",
+   "nameZh": "伊希利恩弓手",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -14615,7 +14616,7 @@
   {
    "code": "06064",
    "name": "Ithilien Pit",
-   "nameZh": "",
+   "nameZh": "伊希利恩坑洞",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -14657,7 +14658,7 @@
   {
    "code": "06065",
    "name": "Hobbit-sense",
-   "nameZh": "",
+   "nameZh": "霍比特人的直觉",
    "type": "event",
    "typeName": "Event",
    "sphere": "neutral",
@@ -14693,7 +14694,7 @@
   {
    "code": "10028",
    "name": "Rossiel",
-   "nameZh": "",
+   "nameZh": "罗塞尔",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "lore",
@@ -14729,7 +14730,7 @@
   {
    "code": "10029",
    "name": "Veteran of Osgiliath",
-   "nameZh": "",
+   "nameZh": "欧斯吉利亚斯老兵",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -14765,7 +14766,7 @@
   {
    "code": "10030",
    "name": "Descendants of Kings",
-   "nameZh": "",
+   "nameZh": "列王的后嗣",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -14801,7 +14802,7 @@
   {
    "code": "10031",
    "name": "Derndingle Warrior",
-   "nameZh": "",
+   "nameZh": "秘林谷战士",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -14837,7 +14838,7 @@
   {
    "code": "10032",
    "name": "Boomed and Trumpeted",
-   "nameZh": "",
+   "nameZh": "怒吼狂呼",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -14873,7 +14874,7 @@
   {
    "code": "10033",
    "name": "Elven Jeweler",
-   "nameZh": "",
+   "nameZh": "精灵宝石匠",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -14909,7 +14910,7 @@
   {
    "code": "10034",
    "name": "Double Back",
-   "nameZh": "",
+   "nameZh": "原路返回",
    "type": "player-side-quest",
    "typeName": "Player Side Quest",
    "sphere": "spirit",
@@ -14945,7 +14946,7 @@
   {
    "code": "10035",
    "name": "Leave No Trace",
-   "nameZh": "",
+   "nameZh": "来去无踪",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -14981,7 +14982,7 @@
   {
    "code": "10036",
    "name": "Distant Stars",
-   "nameZh": "",
+   "nameZh": "遥远的星辰",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -15017,7 +15018,7 @@
   {
    "code": "10037",
    "name": "Keen as Lances",
-   "nameZh": "",
+   "nameZh": "目光如炬",
    "type": "event",
    "typeName": "Event",
    "sphere": "neutral",
@@ -15053,7 +15054,7 @@
   {
    "code": "309037",
    "name": "Castellan Wilhelm",
-   "nameZh": "",
+   "nameZh": "卡斯特蓝·威尔海尔姆",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "leadership",
@@ -15089,7 +15090,7 @@
   {
    "code": "309038",
    "name": "Saruman",
-   "nameZh": "",
+   "nameZh": "萨茹曼",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "neutral",
@@ -15125,7 +15126,7 @@
   {
    "code": "309039",
    "name": "Dweller of Dunharrow",
-   "nameZh": "",
+   "nameZh": "黑蛮祠居住者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -15161,7 +15162,7 @@
   {
    "code": "309040",
    "name": "Man of the Mountain",
-   "nameZh": "",
+   "nameZh": "山民",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -15197,7 +15198,7 @@
   {
    "code": "309041",
    "name": "King of the Dead",
-   "nameZh": "",
+   "nameZh": "亡者之王",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -15233,7 +15234,7 @@
   {
    "code": "309042",
    "name": "Ring Wall Sentry",
-   "nameZh": "",
+   "nameZh": "环形石墙哨兵",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -15269,7 +15270,7 @@
   {
    "code": "309043",
    "name": "Edrik Ravenhelm",
-   "nameZh": "",
+   "nameZh": "埃德利克·鸦盔",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -15305,7 +15306,7 @@
   {
    "code": "309044",
    "name": "Army of the Dead",
-   "nameZh": "",
+   "nameZh": "亡者大军",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -15341,7 +15342,7 @@
   {
    "code": "309045",
    "name": "Lord of Isengard",
-   "nameZh": "",
+   "nameZh": "艾森加德领主",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -15377,7 +15378,7 @@
   {
    "code": "309046",
    "name": "Ring Wall A",
-   "nameZh": "",
+   "nameZh": "环形石墙A",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -15413,7 +15414,7 @@
   {
    "code": "309047",
    "name": "Ring Wall B",
-   "nameZh": "",
+   "nameZh": "环形石墙B",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -15449,7 +15450,7 @@
   {
    "code": "309048",
    "name": "The White",
-   "nameZh": "",
+   "nameZh": "白袍",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -15485,7 +15486,7 @@
   {
    "code": "309049",
    "name": "Fulfil Your Oath",
-   "nameZh": "",
+   "nameZh": "履行你们的誓言",
    "type": "player-side-quest",
    "typeName": "Player Side Quest",
    "sphere": "leadership",
@@ -15521,7 +15522,7 @@
   {
    "code": "309050",
    "name": "Tower of Orthanc",
-   "nameZh": "",
+   "nameZh": "欧尔桑克塔",
    "type": "player-objective",
    "typeName": "Player Objective",
    "sphere": "neutral",
@@ -15557,7 +15558,7 @@
   {
    "code": "19056",
    "name": "Thranduil",
-   "nameZh": "",
+   "nameZh": "瑟兰杜伊",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "leadership",
@@ -15593,7 +15594,7 @@
   {
    "code": "19057",
    "name": "The Elvenking",
-   "nameZh": "",
+   "nameZh": "精灵国王",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -15629,7 +15630,7 @@
   {
    "code": "19058",
    "name": "Orcrist",
-   "nameZh": "",
+   "nameZh": "奥克锐斯特",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -15665,7 +15666,7 @@
   {
    "code": "19059",
    "name": "Forest Road Traveler",
-   "nameZh": "",
+   "nameZh": "密林大道旅人",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -15701,7 +15702,7 @@
   {
    "code": "19060",
    "name": "Leather Boots",
-   "nameZh": "",
+   "nameZh": "皮靴",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -15737,7 +15738,7 @@
   {
    "code": "19061",
    "name": "Giant Bear",
-   "nameZh": "",
+   "nameZh": "巨熊",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -15773,7 +15774,7 @@
   {
    "code": "19062",
    "name": "Outmatched",
-   "nameZh": "",
+   "nameZh": "技高一筹",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -15809,7 +15810,7 @@
   {
    "code": "19063",
    "name": "Galion",
-   "nameZh": "",
+   "nameZh": "加理安",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -15845,7 +15846,7 @@
   {
    "code": "19064",
    "name": "Quicker Than Sight",
-   "nameZh": "",
+   "nameZh": "迅雷不及掩耳",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -15881,7 +15882,7 @@
   {
    "code": "19065",
    "name": "Thalion",
-   "nameZh": "",
+   "nameZh": "沙理安",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "neutral",
@@ -15917,7 +15918,7 @@
   {
    "code": "04101",
    "name": "Glorfindel",
-   "nameZh": "",
+   "nameZh": "格罗芬德尔",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "spirit",
@@ -15959,7 +15960,7 @@
   {
    "code": "04102",
    "name": "Longbeard Elder",
-   "nameZh": "",
+   "nameZh": "长须长者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -16001,7 +16002,7 @@
   {
    "code": "04103",
    "name": "Path of Need",
-   "nameZh": "",
+   "nameZh": "必选之路",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -16043,7 +16044,7 @@
   {
    "code": "04104",
    "name": "Trollshaw Scout",
-   "nameZh": "",
+   "nameZh": "食人妖森林斥候",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -16079,7 +16080,7 @@
   {
    "code": "04105",
    "name": "Heavy Stroke",
-   "nameZh": "",
+   "nameZh": "重击",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -16115,7 +16116,7 @@
   {
    "code": "04106",
    "name": "Imladris Stargazer",
-   "nameZh": "",
+   "nameZh": "伊姆拉缀斯占星师",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -16151,7 +16152,7 @@
   {
    "code": "04107",
    "name": "Light of Valinor",
-   "nameZh": "",
+   "nameZh": "维林诺之光",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -16193,7 +16194,7 @@
   {
    "code": "04108",
    "name": "Daeron's Runes",
-   "nameZh": "",
+   "nameZh": "戴隆的如尼文",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -16241,7 +16242,7 @@
   {
    "code": "04109",
    "name": "Healing Herbs",
-   "nameZh": "",
+   "nameZh": "治疗草药",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -16283,7 +16284,7 @@
   {
    "code": "04110",
    "name": "Asfaloth",
-   "nameZh": "",
+   "nameZh": "阿斯法洛斯",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -16319,7 +16320,7 @@
   {
    "code": "148021",
    "name": "Ho! Tom Bombadil!",
-   "nameZh": "",
+   "nameZh": "呵！汤姆·庞巴迪！",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -16355,7 +16356,7 @@
   {
    "code": "302038",
    "name": "Alagos",
-   "nameZh": "",
+   "nameZh": "阿拉戈斯",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "leadership",
@@ -16391,7 +16392,7 @@
   {
    "code": "302039",
    "name": "Faunith",
-   "nameZh": "",
+   "nameZh": "法乌尼斯",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "tactics",
@@ -16427,7 +16428,7 @@
   {
    "code": "302040",
    "name": "Messenger of Manwë",
-   "nameZh": "",
+   "nameZh": "曼威的信使",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -16463,7 +16464,7 @@
   {
    "code": "302041",
    "name": "Veteran Eagle",
-   "nameZh": "",
+   "nameZh": "老练的大鹰",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -16499,7 +16500,7 @@
   {
    "code": "302042",
    "name": "Chieftain of the Skies",
-   "nameZh": "",
+   "nameZh": "天空首领",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -16535,7 +16536,7 @@
   {
    "code": "302043",
    "name": "Box of Earth",
-   "nameZh": "",
+   "nameZh": "装有泥土的盒子",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -16571,7 +16572,7 @@
   {
    "code": "302044",
    "name": "Roving Herbmaster",
-   "nameZh": "",
+   "nameZh": "四处漂泊的草药大师",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -16607,7 +16608,7 @@
   {
    "code": "302045",
    "name": "Grip",
-   "nameZh": "",
+   "nameZh": "利爪",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -16643,7 +16644,7 @@
   {
    "code": "302046",
    "name": "Fang",
-   "nameZh": "",
+   "nameZh": "尖牙",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -16679,7 +16680,7 @@
   {
    "code": "302047",
    "name": "Wolf",
-   "nameZh": "",
+   "nameZh": "大狼",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -16715,7 +16716,7 @@
   {
    "code": "302048",
    "name": "Hidden Roosts",
-   "nameZh": "",
+   "nameZh": "隐蔽的栖息处",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -16751,7 +16752,7 @@
   {
    "code": "302049",
    "name": "Breath of Arda",
-   "nameZh": "",
+   "nameZh": "阿尔达之下",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -16787,7 +16788,7 @@
   {
    "code": "302050",
    "name": "Golden Crown",
-   "nameZh": "",
+   "nameZh": "金冠",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -16823,7 +16824,7 @@
   {
    "code": "302051",
    "name": "Guided by Fate",
-   "nameZh": "",
+   "nameZh": "命运引导",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -16859,7 +16860,7 @@
   {
    "code": "12001",
    "name": "Denethor",
-   "nameZh": "",
+   "nameZh": "德内梭尔",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "leadership",
@@ -16901,7 +16902,7 @@
   {
    "code": "12002",
    "name": "Rod of the Steward",
-   "nameZh": "",
+   "nameZh": "宰相的权杖",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -16937,7 +16938,7 @@
   {
    "code": "12003",
    "name": "In Service of the Steward",
-   "nameZh": "",
+   "nameZh": "效忠宰相",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -16973,7 +16974,7 @@
   {
    "code": "12004",
    "name": "Azain Silverbeard",
-   "nameZh": "",
+   "nameZh": "阿扎因·银须",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -17015,7 +17016,7 @@
   {
    "code": "12005",
    "name": "Last Stand",
-   "nameZh": "",
+   "nameZh": "最后一战",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -17051,7 +17052,7 @@
   {
    "code": "12006",
    "name": "Glorfindel",
-   "nameZh": "",
+   "nameZh": "格罗芬德尔",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -17087,7 +17088,7 @@
   {
    "code": "12007",
    "name": "Tides of Fate",
-   "nameZh": "",
+   "nameZh": "命运的浪潮",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -17123,7 +17124,7 @@
   {
    "code": "12008",
    "name": "Imladris Caregiver",
-   "nameZh": "",
+   "nameZh": "伊姆拉缀斯护理师",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -17159,7 +17160,7 @@
   {
    "code": "12009",
    "name": "Heed the Dream",
-   "nameZh": "",
+   "nameZh": "梦境指引",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -17195,7 +17196,7 @@
   {
    "code": "12010",
    "name": "Guardian of Rivendell",
-   "nameZh": "",
+   "nameZh": "幽谷守卫",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "neutral",
@@ -17231,7 +17232,7 @@
   {
    "code": "12011",
    "name": "Vanish from Sight",
-   "nameZh": "",
+   "nameZh": "避开耳目",
    "type": "event",
    "typeName": "Event",
    "sphere": "neutral",
@@ -17267,7 +17268,7 @@
   {
    "code": "145001",
    "name": "Aragorn",
-   "nameZh": "",
+   "nameZh": "阿拉贡",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "fellowship",
@@ -17303,7 +17304,7 @@
   {
    "code": "145002",
    "name": "Éowyn",
-   "nameZh": "",
+   "nameZh": "伊奥温",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "tactics",
@@ -17339,7 +17340,7 @@
   {
    "code": "145003",
    "name": "Beregond",
-   "nameZh": "",
+   "nameZh": "贝瑞刚德",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "spirit",
@@ -17375,7 +17376,7 @@
   {
    "code": "145004",
    "name": "Grimbold",
-   "nameZh": "",
+   "nameZh": "格里姆博德",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -17411,7 +17412,7 @@
   {
    "code": "145005",
    "name": "Prince Imrahil",
-   "nameZh": "",
+   "nameZh": "伊姆拉希尔亲王",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -17447,7 +17448,7 @@
   {
    "code": "145006",
    "name": "Halbarad",
-   "nameZh": "",
+   "nameZh": "哈尔巴拉德",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -17483,7 +17484,7 @@
   {
    "code": "145007",
    "name": "Ghân-buri-Ghân",
-   "nameZh": "",
+   "nameZh": "悍-不里-悍",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -17519,7 +17520,7 @@
   {
    "code": "145008",
    "name": "Sterner than Steel",
-   "nameZh": "",
+   "nameZh": "比钢铁更坚强",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -17555,7 +17556,7 @@
   {
    "code": "145009",
    "name": "Desperate Defense",
-   "nameZh": "",
+   "nameZh": "孤注一掷的防御",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -17597,7 +17598,7 @@
   {
    "code": "145010",
    "name": "Golden Shield",
-   "nameZh": "",
+   "nameZh": "金色的盾牌",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -17633,7 +17634,7 @@
   {
    "code": "145011",
    "name": "Livery of the Tower",
-   "nameZh": "",
+   "nameZh": "白塔的制服",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -17669,7 +17670,7 @@
   {
    "code": "145012",
    "name": "Roheryn",
-   "nameZh": "",
+   "nameZh": "洛赫林",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -17705,7 +17706,7 @@
   {
    "code": "145013",
    "name": "Banner of Elendil",
-   "nameZh": "",
+   "nameZh": "埃兰迪尔王旗",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "fellowship",
@@ -17885,7 +17886,7 @@
   {
    "code": "145068",
    "name": "Army of the Dead",
-   "nameZh": "",
+   "nameZh": "亡者大军",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -17921,7 +17922,7 @@
   {
    "code": "02001",
    "name": "Bilbo Baggins",
-   "nameZh": "",
+   "nameZh": "比尔博·巴金斯",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "lore",
@@ -17957,7 +17958,7 @@
   {
    "code": "02002",
    "name": "Dúnedain Mark",
-   "nameZh": "",
+   "nameZh": "杜内丹人的记号",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -17993,7 +17994,7 @@
   {
    "code": "02003",
    "name": "Campfire Tales",
-   "nameZh": "",
+   "nameZh": "篝火故事",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -18029,7 +18030,7 @@
   {
    "code": "02004",
    "name": "Winged Guardian",
-   "nameZh": "",
+   "nameZh": "守护之翼",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -18065,7 +18066,7 @@
   {
    "code": "02005",
    "name": "The Eagles Are Coming!",
-   "nameZh": "",
+   "nameZh": "大鹰来了",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -18101,7 +18102,7 @@
   {
    "code": "02006",
    "name": "Westfold Horse-breaker",
-   "nameZh": "",
+   "nameZh": "西伏尔德驯马师",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -18143,7 +18144,7 @@
   {
    "code": "02007",
    "name": "Mustering the Rohirrim",
-   "nameZh": "",
+   "nameZh": "洛汗集结",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -18179,7 +18180,7 @@
   {
    "code": "02008",
    "name": "Rivendell Minstrel",
-   "nameZh": "",
+   "nameZh": "幽谷吟游诗人",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -18215,7 +18216,7 @@
   {
    "code": "02009",
    "name": "Strider's Path",
-   "nameZh": "",
+   "nameZh": "大步佬之路",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -18251,7 +18252,7 @@
   {
    "code": "02010",
    "name": "Song of Kings",
-   "nameZh": "",
+   "nameZh": "国王之歌",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -18287,7 +18288,7 @@
   {
    "code": "02072",
    "name": "Brand son of Bain",
-   "nameZh": "",
+   "nameZh": "巴因之子布兰德",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "tactics",
@@ -18329,7 +18330,7 @@
   {
    "code": "02073",
    "name": "Keen-eyed Took",
-   "nameZh": "",
+   "nameZh": "目光锐利的图克",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -18365,7 +18366,7 @@
   {
    "code": "02074",
    "name": "Rear Guard",
-   "nameZh": "",
+   "nameZh": "殿后",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -18401,7 +18402,7 @@
   {
    "code": "02075",
    "name": "Descendant of Thorondor",
-   "nameZh": "",
+   "nameZh": "梭隆多的后代",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -18437,7 +18438,7 @@
   {
    "code": "02076",
    "name": "Meneldor's Flight",
-   "nameZh": "",
+   "nameZh": "美尼尔多的飞翔",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -18473,7 +18474,7 @@
   {
    "code": "02077",
    "name": "The Riddermark's Finest",
-   "nameZh": "",
+   "nameZh": "里德马克之冠",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -18515,7 +18516,7 @@
   {
    "code": "02078",
    "name": "Ride to Ruin",
-   "nameZh": "",
+   "nameZh": "骑向毁灭",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -18551,7 +18552,7 @@
   {
    "code": "02079",
    "name": "Gildor Inglorion",
-   "nameZh": "",
+   "nameZh": "吉尔多·英格罗瑞安",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -18587,7 +18588,7 @@
   {
    "code": "02080",
    "name": "Gildor's Counsel",
-   "nameZh": "",
+   "nameZh": "吉尔多的忠告",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -18629,7 +18630,7 @@
   {
    "code": "02081",
    "name": "Song of Travel",
-   "nameZh": "",
+   "nameZh": "旅行之歌",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -18665,7 +18666,7 @@
   {
    "code": "05001",
    "name": "Beregond",
-   "nameZh": "",
+   "nameZh": "贝瑞刚德",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "tactics",
@@ -18707,7 +18708,7 @@
   {
    "code": "05002",
    "name": "Boromir",
-   "nameZh": "",
+   "nameZh": "波洛米尔",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "leadership",
@@ -18749,7 +18750,7 @@
   {
    "code": "05003",
    "name": "Errand-rider",
-   "nameZh": "",
+   "nameZh": "信使骑手",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -18791,7 +18792,7 @@
   {
    "code": "05004",
    "name": "Citadel Custodian",
-   "nameZh": "",
+   "nameZh": "王城看守者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -18833,7 +18834,7 @@
   {
    "code": "05005",
    "name": "Mutual Accord",
-   "nameZh": "",
+   "nameZh": "同德一心",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -18869,7 +18870,7 @@
   {
    "code": "05006",
    "name": "Wealth of Gondor",
-   "nameZh": "",
+   "nameZh": "刚铎的财富",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -18905,7 +18906,7 @@
   {
    "code": "05007",
    "name": "Defender of Rammas",
-   "nameZh": "",
+   "nameZh": "拉马斯防御者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -18953,7 +18954,7 @@
   {
    "code": "05008",
    "name": "Behind Strong Walls",
-   "nameZh": "",
+   "nameZh": "高墙掩护",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -18995,7 +18996,7 @@
   {
    "code": "05009",
    "name": "Spear of the Citadel",
-   "nameZh": "",
+   "nameZh": "王城长矛",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -19031,7 +19032,7 @@
   {
    "code": "05010",
    "name": "Damrod",
-   "nameZh": "",
+   "nameZh": "达姆罗德",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -19067,7 +19068,7 @@
   {
    "code": "05011",
    "name": "Light the Beacons",
-   "nameZh": "",
+   "nameZh": "点燃烽火",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -19103,7 +19104,7 @@
   {
    "code": "05012",
    "name": "A Watchful Peace",
-   "nameZh": "",
+   "nameZh": "警戒的和平",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -19139,7 +19140,7 @@
   {
    "code": "05013",
    "name": "Blood of Númenor",
-   "nameZh": "",
+   "nameZh": "努门诺尔的血统",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -19175,7 +19176,7 @@
   {
    "code": "05014",
    "name": "Hunter of Lamedon",
-   "nameZh": "",
+   "nameZh": "拉梅顿猎人",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -19211,7 +19212,7 @@
   {
    "code": "05015",
    "name": "Ithilien Tracker",
-   "nameZh": "",
+   "nameZh": "伊希利恩追踪者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -19247,7 +19248,7 @@
   {
    "code": "05016",
    "name": "Master of Lore",
-   "nameZh": "",
+   "nameZh": "学识大师",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -19283,7 +19284,7 @@
   {
    "code": "05017",
    "name": "Ranger Spikes",
-   "nameZh": "",
+   "nameZh": "尖兵刺桩",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -19325,7 +19326,7 @@
   {
    "code": "05018",
    "name": "Envoy of Pelargir",
-   "nameZh": "",
+   "nameZh": "佩拉基尔使者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "neutral",
@@ -19373,7 +19374,7 @@
   {
    "code": "02050",
    "name": "Prince Imrahil",
-   "nameZh": "",
+   "nameZh": "伊姆拉希尔亲王",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "leadership",
@@ -19415,7 +19416,7 @@
   {
    "code": "02051",
    "name": "Dúnedain Quest",
-   "nameZh": "",
+   "nameZh": "杜内丹人的探险",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -19451,7 +19452,7 @@
   {
    "code": "02052",
    "name": "Parting Gifts",
-   "nameZh": "",
+   "nameZh": "临别的礼物",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -19487,7 +19488,7 @@
   {
    "code": "02053",
    "name": "Landroval",
-   "nameZh": "",
+   "nameZh": "蓝德洛瓦",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -19523,7 +19524,7 @@
   {
    "code": "02054",
    "name": "To the Eyrie",
-   "nameZh": "",
+   "nameZh": "飞往鹰巢",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -19559,7 +19560,7 @@
   {
    "code": "02055",
    "name": "Escort from Edoras",
-   "nameZh": "",
+   "nameZh": "埃多拉斯护卫队",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -19601,7 +19602,7 @@
   {
    "code": "02056",
    "name": "Ancient Mathom",
-   "nameZh": "",
+   "nameZh": "古老的马松",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -19649,7 +19650,7 @@
   {
    "code": "02057",
    "name": "Haldir of Lórien",
-   "nameZh": "",
+   "nameZh": "罗瑞恩的哈尔迪尔",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -19691,7 +19692,7 @@
   {
    "code": "02058",
    "name": "Infighting",
-   "nameZh": "",
+   "nameZh": "内讧",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -19727,7 +19728,7 @@
   {
    "code": "02059",
    "name": "Radagast",
-   "nameZh": "",
+   "nameZh": "拉达加斯特",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "neutral",
@@ -19763,7 +19764,7 @@
   {
    "code": "03001",
    "name": "Dwalin",
-   "nameZh": "",
+   "nameZh": "杜瓦林",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "spirit",
@@ -19799,7 +19800,7 @@
   {
    "code": "03002",
    "name": "Bifur",
-   "nameZh": "",
+   "nameZh": "比弗",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "lore",
@@ -19847,7 +19848,7 @@
   {
    "code": "03003",
    "name": "Narvi's Belt",
-   "nameZh": "",
+   "nameZh": "纳维的腰带",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -19889,7 +19890,7 @@
   {
    "code": "03004",
    "name": "Durin's Song",
-   "nameZh": "",
+   "nameZh": "都林之歌",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -19931,7 +19932,7 @@
   {
    "code": "03005",
    "name": "Ever Onward",
-   "nameZh": "",
+   "nameZh": "勇往直前",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -19967,7 +19968,7 @@
   {
    "code": "03006",
    "name": "Veteran of Nanduhirion",
-   "nameZh": "",
+   "nameZh": "南都希瑞安的老兵",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -20003,7 +20004,7 @@
   {
    "code": "03007",
    "name": "Dwarrowdelf Axe",
-   "nameZh": "",
+   "nameZh": "矮人挖凿斧",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -20045,7 +20046,7 @@
   {
    "code": "03008",
    "name": "Khazâd! Khazâd!",
-   "nameZh": "",
+   "nameZh": "khazâd! khazâd!",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -20087,7 +20088,7 @@
   {
    "code": "03009",
    "name": "Zigil Miner",
-   "nameZh": "",
+   "nameZh": "齐吉尔矿工",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -20129,7 +20130,7 @@
   {
    "code": "03010",
    "name": "Untroubled by Darkness",
-   "nameZh": "",
+   "nameZh": "适于黑暗",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -20165,7 +20166,7 @@
   {
    "code": "03011",
    "name": "Erebor Record Keeper",
-   "nameZh": "",
+   "nameZh": "埃瑞博撰史人",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -20207,7 +20208,7 @@
   {
    "code": "03012",
    "name": "Ancestral Knowledge",
-   "nameZh": "",
+   "nameZh": "先祖的学识",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -20249,7 +20250,7 @@
   {
    "code": "03013",
    "name": "Boots from Erebor",
-   "nameZh": "",
+   "nameZh": "埃瑞博靴子",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -20285,7 +20286,7 @@
   {
    "code": "144001",
    "name": "Frodo Baggins",
-   "nameZh": "",
+   "nameZh": "弗罗多·巴金斯",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "fellowship",
@@ -20321,7 +20322,7 @@
   {
    "code": "144002",
    "name": "Faramir",
-   "nameZh": "",
+   "nameZh": "法拉米尔",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "leadership",
@@ -20357,7 +20358,7 @@
   {
    "code": "144003",
    "name": "Damrod",
-   "nameZh": "",
+   "nameZh": "达姆罗德",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "lore",
@@ -20393,7 +20394,7 @@
   {
    "code": "144004",
    "name": "Anborn",
-   "nameZh": "",
+   "nameZh": "安博恩",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -20429,7 +20430,7 @@
   {
    "code": "144005",
    "name": "Mablung",
-   "nameZh": "",
+   "nameZh": "玛布隆",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -20471,7 +20472,7 @@
   {
    "code": "144006",
    "name": "Skinbark",
-   "nameZh": "",
+   "nameZh": "树皮王",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -20507,7 +20508,7 @@
   {
    "code": "144007",
    "name": "Gamling",
-   "nameZh": "",
+   "nameZh": "甘姆林",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -20543,7 +20544,7 @@
   {
    "code": "144008",
    "name": "Staff of Lebethron",
-   "nameZh": "",
+   "nameZh": "莱贝斯隆手杖",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -20579,7 +20580,7 @@
   {
    "code": "144009",
    "name": "Ambush",
-   "nameZh": "",
+   "nameZh": "伏击",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -20615,7 +20616,7 @@
   {
    "code": "144010",
    "name": "Snowmane",
-   "nameZh": "",
+   "nameZh": "雪鬃",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -20651,7 +20652,7 @@
   {
    "code": "144011",
    "name": "Taste it Again!",
-   "nameZh": "",
+   "nameZh": "再来尝尝它的厉害！",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -20687,7 +20688,7 @@
   {
    "code": "144012",
    "name": "In the Shadows",
-   "nameZh": "",
+   "nameZh": "阴影之中",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -20723,7 +20724,7 @@
   {
    "code": "144013",
    "name": "Speak Your Promise!",
-   "nameZh": "",
+   "nameZh": "说出你的誓言！",
    "type": "event",
    "typeName": "Event",
    "sphere": "fellowship",
@@ -20867,7 +20868,7 @@
   {
    "code": "17001",
    "name": "Kahliel",
-   "nameZh": "",
+   "nameZh": "卡列尔",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "leadership",
@@ -20903,7 +20904,7 @@
   {
    "code": "17002",
    "name": "Andrath Guardsman",
-   "nameZh": "",
+   "nameZh": "安德拉斯守护者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -20945,7 +20946,7 @@
   {
    "code": "17003",
    "name": "Prepare for Battle",
-   "nameZh": "",
+   "nameZh": "秣马厉兵",
    "type": "player-side-quest",
    "typeName": "Player Side Quest",
    "sphere": "leadership",
@@ -20981,7 +20982,7 @@
   {
    "code": "17004",
    "name": "Yazan",
-   "nameZh": "",
+   "nameZh": "雅赞",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -21017,7 +21018,7 @@
   {
    "code": "17005",
    "name": "Wait no Longer",
-   "nameZh": "",
+   "nameZh": "不再等待",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -21059,7 +21060,7 @@
   {
    "code": "17006",
    "name": "Jubayr",
-   "nameZh": "",
+   "nameZh": "朱拜尔",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -21095,7 +21096,7 @@
   {
    "code": "17007",
    "name": "Dwarf Pipe",
-   "nameZh": "",
+   "nameZh": "矮人烟斗",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -21137,7 +21138,7 @@
   {
    "code": "17008",
    "name": "Firyal",
-   "nameZh": "",
+   "nameZh": "菲尔娅",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -21173,7 +21174,7 @@
   {
    "code": "17009",
    "name": "Coney in a Trap",
-   "nameZh": "",
+   "nameZh": "插翅难飞",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -21215,7 +21216,7 @@
   {
    "code": "17010",
    "name": "Kahliel's Headdress",
-   "nameZh": "",
+   "nameZh": "卡列尔的头饰",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -21251,7 +21252,7 @@
   {
    "code": "19112",
    "name": "Bilbo Baggins",
-   "nameZh": "",
+   "nameZh": "比尔博·巴金斯",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "tactics",
@@ -21287,7 +21288,7 @@
   {
    "code": "19113",
    "name": "Greenwood Defender",
-   "nameZh": "",
+   "nameZh": "绿林防御者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -21323,7 +21324,7 @@
   {
    "code": "19114",
    "name": "Elf Guide",
-   "nameZh": "",
+   "nameZh": "精灵向导",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -21359,7 +21360,7 @@
   {
    "code": "19115",
    "name": "Gaffer Gamgee",
-   "nameZh": "",
+   "nameZh": "甘姆吉老头",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -21395,7 +21396,7 @@
   {
    "code": "19116",
    "name": "Drinking Song",
-   "nameZh": "",
+   "nameZh": "饮酒歌",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -21431,7 +21432,7 @@
   {
    "code": "19117",
    "name": "Sting",
-   "nameZh": "",
+   "nameZh": "刺叮剑",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -21467,7 +21468,7 @@
   {
    "code": "19118",
    "name": "Round Shield",
-   "nameZh": "",
+   "nameZh": "圆盾",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -21503,7 +21504,7 @@
   {
    "code": "19119",
    "name": "Erebor Toymaker",
-   "nameZh": "",
+   "nameZh": "埃瑞博玩具匠",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -21539,7 +21540,7 @@
   {
    "code": "19120",
    "name": "Armor of Erebor",
-   "nameZh": "",
+   "nameZh": "埃瑞博防具",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -21575,7 +21576,7 @@
   {
    "code": "19121",
    "name": "The Shirefolk",
-   "nameZh": "",
+   "nameZh": "夏尔居民",
    "type": "event",
    "typeName": "Event",
    "sphere": "neutral",
@@ -21611,7 +21612,7 @@
   {
    "code": "146001",
    "name": "Frodo Baggins",
-   "nameZh": "",
+   "nameZh": "弗罗多·巴金斯",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "fellowship",
@@ -21647,7 +21648,7 @@
   {
    "code": "146002",
    "name": "Aragorn",
-   "nameZh": "",
+   "nameZh": "阿拉贡",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "fellowship",
@@ -21683,7 +21684,7 @@
   {
    "code": "146003",
    "name": "Éomer",
-   "nameZh": "",
+   "nameZh": "伊奥梅尔",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "leadership",
@@ -21719,7 +21720,7 @@
   {
    "code": "146004",
    "name": "Tom Cotton",
-   "nameZh": "",
+   "nameZh": "汤姆·科顿",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "tactics",
@@ -21755,7 +21756,7 @@
   {
    "code": "146005",
    "name": "Rosie Cotton",
-   "nameZh": "",
+   "nameZh": "罗丝·科顿",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -21791,7 +21792,7 @@
   {
    "code": "146006",
    "name": "Elfhelm",
-   "nameZh": "",
+   "nameZh": "埃尔夫海尔姆",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -21827,7 +21828,7 @@
   {
    "code": "146007",
    "name": "Elladan",
-   "nameZh": "",
+   "nameZh": "埃尔拉丹",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -21863,7 +21864,7 @@
   {
    "code": "146008",
    "name": "Elrohir",
-   "nameZh": "",
+   "nameZh": "埃洛希尔",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -21899,7 +21900,7 @@
   {
    "code": "146010",
    "name": "Captains of the West",
-   "nameZh": "",
+   "nameZh": "西方众将领",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -21935,7 +21936,7 @@
   {
    "code": "146013",
    "name": "Raise the Shire",
-   "nameZh": "",
+   "nameZh": "鼓动夏尔起来抗暴",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -21971,7 +21972,7 @@
   {
    "code": "146011",
    "name": "Gúthwinë",
-   "nameZh": "",
+   "nameZh": "古斯威奈",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -22007,7 +22008,7 @@
   {
    "code": "146012",
    "name": "Friend of Friends",
-   "nameZh": "",
+   "nameZh": "最亲密的朋友",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -22043,7 +22044,7 @@
   {
    "code": "146009",
    "name": "Orc Disguise",
-   "nameZh": "",
+   "nameZh": "奥克伪装",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "fellowship",
@@ -22079,7 +22080,7 @@
   {
    "code": "146041",
    "name": "Gwaihir",
-   "nameZh": "",
+   "nameZh": "格怀希尔",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -25139,7 +25140,7 @@
   {
    "code": "305144",
    "name": "Rowan",
-   "nameZh": "",
+   "nameZh": "罗恩",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "leadership",
@@ -25175,7 +25176,7 @@
   {
    "code": "305145",
    "name": "Osbera",
-   "nameZh": "",
+   "nameZh": "欧斯贝拉",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "lore",
@@ -25211,7 +25212,7 @@
   {
    "code": "305146",
    "name": "Woodmen's Outpost",
-   "nameZh": "",
+   "nameZh": "林中居民的前哨",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -25247,7 +25248,7 @@
   {
    "code": "305147",
    "name": "Lie of the Land",
-   "nameZh": "",
+   "nameZh": "摸清地形",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -25283,7 +25284,7 @@
   {
    "code": "305148",
    "name": "Hunting Dogs",
-   "nameZh": "",
+   "nameZh": "猎狗",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -25319,7 +25320,7 @@
   {
    "code": "305149",
    "name": "Beorning Pony",
-   "nameZh": "",
+   "nameZh": "贝奥恩一族小马",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -25355,7 +25356,7 @@
   {
    "code": "305150",
    "name": "Birna",
-   "nameZh": "",
+   "nameZh": "比尔那",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -25391,7 +25392,7 @@
   {
    "code": "305151",
    "name": "Descendants of Beorn",
-   "nameZh": "",
+   "nameZh": "贝奥恩的后代",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -25427,7 +25428,7 @@
   {
    "code": "305152",
    "name": "Beorn's Welcome",
-   "nameZh": "",
+   "nameZh": "贝奥恩的欢迎",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -25463,7 +25464,7 @@
   {
    "code": "305153",
    "name": "Subdued",
-   "nameZh": "",
+   "nameZh": "制服",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -25499,7 +25500,7 @@
   {
    "code": "305154",
    "name": "Without My Hat",
-   "nameZh": "",
+   "nameZh": "忘戴帽子",
    "type": "event",
    "typeName": "Event",
    "sphere": "neutral",
@@ -25535,7 +25536,7 @@
   {
    "code": "08084",
    "name": "Mablung",
-   "nameZh": "",
+   "nameZh": "玛布隆",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "tactics",
@@ -25577,7 +25578,7 @@
   {
    "code": "08085",
    "name": "Follow Me!",
-   "nameZh": "",
+   "nameZh": "跟我来！",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -25613,7 +25614,7 @@
   {
    "code": "08086",
    "name": "Tighten Our Belts",
-   "nameZh": "",
+   "nameZh": "勒紧裤带",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -25649,7 +25650,7 @@
   {
    "code": "08087",
    "name": "Galadhon Archer",
-   "nameZh": "",
+   "nameZh": "加拉松弓手",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -25697,7 +25698,7 @@
   {
    "code": "08088",
    "name": "Bow of the Galadhrim",
-   "nameZh": "",
+   "nameZh": "加拉兹弓",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -25739,7 +25740,7 @@
   {
    "code": "08089",
    "name": "Celduin Traveler",
-   "nameZh": "",
+   "nameZh": "凯尔都因河旅人",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -25775,7 +25776,7 @@
   {
    "code": "08090",
    "name": "Island Amid Perils",
-   "nameZh": "",
+   "nameZh": "险域中的孤岛",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -25811,7 +25812,7 @@
   {
    "code": "08091",
    "name": "Mirkwood Pioneer",
-   "nameZh": "",
+   "nameZh": "黑森林拓荒者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -25847,7 +25848,7 @@
   {
    "code": "08092",
    "name": "Wingfoot",
-   "nameZh": "",
+   "nameZh": "飞毛腿",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -25889,7 +25890,7 @@
   {
    "code": "08093",
    "name": "Defender of the West",
-   "nameZh": "",
+   "nameZh": "西方守护者",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -25925,7 +25926,7 @@
   {
    "code": "131001",
    "name": "Bilbo Baggins",
-   "nameZh": "",
+   "nameZh": "比尔博·巴金斯",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "baggins",
@@ -25961,7 +25962,7 @@
   {
    "code": "131002",
    "name": "Thorin Oakenshield",
-   "nameZh": "",
+   "nameZh": "梭林·橡木盾",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "leadership",
@@ -25997,7 +25998,7 @@
   {
    "code": "131003",
    "name": "Nori",
-   "nameZh": "",
+   "nameZh": "诺瑞",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "spirit",
@@ -26045,7 +26046,7 @@
   {
    "code": "131004",
    "name": "Ori",
-   "nameZh": "",
+   "nameZh": "欧瑞",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "lore",
@@ -26087,7 +26088,7 @@
   {
    "code": "131005",
    "name": "Beorn",
-   "nameZh": "",
+   "nameZh": "贝奥恩",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "tactics",
@@ -26129,7 +26130,7 @@
   {
    "code": "131006",
    "name": "Fili",
-   "nameZh": "",
+   "nameZh": "菲力",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -26177,7 +26178,7 @@
   {
    "code": "131007",
    "name": "Kili",
-   "nameZh": "",
+   "nameZh": "奇力",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -26225,7 +26226,7 @@
   {
    "code": "131008",
    "name": "Bofur",
-   "nameZh": "",
+   "nameZh": "波弗",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -26261,7 +26262,7 @@
   {
    "code": "131009",
    "name": "Dori",
-   "nameZh": "",
+   "nameZh": "多瑞",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -26303,7 +26304,7 @@
   {
    "code": "131010",
    "name": "Gandalf",
-   "nameZh": "",
+   "nameZh": "甘道夫",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "neutral",
@@ -26339,7 +26340,7 @@
   {
    "code": "131011",
    "name": "Cram",
-   "nameZh": "",
+   "nameZh": "克拉姆",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -26387,7 +26388,7 @@
   {
    "code": "131012",
    "name": "Spare Hood and Cloak",
-   "nameZh": "",
+   "nameZh": "备用的斗篷和兜帽",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -26423,7 +26424,7 @@
   {
    "code": "131013",
    "name": "Thrór's Map",
-   "nameZh": "",
+   "nameZh": "瑟罗尔的地图",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -26465,7 +26466,7 @@
   {
    "code": "131014",
    "name": "A Very Good Tale",
-   "nameZh": "",
+   "nameZh": "非常棒的故事",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -26507,7 +26508,7 @@
   {
    "code": "131015",
    "name": "Foe-hammer",
-   "nameZh": "",
+   "nameZh": "击敌锤",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -26549,7 +26550,7 @@
   {
    "code": "131016",
    "name": "Goblin-cleaver",
-   "nameZh": "",
+   "nameZh": "斩杀半兽人之剑",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -26585,7 +26586,7 @@
   {
    "code": "131017",
    "name": "Late Adventurer",
-   "nameZh": "",
+   "nameZh": "迟来的冒险者",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -26621,7 +26622,7 @@
   {
    "code": "131018",
    "name": "Expecting Mischief",
-   "nameZh": "",
+   "nameZh": "早有准备",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -26657,7 +26658,7 @@
   {
    "code": "131019",
    "name": "Burglar Baggins",
-   "nameZh": "",
+   "nameZh": "飞贼巴金斯",
    "type": "event",
    "typeName": "Event",
    "sphere": "baggins",
@@ -26693,7 +26694,7 @@
   {
    "code": "131020",
    "name": "Sting",
-   "nameZh": "",
+   "nameZh": "刺叮剑",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -26729,7 +26730,7 @@
   {
    "code": "131021",
    "name": "Orcrist",
-   "nameZh": "",
+   "nameZh": "奥克锐斯特",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -26765,7 +26766,7 @@
   {
    "code": "131022",
    "name": "Glamdring",
-   "nameZh": "",
+   "nameZh": "格拉姆德凛",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -26801,7 +26802,7 @@
   {
    "code": "132001",
    "name": "Bilbo Baggins",
-   "nameZh": "",
+   "nameZh": "比尔博·巴金斯",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "baggins",
@@ -26837,7 +26838,7 @@
   {
    "code": "132002",
    "name": "Balin",
-   "nameZh": "",
+   "nameZh": "巴林",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "leadership",
@@ -26873,7 +26874,7 @@
   {
    "code": "132003",
    "name": "Bard the Bowman",
-   "nameZh": "",
+   "nameZh": "神箭手巴德",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "tactics",
@@ -26909,7 +26910,7 @@
   {
    "code": "132004",
    "name": "Óin",
-   "nameZh": "",
+   "nameZh": "欧因",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "spirit",
@@ -26945,7 +26946,7 @@
   {
    "code": "132005",
    "name": "Bombur",
-   "nameZh": "",
+   "nameZh": "邦伯",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "lore",
@@ -26981,7 +26982,7 @@
   {
    "code": "132006",
    "name": "Glóin",
-   "nameZh": "",
+   "nameZh": "格罗因",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -27023,7 +27024,7 @@
   {
    "code": "132007",
    "name": "Bifur",
-   "nameZh": "",
+   "nameZh": "比弗",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -27059,7 +27060,7 @@
   {
    "code": "132008",
    "name": "Dwalin",
-   "nameZh": "",
+   "nameZh": "杜瓦林",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -27095,7 +27096,7 @@
   {
    "code": "132009",
    "name": "Straight Shot",
-   "nameZh": "",
+   "nameZh": "瞄准射击",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -27131,7 +27132,7 @@
   {
    "code": "132010",
    "name": "Desperate Alliance",
-   "nameZh": "",
+   "nameZh": "绝境之盟",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -27167,7 +27168,7 @@
   {
    "code": "132011",
    "name": "Ravens of the Mountain",
-   "nameZh": "",
+   "nameZh": "山中的渡鸦",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -27203,7 +27204,7 @@
   {
    "code": "132012",
    "name": "To me! O my kinsfolk!",
-   "nameZh": "",
+   "nameZh": "跟我来！同胞们，冲啊！",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -27239,7 +27240,7 @@
   {
    "code": "132013",
    "name": "The Lucky Number",
-   "nameZh": "",
+   "nameZh": "幸运数字",
    "type": "event",
    "typeName": "Event",
    "sphere": "baggins",
@@ -27275,7 +27276,7 @@
   {
    "code": "132014",
    "name": "Great Yew Bow",
-   "nameZh": "",
+   "nameZh": "巨大的紫杉木弓",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -27311,7 +27312,7 @@
   {
    "code": "132015",
    "name": "Black Arrow",
-   "nameZh": "",
+   "nameZh": "黑色的羽箭",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -27347,7 +27348,7 @@
   {
    "code": "132016",
    "name": "Thrór's Key",
-   "nameZh": "",
+   "nameZh": "瑟罗尔的钥匙",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -27383,7 +27384,7 @@
   {
    "code": "132017",
    "name": "Expert Treasure-hunter",
-   "nameZh": "",
+   "nameZh": "职业寻宝猎人",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -27419,7 +27420,7 @@
   {
    "code": "132018",
    "name": "King Under the Mountain",
-   "nameZh": "",
+   "nameZh": "山下之王",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -27461,7 +27462,7 @@
   {
    "code": "132019",
    "name": "Bilbo's Magic Ring",
-   "nameZh": "",
+   "nameZh": "比尔博的魔法戒指",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -27497,7 +27498,7 @@
   {
    "code": "132020",
    "name": "The Arkenstone",
-   "nameZh": "",
+   "nameZh": "阿肯宝钻",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -27533,7 +27534,7 @@
   {
    "code": "132021",
    "name": "Mithril Shirt",
-   "nameZh": "",
+   "nameZh": "秘银衫",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -27677,7 +27678,7 @@
   {
    "code": "17028",
    "name": "Thurindir",
-   "nameZh": "",
+   "nameZh": "夙林迪尔",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "lore",
@@ -27713,7 +27714,7 @@
   {
    "code": "17029",
    "name": "Kahliel's Tribesman",
-   "nameZh": "",
+   "nameZh": "卡列尔的族人",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -27749,7 +27750,7 @@
   {
    "code": "17030",
    "name": "Steed of the North",
-   "nameZh": "",
+   "nameZh": "北方的骏马",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -27785,7 +27786,7 @@
   {
    "code": "17031",
    "name": "Mighty Warrior",
-   "nameZh": "",
+   "nameZh": "英勇的战士",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -27821,7 +27822,7 @@
   {
    "code": "17032",
    "name": "Proud Hunters",
-   "nameZh": "",
+   "nameZh": "自豪的猎手",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -27857,7 +27858,7 @@
   {
    "code": "17033",
    "name": "Dunedain Pathfinder",
-   "nameZh": "",
+   "nameZh": "杜内丹寻路者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -27893,7 +27894,7 @@
   {
    "code": "17034",
    "name": "Backtrack",
-   "nameZh": "",
+   "nameZh": "折返",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -27929,7 +27930,7 @@
   {
    "code": "17035",
    "name": "Eryn Galen Settler",
-   "nameZh": "",
+   "nameZh": "埃林嘉兰拓荒者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -27965,7 +27966,7 @@
   {
    "code": "17036",
    "name": "Explore Secret Ways",
-   "nameZh": "",
+   "nameZh": "探索秘径",
    "type": "player-side-quest",
    "typeName": "Player Side Quest",
    "sphere": "lore",
@@ -28001,7 +28002,7 @@
   {
    "code": "17037",
    "name": "Steward of Orthanc",
-   "nameZh": "",
+   "nameZh": "欧尔桑克管家",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "neutral",
@@ -28037,7 +28038,7 @@
   {
    "code": "19026",
    "name": "Haldan",
-   "nameZh": "",
+   "nameZh": "哈尔丹",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "lore",
@@ -28073,7 +28074,7 @@
   {
    "code": "19027",
    "name": "Wiglaf",
-   "nameZh": "",
+   "nameZh": "威格拉弗",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -28109,7 +28110,7 @@
   {
    "code": "19028",
    "name": "Ancestral Armor",
-   "nameZh": "",
+   "nameZh": "祖传防具",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -28145,7 +28146,7 @@
   {
    "code": "19029",
    "name": "Glamdring",
-   "nameZh": "",
+   "nameZh": "格拉姆德凛",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -28181,7 +28182,7 @@
   {
    "code": "19030",
    "name": "Woodmen's Path",
-   "nameZh": "",
+   "nameZh": "林中小道",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -28217,7 +28218,7 @@
   {
    "code": "19031",
    "name": "Meneldor",
-   "nameZh": "",
+   "nameZh": "美尼尔多",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -28253,7 +28254,7 @@
   {
    "code": "19032",
    "name": "Flight of the Eagles",
-   "nameZh": "",
+   "nameZh": "大鹰飞翔",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -28289,7 +28290,7 @@
   {
    "code": "19033",
    "name": "Wild Stallion",
-   "nameZh": "",
+   "nameZh": "野生种马",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -28325,7 +28326,7 @@
   {
    "code": "19034",
    "name": "South Away!",
-   "nameZh": "",
+   "nameZh": "一路向南！",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -28361,7 +28362,7 @@
   {
    "code": "19035",
    "name": "Eagle of the North",
-   "nameZh": "",
+   "nameZh": "北方的大鹰",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "neutral",
@@ -28649,7 +28650,7 @@
   {
    "code": "02116",
    "name": "Dáin Ironfoot",
-   "nameZh": "",
+   "nameZh": "戴因·铁足",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "leadership",
@@ -28691,7 +28692,7 @@
   {
    "code": "02117",
    "name": "Dúnedain Signal",
-   "nameZh": "",
+   "nameZh": "杜内丹人的记号",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -28727,7 +28728,7 @@
   {
    "code": "02118",
    "name": "Dawn Take You All",
-   "nameZh": "",
+   "nameZh": "曙光会照到你们所有人",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -28763,7 +28764,7 @@
   {
    "code": "02119",
    "name": "Eagles of the Misty Mountains",
-   "nameZh": "",
+   "nameZh": "迷雾山脉鹰群",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -28799,7 +28800,7 @@
   {
    "code": "02120",
    "name": "Support of the Eagles",
-   "nameZh": "",
+   "nameZh": "大鹰的支持",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -28835,7 +28836,7 @@
   {
    "code": "02121",
    "name": "West Road Traveller",
-   "nameZh": "",
+   "nameZh": "西大道旅者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -28877,7 +28878,7 @@
   {
    "code": "02122",
    "name": "Astonishing Speed",
-   "nameZh": "",
+   "nameZh": "惊人的速度",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -28919,7 +28920,7 @@
   {
    "code": "02123",
    "name": "Mirkwood Runner",
-   "nameZh": "",
+   "nameZh": "黑森林信使",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -28961,7 +28962,7 @@
   {
    "code": "02124",
    "name": "Rumour from the Earth",
-   "nameZh": "",
+   "nameZh": "大地的线索",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -28997,7 +28998,7 @@
   {
    "code": "02125",
    "name": "Shadow of the Past",
-   "nameZh": "",
+   "nameZh": "往昔阴影",
    "type": "event",
    "typeName": "Event",
    "sphere": "neutral",
@@ -29033,7 +29034,7 @@
   {
    "code": "04028",
    "name": "Elladan",
-   "nameZh": "",
+   "nameZh": "埃尔拉丹",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "tactics",
@@ -29069,7 +29070,7 @@
   {
    "code": "04029",
    "name": "Dúnedain Wanderer",
-   "nameZh": "",
+   "nameZh": "杜内丹漫游者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -29105,7 +29106,7 @@
   {
    "code": "04030",
    "name": "Lure of Moria",
-   "nameZh": "",
+   "nameZh": "墨瑞亚的召唤",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -29147,7 +29148,7 @@
   {
    "code": "04031",
    "name": "Rivendell Blade",
-   "nameZh": "",
+   "nameZh": "幽谷剑",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -29183,7 +29184,7 @@
   {
    "code": "04032",
    "name": "Hail of Stones",
-   "nameZh": "",
+   "nameZh": "落石",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -29219,7 +29220,7 @@
   {
    "code": "04033",
    "name": "Rider of the Mark",
-   "nameZh": "",
+   "nameZh": "马克骑手",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -29255,7 +29256,7 @@
   {
    "code": "04034",
    "name": "Song of Eärendil",
-   "nameZh": "",
+   "nameZh": "埃雅仁迪尔之歌",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -29291,7 +29292,7 @@
   {
    "code": "04035",
    "name": "Bombur",
-   "nameZh": "",
+   "nameZh": "邦伯",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -29333,7 +29334,7 @@
   {
    "code": "04036",
    "name": "Out of the Wild",
-   "nameZh": "",
+   "nameZh": "来自荒野",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -29369,7 +29370,7 @@
   {
    "code": "04037",
    "name": "The End Comes",
-   "nameZh": "",
+   "nameZh": "末日来临",
    "type": "event",
    "typeName": "Event",
    "sphere": "neutral",
@@ -29405,7 +29406,7 @@
   {
    "code": "308001",
    "name": "Alatar",
-   "nameZh": "",
+   "nameZh": "阿拉塔尔",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "spirit",
@@ -29441,7 +29442,7 @@
   {
    "code": "308002",
    "name": "Pallando",
-   "nameZh": "",
+   "nameZh": "帕蓝多",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "spirit",
@@ -29477,7 +29478,7 @@
   {
    "code": "308003",
    "name": "Luin Cultist",
-   "nameZh": "",
+   "nameZh": "路因教徒",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -29513,7 +29514,7 @@
   {
    "code": "308004",
    "name": "Variag Recluse",
-   "nameZh": "",
+   "nameZh": "瓦里亚格隐士",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -29549,7 +29550,7 @@
   {
    "code": "308005",
    "name": "Chariot Racer",
-   "nameZh": "",
+   "nameZh": "战车赛手",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -29585,7 +29586,7 @@
   {
    "code": "308006",
    "name": "East-helper",
-   "nameZh": "",
+   "nameZh": "东方助手",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -29621,7 +29622,7 @@
   {
    "code": "308007",
    "name": "Blue Staff",
-   "nameZh": "",
+   "nameZh": "蓝手杖",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -29657,7 +29658,7 @@
   {
    "code": "308008",
    "name": "Emissary of the East",
-   "nameZh": "",
+   "nameZh": "东方特使",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -29693,7 +29694,7 @@
   {
    "code": "308009",
    "name": "You Cannot Pass!",
-   "nameZh": "",
+   "nameZh": "你休想过！",
    "type": "event",
    "typeName": "Event",
    "sphere": "neutral",
@@ -29729,7 +29730,7 @@
   {
    "code": "308010",
    "name": "Word of Persuasion",
-   "nameZh": "",
+   "nameZh": "劝服之语",
    "type": "event",
    "typeName": "Event",
    "sphere": "neutral",
@@ -29765,7 +29766,7 @@
   {
    "code": "308011",
    "name": "Rods of the Five",
-   "nameZh": "",
+   "nameZh": "魔戒五巫",
    "type": "player-objective",
    "typeName": "Player Objective",
    "sphere": "neutral",
@@ -29801,7 +29802,7 @@
   {
    "code": "04128",
    "name": "Elrond",
-   "nameZh": "",
+   "nameZh": "埃尔隆德",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "lore",
@@ -29843,7 +29844,7 @@
   {
    "code": "04129",
    "name": "We Are Not Idle",
-   "nameZh": "",
+   "nameZh": "我们可没闲着",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -29885,7 +29886,7 @@
   {
    "code": "04130",
    "name": "Hardy Leadership",
-   "nameZh": "",
+   "nameZh": "坚毅的领袖",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -29921,7 +29922,7 @@
   {
    "code": "04131",
    "name": "Hands Upon the Bow",
-   "nameZh": "",
+   "nameZh": "张弓搭箭",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -29963,7 +29964,7 @@
   {
    "code": "04132",
    "name": "A Elbereth! Gilthoniel!",
-   "nameZh": "",
+   "nameZh": "A Elbereth! Gilthoniel!",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -29999,7 +30000,7 @@
   {
    "code": "04133",
    "name": "Miruvor",
-   "nameZh": "",
+   "nameZh": "米茹沃",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -30035,7 +30036,7 @@
   {
    "code": "04134",
    "name": "Master of the Forge",
-   "nameZh": "",
+   "nameZh": "铸造大师",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -30071,7 +30072,7 @@
   {
    "code": "04135",
    "name": "Peace, and Thought",
-   "nameZh": "",
+   "nameZh": "沉思与冥想",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -30107,7 +30108,7 @@
   {
    "code": "04136",
    "name": "Risk Some Light",
-   "nameZh": "",
+   "nameZh": "照探前路",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -30143,7 +30144,7 @@
   {
    "code": "04137",
    "name": "Vilya",
-   "nameZh": "",
+   "nameZh": "维雅",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -30185,7 +30186,7 @@
   {
    "code": "12109",
    "name": "Na'asiyah",
-   "nameZh": "",
+   "nameZh": "娜阿西雅",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "tactics",
@@ -30221,7 +30222,7 @@
   {
    "code": "12110",
    "name": "Rune-master",
-   "nameZh": "",
+   "nameZh": "如尼文大师",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -30257,7 +30258,7 @@
   {
    "code": "12111",
    "name": "Terrible to Behold",
-   "nameZh": "",
+   "nameZh": "王者威势",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -30293,7 +30294,7 @@
   {
    "code": "12112",
    "name": "Veteran Sword-elf",
-   "nameZh": "",
+   "nameZh": "老练的精灵剑士",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -30329,7 +30330,7 @@
   {
    "code": "12113",
    "name": "Vigilant Guard",
-   "nameZh": "",
+   "nameZh": "警惕禁卫",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -30365,7 +30366,7 @@
   {
    "code": "12114",
    "name": "Knife-work",
-   "nameZh": "",
+   "nameZh": "短兵相接",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -30401,7 +30402,7 @@
   {
    "code": "12115",
    "name": "Linhir Sea-captain",
-   "nameZh": "",
+   "nameZh": "林希尔舰长",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -30437,7 +30438,7 @@
   {
    "code": "12116",
    "name": "Windfola",
-   "nameZh": "",
+   "nameZh": "追风驹",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -30473,7 +30474,7 @@
   {
    "code": "12117",
    "name": "Ioreth",
-   "nameZh": "",
+   "nameZh": "伊奥瑞丝",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -30515,7 +30516,7 @@
   {
    "code": "12118",
    "name": "The Houses of Healing",
-   "nameZh": "",
+   "nameZh": "诊疗院",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -30551,7 +30552,7 @@
   {
    "code": "12119",
    "name": "Justice Shall Be Done",
-   "nameZh": "",
+   "nameZh": "正义终将实现",
    "type": "event",
    "typeName": "Event",
    "sphere": "neutral",
@@ -30587,7 +30588,7 @@
   {
    "code": "22001",
    "name": "Thorin Stonehelm",
-   "nameZh": "",
+   "nameZh": "梭林·石盔",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "tactics",
@@ -30629,7 +30630,7 @@
   {
    "code": "22081",
    "name": "Gildor Inglorion",
-   "nameZh": "",
+   "nameZh": "吉尔多·英格罗瑞安",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "leadership",
@@ -30671,7 +30672,7 @@
   {
    "code": "08137",
    "name": "Erkenbrand",
-   "nameZh": "",
+   "nameZh": "埃肯布兰德",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "leadership",
@@ -30707,7 +30708,7 @@
   {
    "code": "08138",
    "name": "Warden of Helm's Deep",
-   "nameZh": "",
+   "nameZh": "海尔姆深谷看守者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -30743,7 +30744,7 @@
   {
    "code": "08139",
    "name": "The Day's Rising",
-   "nameZh": "",
+   "nameZh": "迎接晨光",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -30779,7 +30780,7 @@
   {
    "code": "08140",
    "name": "Captain of Gondor",
-   "nameZh": "",
+   "nameZh": "刚铎的统帅",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -30821,7 +30822,7 @@
   {
    "code": "08141",
    "name": "Booming Ent",
-   "nameZh": "",
+   "nameZh": "激愤的恩特",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -30857,7 +30858,7 @@
   {
    "code": "08142",
    "name": "Ride Them Down",
-   "nameZh": "",
+   "nameZh": "冲倒他们",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -30893,7 +30894,7 @@
   {
    "code": "08143",
    "name": "Shadows Give Way",
-   "nameZh": "",
+   "nameZh": "魔影退散",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -30929,7 +30930,7 @@
   {
    "code": "08144",
    "name": "Don't Be Hasty!",
-   "nameZh": "",
+   "nameZh": "不要仓促行事！",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -30965,7 +30966,7 @@
   {
    "code": "08145",
    "name": "Waters of Nimrodel",
-   "nameZh": "",
+   "nameZh": "宁洛德尔河之水",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -31001,7 +31002,7 @@
   {
    "code": "08146",
    "name": "Treebeard",
-   "nameZh": "",
+   "nameZh": "树须",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "neutral",
@@ -31037,7 +31038,7 @@
   {
    "code": "301001",
    "name": "Fatty Bolger",
-   "nameZh": "",
+   "nameZh": "小胖博尔杰",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "lore",
@@ -31073,7 +31074,7 @@
   {
    "code": "301002",
    "name": "Widfast",
-   "nameZh": "",
+   "nameZh": "维德法斯特",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "spirit",
@@ -31109,7 +31110,7 @@
   {
    "code": "301003",
    "name": "Lily Cotton",
-   "nameZh": "",
+   "nameZh": "莉莉·科顿",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -31145,7 +31146,7 @@
   {
    "code": "301004",
    "name": "A Lesson in Caution",
-   "nameZh": "",
+   "nameZh": "学会保持谨慎",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -31181,7 +31182,7 @@
   {
    "code": "301005",
    "name": "There and Back Again",
-   "nameZh": "",
+   "nameZh": "去而复返",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -31217,7 +31218,7 @@
   {
    "code": "301006",
    "name": "Buckland Shirriff",
-   "nameZh": "",
+   "nameZh": "雄鹿地夏警",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -31253,7 +31254,7 @@
   {
    "code": "301007",
    "name": "Weep No More!",
-   "nameZh": "",
+   "nameZh": "别再哭了！",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -31289,7 +31290,7 @@
   {
    "code": "301008",
    "name": "Fear! Fire! Foes!",
-   "nameZh": "",
+   "nameZh": "出事了！失火了！敌人来了！",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -31325,7 +31326,7 @@
   {
    "code": "301009",
    "name": "Horn-call of Buckland",
-   "nameZh": "",
+   "nameZh": "雄鹿地的动员号角",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -31361,7 +31362,7 @@
   {
    "code": "301010",
    "name": "Young Tom",
-   "nameZh": "",
+   "nameZh": "小汤姆",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -31397,7 +31398,7 @@
   {
    "code": "301011",
    "name": "Gavin",
-   "nameZh": "",
+   "nameZh": "加文",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -31433,7 +31434,7 @@
   {
    "code": "310074",
    "name": "Ghân-buri-Ghân",
-   "nameZh": "",
+   "nameZh": "悍-不里-悍",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "lore",
@@ -31829,7 +31830,7 @@
   {
    "code": "141001",
    "name": "Frodo Baggins",
-   "nameZh": "",
+   "nameZh": "弗罗多·巴金斯",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "fellowship",
@@ -31865,7 +31866,7 @@
   {
    "code": "141002",
    "name": "Sam Gamgee",
-   "nameZh": "",
+   "nameZh": "山姆·甘姆吉",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "leadership",
@@ -31901,7 +31902,7 @@
   {
    "code": "141003",
    "name": "Merry",
-   "nameZh": "",
+   "nameZh": "梅里",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "tactics",
@@ -31937,7 +31938,7 @@
   {
    "code": "141004",
    "name": "Pippin",
-   "nameZh": "",
+   "nameZh": "皮平",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "lore",
@@ -31973,7 +31974,7 @@
   {
    "code": "141005",
    "name": "Fatty Bolger",
-   "nameZh": "",
+   "nameZh": "小胖博尔杰",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "spirit",
@@ -32009,7 +32010,7 @@
   {
    "code": "141006",
    "name": "Bill the Pony",
-   "nameZh": "",
+   "nameZh": "小马比尔",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -32045,7 +32046,7 @@
   {
    "code": "141007",
    "name": "Barliman Butterbur",
-   "nameZh": "",
+   "nameZh": "麦曼·黄油菊",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -32081,7 +32082,7 @@
   {
    "code": "141008",
    "name": "Farmer Maggot",
-   "nameZh": "",
+   "nameZh": "农夫马戈特",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -32117,7 +32118,7 @@
   {
    "code": "141009",
    "name": "Halfling Determination",
-   "nameZh": "",
+   "nameZh": "半身人的决心",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -32153,7 +32154,7 @@
   {
    "code": "141010",
    "name": "Smoke Rings",
-   "nameZh": "",
+   "nameZh": "烟圈",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -32189,7 +32190,7 @@
   {
    "code": "141011",
    "name": "Take No Notice",
-   "nameZh": "",
+   "nameZh": "悄无声息",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -32225,7 +32226,7 @@
   {
    "code": "141012",
    "name": "Frodo's Intuition",
-   "nameZh": "",
+   "nameZh": "弗罗多的直觉",
    "type": "event",
    "typeName": "Event",
    "sphere": "fellowship",
@@ -32261,7 +32262,7 @@
   {
    "code": "141013",
    "name": "Hobbit Cloak",
-   "nameZh": "",
+   "nameZh": "霍比特人斗篷",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -32297,7 +32298,7 @@
   {
    "code": "141014",
    "name": "Dagger of Westernesse",
-   "nameZh": "",
+   "nameZh": "西方之地的匕首",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -32333,7 +32334,7 @@
   {
    "code": "141015",
    "name": "Hobbit Pipe",
-   "nameZh": "",
+   "nameZh": "霍比特人烟斗",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -32369,7 +32370,7 @@
   {
    "code": "141016",
    "name": "Elf-stone",
-   "nameZh": "",
+   "nameZh": "精灵宝石",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -32411,7 +32412,7 @@
   {
    "code": "141017",
    "name": "Mr. Underhill",
-   "nameZh": "",
+   "nameZh": "山下先生",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -32447,7 +32448,7 @@
   {
    "code": "141018",
    "name": "Tireless Ranger",
-   "nameZh": "",
+   "nameZh": "不倦的游侠",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -32483,7 +32484,7 @@
   {
    "code": "141019",
    "name": "Skilled Healer",
-   "nameZh": "",
+   "nameZh": "医术高明的医者",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -32519,7 +32520,7 @@
   {
    "code": "141020",
    "name": "Valiant Warrior",
-   "nameZh": "",
+   "nameZh": "豪勇的战士",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -32555,7 +32556,7 @@
   {
    "code": "141021",
    "name": "Noble Hero",
-   "nameZh": "",
+   "nameZh": "高贵的英雄",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -32591,7 +32592,7 @@
   {
    "code": "141077",
    "name": "Gildor Inglorion",
-   "nameZh": "",
+   "nameZh": "吉尔多·英格罗瑞安",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -32879,7 +32880,7 @@
   {
    "code": "17081",
    "name": "Fastred",
-   "nameZh": "",
+   "nameZh": "法斯特雷德",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "spirit",
@@ -32921,7 +32922,7 @@
   {
    "code": "17082",
    "name": "Song of Hope",
-   "nameZh": "",
+   "nameZh": "希望之歌",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -32957,7 +32958,7 @@
   {
    "code": "17083",
    "name": "Burst into Song",
-   "nameZh": "",
+   "nameZh": "齐声放歌",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -32993,7 +32994,7 @@
   {
    "code": "17084",
    "name": "Defender of Cair Andros",
-   "nameZh": "",
+   "nameZh": "凯尔安德洛斯防御者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -33029,7 +33030,7 @@
   {
    "code": "17085",
    "name": "Oath of Eorl",
-   "nameZh": "",
+   "nameZh": "埃奥尔的誓言",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -33071,7 +33072,7 @@
   {
    "code": "17086",
    "name": "Fearless Scout",
-   "nameZh": "",
+   "nameZh": "无畏的斥候",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -33107,7 +33108,7 @@
   {
    "code": "17087",
    "name": "Rally the West",
-   "nameZh": "",
+   "nameZh": "众志成城",
    "type": "player-side-quest",
    "typeName": "Player Side Quest",
    "sphere": "spirit",
@@ -33143,7 +33144,7 @@
   {
    "code": "17088",
    "name": "Dúnedain Pipe",
-   "nameZh": "",
+   "nameZh": "杜内丹人烟斗",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -33179,7 +33180,7 @@
   {
    "code": "17089",
    "name": "Old Toby",
-   "nameZh": "",
+   "nameZh": "老托比",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -33215,7 +33216,7 @@
   {
    "code": "17090",
    "name": "Southron Refugee",
-   "nameZh": "",
+   "nameZh": "南方的难民",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "neutral",
@@ -33251,7 +33252,7 @@
   {
    "code": "22027",
    "name": "Lothíriel",
-   "nameZh": "",
+   "nameZh": "洛希瑞尔",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "spirit",
@@ -33293,7 +33294,7 @@
   {
    "code": "22028",
    "name": "Angbor the Fearless",
-   "nameZh": "",
+   "nameZh": "无畏的安格博",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -33335,7 +33336,7 @@
   {
    "code": "22029",
    "name": "Need Drives Them",
-   "nameZh": "",
+   "nameZh": "破釜沉舟",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -33377,7 +33378,7 @@
   {
    "code": "22030",
    "name": "Woodland Sentry",
-   "nameZh": "",
+   "nameZh": "林地哨兵",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -33413,7 +33414,7 @@
   {
    "code": "22031",
    "name": "Keen Longbow",
-   "nameZh": "",
+   "nameZh": "锐利长弓",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -33449,7 +33450,7 @@
   {
    "code": "22032",
    "name": "War Axe",
-   "nameZh": "",
+   "nameZh": "战斧",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -33491,7 +33492,7 @@
   {
    "code": "22033",
    "name": "Strength and Courage",
-   "nameZh": "",
+   "nameZh": "万夫莫当",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -33527,7 +33528,7 @@
   {
    "code": "22034",
    "name": "Knight of Belfalas",
-   "nameZh": "",
+   "nameZh": "贝尔法拉斯骑士",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -33563,7 +33564,7 @@
   {
    "code": "22035",
    "name": "Horn of the Mark",
-   "nameZh": "",
+   "nameZh": "马克的号角",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -33605,7 +33606,7 @@
   {
    "code": "22036",
    "name": "Host of Galadhrim",
-   "nameZh": "",
+   "nameZh": "加拉兹大军",
    "type": "event",
    "typeName": "Event",
    "sphere": "neutral",
@@ -33647,7 +33648,7 @@
   {
    "code": "22049",
    "name": "Forth, The Three Hunters!",
-   "nameZh": "",
+   "nameZh": "冲啊，三位猎手！",
    "type": "contract",
    "typeName": "Contract",
    "sphere": "neutral",
@@ -33683,7 +33684,7 @@
   {
    "code": "06032",
    "name": "Mirlonde",
-   "nameZh": "",
+   "nameZh": "米尔泷德",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "lore",
@@ -33719,7 +33720,7 @@
   {
    "code": "06033",
    "name": "Forlong",
-   "nameZh": "",
+   "nameZh": "佛朗",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -33755,7 +33756,7 @@
   {
    "code": "06034",
    "name": "Strength of Arms",
-   "nameZh": "",
+   "nameZh": "武装的力量",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -33791,7 +33792,7 @@
   {
    "code": "06035",
    "name": "Mighty Prowess",
-   "nameZh": "",
+   "nameZh": "勇猛无比",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -33827,7 +33828,7 @@
   {
    "code": "06036",
    "name": "Trained for War",
-   "nameZh": "",
+   "nameZh": "战前操练",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -33863,7 +33864,7 @@
   {
    "code": "06037",
    "name": "Silvan Refugee",
-   "nameZh": "",
+   "nameZh": "西尔凡流亡者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -33905,7 +33906,7 @@
   {
    "code": "06038",
    "name": "Against the Shadow",
-   "nameZh": "",
+   "nameZh": "对抗魔影",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -33941,7 +33942,7 @@
   {
    "code": "06039",
    "name": "Harbor Master",
-   "nameZh": "",
+   "nameZh": "港务总管",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -33977,7 +33978,7 @@
   {
    "code": "06040",
    "name": "Advance Warning",
-   "nameZh": "",
+   "nameZh": "预先警报",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -34013,7 +34014,7 @@
   {
    "code": "06041",
    "name": "White Tower Watchman",
-   "nameZh": "",
+   "nameZh": "白塔守卫",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "neutral",
@@ -34049,7 +34050,7 @@
   {
    "code": "02095",
    "name": "Boromir",
-   "nameZh": "",
+   "nameZh": "波洛米尔",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "tactics",
@@ -34085,7 +34086,7 @@
   {
    "code": "02096",
    "name": "Dúnedain Watcher",
-   "nameZh": "",
+   "nameZh": "杜内丹守望者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -34121,7 +34122,7 @@
   {
    "code": "02097",
    "name": "Dúnedain Cache",
-   "nameZh": "",
+   "nameZh": "杜内丹人的行囊",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -34157,7 +34158,7 @@
   {
    "code": "02098",
    "name": "Vassal of the Windlord",
-   "nameZh": "",
+   "nameZh": "风王的臣属",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -34193,7 +34194,7 @@
   {
    "code": "02099",
    "name": "Song of Mocking",
-   "nameZh": "",
+   "nameZh": "嘲讽之歌",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -34229,7 +34230,7 @@
   {
    "code": "02100",
    "name": "Elfhelm",
-   "nameZh": "",
+   "nameZh": "埃尔夫海尔姆",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -34265,7 +34266,7 @@
   {
    "code": "02101",
    "name": "We Do Not Sleep",
-   "nameZh": "",
+   "nameZh": "我们并不是在沉睡",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -34301,7 +34302,7 @@
   {
    "code": "02102",
    "name": "Silvan Tracker",
-   "nameZh": "",
+   "nameZh": "西尔凡追踪者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -34343,7 +34344,7 @@
   {
    "code": "02103",
    "name": "Fast Hitch",
-   "nameZh": "",
+   "nameZh": "绑紧的绳结",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -34379,7 +34380,7 @@
   {
    "code": "02104",
    "name": "Song of Battle",
-   "nameZh": "",
+   "nameZh": "战争之歌",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -34415,7 +34416,7 @@
   {
    "code": "10140",
    "name": "Arwen Undómiel",
-   "nameZh": "",
+   "nameZh": "阿尔玟·乌多米尔",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "spirit",
@@ -34451,7 +34452,7 @@
   {
    "code": "10141",
    "name": "Éothain",
-   "nameZh": "",
+   "nameZh": "伊奥泰因",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -34487,7 +34488,7 @@
   {
    "code": "10142",
    "name": "Sword of Númenor",
-   "nameZh": "",
+   "nameZh": "努门诺尔剑",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -34523,7 +34524,7 @@
   {
    "code": "10143",
    "name": "Fornost Bowman",
-   "nameZh": "",
+   "nameZh": "佛诺斯特箭手",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -34559,7 +34560,7 @@
   {
    "code": "10144",
    "name": "Hour of Wrath",
-   "nameZh": "",
+   "nameZh": "横扫千军",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -34595,7 +34596,7 @@
   {
    "code": "10145",
    "name": "Elven-light",
-   "nameZh": "",
+   "nameZh": "精灵之光",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -34631,7 +34632,7 @@
   {
    "code": "10146",
    "name": "Tale of Tinúviel",
-   "nameZh": "",
+   "nameZh": "缇努维尔的传说",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -34667,7 +34668,7 @@
   {
    "code": "10147",
    "name": "Galadhrim Healer",
-   "nameZh": "",
+   "nameZh": "加拉兹医者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -34703,7 +34704,7 @@
   {
    "code": "10148",
    "name": "Weather-stained Cloak",
-   "nameZh": "",
+   "nameZh": "风吹雨淋的斗篷",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -34739,7 +34740,7 @@
   {
    "code": "10149",
    "name": "Sword-thain",
-   "nameZh": "",
+   "nameZh": "佩剑侍从",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -34775,7 +34776,7 @@
   {
    "code": "08001",
    "name": "Celeborn",
-   "nameZh": "",
+   "nameZh": "凯勒博恩",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "leadership",
@@ -34817,7 +34818,7 @@
   {
    "code": "08002",
    "name": "Naith Guide",
-   "nameZh": "",
+   "nameZh": "耐斯向导",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -34865,7 +34866,7 @@
   {
    "code": "08003",
    "name": "Swift and Silent",
-   "nameZh": "",
+   "nameZh": "迅捷无声",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -34901,7 +34902,7 @@
   {
    "code": "08004",
    "name": "Firefoot",
-   "nameZh": "",
+   "nameZh": "火足",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -34943,7 +34944,7 @@
   {
    "code": "08005",
    "name": "Close Call",
-   "nameZh": "",
+   "nameZh": "千钧一发",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -34979,7 +34980,7 @@
   {
    "code": "08006",
    "name": "Blue Mountain Trader",
-   "nameZh": "",
+   "nameZh": "蓝山商人",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -35021,7 +35022,7 @@
   {
    "code": "08007",
    "name": "The Fall of Gil-Galad",
-   "nameZh": "",
+   "nameZh": "吉尔-加拉德的陨落",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -35057,7 +35058,7 @@
   {
    "code": "08008",
    "name": "Ithilien Lookout",
-   "nameZh": "",
+   "nameZh": "伊希利恩远望者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -35093,7 +35094,7 @@
   {
    "code": "08009",
    "name": "The Tree People",
-   "nameZh": "",
+   "nameZh": "树民",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -35135,7 +35136,7 @@
   {
    "code": "08010",
    "name": "The White Council",
-   "nameZh": "",
+   "nameZh": "白道会",
    "type": "event",
    "typeName": "Event",
    "sphere": "neutral",
@@ -35495,7 +35496,7 @@
   {
    "code": "22137",
    "name": "Aragorn",
-   "nameZh": "",
+   "nameZh": "阿拉贡",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "spirit",
@@ -35531,7 +35532,7 @@
   {
    "code": "22138",
    "name": "Shining Shield",
-   "nameZh": "",
+   "nameZh": "闪耀的盾牌",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -35567,7 +35568,7 @@
   {
    "code": "22139",
    "name": "Knowledge of the Enemy",
-   "nameZh": "",
+   "nameZh": "了解敌人",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -35603,7 +35604,7 @@
   {
    "code": "22140",
    "name": "Haleth",
-   "nameZh": "",
+   "nameZh": "哈烈丝",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -35639,7 +35640,7 @@
   {
    "code": "22141",
    "name": "Woodman Lore",
-   "nameZh": "",
+   "nameZh": "林中居民的学识",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -35675,7 +35676,7 @@
   {
    "code": "22142",
    "name": "Westfold Lancer",
-   "nameZh": "",
+   "nameZh": "西伏尔德长枪手",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -35717,7 +35718,7 @@
   {
    "code": "22143",
    "name": "Tireless Thoroughbred",
-   "nameZh": "",
+   "nameZh": "不知疲倦的纯种马",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -35753,7 +35754,7 @@
   {
    "code": "22144",
    "name": "Misty Mountain Journeyman",
-   "nameZh": "",
+   "nameZh": "迷雾山脉旅人",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -35789,7 +35790,7 @@
   {
    "code": "22145",
    "name": "A Desperate Path",
-   "nameZh": "",
+   "nameZh": "绝路",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -35825,7 +35826,7 @@
   {
    "code": "22146",
    "name": "Thorongil",
-   "nameZh": "",
+   "nameZh": "梭隆吉尔",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -35861,7 +35862,7 @@
   {
    "code": "22147",
    "name": "Bond of Friendship",
-   "nameZh": "",
+   "nameZh": "友谊的纽带",
    "type": "contract",
    "typeName": "Contract",
    "sphere": "neutral",
@@ -35897,7 +35898,7 @@
   {
    "code": "19145",
    "name": "Radagast",
-   "nameZh": "",
+   "nameZh": "拉达加斯特",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "lore",
@@ -35933,7 +35934,7 @@
   {
    "code": "19146",
    "name": "Messenger Raven",
-   "nameZh": "",
+   "nameZh": "信使渡鸦",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -35969,7 +35970,7 @@
   {
    "code": "19147",
    "name": "The King's Return",
-   "nameZh": "",
+   "nameZh": "国王归来",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -36005,7 +36006,7 @@
   {
    "code": "19148",
    "name": "Loyal Hound",
-   "nameZh": "",
+   "nameZh": "忠诚的猎犬",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -36041,7 +36042,7 @@
   {
    "code": "19149",
    "name": "The Great Hunt",
-   "nameZh": "",
+   "nameZh": "大规模狩猎",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -36077,7 +36078,7 @@
   {
    "code": "19150",
    "name": "Bywater Shirriff",
-   "nameZh": "",
+   "nameZh": "傍水镇夏警",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -36113,7 +36114,7 @@
   {
    "code": "19151",
    "name": "Gwaihir's Debt",
-   "nameZh": "",
+   "nameZh": "格怀希尔的恩情",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -36149,7 +36150,7 @@
   {
    "code": "19152",
    "name": "Mithril Shirt",
-   "nameZh": "",
+   "nameZh": "秘银衫",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -36185,7 +36186,7 @@
   {
    "code": "19153",
    "name": "Reforged",
-   "nameZh": "",
+   "nameZh": "重铸",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -36221,7 +36222,7 @@
   {
    "code": "19154",
    "name": "Radagast's Staff",
-   "nameZh": "",
+   "nameZh": "拉达加斯特的手杖",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -36257,7 +36258,7 @@
   {
    "code": "304101",
    "name": "Gaeronel",
-   "nameZh": "",
+   "nameZh": "盖隆尼尔",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "leadership",
@@ -36293,7 +36294,7 @@
   {
    "code": "304102",
    "name": "Glorfindel",
-   "nameZh": "",
+   "nameZh": "格罗芬德尔",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "tactics",
@@ -36329,7 +36330,7 @@
   {
    "code": "304103",
    "name": "Harlond Lookout",
-   "nameZh": "",
+   "nameZh": "哈泷德守望者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -36365,7 +36366,7 @@
   {
    "code": "304104",
    "name": "Balin",
-   "nameZh": "",
+   "nameZh": "巴林",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -36401,7 +36402,7 @@
   {
    "code": "304105",
    "name": "Salvaged Supplies",
-   "nameZh": "",
+   "nameZh": "抢救回来的补给",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -36437,7 +36438,7 @@
   {
    "code": "304106",
    "name": "Lay of the Nauglamír",
-   "nameZh": "",
+   "nameZh": "瑙格拉弥尔之谣",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -36473,7 +36474,7 @@
   {
    "code": "304107",
    "name": "Wandering Spirit",
-   "nameZh": "",
+   "nameZh": "漫游的灵魂",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -36509,7 +36510,7 @@
   {
    "code": "304108",
    "name": "Relic of Nargothrond",
-   "nameZh": "",
+   "nameZh": "纳国斯隆德的遗物",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -36545,7 +36546,7 @@
   {
    "code": "304109",
    "name": "Onward Into Battle",
-   "nameZh": "",
+   "nameZh": "继续奋战",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -36581,7 +36582,7 @@
   {
    "code": "304110",
    "name": "Legacy of Gondolin",
-   "nameZh": "",
+   "nameZh": "刚多林的遗产",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -36617,7 +36618,7 @@
   {
    "code": "11001",
    "name": "Círdan the Shipwright",
-   "nameZh": "",
+   "nameZh": "造船者奇尔丹",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "spirit",
@@ -36653,7 +36654,7 @@
   {
    "code": "11002",
    "name": "Galdor of the Havens",
-   "nameZh": "",
+   "nameZh": "灰港的加尔多",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "lore",
@@ -36689,7 +36690,7 @@
   {
    "code": "11003",
    "name": "Mithlond Sea-watcher",
-   "nameZh": "",
+   "nameZh": "米斯泷德望海者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -36725,7 +36726,7 @@
   {
    "code": "11004",
    "name": "Skyward Volley",
-   "nameZh": "",
+   "nameZh": "空中截击",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -36761,7 +36762,7 @@
   {
    "code": "11005",
    "name": "Grappling Hook",
-   "nameZh": "",
+   "nameZh": "爪钩",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -36797,7 +36798,7 @@
   {
    "code": "11006",
    "name": "Warden of the Havens",
-   "nameZh": "",
+   "nameZh": "灰港守护者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -36833,7 +36834,7 @@
   {
    "code": "11007",
    "name": "Anchor Watch",
-   "nameZh": "",
+   "nameZh": "锚更",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -36869,7 +36870,7 @@
   {
    "code": "11008",
    "name": "Mariner's Compass",
-   "nameZh": "",
+   "nameZh": "水手的指南针",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -36905,7 +36906,7 @@
   {
    "code": "11009",
    "name": "Lindon Navigator",
-   "nameZh": "",
+   "nameZh": "林顿领航员",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -36941,7 +36942,7 @@
   {
    "code": "11010",
    "name": "The Evening Star",
-   "nameZh": "",
+   "nameZh": "暮星",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -36977,7 +36978,7 @@
   {
    "code": "11011",
    "name": "Explorer's Almanac",
-   "nameZh": "",
+   "nameZh": "探索者的星历",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -37013,7 +37014,7 @@
   {
    "code": "11012",
    "name": "Sailor of Lune",
-   "nameZh": "",
+   "nameZh": "路恩船员",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -37049,7 +37050,7 @@
   {
    "code": "11013",
    "name": "Elwing's Flight",
-   "nameZh": "",
+   "nameZh": "埃尔汶的飞翔",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -37085,7 +37086,7 @@
   {
    "code": "11014",
    "name": "To the Sea, to the Sea!",
-   "nameZh": "",
+   "nameZh": "向海！向海！",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -37121,7 +37122,7 @@
   {
    "code": "11015",
    "name": "Narya",
-   "nameZh": "",
+   "nameZh": "纳雅",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -37157,7 +37158,7 @@
   {
    "code": "19084",
    "name": "Dáin Ironfoot",
-   "nameZh": "",
+   "nameZh": "戴因·铁足",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "spirit",
@@ -37199,7 +37200,7 @@
   {
    "code": "19085",
    "name": "Soldier of Erebor",
-   "nameZh": "",
+   "nameZh": "埃瑞博士兵",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -37235,7 +37236,7 @@
   {
    "code": "19086",
    "name": "Man the Walls",
-   "nameZh": "",
+   "nameZh": "防卫城墙",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -37271,7 +37272,7 @@
   {
    "code": "19087",
    "name": "Mirkwood Hunter",
-   "nameZh": "",
+   "nameZh": "黑森林猎人",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -37307,7 +37308,7 @@
   {
    "code": "19088",
    "name": "Familiar Lands",
-   "nameZh": "",
+   "nameZh": "熟悉的土地",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -37343,7 +37344,7 @@
   {
    "code": "19089",
    "name": "Warrior Sword",
-   "nameZh": "",
+   "nameZh": "战士之剑",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -37379,7 +37380,7 @@
   {
    "code": "19090",
    "name": "Swift and Strong",
-   "nameZh": "",
+   "nameZh": "迅捷有力",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -37415,7 +37416,7 @@
   {
    "code": "19091",
    "name": "Descendant of Girion",
-   "nameZh": "",
+   "nameZh": "吉瑞安的后嗣",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -37451,7 +37452,7 @@
   {
    "code": "19092",
    "name": "Valiant Determination",
-   "nameZh": "",
+   "nameZh": "英勇决心",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -37487,7 +37488,7 @@
   {
    "code": "19093",
    "name": "Ring of Thrór",
-   "nameZh": "",
+   "nameZh": "瑟罗尔的戒指",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -37523,7 +37524,7 @@
   {
    "code": "303071",
    "name": "Barliman Butterbur",
-   "nameZh": "",
+   "nameZh": "麦曼·黄油菊",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "lore",
@@ -37559,7 +37560,7 @@
   {
    "code": "303072",
    "name": "Nob",
-   "nameZh": "",
+   "nameZh": "诺伯",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "lore",
@@ -37595,7 +37596,7 @@
   {
    "code": "303073",
    "name": "Harry Goatleaf",
-   "nameZh": "",
+   "nameZh": "哈里·金银花",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "spirit",
@@ -37631,7 +37632,7 @@
   {
    "code": "303074",
    "name": "Bob",
-   "nameZh": "",
+   "nameZh": "鲍伯",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -37667,7 +37668,7 @@
   {
    "code": "303075",
    "name": "Bree Pony",
-   "nameZh": "",
+   "nameZh": "布理小马",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -37703,7 +37704,7 @@
   {
    "code": "303076",
    "name": "Half-pint",
-   "nameZh": "",
+   "nameZh": "半品脱",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -37739,7 +37740,7 @@
   {
    "code": "303077",
    "name": "Seasoned Forager",
-   "nameZh": "",
+   "nameZh": "擅于觅食",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -37775,7 +37776,7 @@
   {
    "code": "303078",
    "name": "Pint",
-   "nameZh": "",
+   "nameZh": "品脱",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -37811,7 +37812,7 @@
   {
    "code": "303079",
    "name": "Scheming Staddler",
-   "nameZh": "",
+   "nameZh": "精明的斯台多人",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -37847,7 +37848,7 @@
   {
    "code": "303080",
    "name": "Bree-land Protector",
-   "nameZh": "",
+   "nameZh": "布理地区保护者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -37883,7 +37884,7 @@
   {
    "code": "303081",
    "name": "A Stout Heart",
-   "nameZh": "",
+   "nameZh": "坚强的心",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -37919,7 +37920,7 @@
   {
    "code": "303082",
    "name": "Gift of Foresight",
-   "nameZh": "",
+   "nameZh": "先见之明",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -37955,7 +37956,7 @@
   {
    "code": "303083",
    "name": "Archet Alekeeper",
-   "nameZh": "",
+   "nameZh": "阿切特守门人",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -37991,7 +37992,7 @@
   {
    "code": "40047",
    "name": "A Perilous Voyage",
-   "nameZh": "",
+   "nameZh": "危险的航程",
    "type": "contract",
    "typeName": "Contract",
    "sphere": "neutral",
@@ -38027,7 +38028,7 @@
   {
    "code": "503007",
    "name": "Bilbo Baggins",
-   "nameZh": "",
+   "nameZh": "比尔博·巴金斯",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "baggins",
@@ -38135,7 +38136,7 @@
   {
    "code": "503010",
    "name": "Sting",
-   "nameZh": "",
+   "nameZh": "刺叮剑",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -38171,7 +38172,7 @@
   {
    "code": "503011",
    "name": "Bilbo's Magic Ring",
-   "nameZh": "",
+   "nameZh": "比尔博的魔法戒指",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -38495,7 +38496,7 @@
   {
    "code": "503020",
    "name": "The Arkenstone",
-   "nameZh": "",
+   "nameZh": "阿肯宝钻",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -38747,7 +38748,7 @@
   {
    "code": "04076",
    "name": "Háma",
-   "nameZh": "",
+   "nameZh": "哈马",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "tactics",
@@ -38783,7 +38784,7 @@
   {
    "code": "04077",
    "name": "Erestor",
-   "nameZh": "",
+   "nameZh": "埃瑞斯托",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -38819,7 +38820,7 @@
   {
    "code": "04078",
    "name": "Fresh Tracks",
-   "nameZh": "",
+   "nameZh": "新的足迹",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -38855,7 +38856,7 @@
   {
    "code": "04079",
    "name": "Erebor Battle Master",
-   "nameZh": "",
+   "nameZh": "埃瑞博战斗大师",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -38891,7 +38892,7 @@
   {
    "code": "04080",
    "name": "Ring Mail",
-   "nameZh": "",
+   "nameZh": "锁环甲",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -38927,7 +38928,7 @@
   {
    "code": "04081",
    "name": "Out of Sight",
-   "nameZh": "",
+   "nameZh": "视线之外",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -38963,7 +38964,7 @@
   {
    "code": "04082",
    "name": "Ever My Heart Rises",
-   "nameZh": "",
+   "nameZh": "心情转好",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -38999,7 +39000,7 @@
   {
    "code": "04083",
    "name": "Warden of Healing",
-   "nameZh": "",
+   "nameZh": "医护官",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -39035,7 +39036,7 @@
   {
    "code": "04084",
    "name": "Word of Command",
-   "nameZh": "",
+   "nameZh": "命令之语",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -39071,7 +39072,7 @@
   {
    "code": "04085",
    "name": "Love of Tales",
-   "nameZh": "",
+   "nameZh": "喜爱的故事",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -39107,7 +39108,7 @@
   {
    "code": "09001",
    "name": "Aragorn",
-   "nameZh": "",
+   "nameZh": "阿拉贡",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "tactics",
@@ -39143,7 +39144,7 @@
   {
    "code": "09002",
    "name": "Halbarad",
-   "nameZh": "",
+   "nameZh": "哈尔巴拉德",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "leadership",
@@ -39179,7 +39180,7 @@
   {
    "code": "09003",
    "name": "Weather Hills Watchman",
-   "nameZh": "",
+   "nameZh": "风云丘陵看守者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -39215,7 +39216,7 @@
   {
    "code": "09004",
    "name": "Dúnedain Hunter",
-   "nameZh": "",
+   "nameZh": "杜内丹猎人",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -39251,7 +39252,7 @@
   {
    "code": "09005",
    "name": "Sarn Ford Sentry",
-   "nameZh": "",
+   "nameZh": "萨恩渡口哨兵",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -39293,7 +39294,7 @@
   {
    "code": "09006",
    "name": "Warden of Annúminas",
-   "nameZh": "",
+   "nameZh": "安努米那斯守护者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -39329,7 +39330,7 @@
   {
    "code": "09007",
    "name": "Ranger Summons",
-   "nameZh": "",
+   "nameZh": "召唤游民",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -39365,7 +39366,7 @@
   {
    "code": "09008",
    "name": "Tireless Hunters",
-   "nameZh": "",
+   "nameZh": "不倦的猎手",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -39401,7 +39402,7 @@
   {
    "code": "09009",
    "name": "Expert Trackers",
-   "nameZh": "",
+   "nameZh": "职业追踪者",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -39437,7 +39438,7 @@
   {
    "code": "09010",
    "name": "Heir of Valandil",
-   "nameZh": "",
+   "nameZh": "维蓝迪尔的后裔",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -39473,7 +39474,7 @@
   {
    "code": "09011",
    "name": "Athelas",
-   "nameZh": "",
+   "nameZh": "阿塞拉斯",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -39509,7 +39510,7 @@
   {
    "code": "09012",
    "name": "Secret Vigil",
-   "nameZh": "",
+   "nameZh": "秘密监视",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -39545,7 +39546,7 @@
   {
    "code": "09013",
    "name": "Star Brooch",
-   "nameZh": "",
+   "nameZh": "星形别针",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -39581,7 +39582,7 @@
   {
    "code": "09014",
    "name": "Gather Information",
-   "nameZh": "",
+   "nameZh": "收集信息",
    "type": "player-side-quest",
    "typeName": "Player Side Quest",
    "sphere": "neutral",
@@ -39617,7 +39618,7 @@
   {
    "code": "09015",
    "name": "Ranger of the North",
-   "nameZh": "",
+   "nameZh": "北方的游民",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "neutral",
@@ -39653,7 +39654,7 @@
   {
    "code": "22108",
    "name": "Gwaihir",
-   "nameZh": "",
+   "nameZh": "格怀希尔",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "tactics",
@@ -39689,7 +39690,7 @@
   {
    "code": "22109",
    "name": "Hobbit Archer",
-   "nameZh": "",
+   "nameZh": "霍比特人弓手",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -39725,7 +39726,7 @@
   {
    "code": "22110",
    "name": "Red Book of Westmarch",
-   "nameZh": "",
+   "nameZh": "西界红皮书",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -39761,7 +39762,7 @@
   {
    "code": "22111",
    "name": "Dale Messenger",
-   "nameZh": "",
+   "nameZh": "河谷邦信使",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -39797,7 +39798,7 @@
   {
    "code": "22112",
    "name": "Song of Healing",
-   "nameZh": "",
+   "nameZh": "治疗之歌",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -39833,7 +39834,7 @@
   {
    "code": "22113",
    "name": "Eagle Emissary",
-   "nameZh": "",
+   "nameZh": "大鹰特使",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -39869,7 +39870,7 @@
   {
    "code": "22114",
    "name": "Bilbo's Plan",
-   "nameZh": "",
+   "nameZh": "比尔博的计划",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -39905,7 +39906,7 @@
   {
    "code": "22115",
    "name": "Spare Pipe",
-   "nameZh": "",
+   "nameZh": "备用烟斗",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -39941,7 +39942,7 @@
   {
    "code": "22116",
    "name": "Smoke and Think",
-   "nameZh": "",
+   "nameZh": "边抽烟边思考",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -39977,7 +39978,7 @@
   {
    "code": "22117",
    "name": "Wilyador",
-   "nameZh": "",
+   "nameZh": "威尔雅多",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "neutral",
@@ -40013,7 +40014,7 @@
   {
    "code": "22134",
    "name": "Messenger of the King",
-   "nameZh": "",
+   "nameZh": "国王的信使",
    "type": "contract",
    "typeName": "Contract",
    "sphere": "neutral",
@@ -40049,7 +40050,7 @@
   {
    "code": "06134",
    "name": "Théoden",
-   "nameZh": "",
+   "nameZh": "希奥顿",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "tactics",
@@ -40085,7 +40086,7 @@
   {
    "code": "06135",
    "name": "Pelargir Ship Captain",
-   "nameZh": "",
+   "nameZh": "佩拉基尔船长",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -40127,7 +40128,7 @@
   {
    "code": "06136",
    "name": "Visionary Leadership",
-   "nameZh": "",
+   "nameZh": "远见卓识",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -40169,7 +40170,7 @@
   {
    "code": "06137",
    "name": "Spear of the Mark",
-   "nameZh": "",
+   "nameZh": "马克的长矛",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -40211,7 +40212,7 @@
   {
    "code": "06138",
    "name": "Forth Eorlingas!",
-   "nameZh": "",
+   "nameZh": "埃奥尔一族，勇往直前！",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -40253,7 +40254,7 @@
   {
    "code": "06139",
    "name": "Steed of the Mark",
-   "nameZh": "",
+   "nameZh": "马克的坐骑",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -40295,7 +40296,7 @@
   {
    "code": "06140",
    "name": "Lay of Nimrodel",
-   "nameZh": "",
+   "nameZh": "宁洛德尔之谣",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -40331,7 +40332,7 @@
   {
    "code": "06141",
    "name": "Ered Nimrais Prospector",
-   "nameZh": "",
+   "nameZh": "埃瑞德宁莱斯勘探者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -40373,7 +40374,7 @@
   {
    "code": "06142",
    "name": "Scroll of Isildur",
-   "nameZh": "",
+   "nameZh": "伊熙尔杜卷轴",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -40409,7 +40410,7 @@
   {
    "code": "06143",
    "name": "Hidden Cache",
-   "nameZh": "",
+   "nameZh": "隐秘的珍宝",
    "type": "event",
    "typeName": "Event",
    "sphere": "neutral",
@@ -40451,7 +40452,7 @@
   {
    "code": "505001",
    "name": "Silver Belt",
-   "nameZh": "",
+   "nameZh": "银色腰带",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -40487,7 +40488,7 @@
   {
    "code": "505002",
    "name": "Phial of Galadriel",
-   "nameZh": "",
+   "nameZh": "加拉德瑞尔的水晶瓶",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -40523,7 +40524,7 @@
   {
    "code": "505003",
    "name": "Golden Hair",
-   "nameZh": "",
+   "nameZh": "金色的发丝",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -40559,7 +40560,7 @@
   {
    "code": "505004",
    "name": "Sword-sheath",
-   "nameZh": "",
+   "nameZh": "剑鞘",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -40595,7 +40596,7 @@
   {
    "code": "505009",
    "name": "Ring-bound Soldiers",
-   "nameZh": "",
+   "nameZh": "锁甲兵",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -40631,7 +40632,7 @@
   {
    "code": "505010",
    "name": "Chance Meeting",
-   "nameZh": "",
+   "nameZh": "偶遇",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -40667,7 +40668,7 @@
   {
    "code": "505011",
    "name": "Drop of Miruvor",
-   "nameZh": "",
+   "nameZh": "一滴米茹沃",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -40703,7 +40704,7 @@
   {
    "code": "505012",
    "name": "Mallorn Bow",
-   "nameZh": "",
+   "nameZh": "瑁珑弓",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -40739,7 +40740,7 @@
   {
    "code": "505013",
    "name": "The Lady's Favor",
-   "nameZh": "",
+   "nameZh": "夫人的看重",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -40775,7 +40776,7 @@
   {
    "code": "505014",
    "name": "A New Alliance",
-   "nameZh": "",
+   "nameZh": "新的联盟",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -40811,7 +40812,7 @@
   {
    "code": "505015",
    "name": "Flask of Miruvor",
-   "nameZh": "",
+   "nameZh": "一瓶米茹沃",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -40883,7 +40884,7 @@
   {
    "code": "505017",
    "name": "The Will of Ilúvatar",
-   "nameZh": "",
+   "nameZh": "伊露维塔的意志",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -40919,7 +40920,7 @@
   {
    "code": "505018",
    "name": "Word of Healing",
-   "nameZh": "",
+   "nameZh": "治疗之语",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -40991,7 +40992,7 @@
   {
    "code": "501053",
    "name": "At the End of All Things",
-   "nameZh": "",
+   "nameZh": "万事终结之际",
    "type": "contract",
    "typeName": "Contract",
    "sphere": "neutral",
@@ -41063,7 +41064,7 @@
   {
    "code": "142001",
    "name": "Frodo Baggins",
-   "nameZh": "",
+   "nameZh": "弗罗多·巴金斯",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "fellowship",
@@ -41099,7 +41100,7 @@
   {
    "code": "142002",
    "name": "Gandalf",
-   "nameZh": "",
+   "nameZh": "甘道夫",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "neutral",
@@ -41135,7 +41136,7 @@
   {
    "code": "142003",
    "name": "Galadriel",
-   "nameZh": "",
+   "nameZh": "加拉德瑞尔",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -41177,7 +41178,7 @@
   {
    "code": "142004",
    "name": "Boromir",
-   "nameZh": "",
+   "nameZh": "波洛米尔",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -41213,7 +41214,7 @@
   {
    "code": "142005",
    "name": "Elrond",
-   "nameZh": "",
+   "nameZh": "埃尔隆德",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -41255,7 +41256,7 @@
   {
    "code": "142006",
    "name": "Bilbo Baggins",
-   "nameZh": "",
+   "nameZh": "比尔博·巴金斯",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -41291,7 +41292,7 @@
   {
    "code": "142007",
    "name": "Flame of Anor",
-   "nameZh": "",
+   "nameZh": "阿诺尔之火",
    "type": "event",
    "typeName": "Event",
    "sphere": "neutral",
@@ -41327,7 +41328,7 @@
   {
    "code": "142008",
    "name": "Gandalf's Staff",
-   "nameZh": "",
+   "nameZh": "甘道夫的手杖",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -41363,7 +41364,7 @@
   {
    "code": "142009",
    "name": "Wizard Pipe",
-   "nameZh": "",
+   "nameZh": "巫师烟斗",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -41399,7 +41400,7 @@
   {
    "code": "142010",
    "name": "Fellowship of the Ring",
-   "nameZh": "",
+   "nameZh": "魔戒同盟",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "fellowship",
@@ -41435,7 +41436,7 @@
   {
    "code": "142011",
    "name": "Sting",
-   "nameZh": "",
+   "nameZh": "刺叮剑",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -41471,7 +41472,7 @@
   {
    "code": "142012",
    "name": "Mithril Shirt",
-   "nameZh": "",
+   "nameZh": "秘银衫",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -41507,7 +41508,7 @@
   {
    "code": "142013",
    "name": "Glamdring",
-   "nameZh": "",
+   "nameZh": "格拉姆德凛",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -41543,7 +41544,7 @@
   {
    "code": "142014",
    "name": "Andúril",
-   "nameZh": "",
+   "nameZh": "安督利尔",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -41579,7 +41580,7 @@
   {
    "code": "142015",
    "name": "Phial of Galadriel",
-   "nameZh": "",
+   "nameZh": "加拉德瑞尔的水晶瓶",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -41615,7 +41616,7 @@
   {
    "code": "142016",
    "name": "Three Golden Hairs",
-   "nameZh": "",
+   "nameZh": "三根金发",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -41651,7 +41652,7 @@
   {
    "code": "142017",
    "name": "Lórien Rope",
-   "nameZh": "",
+   "nameZh": "罗瑞安的绳索",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -41687,7 +41688,7 @@
   {
    "code": "142018",
    "name": "Leaf-wrapped Lembas",
-   "nameZh": "",
+   "nameZh": "绿叶包裹的兰巴斯",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -41975,7 +41976,7 @@
   {
    "code": "04001",
    "name": "Elrohir",
-   "nameZh": "",
+   "nameZh": "埃洛希尔",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "leadership",
@@ -42011,7 +42012,7 @@
   {
    "code": "04002",
    "name": "Taking Initiative",
-   "nameZh": "",
+   "nameZh": "采取主动",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -42047,7 +42048,7 @@
   {
    "code": "04003",
    "name": "Timely Aid",
-   "nameZh": "",
+   "nameZh": "及时的援助",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -42083,7 +42084,7 @@
   {
    "code": "04004",
    "name": "Unseen Strike",
-   "nameZh": "",
+   "nameZh": "无影之击",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -42119,7 +42120,7 @@
   {
    "code": "04005",
    "name": "Keeping Count",
-   "nameZh": "",
+   "nameZh": "持续击杀",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -42155,7 +42156,7 @@
   {
    "code": "04006",
    "name": "Bofur",
-   "nameZh": "",
+   "nameZh": "波弗",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -42197,7 +42198,7 @@
   {
    "code": "04007",
    "name": "Renewed Friendship",
-   "nameZh": "",
+   "nameZh": "重拾的友谊",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -42233,7 +42234,7 @@
   {
    "code": "04008",
    "name": "Ravenhill Scout",
-   "nameZh": "",
+   "nameZh": "渡鸦岭斥候",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -42269,7 +42270,7 @@
   {
    "code": "04009",
    "name": "Needful to Know",
-   "nameZh": "",
+   "nameZh": "必要信息",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -42305,7 +42306,7 @@
   {
    "code": "04010",
    "name": "Good Meal",
-   "nameZh": "",
+   "nameZh": "美味的餐食",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -42341,7 +42342,7 @@
   {
    "code": "06001",
    "name": "Hirluin the Fair",
-   "nameZh": "",
+   "nameZh": "白肤希尔路因",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "leadership",
@@ -42377,7 +42378,7 @@
   {
    "code": "06002",
    "name": "Warrior of Lossarnach",
-   "nameZh": "",
+   "nameZh": "洛斯阿尔那赫战士",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -42413,7 +42414,7 @@
   {
    "code": "06003",
    "name": "Gaining Strength",
-   "nameZh": "",
+   "nameZh": "聚集力量",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -42449,7 +42450,7 @@
   {
    "code": "06004",
    "name": "Knights of the Swan",
-   "nameZh": "",
+   "nameZh": "天鹅骑士",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -42485,7 +42486,7 @@
   {
    "code": "06005",
    "name": "Gondorian Shield",
-   "nameZh": "",
+   "nameZh": "刚铎盾",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -42527,7 +42528,7 @@
   {
    "code": "06006",
    "name": "Ethir Swordsman",
-   "nameZh": "",
+   "nameZh": "埃希尔剑士",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -42563,7 +42564,7 @@
   {
    "code": "06007",
    "name": "Ring of Barahir",
-   "nameZh": "",
+   "nameZh": "巴拉西尔之戒",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -42599,7 +42600,7 @@
   {
    "code": "06008",
    "name": "Anfalas Herdsman",
-   "nameZh": "",
+   "nameZh": "安法拉斯牧民",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -42635,7 +42636,7 @@
   {
    "code": "06009",
    "name": "Mithrandir's Advice",
-   "nameZh": "",
+   "nameZh": "米斯兰迪尔的提议",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -42671,7 +42672,7 @@
   {
    "code": "06010",
    "name": "A Good Harvest",
-   "nameZh": "",
+   "nameZh": "丰收",
    "type": "event",
    "typeName": "Event",
    "sphere": "neutral",
@@ -42707,7 +42708,7 @@
   {
    "code": "307001",
    "name": "Elena",
-   "nameZh": "",
+   "nameZh": "埃伦娜",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "leadership",
@@ -42743,7 +42744,7 @@
   {
    "code": "307002",
    "name": "Tom Bombadil",
-   "nameZh": "",
+   "nameZh": "汤姆·邦巴迪尔",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "lore",
@@ -42779,7 +42780,7 @@
   {
    "code": "307003",
    "name": "Goldberry",
-   "nameZh": "",
+   "nameZh": "金莓",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "spirit",
@@ -42815,7 +42816,7 @@
   {
    "code": "307004",
    "name": "Lobelia Sackville-Baggins",
-   "nameZh": "",
+   "nameZh": "洛比莉亚·萨克维尔-巴金斯",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "tactics",
@@ -42851,7 +42852,7 @@
   {
    "code": "307005",
    "name": "An Unexpected Party",
-   "nameZh": "",
+   "nameZh": "不速之客",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -42887,7 +42888,7 @@
   {
    "code": "307006",
    "name": "Song of Slumber",
-   "nameZh": "",
+   "nameZh": "沉睡之歌",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -42923,7 +42924,7 @@
   {
    "code": "307007",
    "name": "Songs of Slaying",
-   "nameZh": "",
+   "nameZh": "杀伐之歌",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -42959,7 +42960,7 @@
   {
    "code": "307008",
    "name": "Wooden Lyre",
-   "nameZh": "",
+   "nameZh": "木制里拉琴",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -42995,7 +42996,7 @@
   {
    "code": "307009",
    "name": "Bilbo Baggins",
-   "nameZh": "",
+   "nameZh": "比尔博·巴金斯",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -43031,7 +43032,7 @@
   {
    "code": "307010",
    "name": "Hey Dol! Merry Dol!",
-   "nameZh": "",
+   "nameZh": "嘿嘿咚！欢乐咚！",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -43067,7 +43068,7 @@
   {
    "code": "307011",
    "name": "Fatty Lumpkin",
-   "nameZh": "",
+   "nameZh": "胖墩儿",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -43103,7 +43104,7 @@
   {
    "code": "307012",
    "name": "Bronze Bell",
-   "nameZh": "",
+   "nameZh": "铜钟",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -43139,7 +43140,7 @@
   {
    "code": "307013",
    "name": "Daughter of Withywindle",
-   "nameZh": "",
+   "nameZh": "柳条河之女",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -43175,7 +43176,7 @@
   {
    "code": "307014",
    "name": "Frodo Baggins",
-   "nameZh": "",
+   "nameZh": "弗罗多·巴金斯",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -43211,7 +43212,7 @@
   {
    "code": "307015",
    "name": "Bilbo's Walking Song",
-   "nameZh": "",
+   "nameZh": "比尔博的行路歌",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -43247,7 +43248,7 @@
   {
    "code": "307016",
    "name": "Let Us Sing Together",
-   "nameZh": "",
+   "nameZh": "大家一起唱",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -43283,7 +43284,7 @@
   {
    "code": "307017",
    "name": "Lamenter of the Lost",
-   "nameZh": "",
+   "nameZh": "失落的哀悼者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -43319,7 +43320,7 @@
   {
    "code": "307018",
    "name": "Bilbo's Spoons",
-   "nameZh": "",
+   "nameZh": "比尔博的勺子",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -43355,7 +43356,7 @@
   {
    "code": "307019",
    "name": "A Burglar Indeed!",
-   "nameZh": "",
+   "nameZh": "真正的飞贼！",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -43391,7 +43392,7 @@
   {
    "code": "307020",
    "name": "Golden Horn",
-   "nameZh": "",
+   "nameZh": "金色的号角",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -43427,7 +43428,7 @@
   {
    "code": "307021",
    "name": "Keep It Secret",
-   "nameZh": "",
+   "nameZh": "将它秘藏",
    "type": "player-objective",
    "typeName": "Player Objective",
    "sphere": "neutral",
@@ -43463,7 +43464,7 @@
   {
    "code": "307022",
    "name": "The Riddle-game",
-   "nameZh": "",
+   "nameZh": "猜谜游戏",
    "type": "contract",
    "typeName": "Contract",
    "sphere": "neutral",
@@ -43499,7 +43500,7 @@
   {
    "code": "307023",
    "name": "Hungry Creature",
-   "nameZh": "",
+   "nameZh": "饥饿的生物",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -43535,7 +43536,7 @@
   {
    "code": "502993",
    "name": "Brand son of Bain",
-   "nameZh": "",
+   "nameZh": "巴因之子布兰德",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "tactics",
@@ -43571,7 +43572,7 @@
   {
    "code": "16001",
    "name": "Gimli",
-   "nameZh": "",
+   "nameZh": "吉姆利",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "leadership",
@@ -43607,7 +43608,7 @@
   {
    "code": "16002",
    "name": "Legolas",
-   "nameZh": "",
+   "nameZh": "莱戈拉斯",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "spirit",
@@ -43643,7 +43644,7 @@
   {
    "code": "16003",
    "name": "Greenwood Archer",
-   "nameZh": "",
+   "nameZh": "绿林弓手",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -43685,7 +43686,7 @@
   {
    "code": "16004",
    "name": "Erebor Guard",
-   "nameZh": "",
+   "nameZh": "埃瑞博禁卫",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -43727,7 +43728,7 @@
   {
    "code": "16005",
    "name": "Halfling Bounder",
-   "nameZh": "",
+   "nameZh": "半身人边界守卫",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -43763,7 +43764,7 @@
   {
    "code": "16006",
    "name": "Vigilant Dúnadan",
-   "nameZh": "",
+   "nameZh": "警惕的杜内丹人",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -43799,7 +43800,7 @@
   {
    "code": "16007",
    "name": "Unlikely Friendship",
-   "nameZh": "",
+   "nameZh": "非比寻常的友谊",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -43835,7 +43836,7 @@
   {
    "code": "16008",
    "name": "Well Warned",
-   "nameZh": "",
+   "nameZh": "获得警讯",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -43871,7 +43872,7 @@
   {
    "code": "16009",
    "name": "Dour Handed",
-   "nameZh": "",
+   "nameZh": "死到临头",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -43907,7 +43908,7 @@
   {
    "code": "16010",
    "name": "Dwarven Shield",
-   "nameZh": "",
+   "nameZh": "矮人盾",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -43943,7 +43944,7 @@
   {
    "code": "16011",
    "name": "Mirkwood Long-knife",
-   "nameZh": "",
+   "nameZh": "黑森林长刀",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -43979,7 +43980,7 @@
   {
    "code": "16012",
    "name": "The Road Goes Ever On",
-   "nameZh": "",
+   "nameZh": "旅途永不绝",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -44015,7 +44016,7 @@
   {
    "code": "16013",
    "name": "The Storm Comes",
-   "nameZh": "",
+   "nameZh": "风暴将至",
    "type": "player-side-quest",
    "typeName": "Player Side Quest",
    "sphere": "neutral",
@@ -44051,7 +44052,7 @@
   {
    "code": "500006",
    "name": "Frodo Baggins",
-   "nameZh": "",
+   "nameZh": "弗罗多·巴金斯",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "fellowship",
@@ -44267,7 +44268,7 @@
   {
    "code": "08025",
    "name": "Idraen",
-   "nameZh": "",
+   "nameZh": "伊德拉恩",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "spirit",
@@ -44303,7 +44304,7 @@
   {
    "code": "08026",
    "name": "Rivendell Scout",
-   "nameZh": "",
+   "nameZh": "幽谷斥候",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -44339,7 +44340,7 @@
   {
    "code": "08027",
    "name": "Feigned Voices",
-   "nameZh": "",
+   "nameZh": "诱敌之声",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -44387,7 +44388,7 @@
   {
    "code": "08028",
    "name": "Rúmil",
-   "nameZh": "",
+   "nameZh": "儒米尔",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -44429,7 +44430,7 @@
   {
    "code": "08029",
    "name": "Elven Mail",
-   "nameZh": "",
+   "nameZh": "精灵锁甲",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -44465,7 +44466,7 @@
   {
    "code": "08030",
    "name": "Greyflood Wanderer",
-   "nameZh": "",
+   "nameZh": "灰水河漫游者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -44501,7 +44502,7 @@
   {
    "code": "08031",
    "name": "Warden of Arnor",
-   "nameZh": "",
+   "nameZh": "阿尔诺看守者",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -44537,7 +44538,7 @@
   {
    "code": "08032",
    "name": "Message from Elrond",
-   "nameZh": "",
+   "nameZh": "埃尔隆德的来信",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -44573,7 +44574,7 @@
   {
    "code": "08033",
    "name": "Noiseless Movement",
-   "nameZh": "",
+   "nameZh": "无声的移动",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -44609,7 +44610,7 @@
   {
    "code": "08034",
    "name": "Leaf Brooch",
-   "nameZh": "",
+   "nameZh": "绿叶胸针",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -44645,7 +44646,7 @@
   {
    "code": "19001",
    "name": "Grimbeorn the Old",
-   "nameZh": "",
+   "nameZh": "老格里姆贝奥恩",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "tactics",
@@ -44681,7 +44682,7 @@
   {
    "code": "19002",
    "name": "Guardian of Esgaroth",
-   "nameZh": "",
+   "nameZh": "埃斯加洛斯守卫",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -44717,7 +44718,7 @@
   {
    "code": "19003",
    "name": "Squire's Helm",
-   "nameZh": "",
+   "nameZh": "侍从头盔",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -44753,7 +44754,7 @@
   {
    "code": "19006",
    "name": "Woodmen's Clearing",
-   "nameZh": "",
+   "nameZh": "林中空地",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -44789,7 +44790,7 @@
   {
    "code": "19007",
    "name": "The Hidden Way",
-   "nameZh": "",
+   "nameZh": "隐蔽的小路",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -44825,7 +44826,7 @@
   {
    "code": "19004",
    "name": "Beorning Skin-changer",
-   "nameZh": "",
+   "nameZh": "贝奥恩一族换皮人",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -44861,7 +44862,7 @@
   {
    "code": "19005",
    "name": "Beorn's Rage",
-   "nameZh": "",
+   "nameZh": "贝奥恩之怒",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -44897,7 +44898,7 @@
   {
    "code": "19008",
    "name": "Long Lake Fisherman",
-   "nameZh": "",
+   "nameZh": "长湖渔夫",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -44933,7 +44934,7 @@
   {
    "code": "19009",
    "name": "Grey Cloak",
-   "nameZh": "",
+   "nameZh": "灰斗篷",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -44969,7 +44970,7 @@
   {
    "code": "19010",
    "name": "The Arkenstone",
-   "nameZh": "",
+   "nameZh": "阿肯宝钻",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -45005,7 +45006,7 @@
   {
    "code": "18001",
    "name": "Brand son of Bain",
-   "nameZh": "",
+   "nameZh": "巴因之子布兰德",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "leadership",
@@ -45041,7 +45042,7 @@
   {
    "code": "18002",
    "name": "Bard son of Brand",
-   "nameZh": "",
+   "nameZh": "布兰德之子巴德",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "spirit",
@@ -45077,7 +45078,7 @@
   {
    "code": "18003",
    "name": "Redwater Sentry",
-   "nameZh": "",
+   "nameZh": "红水河哨兵",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -45113,7 +45114,7 @@
   {
    "code": "18004",
    "name": "North Realm Lookout",
-   "nameZh": "",
+   "nameZh": "北方王国守望者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -45149,7 +45150,7 @@
   {
    "code": "18005",
    "name": "Warrior of Dale",
-   "nameZh": "",
+   "nameZh": "河谷邦战士",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -45185,7 +45186,7 @@
   {
    "code": "18006",
    "name": "Long Lake Trader",
-   "nameZh": "",
+   "nameZh": "长湖商人",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -45221,7 +45222,7 @@
   {
    "code": "18007",
    "name": "Hauberk of Mail",
-   "nameZh": "",
+   "nameZh": "锁子甲",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -45257,7 +45258,7 @@
   {
    "code": "18008",
    "name": "King of Dale",
-   "nameZh": "",
+   "nameZh": "河谷邦之王",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -45293,7 +45294,7 @@
   {
    "code": "18009",
    "name": "Bow of Yew",
-   "nameZh": "",
+   "nameZh": "紫衫木弓",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -45329,7 +45330,7 @@
   {
    "code": "18010",
    "name": "Map of Rhovanion",
-   "nameZh": "",
+   "nameZh": "罗瓦尼安地图",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -45365,7 +45366,7 @@
   {
    "code": "18011",
    "name": "Necklace of Girion",
-   "nameZh": "",
+   "nameZh": "吉瑞安的项链",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -45401,7 +45402,7 @@
   {
    "code": "18012",
    "name": "Traffic from Dale",
-   "nameZh": "",
+   "nameZh": "河谷邦的物流",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -45437,7 +45438,7 @@
   {
    "code": "18013",
    "name": "To Arms!",
-   "nameZh": "",
+   "nameZh": "拿起武器！",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -45473,7 +45474,7 @@
   {
    "code": "18014",
    "name": "Valour of the North",
-   "nameZh": "",
+   "nameZh": "北方的英勇",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -45509,7 +45510,7 @@
   {
    "code": "18015",
    "name": "Bartering",
-   "nameZh": "",
+   "nameZh": "以货易货",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -45545,7 +45546,7 @@
   {
    "code": "08056",
    "name": "Haldir of Lórien",
-   "nameZh": "",
+   "nameZh": "罗瑞恩的哈尔迪尔",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "lore",
@@ -45587,7 +45588,7 @@
   {
    "code": "08057",
    "name": "Herald of Anórien",
-   "nameZh": "",
+   "nameZh": "阿诺瑞恩传令官",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -45623,7 +45624,7 @@
   {
    "code": "08058",
    "name": "O Lórien!",
-   "nameZh": "",
+   "nameZh": "啊，罗瑞恩！",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -45665,7 +45666,7 @@
   {
    "code": "08059",
    "name": "Gwaihir",
-   "nameZh": "",
+   "nameZh": "格怀希尔",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -45701,7 +45702,7 @@
   {
    "code": "08060",
    "name": "Pursuing the Enemy",
-   "nameZh": "",
+   "nameZh": "追击敌人",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -45749,7 +45750,7 @@
   {
    "code": "08061",
    "name": "Courage Awakened",
-   "nameZh": "",
+   "nameZh": "苏醒的勇气",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -45785,7 +45786,7 @@
   {
    "code": "08062",
    "name": "Free to Choose",
-   "nameZh": "",
+   "nameZh": "命运选择",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -45821,7 +45822,7 @@
   {
    "code": "08063",
    "name": "Galadhrim Minstrel",
-   "nameZh": "",
+   "nameZh": "加拉兹吟游诗人",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -45869,7 +45870,7 @@
   {
    "code": "08064",
    "name": "Lembas",
-   "nameZh": "",
+   "nameZh": "兰巴斯",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -45917,7 +45918,7 @@
   {
    "code": "08065",
    "name": "Defender of the Naith",
-   "nameZh": "",
+   "nameZh": "耐斯防御者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "neutral",
@@ -45965,7 +45966,7 @@
   {
    "code": "12030",
    "name": "Lanwyn",
-   "nameZh": "",
+   "nameZh": "蓝温",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "spirit",
@@ -46001,7 +46002,7 @@
   {
    "code": "12031",
    "name": "Eldahir",
-   "nameZh": "",
+   "nameZh": "埃尔达希尔",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -46037,7 +46038,7 @@
   {
    "code": "12032",
    "name": "Captain's Wisdom",
-   "nameZh": "",
+   "nameZh": "统帅的智慧",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -46073,7 +46074,7 @@
   {
    "code": "12033",
    "name": "Master Ironsmith",
-   "nameZh": "",
+   "nameZh": "铁匠大师",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -46109,7 +46110,7 @@
   {
    "code": "12034",
    "name": "Raiment of War",
-   "nameZh": "",
+   "nameZh": "战争装备",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -46145,7 +46146,7 @@
   {
    "code": "12035",
    "name": "Sam Gamgee",
-   "nameZh": "",
+   "nameZh": "山姆·甘姆吉",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -46181,7 +46182,7 @@
   {
    "code": "12036",
    "name": "Elevenses",
-   "nameZh": "",
+   "nameZh": "午餐时间",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -46217,7 +46218,7 @@
   {
    "code": "12037",
    "name": "Mirkwood Explorer",
-   "nameZh": "",
+   "nameZh": "黑森林探索者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -46253,7 +46254,7 @@
   {
    "code": "12038",
    "name": "Guarded Ceaselessly",
-   "nameZh": "",
+   "nameZh": "保持监视",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -46289,7 +46290,7 @@
   {
    "code": "10084",
    "name": "Erestor",
-   "nameZh": "",
+   "nameZh": "埃瑞斯托",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "lore",
@@ -46325,7 +46326,7 @@
   {
    "code": "10085",
    "name": "Reinforcements",
-   "nameZh": "",
+   "nameZh": "增援",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -46361,7 +46362,7 @@
   {
    "code": "10086",
    "name": "Send for Aid",
-   "nameZh": "",
+   "nameZh": "请求援助",
    "type": "player-side-quest",
    "typeName": "Player Side Quest",
    "sphere": "leadership",
@@ -46397,7 +46398,7 @@
   {
    "code": "10087",
    "name": "Elven Spear",
-   "nameZh": "",
+   "nameZh": "精灵长矛",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -46433,7 +46434,7 @@
   {
    "code": "10088",
    "name": "Horn's Cry",
-   "nameZh": "",
+   "nameZh": "震耳的号角声",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -46469,7 +46470,7 @@
   {
    "code": "10089",
    "name": "Galadhrim Weaver",
-   "nameZh": "",
+   "nameZh": "加拉兹编织者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -46505,7 +46506,7 @@
   {
    "code": "10090",
    "name": "Silver Harp",
-   "nameZh": "",
+   "nameZh": "银色的竖琴",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -46541,7 +46542,7 @@
   {
    "code": "10091",
    "name": "Galdor of the Havens",
-   "nameZh": "",
+   "nameZh": "灰港的加尔多",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -46577,7 +46578,7 @@
   {
    "code": "10092",
    "name": "The Door is Closed!",
-   "nameZh": "",
+   "nameZh": "休想得逞！",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -46613,7 +46614,7 @@
   {
    "code": "10093",
    "name": "Elf-friend",
-   "nameZh": "",
+   "nameZh": "精灵之友",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -46649,7 +46650,7 @@
   {
    "code": "143001",
    "name": "Aragorn",
-   "nameZh": "",
+   "nameZh": "阿拉贡",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "fellowship",
@@ -46685,7 +46686,7 @@
   {
    "code": "143002",
    "name": "Théoden",
-   "nameZh": "",
+   "nameZh": "希奥顿",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "spirit",
@@ -46721,7 +46722,7 @@
   {
    "code": "143003",
    "name": "Treebeard",
-   "nameZh": "",
+   "nameZh": "树须",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "lore",
@@ -46757,7 +46758,7 @@
   {
    "code": "143004",
    "name": "Gimli",
-   "nameZh": "",
+   "nameZh": "吉姆利",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -46799,7 +46800,7 @@
   {
    "code": "143005",
    "name": "Legolas",
-   "nameZh": "",
+   "nameZh": "莱戈拉斯",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -46841,7 +46842,7 @@
   {
    "code": "143006",
    "name": "Quickbeam",
-   "nameZh": "",
+   "nameZh": "急楸",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -46877,7 +46878,7 @@
   {
    "code": "143007",
    "name": "Háma",
-   "nameZh": "",
+   "nameZh": "哈马",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -46913,7 +46914,7 @@
   {
    "code": "143008",
    "name": "Arod",
-   "nameZh": "",
+   "nameZh": "阿罗德",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -46949,7 +46950,7 @@
   {
    "code": "143009",
    "name": "Ent Draught",
-   "nameZh": "",
+   "nameZh": "恩特饮料",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -46985,7 +46986,7 @@
   {
    "code": "143010",
    "name": "Herugrim",
-   "nameZh": "",
+   "nameZh": "赫鲁格林",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -47021,7 +47022,7 @@
   {
    "code": "143011",
    "name": "Entmoot",
-   "nameZh": "",
+   "nameZh": "恩特集会",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -47057,7 +47058,7 @@
   {
    "code": "143012",
    "name": "Helm! Helm!",
-   "nameZh": "",
+   "nameZh": "海尔姆！海尔姆！",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -47093,7 +47094,7 @@
   {
    "code": "143013",
    "name": "The Three Hunters",
-   "nameZh": "",
+   "nameZh": "三位猎手",
    "type": "event",
    "typeName": "Event",
    "sphere": "fellowship",
@@ -47129,7 +47130,7 @@
   {
    "code": "143014",
    "name": "Shadowfax",
-   "nameZh": "",
+   "nameZh": "捷影",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -47201,7 +47202,7 @@
   {
    "code": "143016",
    "name": "Hands of a Healer",
-   "nameZh": "",
+   "nameZh": "医者之手",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -47345,7 +47346,7 @@
   {
    "code": "143020",
    "name": "Palantír of Orthanc",
-   "nameZh": "",
+   "nameZh": "欧尔桑克的帕蓝提尔",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -47453,7 +47454,7 @@
   {
    "code": "12057",
    "name": "Elfhelm",
-   "nameZh": "",
+   "nameZh": "埃尔夫海尔姆",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "leadership",
@@ -47489,7 +47490,7 @@
   {
    "code": "12058",
    "name": "Ceorl",
-   "nameZh": "",
+   "nameZh": "克奥尔",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -47525,7 +47526,7 @@
   {
    "code": "12059",
    "name": "Armored Destrier",
-   "nameZh": "",
+   "nameZh": "装甲军马",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -47561,7 +47562,7 @@
   {
    "code": "12060",
    "name": "Déorwine",
-   "nameZh": "",
+   "nameZh": "狄奥威奈",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -47597,7 +47598,7 @@
   {
    "code": "12061",
    "name": "Revealed in Wrath",
-   "nameZh": "",
+   "nameZh": "盛怒现身",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -47633,7 +47634,7 @@
   {
    "code": "12062",
    "name": "Rhovanion Outrider",
-   "nameZh": "",
+   "nameZh": "罗瓦尼安先驱者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -47669,7 +47670,7 @@
   {
    "code": "12063",
    "name": "Scouting Party",
-   "nameZh": "",
+   "nameZh": "斥候小队",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -47705,7 +47706,7 @@
   {
    "code": "12064",
    "name": "Entangling Nets",
-   "nameZh": "",
+   "nameZh": "纠缠之网",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -47741,7 +47742,7 @@
   {
    "code": "12065",
    "name": "Arrows from the Trees",
-   "nameZh": "",
+   "nameZh": "林中暗箭",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -47777,7 +47778,7 @@
   {
    "code": "12066",
    "name": "Ered Luin Miner",
-   "nameZh": "",
+   "nameZh": "埃瑞德路因矿工",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "neutral",
@@ -47819,7 +47820,7 @@
   {
    "code": "22082",
    "name": "Wandering Exile",
-   "nameZh": "",
+   "nameZh": "漫游的流亡者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -47855,7 +47856,7 @@
   {
    "code": "22083",
    "name": "Valiant Sword",
-   "nameZh": "",
+   "nameZh": "豪勇之剑",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -47897,7 +47898,7 @@
   {
    "code": "22084",
    "name": "Stone of Elostirion",
-   "nameZh": "",
+   "nameZh": "埃洛斯提力安之石",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -47933,7 +47934,7 @@
   {
    "code": "22085",
    "name": "Well Preserved",
-   "nameZh": "",
+   "nameZh": "保养有道",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -47969,7 +47970,7 @@
   {
    "code": "22086",
    "name": "Northern Bowmaster",
-   "nameZh": "",
+   "nameZh": "北方的神射手",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -48005,7 +48006,7 @@
   {
    "code": "22087",
    "name": "Reckless Attack",
-   "nameZh": "",
+   "nameZh": "鲁莽攻击",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -48041,7 +48042,7 @@
   {
    "code": "22088",
    "name": "Odo Proudfoot",
-   "nameZh": "",
+   "nameZh": "奥多·傲足",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -48077,7 +48078,7 @@
   {
    "code": "22089",
    "name": "Defiant Challenge",
-   "nameZh": "",
+   "nameZh": "力挽狂澜",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -48113,7 +48114,7 @@
   {
    "code": "22090",
    "name": "Helm of Secrecy",
-   "nameZh": "",
+   "nameZh": "摘下头盔",
    "type": "event",
    "typeName": "Event",
    "sphere": "neutral",
@@ -48155,7 +48156,7 @@
   {
    "code": "22091",
    "name": "Council of the Wise",
-   "nameZh": "",
+   "nameZh": "智者议会",
    "type": "contract",
    "typeName": "Contract",
    "sphere": "neutral",
@@ -48191,7 +48192,7 @@
   {
    "code": "07001",
    "name": "Éomer",
-   "nameZh": "",
+   "nameZh": "伊奥梅尔",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "tactics",
@@ -48233,7 +48234,7 @@
   {
    "code": "07002",
    "name": "Gríma",
-   "nameZh": "",
+   "nameZh": "格里马",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "lore",
@@ -48269,7 +48270,7 @@
   {
    "code": "07003",
    "name": "Saruman",
-   "nameZh": "",
+   "nameZh": "萨茹曼",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "neutral",
@@ -48305,7 +48306,7 @@
   {
    "code": "07004",
    "name": "Orthanc Guard",
-   "nameZh": "",
+   "nameZh": "欧尔桑克禁卫",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -48341,7 +48342,7 @@
   {
    "code": "07005",
    "name": "Isengard Messenger",
-   "nameZh": "",
+   "nameZh": "艾森加德信使",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -48377,7 +48378,7 @@
   {
    "code": "07006",
    "name": "Westfold Outrider",
-   "nameZh": "",
+   "nameZh": "西伏尔德先驱者",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -48419,7 +48420,7 @@
   {
    "code": "07007",
    "name": "Westfold Horse-breeder",
-   "nameZh": "",
+   "nameZh": "西伏尔德饲马师",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -48461,7 +48462,7 @@
   {
    "code": "07008",
    "name": "Rohan Warhorse",
-   "nameZh": "",
+   "nameZh": "洛汗战马",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -48503,7 +48504,7 @@
   {
    "code": "07009",
    "name": "Silver Lamp",
-   "nameZh": "",
+   "nameZh": "银灯",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -48539,7 +48540,7 @@
   {
    "code": "07010",
    "name": "Keys of Orthanc",
-   "nameZh": "",
+   "nameZh": "欧尔桑克钥匙",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -48575,7 +48576,7 @@
   {
    "code": "07011",
    "name": "Legacy of Númenor",
-   "nameZh": "",
+   "nameZh": "努门诺尔的遗产",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -48611,7 +48612,7 @@
   {
    "code": "07012",
    "name": "Deep Knowledge",
-   "nameZh": "",
+   "nameZh": "深层知识",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -48647,7 +48648,7 @@
   {
    "code": "07013",
    "name": "The Wizards's Voice",
-   "nameZh": "",
+   "nameZh": "巫师的声音",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -48683,7 +48684,7 @@
   {
    "code": "07014",
    "name": "Power of Orthanc",
-   "nameZh": "",
+   "nameZh": "欧尔桑克的力量",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -48719,7 +48720,7 @@
   {
    "code": "07015",
    "name": "The Seeing-stone",
-   "nameZh": "",
+   "nameZh": "真知晶石",
    "type": "event",
    "typeName": "Event",
    "sphere": "neutral",
@@ -48755,7 +48756,7 @@
   {
    "code": "22002",
    "name": "Soldier of Gondor",
-   "nameZh": "",
+   "nameZh": "刚铎士兵",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -48797,7 +48798,7 @@
   {
    "code": "22003",
    "name": "Pillars of the Kings",
-   "nameZh": "",
+   "nameZh": "王者双柱",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -48839,7 +48840,7 @@
   {
    "code": "22004",
    "name": "Cautious Halfling",
-   "nameZh": "",
+   "nameZh": "谨慎的半身人",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -48875,7 +48876,7 @@
   {
    "code": "22005",
    "name": "Tom Bombadillo!",
-   "nameZh": "",
+   "nameZh": "汤姆·邦巴迪尔！",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -48911,7 +48912,7 @@
   {
    "code": "22006",
    "name": "Durin's Axe",
-   "nameZh": "",
+   "nameZh": "都林之斧",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -48947,7 +48948,7 @@
   {
    "code": "22007",
    "name": "Charge into Battle",
-   "nameZh": "",
+   "nameZh": "冲进敌阵",
    "type": "event",
    "typeName": "Event",
    "sphere": "tactics",
@@ -48983,7 +48984,7 @@
   {
    "code": "22008",
    "name": "Silver Circlet",
-   "nameZh": "",
+   "nameZh": "银箍",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -49019,7 +49020,7 @@
   {
    "code": "22009",
    "name": "Inner Strength",
-   "nameZh": "",
+   "nameZh": "内在强大",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -49055,7 +49056,7 @@
   {
    "code": "22010",
    "name": "Tom Bombadil",
-   "nameZh": "",
+   "nameZh": "汤姆·邦巴迪尔",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "neutral",
@@ -49091,7 +49092,7 @@
   {
    "code": "22024",
    "name": "The Burglar's Turn",
-   "nameZh": "",
+   "nameZh": "轮到飞贼露一手了",
    "type": "contract",
    "typeName": "Contract",
    "sphere": "neutral",
@@ -49127,7 +49128,7 @@
   {
    "code": "04053",
    "name": "Aragorn",
-   "nameZh": "",
+   "nameZh": "阿拉贡",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "lore",
@@ -49163,7 +49164,7 @@
   {
    "code": "04054",
    "name": "Grave Cairn",
-   "nameZh": "",
+   "nameZh": "石冢",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -49199,7 +49200,7 @@
   {
    "code": "04055",
    "name": "Sword that was Broken",
-   "nameZh": "",
+   "nameZh": "断剑",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "leadership",
@@ -49235,7 +49236,7 @@
   {
    "code": "04056",
    "name": "Watcher of the Bruinen",
-   "nameZh": "",
+   "nameZh": "布茹伊能河哨兵",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -49271,7 +49272,7 @@
   {
    "code": "04057",
    "name": "Rivendell Bow",
-   "nameZh": "",
+   "nameZh": "幽谷弓",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -49307,7 +49308,7 @@
   {
    "code": "04058",
    "name": "Arwen Undómiel",
-   "nameZh": "",
+   "nameZh": "阿尔玟·乌多米尔",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -49349,7 +49350,7 @@
   {
    "code": "04059",
    "name": "Elrond's Counsel",
-   "nameZh": "",
+   "nameZh": "埃尔隆德的忠告",
    "type": "event",
    "typeName": "Event",
    "sphere": "spirit",
@@ -49391,7 +49392,7 @@
   {
    "code": "04060",
    "name": "Short Cut",
-   "nameZh": "",
+   "nameZh": "捷径",
    "type": "event",
    "typeName": "Event",
    "sphere": "lore",
@@ -49427,7 +49428,7 @@
   {
    "code": "04061",
    "name": "Legacy of Durin",
-   "nameZh": "",
+   "nameZh": "都林的遗产",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "lore",
@@ -49469,7 +49470,7 @@
   {
    "code": "04062",
    "name": "Resourceful",
-   "nameZh": "",
+   "nameZh": "资源丰富",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "neutral",
@@ -49505,7 +49506,7 @@
   {
    "code": "10001",
    "name": "Merry",
-   "nameZh": "",
+   "nameZh": "梅里",
    "type": "hero",
    "typeName": "Hero",
    "sphere": "spirit",
@@ -49541,7 +49542,7 @@
   {
    "code": "10002",
    "name": "Ingold",
-   "nameZh": "",
+   "nameZh": "英戈尔德",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "leadership",
@@ -49577,7 +49578,7 @@
   {
    "code": "10003",
    "name": "Rallying Cry",
-   "nameZh": "",
+   "nameZh": "集结号",
    "type": "event",
    "typeName": "Event",
    "sphere": "leadership",
@@ -49613,7 +49614,7 @@
   {
    "code": "10004",
    "name": "Honour Guard",
-   "nameZh": "",
+   "nameZh": "荣誉禁卫",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "tactics",
@@ -49649,7 +49650,7 @@
   {
    "code": "10005",
    "name": "Raven-winged Helm",
-   "nameZh": "",
+   "nameZh": "鸦翼头盔",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "tactics",
@@ -49685,7 +49686,7 @@
   {
    "code": "10006",
    "name": "Curious Brandybuck",
-   "nameZh": "",
+   "nameZh": "好奇的白兰地鹿",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "spirit",
@@ -49721,7 +49722,7 @@
   {
    "code": "10007",
    "name": "Hobbit Pony",
-   "nameZh": "",
+   "nameZh": "霍比特人小马",
    "type": "attachment",
    "typeName": "Attachment",
    "sphere": "spirit",
@@ -49757,7 +49758,7 @@
   {
    "code": "10008",
    "name": "East Road Ranger",
-   "nameZh": "",
+   "nameZh": "东大道游民",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "lore",
@@ -49793,7 +49794,7 @@
   {
    "code": "10009",
    "name": "Scout Ahead",
-   "nameZh": "",
+   "nameZh": "斥候在前",
    "type": "player-side-quest",
    "typeName": "Player Side Quest",
    "sphere": "lore",
@@ -49829,7 +49830,7 @@
   {
    "code": "10010",
    "name": "Ranger of Cardolan",
-   "nameZh": "",
+   "nameZh": "卡多蓝游民",
    "type": "ally",
    "typeName": "Ally",
    "sphere": "neutral",

@@ -4,7 +4,8 @@
  "endpoint": "https://hallofbeorn.com/Export/{Cards/OFFICIAL,Scenarios/{slug}}",
  "ringsdbNote": "RingsDB API carries no encounter cards (verified 2026-11-02); pack codes differ: RingsDB HfG = Hall of Beorn THfG. Boons/burdens (campaign treasure) come from the local RingsDB cache and carry card-level source=\"ringsdb\".",
  "uniqueKeyNote": "Card identity = the materialized `uid` field (100% unique). (packCode, code) collides 103x across the full catalog — every Nightmare pack restarts at 02001, several 5-digit codes are reused across packs with different cards, and 18 groups are same-name double rows; see encounter-missing-report.json packCodeCodeDuplicates for the full audit. Display-side lookups by (pod, code) MUST switch to uid.",
- "fetchedAt": "2026-11-03T02:31:09+00:00",
+ "fetchedAt": "2026-11-03T03:45:41+00:00",
+ "nameZhNote": "nameZh 来自 docs/data/zh-overrides（EDGE 扩展导出）规范化英文名匹配，遭遇侧覆盖极弱（如实留空，不编造）；data.js 内置条目（Core 遭遇卡 / HfG 132-142 / quest）不回写——展示层以 data.js 为准。详见 scripts/zh-merge.py 与 docs/data/zh-merge-report.json。",
  "cardCount": 3820,
  "packCount": 168,
  "packs": [
@@ -43732,7 +43733,7 @@
   {
    "code": "10171",
    "name": "The Wastes of Eriador",
-   "nameZh": "",
+   "nameZh": "埃利阿多荒原",
    "type": "campaign",
    "typeName": "Campaign",
    "sphere": "none",
@@ -43812,7 +43813,7 @@
   {
    "code": "10174",
    "name": "Escape from Mount Gram",
-   "nameZh": "",
+   "nameZh": "逃离格拉姆山",
    "type": "campaign",
    "typeName": "Campaign",
    "sphere": "none",
@@ -43892,7 +43893,7 @@
   {
    "code": "10182",
    "name": "Across the Ettenmoors",
-   "nameZh": "",
+   "nameZh": "横穿埃滕荒原",
    "type": "campaign",
    "typeName": "Campaign",
    "sphere": "none",
@@ -43972,7 +43973,7 @@
   {
    "code": "10184",
    "name": "The Treachery of Rhudaur",
-   "nameZh": "",
+   "nameZh": "鲁道尔的背叛",
    "type": "campaign",
    "typeName": "Campaign",
    "sphere": "none",
@@ -44012,7 +44013,7 @@
   {
    "code": "10188",
    "name": "The Battle of Carn Dûm",
-   "nameZh": "",
+   "nameZh": "卡恩督姆之战",
    "type": "campaign",
    "typeName": "Campaign",
    "sphere": "none",
@@ -44052,7 +44053,7 @@
   {
    "code": "10193",
    "name": "The Dread Realm",
-   "nameZh": "",
+   "nameZh": "恐惧王国",
    "type": "campaign",
    "typeName": "Campaign",
    "sphere": "none",
@@ -45101,7 +45102,7 @@
   {
    "code": "02063",
    "name": "Athelas",
-   "nameZh": "",
+   "nameZh": "阿塞拉斯",
    "type": "objective",
    "typeName": "Objective",
    "sphere": "none",
@@ -45141,7 +45142,7 @@
   {
    "code": "02064",
    "name": "Wilyador",
-   "nameZh": "",
+   "nameZh": "威尔雅多",
    "type": "objective-ally",
    "typeName": "Objective Ally",
    "sphere": "none",
@@ -48501,7 +48502,7 @@
   {
    "code": "21071",
    "name": "Stinker",
-   "nameZh": "",
+   "nameZh": "缺德鬼",
    "type": "treachery",
    "typeName": "Treachery",
    "sphere": "none",
@@ -52967,7 +52968,7 @@
   {
    "code": "10067",
    "name": "Amarthiúl",
-   "nameZh": "",
+   "nameZh": "阿玛希乌",
    "type": "objective-ally",
    "typeName": "Objective Ally",
    "sphere": "none",
@@ -56071,7 +56072,7 @@
   {
    "code": "02037",
    "name": "Grimbeorn the Old",
-   "nameZh": "",
+   "nameZh": "老格里姆贝奥恩",
    "type": "objective-ally",
    "typeName": "Objective Ally",
    "sphere": "none",
@@ -57074,7 +57075,7 @@
   {
    "code": "17146",
    "name": "The Black Serpent",
-   "nameZh": "",
+   "nameZh": "黑蛇",
    "type": "enemy",
    "typeName": "Enemy",
    "sphere": "none",
@@ -60863,7 +60864,7 @@
   {
    "code": "12063",
    "name": "The Thing in the Depths",
-   "nameZh": "",
+   "nameZh": "深海之物",
    "type": "enemy",
    "typeName": "Enemy",
    "sphere": "none",
@@ -60903,7 +60904,7 @@
   {
    "code": "12063",
    "name": "The Thing in the Depths",
-   "nameZh": "",
+   "nameZh": "深海之物",
    "type": "enemy",
    "typeName": "Enemy",
    "sphere": "none",
@@ -61143,7 +61144,7 @@
   {
    "code": "12136",
    "name": "Dream-chaser",
-   "nameZh": "",
+   "nameZh": "逐梦者",
    "type": "ship-objective",
    "typeName": "Ship Objective",
    "sphere": "none",
@@ -61183,7 +61184,7 @@
   {
    "code": "12136",
    "name": "Dream-chaser",
-   "nameZh": "",
+   "nameZh": "逐梦者",
    "type": "ship-objective",
    "typeName": "Ship Objective",
    "sphere": "none",
@@ -61863,7 +61864,7 @@
   {
    "code": "12191",
    "name": "Flight of the Stormcaller",
-   "nameZh": "",
+   "nameZh": "追击风暴召唤者",
    "type": "campaign",
    "typeName": "Campaign",
    "sphere": "none",
@@ -62063,7 +62064,7 @@
   {
    "code": "12194",
    "name": "The Thing in the Depths",
-   "nameZh": "",
+   "nameZh": "深海之物",
    "type": "campaign",
    "typeName": "Campaign",
    "sphere": "none",
@@ -62183,7 +62184,7 @@
   {
    "code": "12197",
    "name": "Temple of the Deceived",
-   "nameZh": "",
+   "nameZh": "欺诈者神庙",
    "type": "campaign",
    "typeName": "Campaign",
    "sphere": "none",
@@ -62263,7 +62264,7 @@
   {
    "code": "12200",
    "name": "The Drowned Ruins",
-   "nameZh": "",
+   "nameZh": "淹没的废墟",
    "type": "campaign",
    "typeName": "Campaign",
    "sphere": "none",
@@ -62303,7 +62304,7 @@
   {
    "code": "12209",
    "name": "A Storm on Cobas Haven",
-   "nameZh": "",
+   "nameZh": "科巴斯港的风暴",
    "type": "campaign",
    "typeName": "Campaign",
    "sphere": "none",
@@ -62343,7 +62344,7 @@
   {
    "code": "12210",
    "name": "Gavin",
-   "nameZh": "",
+   "nameZh": "加文",
    "type": "objective-ally",
    "typeName": "Objective Ally",
    "sphere": "none",
@@ -62383,7 +62384,7 @@
   {
    "code": "12215",
    "name": "The City of Corsairs",
-   "nameZh": "",
+   "nameZh": "海盗之城",
    "type": "campaign",
    "typeName": "Campaign",
    "sphere": "none",
@@ -63783,7 +63784,7 @@
   {
    "code": "11210",
    "name": "Gavin",
-   "nameZh": "",
+   "nameZh": "加文",
    "type": "treasure",
    "typeName": "Campaign",
    "sphere": "neutral",
@@ -65992,7 +65993,7 @@
   {
    "code": "19175",
    "name": "The Withered Heath",
-   "nameZh": "",
+   "nameZh": "枯荒野",
    "type": "campaign",
    "typeName": "Campaign",
    "sphere": "none",
@@ -66032,7 +66033,7 @@
   {
    "code": "19184",
    "name": "Roam Across Rhovanion",
-   "nameZh": "",
+   "nameZh": "漫游罗瓦尼安",
    "type": "campaign",
    "typeName": "Campaign",
    "sphere": "none",
@@ -66152,7 +66153,7 @@
   {
    "code": "19187",
    "name": "Fire in the Night",
-   "nameZh": "",
+   "nameZh": "夜火",
    "type": "campaign",
    "typeName": "Campaign",
    "sphere": "none",
@@ -66192,7 +66193,7 @@
   {
    "code": "19189",
    "name": "The Ghost of Framsburg",
-   "nameZh": "",
+   "nameZh": "弗拉姆堡的鬼魂",
    "type": "campaign",
    "typeName": "Campaign",
    "sphere": "none",
@@ -66352,7 +66353,7 @@
   {
    "code": "19193",
    "name": "Mount Gundabad",
-   "nameZh": "",
+   "nameZh": "贡达巴德山",
    "type": "campaign",
    "typeName": "Campaign",
    "sphere": "none",
@@ -66432,7 +66433,7 @@
   {
    "code": "19195",
    "name": "The Fate of Wilderland",
-   "nameZh": "",
+   "nameZh": "荒原的命运",
    "type": "campaign",
    "typeName": "Campaign",
    "sphere": "none",
@@ -71825,7 +71826,7 @@
   {
    "code": "10052",
    "name": "Interrogation",
-   "nameZh": "",
+   "nameZh": "审讯",
    "type": "treachery",
    "typeName": "Treachery",
    "sphere": "none",
@@ -74295,7 +74296,7 @@
   {
    "code": "04119",
    "name": "Durin's Axe",
-   "nameZh": "",
+   "nameZh": "都林之斧",
    "type": "objective",
    "typeName": "Objective",
    "sphere": "none",
@@ -75707,7 +75708,7 @@
   {
    "code": "148019",
    "name": "Tom Bombadil",
-   "nameZh": "",
+   "nameZh": "汤姆·邦巴迪尔",
    "type": "objective-ally",
    "typeName": "Objective Ally",
    "sphere": "none",
@@ -75747,7 +75748,7 @@
   {
    "code": "148020",
    "name": "Fog on the Barrow-downs",
-   "nameZh": "",
+   "nameZh": "古冢迷雾",
    "type": "campaign",
    "typeName": "Campaign",
    "sphere": "none",
@@ -77439,7 +77440,7 @@
   {
    "code": "00007",
    "name": "Rain of Arrows",
-   "nameZh": "",
+   "nameZh": "箭雨",
    "type": "treachery",
    "typeName": "Treachery",
    "sphere": "none",
@@ -77759,7 +77760,7 @@
   {
    "code": "05025",
    "name": "Celador",
-   "nameZh": "",
+   "nameZh": "凯拉多",
    "type": "objective",
    "typeName": "Objective",
    "sphere": "none",
@@ -79574,7 +79575,7 @@
   {
    "code": "05070",
    "name": "The Hidden Way",
-   "nameZh": "",
+   "nameZh": "隐蔽的小路",
    "type": "quest",
    "typeName": "Quest",
    "sphere": "none",
@@ -88273,7 +88274,7 @@
   {
    "code": "02007",
    "name": "Backtrack!",
-   "nameZh": "",
+   "nameZh": "折返",
    "type": "treachery",
    "typeName": "Treachery",
    "sphere": "none",
@@ -92490,7 +92491,7 @@
   {
    "code": "142091",
    "name": "The One Ring",
-   "nameZh": "",
+   "nameZh": "至尊戒",
    "type": "objective",
    "typeName": "Objective",
    "sphere": "none",
@@ -96298,7 +96299,7 @@
   {
    "code": "02129",
    "name": "Ambush",
-   "nameZh": "",
+   "nameZh": "伏击",
    "type": "quest",
    "typeName": "Quest",
    "sphere": "none",
@@ -97230,7 +97231,7 @@
   {
    "code": "04041",
    "name": "Arwen Undómiel",
-   "nameZh": "",
+   "nameZh": "阿尔玟·乌多米尔",
    "type": "objective-ally",
    "typeName": "Objective Ally",
    "sphere": "none",
@@ -102595,7 +102596,7 @@
   {
    "code": "141077",
    "name": "Gildor Inglorion",
-   "nameZh": "",
+   "nameZh": "吉尔多·英格罗瑞安",
    "type": "objective-ally",
    "typeName": "Objective Ally",
    "sphere": "none",
@@ -102915,7 +102916,7 @@
   {
    "code": "141085",
    "name": "The One Ring",
-   "nameZh": "",
+   "nameZh": "至尊戒",
    "type": "objective",
    "typeName": "Objective",
    "sphere": "none",
@@ -103075,7 +103076,7 @@
   {
    "code": "17094",
    "name": "The Black Serpent",
-   "nameZh": "",
+   "nameZh": "黑蛇",
    "type": "enemy",
    "typeName": "Enemy",
    "sphere": "none",
@@ -105296,7 +105297,7 @@
   {
    "code": "06132",
    "name": "Faramir",
-   "nameZh": "",
+   "nameZh": "法拉米尔",
    "type": "objective-ally",
    "typeName": "Objective Ally",
    "sphere": "none",
@@ -111027,7 +111028,7 @@
   {
    "code": "10151",
    "name": "Angmar Awakened",
-   "nameZh": "",
+   "nameZh": "安格玛觉醒",
    "type": "quest",
    "typeName": "Quest",
    "sphere": "none",
@@ -118604,7 +118605,7 @@
   {
    "code": "00045",
    "name": "Gildor Inglorion",
-   "nameZh": "",
+   "nameZh": "吉尔多·英格罗瑞安",
    "type": "objective-ally",
    "typeName": "Objective Ally",
    "sphere": "none",
@@ -122964,7 +122965,7 @@
   {
    "code": "00166",
    "name": "The One Ring",
-   "nameZh": "",
+   "nameZh": "至尊戒",
    "type": "objective",
    "typeName": "Objective",
    "sphere": "none",
@@ -124724,7 +124725,7 @@
   {
    "code": "145050",
    "name": "The Black Serpent",
-   "nameZh": "",
+   "nameZh": "黑蛇",
    "type": "enemy",
    "typeName": "Enemy",
    "sphere": "none",
@@ -125404,7 +125405,7 @@
   {
    "code": "145067",
    "name": "Army of the Dead",
-   "nameZh": "",
+   "nameZh": "亡者大军",
    "type": "enemy",
    "typeName": "Enemy",
    "sphere": "none",
@@ -125444,7 +125445,7 @@
   {
    "code": "145068",
    "name": "Army of the Dead",
-   "nameZh": "",
+   "nameZh": "亡者大军",
    "type": "objective-ally",
    "typeName": "Objective Ally",
    "sphere": "none",
@@ -126911,7 +126912,7 @@
   {
    "code": "11039",
    "name": "Dream-chaser",
-   "nameZh": "",
+   "nameZh": "逐梦者",
    "type": "location",
    "typeName": "Location",
    "sphere": "none",
@@ -128471,7 +128472,7 @@
   {
    "code": "11078",
    "name": "Na'asiyah",
-   "nameZh": "",
+   "nameZh": "娜阿西雅",
    "type": "enemy",
    "typeName": "Enemy",
    "sphere": "none",
@@ -128511,7 +128512,7 @@
   {
    "code": "11079",
    "name": "Na'asiyah",
-   "nameZh": "",
+   "nameZh": "娜阿西雅",
    "type": "objective-ally",
    "typeName": "Objective Ally",
    "sphere": "none",
@@ -128551,7 +128552,7 @@
   {
    "code": "11080",
    "name": "Dream-chaser",
-   "nameZh": "",
+   "nameZh": "逐梦者",
    "type": "ship-objective",
    "typeName": "Ship Objective",
    "sphere": "none",
@@ -129480,7 +129481,7 @@
   {
    "code": "131020",
    "name": "Sting",
-   "nameZh": "",
+   "nameZh": "刺叮剑",
    "type": "treasure",
    "typeName": "Treasure",
    "sphere": "neutral",
@@ -129520,7 +129521,7 @@
   {
    "code": "131021",
    "name": "Orcrist",
-   "nameZh": "",
+   "nameZh": "奥克锐斯特",
    "type": "treasure",
    "typeName": "Treasure",
    "sphere": "neutral",
@@ -129560,7 +129561,7 @@
   {
    "code": "131022",
    "name": "Glamdring",
-   "nameZh": "",
+   "nameZh": "格拉姆德凛",
    "type": "treasure",
    "typeName": "Treasure",
    "sphere": "neutral",
@@ -129600,7 +129601,7 @@
   {
    "code": "131023",
    "name": "An Unexpected Party",
-   "nameZh": "",
+   "nameZh": "不速之客",
    "type": "quest",
    "typeName": "Quest",
    "sphere": "none",
@@ -129686,7 +129687,7 @@
   {
    "code": "131025",
    "name": "Dawn Take You All",
-   "nameZh": "",
+   "nameZh": "曙光会照到你们所有人",
    "type": "quest",
    "typeName": "Quest",
    "sphere": "none",
@@ -131867,7 +131868,7 @@
   {
    "code": "131079",
    "name": "Bilbo's Magic Ring",
-   "nameZh": "",
+   "nameZh": "比尔博的魔法戒指",
    "type": "objective",
    "typeName": "Objective",
    "sphere": "none",
@@ -132107,7 +132108,7 @@
   {
    "code": "132019",
    "name": "Bilbo's Magic Ring",
-   "nameZh": "",
+   "nameZh": "比尔博的魔法戒指",
    "type": "treasure",
    "typeName": "Treasure",
    "sphere": "neutral",
@@ -132147,7 +132148,7 @@
   {
    "code": "132020",
    "name": "The Arkenstone",
-   "nameZh": "",
+   "nameZh": "阿肯宝钻",
    "type": "treasure",
    "typeName": "Treasure",
    "sphere": "neutral",
@@ -132187,7 +132188,7 @@
   {
    "code": "132021",
    "name": "Mithril Shirt",
-   "nameZh": "",
+   "nameZh": "秘银衫",
    "type": "treasure",
    "typeName": "Treasure",
    "sphere": "neutral",
@@ -134242,7 +134243,7 @@
   {
    "code": "132072",
    "name": "The Burglar's Turn",
-   "nameZh": "",
+   "nameZh": "轮到飞贼露一手了",
    "type": "quest",
    "typeName": "Quest",
    "sphere": "none",
@@ -137638,7 +137639,7 @@
   {
    "code": "02082",
    "name": "The Hills of Emyn Muil",
-   "nameZh": "",
+   "nameZh": "埃敏穆伊丘陵",
    "type": "quest",
    "typeName": "Quest",
    "sphere": "none",
@@ -144022,7 +144023,7 @@
   {
    "code": "144063",
    "name": "The One Ring",
-   "nameZh": "",
+   "nameZh": "至尊戒",
    "type": "objective",
    "typeName": "Objective",
    "sphere": "none",
@@ -144523,7 +144524,7 @@
   {
    "code": "144076",
    "name": "Sméagol",
-   "nameZh": "",
+   "nameZh": "斯密戈",
    "type": "objective-ally",
    "typeName": "Objective Ally",
    "sphere": "none",
@@ -148876,7 +148877,7 @@
   {
    "code": "146041",
    "name": "Gwaihir",
-   "nameZh": "",
+   "nameZh": "格怀希尔",
    "type": "objective-ally",
    "typeName": "Objective Ally",
    "sphere": "none",
@@ -149836,7 +149837,7 @@
   {
    "code": "146065",
    "name": "The One Ring",
-   "nameZh": "",
+   "nameZh": "至尊戒",
    "type": "objective",
    "typeName": "Objective",
    "sphere": "none",
@@ -153623,7 +153624,7 @@
   {
    "code": "147022",
    "name": "Tom Bombadil",
-   "nameZh": "",
+   "nameZh": "汤姆·邦巴迪尔",
    "type": "objective-ally",
    "typeName": "Objective Ally",
    "sphere": "none",
@@ -153663,7 +153664,7 @@
   {
    "code": "147023",
    "name": "The Old Forest",
-   "nameZh": "",
+   "nameZh": "老林子",
    "type": "campaign",
    "typeName": "Campaign",
    "sphere": "none",
@@ -155613,7 +155614,7 @@
   {
    "code": "04014",
    "name": "Arwen Undómiel",
-   "nameZh": "",
+   "nameZh": "阿尔玟·乌多米尔",
    "type": "objective-ally",
    "typeName": "Objective Ally",
    "sphere": "none",
@@ -160154,7 +160155,7 @@
   {
    "code": "00041",
    "name": "Gwaihir",
-   "nameZh": "",
+   "nameZh": "格怀希尔",
    "type": "objective-ally",
    "typeName": "Objective Ally",
    "sphere": "none",
@@ -160834,7 +160835,7 @@
   {
    "code": "00050",
    "name": "The Black Serpent",
-   "nameZh": "",
+   "nameZh": "黑蛇",
    "type": "enemy",
    "typeName": "Enemy",
    "sphere": "none",
@@ -162083,7 +162084,7 @@
   {
    "code": "00065",
    "name": "The One Ring",
-   "nameZh": "",
+   "nameZh": "至尊戒",
    "type": "objective",
    "typeName": "Objective",
    "sphere": "none",
@@ -162206,7 +162207,7 @@
   {
    "code": "00067",
    "name": "Army of the Dead",
-   "nameZh": "",
+   "nameZh": "亡者大军",
    "type": "enemy",
    "typeName": "Enemy",
    "sphere": "none",
@@ -162289,7 +162290,7 @@
   {
    "code": "00068",
    "name": "Army of the Dead",
-   "nameZh": "",
+   "nameZh": "亡者大军",
    "type": "objective-ally",
    "typeName": "Objective Ally",
    "sphere": "none",
@@ -165755,7 +165756,7 @@
   {
    "code": "00009",
    "name": "Delay the Enemy",
-   "nameZh": "",
+   "nameZh": "拖延敌人",
    "type": "quest",
    "typeName": "Quest",
    "sphere": "none",
@@ -165798,7 +165799,7 @@
   {
    "code": "00010",
    "name": "Man the Walls",
-   "nameZh": "",
+   "nameZh": "防卫城墙",
    "type": "quest",
    "typeName": "Quest",
    "sphere": "none",
@@ -167173,7 +167174,7 @@
   {
    "code": "00004",
    "name": "Derufin",
-   "nameZh": "",
+   "nameZh": "德茹芬",
    "type": "objective-ally",
    "typeName": "Objective Ally",
    "sphere": "none",
@@ -168813,7 +168814,7 @@
   {
    "code": "16031",
    "name": "Kahliel",
-   "nameZh": "",
+   "nameZh": "卡列尔",
    "type": "objective-hero",
    "typeName": "Objective Hero",
    "sphere": "none",
@@ -168853,7 +168854,7 @@
   {
    "code": "16032",
    "name": "Firyal",
-   "nameZh": "",
+   "nameZh": "菲尔娅",
    "type": "objective-hero",
    "typeName": "Objective Hero",
    "sphere": "none",
@@ -168893,7 +168894,7 @@
   {
    "code": "16033",
    "name": "Yazan",
-   "nameZh": "",
+   "nameZh": "雅赞",
    "type": "objective-hero",
    "typeName": "Objective Hero",
    "sphere": "none",
@@ -168933,7 +168934,7 @@
   {
    "code": "16034",
    "name": "Jubayr",
-   "nameZh": "",
+   "nameZh": "朱拜尔",
    "type": "objective-hero",
    "typeName": "Objective Hero",
    "sphere": "none",
@@ -170772,7 +170773,7 @@
   {
    "code": "08039",
    "name": "The Antlered Crown",
-   "nameZh": "",
+   "nameZh": "鹿角王冠",
    "type": "quest",
    "typeName": "Quest",
    "sphere": "none",
@@ -172184,7 +172185,7 @@
   {
    "code": "12049",
    "name": "The Thing in the Depths",
-   "nameZh": "",
+   "nameZh": "深海之物",
    "type": "enemy",
    "typeName": "Enemy",
    "sphere": "none",
@@ -172910,7 +172911,7 @@
   {
    "code": "10096",
    "name": "Amarthiúl",
-   "nameZh": "",
+   "nameZh": "阿玛希乌",
    "type": "objective-ally",
    "typeName": "Objective Ally",
    "sphere": "none",
@@ -174971,7 +174972,7 @@
   {
    "code": "00056",
    "name": "Soldier of Isengard",
-   "nameZh": "",
+   "nameZh": "艾森加德士兵",
    "type": "enemy",
    "typeName": "Enemy",
    "sphere": "none",
@@ -175620,7 +175621,7 @@
   {
    "code": "00072",
    "name": "Saruman",
-   "nameZh": "",
+   "nameZh": "萨茹曼",
    "type": "enemy",
    "typeName": "Enemy",
    "sphere": "none",
@@ -175660,7 +175661,7 @@
   {
    "code": "00073",
    "name": "Saruman's Staff",
-   "nameZh": "",
+   "nameZh": "萨茹曼的手杖",
    "type": "objective",
    "typeName": "Objective",
    "sphere": "none",
@@ -175700,7 +175701,7 @@
   {
    "code": "00074",
    "name": "Gríma",
-   "nameZh": "",
+   "nameZh": "格里马",
    "type": "enemy",
    "typeName": "Enemy",
    "sphere": "none",
@@ -178220,7 +178221,7 @@
   {
    "code": "00139",
    "name": "The One Ring",
-   "nameZh": "",
+   "nameZh": "至尊戒",
    "type": "objective",
    "typeName": "Objective",
    "sphere": "none",
@@ -178580,7 +178581,7 @@
   {
    "code": "00147",
    "name": "Sméagol",
-   "nameZh": "",
+   "nameZh": "斯密戈",
    "type": "objective-ally",
    "typeName": "Objective Ally",
    "sphere": "none",
@@ -185480,7 +185481,7 @@
   {
    "code": "10016",
    "name": "Amarthiúl",
-   "nameZh": "",
+   "nameZh": "阿玛希乌",
    "type": "objective-ally",
    "typeName": "Objective Ally",
    "sphere": "none",
@@ -188449,7 +188450,7 @@
   {
    "code": "18070",
    "name": "Haldan",
-   "nameZh": "",
+   "nameZh": "哈尔丹",
    "type": "objective-ally",
    "typeName": "Objective Ally",
    "sphere": "none",
@@ -190565,7 +190566,7 @@
   {
    "code": "143036",
    "name": "Soldier of Isengard",
-   "nameZh": "",
+   "nameZh": "艾森加德士兵",
    "type": "enemy",
    "typeName": "Enemy",
    "sphere": "none",
@@ -191005,7 +191006,7 @@
   {
    "code": "143047",
    "name": "Saruman",
-   "nameZh": "",
+   "nameZh": "萨茹曼",
    "type": "enemy",
    "typeName": "Enemy",
    "sphere": "none",
@@ -191045,7 +191046,7 @@
   {
    "code": "143048",
    "name": "Saruman's Staff",
-   "nameZh": "",
+   "nameZh": "萨茹曼的手杖",
    "type": "objective",
    "typeName": "Objective",
    "sphere": "none",
@@ -191085,7 +191086,7 @@
   {
    "code": "143049",
    "name": "Gríma",
-   "nameZh": "",
+   "nameZh": "格里马",
    "type": "enemy",
    "typeName": "Enemy",
    "sphere": "none",
@@ -194420,7 +194421,7 @@
   {
    "code": "07016",
    "name": "Gríma",
-   "nameZh": "",
+   "nameZh": "格里马",
    "type": "objective-ally",
    "typeName": "Objective Ally",
    "sphere": "none",
