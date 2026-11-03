@@ -44,7 +44,10 @@ const QuestRulesFactory=(H,R)=>{
  function approveActions(s,pid){check(s);need(q(s).order.includes(pid)&&planned(s).length&&!q(s).actionLocked,'没有待二次确认的行动');validateReservations(s);q(s).actionApprovals??=[];need(!q(s).actionApprovals.includes(pid),'已二次确认');q(s).actionApprovals.push(pid);if(alive(s).every(p=>q(s).actionApprovals.includes(p.id))){q(s).actionLocked=true;resumeActions(s);}}
  function withdrawActionApproval(s,pid){check(s);need(!q(s).actionLocked&&q(s).order.includes(pid),'行动已经锁定或玩家无效');q(s).actionApprovals=(q(s).actionApprovals||[]).filter(id=>id!==pid);}
  function resumeActions(s){const x=q(s);if(!x?.actionLocked||x.runningAction||x.queue.length||x.tasks.length||s.pending.length||s.status!=='playing')return;
-  while(planned(s).length&&!x.queue.length&&!x.tasks.length&&s.status==='playing'){const item=planned(s)[0];try{x.executingAction=true;validatePlanItem(s,item);const trial=JSON.parse(JSON.stringify(s));q(trial).runningAction=true;if(item.kind==='play')R.play(trial,item.player,item.uid,item.params);else R.activate(trial,item.player,item.uid,item.params);x.runningAction=true;const codeBefore=item.kind==='play'?s.players[item.player].hand.find(y=>same(y.uid,item.uid))?.code:null;if(item.kind==='play')R.play(s,item.player,item.uid,item.params);else R.activate(s,item.player,item.uid,item.params);if(item.kind==='play'&&codeBefore){const m=R.data(s,{code:codeBefore,owner:item.player});if(curseExtra(s,m.name,item.player))spendExtra(s,item.player,1);}if(H.deadmenGate)H.deadmenGate(s,item.player); /* v0.16.10 批次2：169 亡者之门——行动效果触发后弃牌库顶 */ x.plannedActions.shift();delete x.actionError;}catch(e){x.actionLocked=false;x.actionApprovals=[];x.actionError='后续暂定行动需重新选择：'+e.message;log(s,x.actionError);return;}finally{x.executingAction=false;x.runningAction=false;}}
+  while(planned(s).length&&!x.queue.length&&!x.tasks.length&&s.status==='playing'){const item=planned(s)[0];try{x.executingAction=true;validatePlanItem(s,item);const trial=JSON.parse(JSON.stringify(s));q(trial).runningAction=true;if(item.kind==='play')R.play(trial,item.player,item.uid,item.params);else R.activate(trial,item.player,item.uid,item.params);x.runningAction=true;const codeBefore=item.kind==='play'?s.players[item.player].hand.find(y=>same(y.uid,item.uid))?.code:null;if(item.kind==='play')R.play(s,item.player,item.uid,item.params);else R.activate(s,item.player,item.uid,item.params);if(item.kind==='play'&&codeBefore){const m=R.data(s,{code:codeBefore,owner:item.player});if(curseExtra(s,m.name,item.player))spendExtra(s,item.player,1);}
+ /* v0.16.10 批次2修复（verify-angmar #2）：169 亡者之门由 planning R.play/R.activate 内部统一钩（覆盖
+   计划阶段与探险阶段行动窗口两条路径），此处不再重复钩以免行动双弃。 */
+ x.plannedActions.shift();delete x.actionError;}catch(e){x.actionLocked=false;x.actionApprovals=[];x.actionError='后续暂定行动需重新选择：'+e.message;log(s,x.actionError);return;}finally{x.executingAction=false;x.runningAction=false;}}
   if(!planned(s).length){x.actionLocked=false;x.actionApprovals=[];x.finalPasses=[];log(s,'已确认的行动执行完成，请继续交流或结束本窗口');}
  }
  function withdrawDeploymentApproval(s,pid){check(s);need(q(s).discussion&&!q(s).deploymentLocked,'名单已锁定');need(q(s).order.includes(pid),'无效玩家');q(s).deploymentApprovals=(q(s).deploymentApprovals||[]).filter(id=>id!==pid);}
@@ -97,6 +100,9 @@ function submitDeployment(s,pid,uids){check(s);const x=q(s);need(x.step==='commi
    /* v0.16.10 批次2：157 雾罩丘陵——场上只有1张探险卡时涌现（探险阶段路径，走涌现余量）。 */
    if(c.id===157&&1+s.staging.filter(y=>y.type==='Quest'||y.type==='Side Quest').length===1){log(s,'雾罩丘陵：场上只有1张探险卡，涌现');x.remaining.unshift({});}
    /* v0.16.10 批次2：168 闹鬼堡垒（活跃地点）——每回合第一个翻开的亡灵敌人涌现。 */
+   /* v0.16.10 批次2：168 闹鬼堡垒（活跃地点）——每回合第一个翻开的亡灵敌人涌现。
+      注意与涌现余量 c.surge（line 94）互斥路径：若未来出现自带 surge 的亡灵敌人，此处会吞掉
+      其自带涌现，届时应改为独立结算并限制每回合总涌现次数。 */
    else if(s.active?.id===168&&c.type==='Enemy'&&/Undead\./.test(c.traits||'')&&s.haunted168Round!==s.round){s.haunted168Round=s.round;log(s,'闹鬼堡垒：本回合第一个亡灵敌人，涌现');x.remaining.unshift({});}}
   if(c.type==='Objective'){c.holder=null;c.guard=null;s.objectives.push(c);x.remaining.unshift({guard:c.uid});}
   if(!cur.canceled&&cur.hasEffect)effect(s,c);

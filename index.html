@@ -8416,6 +8416,7 @@ const PlanningRulesFactory=(H)=>{
  function play(s,pid,uid,params={}){need(![2,3,4,5,6].includes(s.phase)||!context(s)?.discussion||context(s).executingAction,'请先暂定事件并由全员二次确认');const r=checkedPlay(s,pid,uid,params),{meta:m,instance:x}=r;spend(s,r.payment.pay);removeFrom(s.players[pid].hand,uid);touch(s);log(s,`${s.players[pid].name}支付${r.cost}资源：${Object.entries(r.payment.pay).map(([id,n])=>find(s,id).meta.nameZh+'−'+n).join('、')||'0费用'}`);
   if(m.type==='ally')putAlly(s,pid,x,true);else if(m.type==='attachment'){x.controller=pid;x.target=num(params.target);x.exhausted=false;s.players[pid].attachments.push(x);log(s,`附加「${m.nameZh}」至${label(s,find(s,x.target))}`);if(restrictedOn(s,x.target).length>2)queue(s,'restricted',pid,{target:x.target},false);}
   else{applyEvent(s,pid,x,params);if(m.code==='01049')ownerZone(s,x,'playerRemoved').push(x);else ownerZone(s,x,'playerDiscard').push(x);}
+  if(H.deadmenGate)H.deadmenGate(s,pid); /* v0.16.10 批次2修复（verify-angmar #2）：169 计划阶段打出事件同样算触发行动效果 */
   pump(s);return x;
  }
  function engageEnemy(s,uid,pid){const p=s.players[pid],c=find(s,uid);need(p&&!p.eliminated&&c?.kind==='enemy','交战目标或玩家已失效');const old=alive(s).find(p=>p.engaged.some(e=>same(e.uid,uid)));need(old?.id!==pid,'该敌人已与你交战');if(old)removeFrom(old.engaged,uid);else removeFrom(s.staging,uid);p.engaged.push(c.state);if(c.state.id===75)queue(s,'hummer',pid,{},false);if(c.state.id===96){c.state.forestSpiderBonus=(c.state.forestSpiderRound===s.round?(c.state.forestSpiderBonus??1):0)+1;c.state.forestSpiderRound=s.round;}log(s,p.name+'与「'+c.state.name+'」交战');}
@@ -8513,7 +8514,9 @@ const PlanningRulesFactory=(H)=>{
    case'01062':draw(s,num(a.player),1);break;
    case'01070':s.abilityUses??={};s.abilityUses[`${uid}:protector:${s.round}:${s.phase}`]=(s.abilityUses[`${uid}:protector:${s.round}:${s.phase}`]||0)+1;s.players[pid].playerDiscard.push(removeFrom(s.players[pid].hand,a.discard));modifier(s,[c.state.target],a.stat,1);break;
    case'01072':heal(s,find(s,c.state.target),2);break;
-  }log(s,`使用「${c.meta.nameZh}」能力`);pump(s);
+  }log(s,`使用「${c.meta.nameZh}」能力`);
+  if(H.deadmenGate)H.deadmenGate(s,pid); /* v0.16.10 批次2修复（verify-angmar #2）：169 计划阶段能力行动同样算触发行动效果 */
+  pump(s);
  }
  function abilities(s,pid){return [...chars(s),...attaches(s)].filter(c=>c.controller===pid||c.meta.code==='01007').map(c=>({uid:c.uid,name:c.meta.nameZh,...abilitySpec(s,pid,c.uid)})).filter(c=>c.legal||!c.reason.includes('没有可主动使用'));}
  function responses(s,t){const a=[],ctx=t.payload;for(const c of attaches(s))if(c.meta.code==='01042'&&ctx.destroyed&&!ctx.used.includes(c.uid))a.push({value:String(c.uid),label:s.players[c.controller].name+' · 刚铎号角',type:'horn',pid:c.controller,uid:c.uid});
@@ -8628,7 +8631,10 @@ const QuestRulesFactory=(H,R)=>{
  function approveActions(s,pid){check(s);need(q(s).order.includes(pid)&&planned(s).length&&!q(s).actionLocked,'没有待二次确认的行动');validateReservations(s);q(s).actionApprovals??=[];need(!q(s).actionApprovals.includes(pid),'已二次确认');q(s).actionApprovals.push(pid);if(alive(s).every(p=>q(s).actionApprovals.includes(p.id))){q(s).actionLocked=true;resumeActions(s);}}
  function withdrawActionApproval(s,pid){check(s);need(!q(s).actionLocked&&q(s).order.includes(pid),'行动已经锁定或玩家无效');q(s).actionApprovals=(q(s).actionApprovals||[]).filter(id=>id!==pid);}
  function resumeActions(s){const x=q(s);if(!x?.actionLocked||x.runningAction||x.queue.length||x.tasks.length||s.pending.length||s.status!=='playing')return;
-  while(planned(s).length&&!x.queue.length&&!x.tasks.length&&s.status==='playing'){const item=planned(s)[0];try{x.executingAction=true;validatePlanItem(s,item);const trial=JSON.parse(JSON.stringify(s));q(trial).runningAction=true;if(item.kind==='play')R.play(trial,item.player,item.uid,item.params);else R.activate(trial,item.player,item.uid,item.params);x.runningAction=true;const codeBefore=item.kind==='play'?s.players[item.player].hand.find(y=>same(y.uid,item.uid))?.code:null;if(item.kind==='play')R.play(s,item.player,item.uid,item.params);else R.activate(s,item.player,item.uid,item.params);if(item.kind==='play'&&codeBefore){const m=R.data(s,{code:codeBefore,owner:item.player});if(curseExtra(s,m.name,item.player))spendExtra(s,item.player,1);}if(H.deadmenGate)H.deadmenGate(s,item.player); /* v0.16.10 批次2：169 亡者之门——行动效果触发后弃牌库顶 */ x.plannedActions.shift();delete x.actionError;}catch(e){x.actionLocked=false;x.actionApprovals=[];x.actionError='后续暂定行动需重新选择：'+e.message;log(s,x.actionError);return;}finally{x.executingAction=false;x.runningAction=false;}}
+  while(planned(s).length&&!x.queue.length&&!x.tasks.length&&s.status==='playing'){const item=planned(s)[0];try{x.executingAction=true;validatePlanItem(s,item);const trial=JSON.parse(JSON.stringify(s));q(trial).runningAction=true;if(item.kind==='play')R.play(trial,item.player,item.uid,item.params);else R.activate(trial,item.player,item.uid,item.params);x.runningAction=true;const codeBefore=item.kind==='play'?s.players[item.player].hand.find(y=>same(y.uid,item.uid))?.code:null;if(item.kind==='play')R.play(s,item.player,item.uid,item.params);else R.activate(s,item.player,item.uid,item.params);if(item.kind==='play'&&codeBefore){const m=R.data(s,{code:codeBefore,owner:item.player});if(curseExtra(s,m.name,item.player))spendExtra(s,item.player,1);}
+ /* v0.16.10 批次2修复（verify-angmar #2）：169 亡者之门由 planning R.play/R.activate 内部统一钩（覆盖
+   计划阶段与探险阶段行动窗口两条路径），此处不再重复钩以免行动双弃。 */
+ x.plannedActions.shift();delete x.actionError;}catch(e){x.actionLocked=false;x.actionApprovals=[];x.actionError='后续暂定行动需重新选择：'+e.message;log(s,x.actionError);return;}finally{x.executingAction=false;x.runningAction=false;}}
   if(!planned(s).length){x.actionLocked=false;x.actionApprovals=[];x.finalPasses=[];log(s,'已确认的行动执行完成，请继续交流或结束本窗口');}
  }
  function withdrawDeploymentApproval(s,pid){check(s);need(q(s).discussion&&!q(s).deploymentLocked,'名单已锁定');need(q(s).order.includes(pid),'无效玩家');q(s).deploymentApprovals=(q(s).deploymentApprovals||[]).filter(id=>id!==pid);}
@@ -8681,6 +8687,9 @@ function submitDeployment(s,pid,uids){check(s);const x=q(s);need(x.step==='commi
    /* v0.16.10 批次2：157 雾罩丘陵——场上只有1张探险卡时涌现（探险阶段路径，走涌现余量）。 */
    if(c.id===157&&1+s.staging.filter(y=>y.type==='Quest'||y.type==='Side Quest').length===1){log(s,'雾罩丘陵：场上只有1张探险卡，涌现');x.remaining.unshift({});}
    /* v0.16.10 批次2：168 闹鬼堡垒（活跃地点）——每回合第一个翻开的亡灵敌人涌现。 */
+   /* v0.16.10 批次2：168 闹鬼堡垒（活跃地点）——每回合第一个翻开的亡灵敌人涌现。
+      注意与涌现余量 c.surge（line 94）互斥路径：若未来出现自带 surge 的亡灵敌人，此处会吞掉
+      其自带涌现，届时应改为独立结算并限制每回合总涌现次数。 */
    else if(s.active?.id===168&&c.type==='Enemy'&&/Undead\./.test(c.traits||'')&&s.haunted168Round!==s.round){s.haunted168Round=s.round;log(s,'闹鬼堡垒：本回合第一个亡灵敌人，涌现');x.remaining.unshift({});}}
   if(c.type==='Objective'){c.holder=null;c.guard=null;s.objectives.push(c);x.remaining.unshift({guard:c.uid});}
   if(!cur.canceled&&cur.hasEffect)effect(s,c);
@@ -9375,7 +9384,8 @@ function blankText(s,c){if(!s.questAttachments?.some(a=>a.card.id===196))return 
    战斗内 respond（长矛/迅捷打击）也走 resolveChoice/排队的由各引擎补钩。牌库为空时不弃（原文未定淘汰）。 */
 function deadmenGate(s,pid){if(!s.active||s.active.id!==169)return;const p=s.players[pid];if(!p||p.eliminated||!p.playerDeck.length)return;const c=p.playerDeck.shift();p.playerDiscard.push(c);log(s,`${p.name}触发行动/响应效果，弃掉牌库顶1张牌（亡者之门）`);}
 /* 183 阿蒙福恩（活跃地点）强制：1个兽人敌人加入探查区后，立即对第一名玩家发起一次攻击。
-   简化：探险/设置期无完整战斗窗口，沿用 162 sorceryStrike 先例——第一名玩家的第一名角色直接承受攻击力伤害。 */
+   官方为一次可防御的完整即时攻击；本引擎探险/设置期无战斗窗口，沿用 162 sorceryStrike 先例——
+   第一名玩家的第一名角色直接承受攻击力伤害（不可防御）。verify-angmar 已认可为已知简化口径。 */
 function amonFornStrike(s,c){if(!s.active||s.active.id!==183)return;if(!c||c.type!=='Enemy'||!/Orc\./.test(c.traits||''))return;const hs=P2.chars(s).filter(x=>x.controller===s.first&&x.kind==='hero');const t=hs[0]||P2.chars(s).find(x=>x.controller===s.first);const n=P2.stats(s,c.uid).attack;if(!t||!n)return;log(s,'阿蒙福恩：兽人敌人加入探查区，立即对第一名玩家发起攻击');P2.damageCharacter(s,t,n);P2.pump(s);}
 /* 156 崎岖乡野口径：当前探险是支线探险。本引擎的 s.quest 只会指向 D.quests 的正式关 stage 实体，
    支线（149/150/155 等）目前只入探查区、无「转正」机制——故当前恒 false；未来若支持支线转正
@@ -9409,13 +9419,18 @@ function reveal(s,count=1,guardFor=null){
   }
   if(c.type==='Treachery')sorceryStrike(s,c);
   if(c.surge)reveal(s,1);
-  /* v0.16.10 批次2：168 闹鬼堡垒（活跃地点）——每回合第一个翻开的亡灵敌人获得涌现。 */
+  /* v0.16.10 批次2：168 闹鬼堡垒（活跃地点）——每回合第一个翻开的亡灵敌人获得涌现。
+     注意：此处与 surge 为 else-if 互斥——若未来出现「自带 surge 的亡灵敌人」，其自带涌现会被本
+     分支吞掉（只补一次）。届时应改为两个条件各自独立结算再限制总涌现次数。 */
   else if(s.active?.id===168&&c.type==='Enemy'&&/Undead\./.test(c.traits||'')&&s.haunted168Round!==s.round){s.haunted168Round=s.round;log(s,'闹鬼堡垒：本回合第一个亡灵敌人，涌现');reveal(s,1);}
  }
 }
 function enter(s,id){s.quest=id;s.progress=0;s.spawnDefeated=false;log(s,`进入 ${quest(s).stage}B「${quest(s).name}」`);
  /* 进入新探险卡 = 新目标，本回合视为尚未达成；否则上一阶段的条件会一路沿用，自动推进到错误的关卡。 */
  s.questDoneRound=null;
+ /* v0.16.10 批次2修复（verify-angmar #3）：条件附属随所附探险卡离场而弃——换关时清空
+    questAttachments（196 寒意 / 180 重负等），否则旧关的条件在新关永久生效（本体已进弃牌堆而引用残留）。 */
+ s.questAttachments=[];
  onEnterEffects(s,id);
 }
 /* v0.16.3：进入效果读 stage.onEnter；v0.16.10 抽出复用——首张探险卡的 onEnter 在剧本设置时也要执行

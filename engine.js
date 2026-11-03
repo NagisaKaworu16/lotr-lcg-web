@@ -90,7 +90,8 @@ function blankText(s,c){if(!s.questAttachments?.some(a=>a.card.id===196))return 
    战斗内 respond（长矛/迅捷打击）也走 resolveChoice/排队的由各引擎补钩。牌库为空时不弃（原文未定淘汰）。 */
 function deadmenGate(s,pid){if(!s.active||s.active.id!==169)return;const p=s.players[pid];if(!p||p.eliminated||!p.playerDeck.length)return;const c=p.playerDeck.shift();p.playerDiscard.push(c);log(s,`${p.name}触发行动/响应效果，弃掉牌库顶1张牌（亡者之门）`);}
 /* 183 阿蒙福恩（活跃地点）强制：1个兽人敌人加入探查区后，立即对第一名玩家发起一次攻击。
-   简化：探险/设置期无完整战斗窗口，沿用 162 sorceryStrike 先例——第一名玩家的第一名角色直接承受攻击力伤害。 */
+   官方为一次可防御的完整即时攻击；本引擎探险/设置期无战斗窗口，沿用 162 sorceryStrike 先例——
+   第一名玩家的第一名角色直接承受攻击力伤害（不可防御）。verify-angmar 已认可为已知简化口径。 */
 function amonFornStrike(s,c){if(!s.active||s.active.id!==183)return;if(!c||c.type!=='Enemy'||!/Orc\./.test(c.traits||''))return;const hs=P2.chars(s).filter(x=>x.controller===s.first&&x.kind==='hero');const t=hs[0]||P2.chars(s).find(x=>x.controller===s.first);const n=P2.stats(s,c.uid).attack;if(!t||!n)return;log(s,'阿蒙福恩：兽人敌人加入探查区，立即对第一名玩家发起攻击');P2.damageCharacter(s,t,n);P2.pump(s);}
 /* 156 崎岖乡野口径：当前探险是支线探险。本引擎的 s.quest 只会指向 D.quests 的正式关 stage 实体，
    支线（149/150/155 等）目前只入探查区、无「转正」机制——故当前恒 false；未来若支持支线转正
@@ -124,13 +125,18 @@ function reveal(s,count=1,guardFor=null){
   }
   if(c.type==='Treachery')sorceryStrike(s,c);
   if(c.surge)reveal(s,1);
-  /* v0.16.10 批次2：168 闹鬼堡垒（活跃地点）——每回合第一个翻开的亡灵敌人获得涌现。 */
+  /* v0.16.10 批次2：168 闹鬼堡垒（活跃地点）——每回合第一个翻开的亡灵敌人获得涌现。
+     注意：此处与 surge 为 else-if 互斥——若未来出现「自带 surge 的亡灵敌人」，其自带涌现会被本
+     分支吞掉（只补一次）。届时应改为两个条件各自独立结算再限制总涌现次数。 */
   else if(s.active?.id===168&&c.type==='Enemy'&&/Undead\./.test(c.traits||'')&&s.haunted168Round!==s.round){s.haunted168Round=s.round;log(s,'闹鬼堡垒：本回合第一个亡灵敌人，涌现');reveal(s,1);}
  }
 }
 function enter(s,id){s.quest=id;s.progress=0;s.spawnDefeated=false;log(s,`进入 ${quest(s).stage}B「${quest(s).name}」`);
  /* 进入新探险卡 = 新目标，本回合视为尚未达成；否则上一阶段的条件会一路沿用，自动推进到错误的关卡。 */
  s.questDoneRound=null;
+ /* v0.16.10 批次2修复（verify-angmar #3）：条件附属随所附探险卡离场而弃——换关时清空
+    questAttachments（196 寒意 / 180 重负等），否则旧关的条件在新关永久生效（本体已进弃牌堆而引用残留）。 */
+ s.questAttachments=[];
  onEnterEffects(s,id);
 }
 /* v0.16.3：进入效果读 stage.onEnter；v0.16.10 抽出复用——首张探险卡的 onEnter 在剧本设置时也要执行

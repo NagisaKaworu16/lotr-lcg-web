@@ -163,6 +163,7 @@ const PlanningRulesFactory=(H)=>{
  function play(s,pid,uid,params={}){need(![2,3,4,5,6].includes(s.phase)||!context(s)?.discussion||context(s).executingAction,'请先暂定事件并由全员二次确认');const r=checkedPlay(s,pid,uid,params),{meta:m,instance:x}=r;spend(s,r.payment.pay);removeFrom(s.players[pid].hand,uid);touch(s);log(s,`${s.players[pid].name}支付${r.cost}资源：${Object.entries(r.payment.pay).map(([id,n])=>find(s,id).meta.nameZh+'−'+n).join('、')||'0费用'}`);
   if(m.type==='ally')putAlly(s,pid,x,true);else if(m.type==='attachment'){x.controller=pid;x.target=num(params.target);x.exhausted=false;s.players[pid].attachments.push(x);log(s,`附加「${m.nameZh}」至${label(s,find(s,x.target))}`);if(restrictedOn(s,x.target).length>2)queue(s,'restricted',pid,{target:x.target},false);}
   else{applyEvent(s,pid,x,params);if(m.code==='01049')ownerZone(s,x,'playerRemoved').push(x);else ownerZone(s,x,'playerDiscard').push(x);}
+  if(H.deadmenGate)H.deadmenGate(s,pid); /* v0.16.10 批次2修复（verify-angmar #2）：169 计划阶段打出事件同样算触发行动效果 */
   pump(s);return x;
  }
  function engageEnemy(s,uid,pid){const p=s.players[pid],c=find(s,uid);need(p&&!p.eliminated&&c?.kind==='enemy','交战目标或玩家已失效');const old=alive(s).find(p=>p.engaged.some(e=>same(e.uid,uid)));need(old?.id!==pid,'该敌人已与你交战');if(old)removeFrom(old.engaged,uid);else removeFrom(s.staging,uid);p.engaged.push(c.state);if(c.state.id===75)queue(s,'hummer',pid,{},false);if(c.state.id===96){c.state.forestSpiderBonus=(c.state.forestSpiderRound===s.round?(c.state.forestSpiderBonus??1):0)+1;c.state.forestSpiderRound=s.round;}log(s,p.name+'与「'+c.state.name+'」交战');}
@@ -260,7 +261,9 @@ const PlanningRulesFactory=(H)=>{
    case'01062':draw(s,num(a.player),1);break;
    case'01070':s.abilityUses??={};s.abilityUses[`${uid}:protector:${s.round}:${s.phase}`]=(s.abilityUses[`${uid}:protector:${s.round}:${s.phase}`]||0)+1;s.players[pid].playerDiscard.push(removeFrom(s.players[pid].hand,a.discard));modifier(s,[c.state.target],a.stat,1);break;
    case'01072':heal(s,find(s,c.state.target),2);break;
-  }log(s,`使用「${c.meta.nameZh}」能力`);pump(s);
+  }log(s,`使用「${c.meta.nameZh}」能力`);
+  if(H.deadmenGate)H.deadmenGate(s,pid); /* v0.16.10 批次2修复（verify-angmar #2）：169 计划阶段能力行动同样算触发行动效果 */
+  pump(s);
  }
  function abilities(s,pid){return [...chars(s),...attaches(s)].filter(c=>c.controller===pid||c.meta.code==='01007').map(c=>({uid:c.uid,name:c.meta.nameZh,...abilitySpec(s,pid,c.uid)})).filter(c=>c.legal||!c.reason.includes('没有可主动使用'));}
  function responses(s,t){const a=[],ctx=t.payload;for(const c of attaches(s))if(c.meta.code==='01042'&&ctx.destroyed&&!ctx.used.includes(c.uid))a.push({value:String(c.uid),label:s.players[c.controller].name+' · 刚铎号角',type:'horn',pid:c.controller,uid:c.uid});

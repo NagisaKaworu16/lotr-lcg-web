@@ -215,10 +215,27 @@ test('B2 169 Deadmen\'s Gate: triggered action and response each discard that pl
  assert.equal(p.playerDeck.length,d2,'跳过（未触发效果）不弃牌');});
 test('B2 169 inactive: actions do not discard deck top',()=>{const s=make(['lore']);commitAll(s);s.questing.remaining=[];s.questing.current=null;s.questing.step='staging';Q.drawNext(s);
  const p=s.players[0];const event=p.hand.find(c=>{if(R.data(s,c).type!=='event')return false;const sp2=R.playSpec(s,0,c.uid,{});return sp2.legal;});assert(event);
- const d0=p.playerDeck.length;
  const params=Object.fromEntries(R.playSpec(s,0,event.uid,{}).fields.map(f=>[f.key,f.options[0].value]));
  Q.queueAction(s,'play',0,event.uid,params);Q.approveActions(s,0);
  assert(!s.log.some(t=>t.includes('亡者之门')),'亡者之门不在场 → 不弃');});
+test('B2fix #2 169 covers planning-phase card plays and ability activations',()=>{const s=make(['lore']);const p=s.players[0];
+ const gate={...E.byId[169],uid:++s.serial};s.active=gate;
+ /* 回到计划阶段自由行动窗口（make() 已走完 phase1，测试垫片重开） */
+ s.phase=1;s.planning.completed=false;
+ const event=p.hand.find(c=>{if(R.data(s,c).type!=='event')return false;try{return R.playSpec(s,0,c.uid,{}).legal;}catch{return false;}});assert(event,'lore 起手需有合法事件');
+ const params=Object.fromEntries(R.playSpec(s,0,event.uid,{}).fields.map(f=>[f.key,f.options[0].value]));
+ R.play(s,0,event.uid,params);
+ assert(s.log.filter(t=>t.includes('亡者之门')).length===1,'计划阶段打出事件 → 弃牌库顶1张');
+ const beravor=R.chars(s).find(c=>c.meta.code==='01012');assert(beravor,'lore 预组需含贝拉沃');
+ R.activate(s,0,beravor.uid,{player:'0'});
+ assert(s.log.filter(t=>t.includes('亡者之门')).length===2,'能力激活同样触发（第二次）');});
+test('B2fix #3 questAttachments cleared on stage advance: 196 blank-text ends with the quest card',()=>{const s=make(['spirit']);commitAll(s);
+ s.questAttachments??=[];s.questAttachments.push({card:{...E.byId[196],uid:++s.serial},round:s.round});
+ const el=R.chars(s).find(c=>c.meta.code==='01008');el.state.damage=1;el.state.exhausted=false;el.state.committed=false;
+ one(s,148);assert(!Q.cancelOptions(s).some(o=>o.value.startsWith('eleanor:')),'196 在场且受伤：文本空白');Q.resolveReveal(s);
+ s.questing.remaining=[];s.progress=999;E.advance(s,true);assert.equal(s.quest,120,'换到 2B');
+ assert.equal(s.questAttachments.length,0,'换关后条件附属引用清空（官方：condition 随所附卡离场而弃）');
+ one(s,148);assert(Q.cancelOptions(s).some(o=>o.value.startsWith('eleanor:')),'同一受伤角色不再被空白（196 已随旧关离场）');});
 test('B2 196 conditional attachment: damaged Eleanor loses her cancel response, undamaged keeps it',()=>{const s=make(['spirit']);commitAll(s);
  s.questAttachments??=[];s.questAttachments.push({card:{...E.byId[196],uid:++s.serial},round:s.round});
  const el=R.chars(s).find(c=>c.meta.code==='01008');assert(el,'spirit 预组需含埃莉诺');
