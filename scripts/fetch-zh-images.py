@@ -64,6 +64,27 @@ def norm(s):
     return re.sub(r'[^a-z0-9]', '', ''.join(ch for ch in s if not unicodedata.combining(ch)))
 
 
+# ── v0.17.3 批次② 映射提升 ─────────────────────────────────────────────
+# 1) packName 参与规范化匹配：cardata 'Khazad-dûm'/'The Hobbit: X'/'X Nightmare'
+#    与 cardDb 'Khazad-dum'/'The Hobbit - X'/'X - Nightmare' 的写法差异全部被
+#    norm() 吸收（Û→u、: → 空、- → 空），此前 packName 用原文做键是批次①未命中大头。
+# 2) 真别名（cardata packName → cardDb packName 的 norm 键，按序回退）：
+PACK_ALIASES = {
+    norm('Revised Core Set'): [norm('Revised Core Set'), norm('Core Set')],
+    norm('The Dark of Mirkwood'): [norm('The Dark of Mirkwood'), norm('Dark of Mirkwood')],
+    norm('On the Doorstep'): [norm('On the Doorstep'), norm('The Hobbit - On the Doorstep')],
+    norm('Over Hill and Under Hill'): [norm('Over Hill and Under Hill'),
+                                       norm('The Hobbit - Over Hill and Under Hill')],
+}
+# 3) saga 三部曲：cardDb 根本没有这三个包的行（电影三部曲数据源分组），只能按
+#    卡名在全库（剔除 - Nightmare 包）唯一命中才采信；多包同名 → ambiguous 如实留空。
+SAGA_PACKS = {norm(x) for x in ('The Fellowship of the Ring', 'The Two Towers',
+                                'The Return of the King')}
+# 4) MotK 前缀剥离：'(MotK) Ingold' → 'Ingold'。ALeP 包 cardDb 无行，当前
+#    剥离后仍 no-row（不与其它包同名卡交叉匹配，避免张冠李戴），仅前向兼容。
+_MOTK_PREFIX = re.compile(r'^\([^)]*\)\s*')
+
+
 def numtail(x):
     try:
         return int(str(x).strip()) % 1000
@@ -161,27 +182,66 @@ def main():
 
     db = load_carddb(args.carddb, args.proxy, 2)
     print(f'cardDb rows: {len(db)}')
+    # 行去重：cardDb 存在完全重复行（同 name/pack/number/side/back/uuid 出现两次，
+    # 如 DCC 'Calphon' 13 号），按五元组+uuid 折叠，避免同名多条假歧义。
+    seen, dedup = set(), []
+    for r in db:
+        k = (norm(r['name']), norm(r['packName']), r['numberInPack'], r['side'],
+             r['cardBack'], r['databaseId'])
+        if k in seen:
+            continue
+        seen.add(k)
+        dedup.append(r)
+    if len(dedup) != len(db):
+        print(f'cardDb dedupe: {len(db)} -> {len(dedup)} rows')
+    db = dedup
     by_name = {}
     for r in db:
-        by_name.setdefault((norm(r['name']), r['packName']), []).append(r)
+        by_name.setdefault((norm(r['name']), norm(r['packName'])), []).append(r)
+    saga_all = {}
+    for r in db:
+        if 'nightmare' not in norm(r['packName']):
+            saga_all.setdefault(norm(r['name']), []).append(r)
+
+    def resolve_uuid(hits, cand):
+        """多条命中时按数字尾数消歧；仍不唯一则按 distinct uuid 判定。"""
+        rows = [r for r in hits if r['side'] != 'B'
+                and numtail(r['numberInPack']) == cand]
+        if len(rows) == 1:
+            return rows[0]
+        uuids = {r['databaseId'] for r in hits}
+        return hits[0] if len(uuids) == 1 else None
 
     def pick(card, back):
-        """name+packName 主键 → (row, status)。歧义时用数字尾数消歧。"""
-        hits = by_name.get((norm(card['name']), card['packName']), [])
-        if not hits:
-            return None, 'no-dragncards-row'
-        if len(hits) == 1:
-            row = hits[0]
-        else:
-            cand = numtail(card.get('position')) or numtail(card.get('code'))
-            rows = [r for r in hits if r['side'] != 'B' and numtail(r['numberInPack']) == cand]
-            if len(rows) != 1:
+        """packName 规范化 + 别名链主键匹配；saga 包按全库名字唯一性采信。"""
+        nname, npack = norm(card['name']), norm(card.get('packName'))
+        if npack in SAGA_PACKS:
+            hits = saga_all.get(nname, [])
+            if not hits:
+                return None, 'no-dragncards-row'
+            row = resolve_uuid(hits, numtail(card.get('position')) or numtail(card.get('code')))
+            if row is None:
                 return None, 'ambiguous'
-            row = rows[0]
-        pref = [row] if row['cardBack'] == back else \
-            [r for r in hits if r['cardBack'] == back and r['side'] != 'B']
-        row2 = pref[0] if pref else row
-        return row2, 'matched'
+            return row, 'matched'
+        name2 = _MOTK_PREFIX.sub('', card['name'])  # '(MotK) ' 前缀剥离（前向兼容）
+        for pk in PACK_ALIASES.get(npack, [npack]):
+            hits = by_name.get((nname, pk), [])
+            if not hits and name2 != card['name']:
+                hits = by_name.get((norm(name2), pk), [])
+            if not hits:
+                continue
+            if len(hits) == 1:
+                row = hits[0]
+            else:
+                cand = numtail(card.get('position')) or numtail(card.get('code'))
+                row = resolve_uuid(hits, cand)
+                if row is None:
+                    return None, 'ambiguous'
+            pref = [row] if row['cardBack'] == back else \
+                [r for r in hits if r['cardBack'] == back and r['side'] != 'B']
+            row2 = pref[0] if pref else row
+            return row2, 'matched'
+        return None, 'no-dragncards-row'
 
     with io.open(PLAYER, encoding='utf-8') as fh:
         pcards = json.load(fh)['cards']
@@ -216,10 +276,10 @@ def main():
             st = fetch_face(url, raw, args.proxy)
             if st == 'ok':
                 to_webp(raw, dest, args.quality, args.max_side)
-        if in_batch and os.path.exists(dest):
+        if os.path.exists(dest):  # 文件已存在即 ok（跨批次累积，不回退 pending）
             st, sha = 'ok', sha256(dest)
-        rec('player', key, c, row, st if in_batch else 'pending', url,
-            local if st == 'ok' or not in_batch else None, sha)
+            local = f'assets/cards-zh/{c["code"]}.webp'
+        rec('player', key, c, row, st, url, local if st == 'ok' else None, sha)
 
     # ── 遭遇卡 / 关卡卡（A+B 面）────────────────────────────────────────
     for c in ecards:
@@ -237,9 +297,9 @@ def main():
             st = fetch_face(url, raw, args.proxy)
             if st == 'ok':
                 to_webp(raw, dest, args.quality, args.max_side)
-        if in_batch and os.path.exists(dest):
+        if os.path.exists(dest):  # 文件已存在即 ok（跨批次累积）
             st, sha = 'ok', sha256(dest)
-        rec('encounter', c['uid'], c, row, st if in_batch else 'pending', url,
+        rec('encounter', c['uid'], c, row, st, url,
             f'assets/cards-zh-enc/{c["uid"]}.webp' if st == 'ok' else None, sha)
         if c.get('type') == 'quest':  # 关卡 B 面
             burl = S3 + uuid.replace('.jpg', '') + '.B.jpg'
@@ -251,13 +311,13 @@ def main():
                 bst = fetch_face(burl, raw, args.proxy)
                 if bst == 'ok':
                     to_webp(raw, bdest, args.quality, args.max_side)
-            if in_batch and os.path.exists(bdest):
+            if os.path.exists(bdest):  # 文件已存在即 ok（跨批次累积）
                 bst, bsha = 'ok', sha256(bdest)
             records.append({'kind': 'questB', 'key': bkey, 'code': c.get('code'), 'uid': c.get('uid'),
                             'name': c.get('name'), 'pack': c.get('packCode'), 'uuid': uuid,
                             'url': burl, 'local': blocal if bst == 'ok' else None,
                             'sha256': bsha,
-                            'status': bst if in_batch else 'pending'})
+                            'status': bst})
             counters[bst if bst in counters else 'pending'] = \
                 counters.get(bst if bst in counters else 'pending', 0) + 1
 
