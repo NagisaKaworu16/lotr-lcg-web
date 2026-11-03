@@ -241,6 +241,7 @@ def main():
     # 回填）——试点 core-text-zh.json + 批次2 cycles1-text-zh.json。
     ct_stats = zh_merge.merge_core_text(cards)
     cy_stats = zh_merge.merge_text_zh(cards, 'cycles1-text-zh.json', 'playerCycles1Text')
+    ar_stats = zh_merge.merge_text_zh(cards, 'ats-rm-text-zh.json', 'playerAtsRmText')
 
     dataset = {
         'schemaVersion': 1,
