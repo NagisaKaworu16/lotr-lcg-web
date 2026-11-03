@@ -22,7 +22,7 @@ function withScenario(id,mutate,fn){const sc=D.scenarios.find(x=>x.id===id);cons
 /* ── 1. 数据 schema 自检 ─────────────────────────────────────────────── */
 test('scenario schema: stages cover every quest, next targets exist, enums valid',()=>{
  const allQuests=new Set(D.quests.map(q=>q.id)),covered=new Set;
- assert.deepEqual(D.scenarios.map(s=>s.id),['mirkwood','anduin','dolguldur','gollum'],'剧本声明顺序即 UI 顺序，不许变');
+ assert.deepEqual(D.scenarios.map(s=>s.id),['mirkwood','anduin','dolguldur','gollum','iic','dd','twh'],'剧本声明顺序即 UI 顺序，不许变');
  for(const sc of D.scenarios){
   assert(sc.coverCard===sc.stages[0].id,'coverCard 必须是首张探险卡（PODS 派生的封面依据）');
   const ids=new Set(sc.stages.map(st=>st.id));
@@ -32,8 +32,8 @@ test('scenario schema: stages cover every quest, next targets exist, enums valid
    assert('next' in st,`stage ${st.id} 缺 next 字段`);
    if(st.next==='random'){assert(Array.isArray(st.nextRandom)&&st.nextRandom.length>=1);for(const n of st.nextRandom)assert(ids.has(n),`随机分叉目标 ${n} 未定义`);}
    else if(st.next!==null)assert(ids.has(st.next),`stage ${st.id} 的 next ${st.next} 未定义`);
-   if(st.gate)for(const k of Object.keys(st.gate))assert(['spawnDefeated','noInPlay','noEnemies','holdObjectives','rescued'].includes(k),`未知 gate 字段 ${k}`);
-   if(st.onEnter)assert(['spiderSearch','revealPerPlayer'].includes(st.onEnter.type),`未知 onEnter 类型`);
+   if(st.gate)for(const k of Object.keys(st.gate))assert(['spawnDefeated','noInPlay','noEnemies','holdObjectives','rescued','controlsObjective','spawnHpZero'].includes(k),`未知 gate 字段 ${k}`);
+   if(st.onEnter)assert(['spiderSearch','revealPerPlayer','searchEngage','spawnSetAside','revealSetAside'].includes(st.onEnter.type),`未知 onEnter 类型`);
    if(st.revealPer!==undefined)assert(['player','skip'].includes(st.revealPer),`未知 revealPer`);
   }
  }
@@ -255,4 +255,117 @@ test('fail loud: easyRemove with unknown card id throws at create',()=>{
  withScenario('mirkwood',sc=>{sc.easyRemove={'99999':1};},()=>{
   assert.throws(()=>E.create('mirkwood',1,7),/未知卡 id/);
  });
+});
+
+/* ── 9. 安格玛批次1（TLR，id 143-201 + 剧本 iic/dd/twh）数据层断言 ─────────
+   引擎端（setup.type=stageCards、searchEngage/spawnSetAside/revealSetAside、
+   controlsObjective/spawnHpZero、sideQuest、time/timeExpire 等）由 fe 并行接线；
+   在接线完成前，effect 覆盖检查走下方 PENDING_ENGINE_WIRING 豁免清单——
+   这是显式的「待引擎接线」登记，fe 完成对应 id 后应从清单除名。 */
+const TLR_SRC=JSON.parse(require('fs').readFileSync(path.join(ROOT,'docs/data/cache/angmar-batch1-source.json'),'utf8'));
+
+test('TLR uid: every new card/quest materializes uid matching the HoB export, globally unique',()=>{
+ const seen=new Set;
+ for(const c of [...D.cards,...D.quests]){
+  if(c.pack!=='TLR')continue;
+  assert(c.uid&&typeof c.uid==='string',`TLR 条目 ${c.id} 缺 uid`);
+  assert(!seen.has(c.uid),'uid 全局唯一');
+  seen.add(c.uid);
+ }
+ const hobCodes=new Set(Object.values(TLR_SRC).map(c=>c.uid));
+ for(const c of [...D.cards,...D.quests].filter(x=>x.pack==='TLR'))
+  assert(hobCodes.has(c.uid),`uid ${c.uid} 不在 HoB 导出中（必须与 encounter-carddata 一致）`);
+});
+
+test('TLR effect coverage: every id referenced by iic/dd/twh is known to the engine or explicitly waived',()=>{
+ /* 从引擎源码文本读取三个清单（归 fe 维护，这里只读不写） */
+ const qeSrc=require('fs').readFileSync(path.join(ROOT,'quest-engine.js'),'utf8');
+ const eSrc=require('fs').readFileSync(path.join(ROOT,'engine.js'),'utf8');
+ const known=new Set;
+ for(const m of qeSrc.matchAll(/hasEffect=\[([^\]]*)\]/g))for(const x of m[1].split(','))if(x.trim())known.add(Number(x));
+ for(const m of eSrc.matchAll(/(?:manualReveal|SETUP_EFFECT)=new Set\(\[([^\]]*)\]\)/g))for(const x of m[1].split(','))if(x.trim())known.add(Number(x));
+ /* 待引擎接线豁免清单（fail-loud 精神：显式登记，不静默跳过）：
+    143 兽人战团确保进场 / 151,172,190 stageCards 关卡 / 155,183 setAside 伏笔 /
+    161 伊亚里安目标 / 162 索尔迪尔 spawnHpZero / 164 searchEngage /
+    167 确保进场 / 172? 关卡 / 183 setAside / 184 确保进场 / 185 makeActive /
+    190,191 关卡链 / 192 确保进场目标。fe 接线后逐一除名。 */
+ const PENDING_ENGINE_WIRING=new Set([143,151,155,161,162,164,167,172,173,183,184,185,190,191,192]);
+ const refs=new Set;
+ for(const sc of D.scenarios.filter(s=>['iic','dd','twh'].includes(s.id))){
+  const su=sc.setup||{};
+  for(const k of ['cards','objectives','ensureInStaging','setAside','makeActive'])for(const v of su[k]||[])refs.add(v);
+  for(const st of sc.stages){
+   refs.add(st.id);
+   if(st.next!=null)refs.add(st.next);
+   const oe=st.onEnter||{};
+   if(oe.card!=null)refs.add(oe.card);
+   for(const v of oe.cards||[])refs.add(v);
+   const g=st.gate||{};
+   for(const v of Object.values(g))for(const x of (Array.isArray(v)?v:[v]))if(typeof x==='number')refs.add(x);
+  }
+ }
+ const missing=[...refs].filter(id=>!known.has(id)&&!PENDING_ENGINE_WIRING.has(id));
+ assert.deepEqual(missing,[],`剧本引用的 id 未被引擎三清单覆盖且未登记豁免: ${missing}`);
+ /* 豁免清单保持诚实：不允许登记剧本未引用的 id */
+ const unref=PENDING_ENGINE_WIRING&&[...PENDING_ENGINE_WIRING].filter(id=>!refs.has(id));
+ assert.deepEqual(unref,[],`豁免清单存在剧本未引用的 id（fe 接线后请除名）: ${unref}`);
+});
+
+test('TLR shadow audit: shadow text must have shadowSpec or be on the manual list',()=>{
+ /* 人工暗影清单：阴影文本无法用 shadowSpec 契约键完整表达，需引擎人工结算 */
+ const MANUAL_SHADOWS=new Set([144,145,152,153,159,168,174,175,176,178,182,185,188,195,198,200]);
+ for(const c of D.cards.filter(c=>c.pack==='TLR')){
+  if(c.shadow&&!c.shadowSpec)assert(MANUAL_SHADOWS.has(c.id),`卡 ${c.id}「${c.en}」有阴影文本但无 shadowSpec 且不在人工清单`);
+  if(c.shadowSpec){assert(c.shadow,`卡 ${c.id} 有 shadowSpec 却无阴影文本`);assert(!MANUAL_SHADOWS.has(c.id),`卡 ${c.id} 已可结构化表达，不应留在人工清单`);}
+ }
+ for(const id of MANUAL_SHADOWS){
+  const c=D.cards.find(x=>x.id===id);
+  assert(c&&c.shadow&&!c.shadowSpec,`人工暗影清单条目 ${id} 必须真实有阴影文本且无 shadowSpec（清单保持诚实）`);
+ }
+});
+
+test('TLR time fields: rule text 时间N 与 time 字段一致，timeExpire 仅 165',()=>{
+ for(const c of D.cards.filter(c=>c.pack==='TLR')){
+  const m=(c.rule||'').match(/时间(\d+)/);
+  if(m)assert.equal(c.time,Number(m[1]),`卡 ${c.id} 文本时间 ${m[1]} 与 time 字段不一致`);
+  else assert.equal(c.time,undefined,`卡 ${c.id} 无时间文本却带 time 字段`);
+ }
+ const te=D.cards.filter(c=>c.timeExpire).map(c=>c.id);
+ assert.deepEqual(te,[165],'timeExpire 本批仅崩毁的壁垒（millEach n=5 reset=1）');
+ const b=D.cards.find(c=>c.id===165);
+ assert.deepEqual(b.timeExpire,{type:'millEach',n:5,reset:1});
+});
+
+test('TLR sets: per-set normal totals match the official group table; scenario decks match HoB',()=>{
+ const SET_NORMAL={'Intruders in Chetwood':18,'Angmar Orcs':9,'Eriador Wilds':10,'Iârion':1,
+                   "Deadmen's Dike":24,'Cursed Dead':10,'Dark Sorcery':9,'The Weather Hills':22,
+                   'Foul Weather':9,'Ruins of Arnor':8};
+ for(const [name,n] of Object.entries(SET_NORMAL)){
+  const s=D.cards.filter(c=>c.set===name).reduce((a,c)=>a+c.quantity,0);
+  assert.equal(s,n,`遭遇组 ${name} normal 合计应 ${n}，实测 ${s}`);
+  assert(D.sets[name]&&D.sets[name].length,'每个新组都要有中文名');
+ }
+ const HOB={iic:{total:37,easyDelta:12,sets:['Intruders in Chetwood','Angmar Orcs','Eriador Wilds']},
+            dd:{total:43,easyDelta:13,sets:["Deadmen's Dike",'Cursed Dead','Dark Sorcery']},
+            twh:{total:48,easyDelta:9,sets:['The Weather Hills','Foul Weather','Ruins of Arnor','Angmar Orcs']}};
+ for(const [id,exp] of Object.entries(HOB)){
+  const sc=D.scenarios.find(s=>s.id===id);
+  const qsum=Object.values(sc.deckQuantities).reduce((a,b)=>a+b,0);
+  assert.equal(qsum,exp.total,`剧本 ${id} normal 牌库应 ${exp.total} 张`);
+  const esum=Object.values(sc.easyRemove).reduce((a,b)=>a+b,0);
+  assert.equal(esum,exp.easyDelta,`剧本 ${id} easy 移除合计应 ${exp.easyDelta}`);
+  const inDeck=new Set(D.cards.filter(c=>exp.sets.includes(c.set)).map(c=>String(c.id)));
+  for(const k of Object.keys(sc.deckQuantities))assert(inDeck.has(k),`剧本 ${id} deckQuantities 含组外卡 ${k}`);
+  assert.deepEqual(new Set([...Object.keys(sc.deckQuantities),...Object.keys(sc.easyRemove)].filter(k=>!inDeck.has(k))),new Set);
+  for(const [k,v] of Object.entries(sc.easyRemove)){
+   assert(sc.deckQuantities[k]>=v,`剧本 ${id} 卡 ${k} 的 easyRemove ${v} 超过 normal 数量`);
+  }
+ }
+ const POINTS={151:30,172:11,173:13,190:null,191:20};
+ for(const [id,pts] of Object.entries(POINTS)){
+  const q=D.quests.find(x=>x.id===Number(id));
+  assert(q,'TLR 关卡卡缺失 '+id);
+  assert.equal(q.points,pts,`关卡 ${id} 进度阈值不符`);
+ }
+ assert.deepEqual(D.quests.filter(q=>q.pack==='TLR').map(q=>q.stage).sort((a,b)=>a-b),[1,1,1,2,2]);
 });

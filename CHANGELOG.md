@@ -1,3 +1,15 @@
+# v0.17.0 · 《失落的王国》批次1数据层：59 张遭遇卡 + 三个剧本入口（2026-11-03）
+
+安格玛觉醒批次1（数据层先行，引擎接线由 fe 并行实施，契约对齐）：
+
+- **新遭遇卡 54 张（id 143-161、162-171 起各遭遇组）+ 关卡卡 5 张（151/172/173/190/191）**：数值/特质/数量程序化取自 HoB /Export（encounter-carddata packCode 09016-09074），中文工作译名与机制摘要人工校对；每卡 materialize **uid = HoB slug**（与展示层 encounter-carddata 去重/详情命中一致），uid 全局唯一有断言。
+- **口径修正（对照 HoB 剧本载荷与 FFG 插页）**：IiC 牌库 = 切特伍德入侵者 18 + 安格玛兽人 9 + 埃利阿多荒野 10（37/25）；DD = 亡者堤道 24 + 被诅咒的亡者 10 + 暗黑巫术 9（43/30）；TWH = 风云丘陵 22（含 2 张任务目标）+ 恶劣天气 9 + 阿尔诺废墟 8 + 安格玛兽人 9（48/39）。10 组遭遇组进 D.sets（组级 normal 合计与 HoB 逐一相符，断言覆盖）；easyRemove 按 easy<normal 逐卡推导并断言差值。
+- **新 schema 字段**（引擎端 fail loud 兜底）：`time`（150/189=4、165=3，与文本「时间N」一致性断言）、`timeExpire:{type:'millEach',n:5,reset:1}`（165 崩毁的壁垒）、`indestructible`（162 索尔迪尔）、`sideQuest`（10 张遭遇支线探险）、`shadowSpec`（5 张可结构化：148/156/164/169/194；其余 16 张进 check-scenario-data 人工暗影清单，清单本身有「必须真实有阴影文本」的反向断言保持诚实）。
+- **三个剧本**：iic（难度4）/dd（难度7）/twh（难度5）——难度为 FFG 官方插页值（mec38/mec108，BGG 对照）。setup/stages/gate/onEnter 按契约写入；新枚举（stageCards、searchEngage、spawnSetAside、revealSetAside、controlsObjective、spawnHpZero、makeActive、perPlayerLocation、threatPerStagingEnemy、deckOutElimination）登记进 check-scenario-data 合法值表；effect 覆盖检查读引擎三清单（hasEffect/manualReveal/SETUP_EFFECT）源码，未接线的 id 显式登记「待引擎接线豁免清单」（15 个 id，fe 接线后除名）。TWH 本批降级：兽人副牌库不做，相关交互走人工清单。
+- **数据事实核查**：Iârion 威/攻/防 HoB 254 哨兵值经卡图核对为印面 X/X/X（生命 4）；风云丘陵 1B 无进度阈值（255 哨兵 → points:null，推进走任务目标机制）。
+- 测试同步（旧计数断言随数据扩容更新）：tests.cjs 110 定义/233 拷贝/18 关卡；pack-data-tests pack→遭遇组允许表改登记制（Core/THfG/TLR）；encounter-image-tests TLR 卡面豁免（图像索引仍 69 条，属后续图片批次）；check-scenario-data +5 专项（uid/效果覆盖/暗影清单/time 一致性/组数量）34 项全绿。
+- 回归：build + check_project 全绿。卡数：110 遭遇定义 + 18 关卡 = 128 条（此前 69）。
+
 # v0.16.9 · nameZh merge：EDGE 中文覆盖层接入两条 fetch 管线（2026-11-02）
 
 docs/data/zh-overrides（银星 EDGE 扩展导出，见该目录 README.md）接入 carddata 产出收尾：
