@@ -988,6 +988,7 @@ const LOTR_DATA = {
       "shadow": "",
       "traits": "Dúnedain. Ranger.",
       "willpower": "X",
+      "threat": "X",
       "attack": "X",
       "defense": "X",
       "health": 4,
