@@ -44,7 +44,7 @@ const QuestRulesFactory=(H,R)=>{
  function approveActions(s,pid){check(s);need(q(s).order.includes(pid)&&planned(s).length&&!q(s).actionLocked,'没有待二次确认的行动');validateReservations(s);q(s).actionApprovals??=[];need(!q(s).actionApprovals.includes(pid),'已二次确认');q(s).actionApprovals.push(pid);if(alive(s).every(p=>q(s).actionApprovals.includes(p.id))){q(s).actionLocked=true;resumeActions(s);}}
  function withdrawActionApproval(s,pid){check(s);need(!q(s).actionLocked&&q(s).order.includes(pid),'行动已经锁定或玩家无效');q(s).actionApprovals=(q(s).actionApprovals||[]).filter(id=>id!==pid);}
  function resumeActions(s){const x=q(s);if(!x?.actionLocked||x.runningAction||x.queue.length||x.tasks.length||s.pending.length||s.status!=='playing')return;
-  while(planned(s).length&&!x.queue.length&&!x.tasks.length&&s.status==='playing'){const item=planned(s)[0];try{x.executingAction=true;validatePlanItem(s,item);const trial=JSON.parse(JSON.stringify(s));q(trial).runningAction=true;if(item.kind==='play')R.play(trial,item.player,item.uid,item.params);else R.activate(trial,item.player,item.uid,item.params);x.runningAction=true;const codeBefore=item.kind==='play'?s.players[item.player].hand.find(y=>same(y.uid,item.uid))?.code:null;if(item.kind==='play')R.play(s,item.player,item.uid,item.params);else R.activate(s,item.player,item.uid,item.params);if(item.kind==='play'&&codeBefore){const m=R.data(s,{code:codeBefore,owner:item.player});if(curseExtra(s,m.name,item.player))spendExtra(s,item.player,1);}x.plannedActions.shift();delete x.actionError;}catch(e){x.actionLocked=false;x.actionApprovals=[];x.actionError='后续暂定行动需重新选择：'+e.message;log(s,x.actionError);return;}finally{x.executingAction=false;x.runningAction=false;}}
+  while(planned(s).length&&!x.queue.length&&!x.tasks.length&&s.status==='playing'){const item=planned(s)[0];try{x.executingAction=true;validatePlanItem(s,item);const trial=JSON.parse(JSON.stringify(s));q(trial).runningAction=true;if(item.kind==='play')R.play(trial,item.player,item.uid,item.params);else R.activate(trial,item.player,item.uid,item.params);x.runningAction=true;const codeBefore=item.kind==='play'?s.players[item.player].hand.find(y=>same(y.uid,item.uid))?.code:null;if(item.kind==='play')R.play(s,item.player,item.uid,item.params);else R.activate(s,item.player,item.uid,item.params);if(item.kind==='play'&&codeBefore){const m=R.data(s,{code:codeBefore,owner:item.player});if(curseExtra(s,m.name,item.player))spendExtra(s,item.player,1);}if(H.deadmenGate)H.deadmenGate(s,item.player); /* v0.16.10 批次2：169 亡者之门——行动效果触发后弃牌库顶 */ x.plannedActions.shift();delete x.actionError;}catch(e){x.actionLocked=false;x.actionApprovals=[];x.actionError='后续暂定行动需重新选择：'+e.message;log(s,x.actionError);return;}finally{x.executingAction=false;x.runningAction=false;}}
   if(!planned(s).length){x.actionLocked=false;x.actionApprovals=[];x.finalPasses=[];log(s,'已确认的行动执行完成，请继续交流或结束本窗口');}
  }
  function withdrawDeploymentApproval(s,pid){check(s);need(q(s).discussion&&!q(s).deploymentLocked,'名单已锁定');need(q(s).order.includes(pid),'无效玩家');q(s).deploymentApprovals=(q(s).deploymentApprovals||[]).filter(id=>id!==pid);}
@@ -81,11 +81,11 @@ function submitDeployment(s,pid,uids){check(s);const x=q(s);need(x.step==='commi
   need(++x.revealed<400,'连续翻牌异常，已停止');const instruction=x.remaining.shift(),c=H.draw(s,s.phase===2);if(!c){log(s,'遭遇牌库无牌可翻');return null;}
   log(s,'翻开「'+c.name+'」');x.current={card:c,guard:instruction.guard||null,canceled:false,replacement:false};
   // Thalin is a constant effect before keywords or When Revealed (FAQ).
-  if(c.type==='Enemy'&&committed(s).some(a=>a.meta.code==='01006')){c.damage=(c.damage||0)+1;if(c.damage>=c.health){if(c.id===115){delete c.damage;s.deck.push(c);H.shuffle(s,s.deck);}else if(c.victory)s.victory.push(c);else H.discardCard(s,c);log(s,'沙林在翻开时击败敌人，跳过涌现与翻开效果');x.current=null;return c;}}
+  if(c.type==='Enemy'&&committed(s).some(a=>a.meta.code==='01006'&&!H.blankText(s,a))){c.damage=(c.damage||0)+1;if(c.damage>=c.health){if(c.id===115){delete c.damage;s.deck.push(c);H.shuffle(s,s.deck);}else if(c.victory)s.victory.push(c);else H.discardCard(s,c);log(s,'沙林在翻开时击败敌人，跳过涌现与翻开效果');x.current=null;return c;}}
   x.current.hasEffect=HAS_EFFECT.includes(c.id);return c;
  }
  function cancelOptions(s){const cur=q(s)?.current;if(!cur?.hasEffect||cur.canceled)return [];/* v0.16.10 P0③：147 兽人战团的效果不可取消，不提供任何取消选项 */if(cur.card.id===147)return [];const a=[];for(const p of alive(s)){for(const x of p.hand)if(x.code==='01050'){try{R.payment(s,p.id,'spirit',1);a.push({value:'will:'+x.uid,label:p.name+' · 意志考验（1资源）'});}catch{}}
-  if(cur.card.type==='Treachery')for(const h of chars(s).filter(c=>c.controller===p.id&&c.meta.code==='01008'&&!c.state.exhausted))a.push({value:'eleanor:'+h.uid,label:p.name+' · 埃莉诺（横置，弃掉并补翻）'});
+  if(cur.card.type==='Treachery')for(const h of chars(s).filter(c=>c.controller===p.id&&c.meta.code==='01008'&&!c.state.exhausted&&!H.blankText(s,c)))a.push({value:'eleanor:'+h.uid,label:p.name+' · 埃莉诺（横置，弃掉并补翻）'});
   }return a;
  }
  function cancel(s,value,payment){check(s);const cur=q(s).current;need(cancelOptions(s).some(c=>c.value===value),'此取消响应当前不合法');const [kind,id]=value.split(':');if(kind==='will'){const p=alive(s).find(p=>p.hand.some(x=>same(x.uid,id))),pay=R.payment(s,p.id,'spirit',1,payment);R.spend(s,pay.pay);const at=p.hand.findIndex(x=>same(x.uid,id));p.playerDiscard.push(p.hand.splice(at,1)[0]);}else{R.find(s,id).state.exhausted=true;cur.replacement=true;}cur.canceled=true;log(s,'取消「'+cur.card.name+'」的翻开效果；关键词仍会结算');}
@@ -93,19 +93,20 @@ function submitDeployment(s,pid,uids){check(s);const x=q(s);need(x.step==='commi
   if(s.phase===2&&c.doomed)for(const p of [...alive(s)])R.changeThreat(s,p.id,c.doomed);
   if(s.phase===2&&c.surge)x.remaining.unshift({});
   if(cur.replacement){H.discardCard(s,c);x.remaining.unshift({guard:cur.guard});x.current=null;return;}
-  if(['Enemy','Location'].includes(c.type)||c.type==='Side Quest'||c.type==='Quest'){s.staging.push(c);H.timeEnter(s,c);if(cur.guard){const o=s.objectives.find(o=>o.uid===cur.guard);if(o){o.guard=c.uid;c.guard=o.uid;}}}
+  if(['Enemy','Location'].includes(c.type)||c.type==='Side Quest'||c.type==='Quest'){s.staging.push(c);H.timeEnter(s,c);if(c.type==='Enemy'&&H.amonFornStrike)H.amonFornStrike(s,c);if(cur.guard){const o=s.objectives.find(o=>o.uid===cur.guard);if(o){o.guard=c.uid;c.guard=o.uid;}}
+   /* v0.16.10 批次2：157 雾罩丘陵——场上只有1张探险卡时涌现（探险阶段路径，走涌现余量）。 */
+   if(c.id===157&&1+s.staging.filter(y=>y.type==='Quest'||y.type==='Side Quest').length===1){log(s,'雾罩丘陵：场上只有1张探险卡，涌现');x.remaining.unshift({});}
+   /* v0.16.10 批次2：168 闹鬼堡垒（活跃地点）——每回合第一个翻开的亡灵敌人涌现。 */
+   else if(s.active?.id===168&&c.type==='Enemy'&&/Undead\./.test(c.traits||'')&&s.haunted168Round!==s.round){s.haunted168Round=s.round;log(s,'闹鬼堡垒：本回合第一个亡灵敌人，涌现');x.remaining.unshift({});}}
   if(c.type==='Objective'){c.holder=null;c.guard=null;s.objectives.push(c);x.remaining.unshift({guard:c.uid});}
   if(!cur.canceled&&cur.hasEffect)effect(s,c);
   if(c.type==='Treachery'&&!cur.canceled)H.sorceryStrike(s,c);
   if(c.type==='Treachery'&&!s.conditions.includes(c)&&!x.tasks.some(t=>t.payload.card?.uid===c.uid))H.discardCard(s,c);
   x.current=null;log(s,'已结算「'+c.name+'」');
  }
- /* TODO(angmar-batch2) 待补缺口（需 planning-engine 授权后落地）：
-  ① 156/157：X 为静态值（无法术来源时 X=0），当前按字面读 X 未兜底；
-  ② 169/183/168：光环型持续修正（183 禁胜已另修，剩光环数值）；
-  ③ 196：卡牌文本框空白区提示/交互尚未实现（onEnter 伤害已生效）；
-  ④ 143/162：附属限制（不能有附属/限制条件）未实现；
-  ⑤ 155：兽人攻击/防御光环未实现。 */
+ /* v0.16.10 批次2：TODO(angmar-batch1) 缺口已收口——①157 X=场上探险卡数（stats 动态）；
+  ②169/183/168 光环（deadmenGate/amonFornStrike/haunted168Round）；③196 条件附属（H.blankText）；
+  ④143/162 附属限制（attachmentTargets 过滤）；⑤155 兽人光环（stats 动态）。 */
  function effect(s,c){const x=q(s);switch(c.id){
   case 74:for(const p of alive(s))if(chars(s).some(a=>a.controller===p.id&&!a.state.exhausted))task(s,'exhaust',p.id);break;
   case 76:x.encounterModifiers.push({kind:'committed',stat:'willpower',amount:-1});break;
@@ -125,7 +126,7 @@ function submitDeployment(s,pid,uids){check(s);const x=q(s);need(x.step==='commi
   /* ── v0.16.10《安格玛觉醒》批次1 effect cases（实现口径详见 angmar-engine-tests.cjs 夹具与提交说明）── */
   case 152:task(s,'angmarOrc',s.first,{card:c},true);break;
   case 147:{const es=s.staging.filter(e2=>e2.type==='Enemy');if(es.length&&total(s)>H.threat(s)){for(const e2 of es)task(s,'suddenAssault',s.first,{uid:e2.uid,attack:R.stats(s,e2.uid).attack,name:e2.name});}
-   else{const hit=[s.deck,s.discard].find(a=>a.some(y=>(y.en||y.name)==='Orc War Party'));need(hit,'Sudden Assault：遭遇牌库/弃牌堆找不到 Orc War Party');const c2=hit.find(y=>(y.en||y.name)==='Orc War Party');hit.splice(hit.indexOf(c2),1);s.staging.push(c2);H.timeEnter(s,c2);H.shuffle(s,s.deck);log(s,'没有攻击发生：搜索「兽人战团」加入探查区');}break;}
+   else{const hit=[s.deck,s.discard].find(a=>a.some(y=>(y.en||y.name)==='Orc War Party'));need(hit,'Sudden Assault：遭遇牌库/弃牌堆找不到 Orc War Party');const c2=hit.find(y=>(y.en||y.name)==='Orc War Party');hit.splice(hit.indexOf(c2),1);s.staging.push(c2);H.timeEnter(s,c2);if(H.amonFornStrike)H.amonFornStrike(s,c2);H.shuffle(s,s.deck);log(s,'没有攻击发生：搜索「兽人战团」加入探查区');}break;}
   case 148:{const withE=alive(s).filter(p=>p.engaged.some(e2=>e2.type==='Enemy'));if(withE.length)for(const p of withE)task(s,'returnEnemy148',p.id);else{x.remaining.unshift({});for(const p of [...alive(s)])R.changeThreat(s,p.id,1);}break;}
   case 150:{const t2=s.objectives.find(o=>o.id===161);
    if(!t2){log(s,'伊亚里安不在场，营救伊亚里安的翻开效果无处结算（伊亚里安离场时对局应已判负）');break;}
@@ -135,7 +136,7 @@ function submitDeployment(s,pid,uids){check(s);const x=q(s);need(x.step==='commi
   case 158:task(s,'treacheryManual',s.first,{card:c,text:'迫切需求：从遭遇牌库和弃牌堆找出1张遭遇支线探险并翻开，或选择一张不同的探险卡成为当前探险卡（当前按手动事项处理）。'},true);break;
   case 159:{const n=questCardsInPlay(s);x.remaining.unshift(...Array.from({length:n},()=>({})));break;}
   case 170:{const cs=committed(s);for(const p of new Set(cs.map(a2=>a2.controller)))task(s,'fog170',p,{count:cs.filter(a2=>a2.controller===p).length});break;}
-  case 175:{const dead=s.discard.filter(y=>y.type==='Enemy'&&((y.en||y.name)==='Cursed Dead'));for(const y of dead){s.discard.splice(s.discard.indexOf(y),1);delete y.damage;delete y.timeLeft;s.staging.push(y);H.timeEnter(s,y);}log(s,`弃牌堆的 ${dead.length} 张被诅咒的亡者加入探查区`);break;}
+  case 175:{const dead=s.discard.filter(y=>y.type==='Enemy'&&((y.en||y.name)==='Cursed Dead'));for(const y of dead){s.discard.splice(s.discard.indexOf(y),1);delete y.damage;delete y.timeLeft;s.staging.push(y);H.timeEnter(s,y);if(H.amonFornStrike)H.amonFornStrike(s,y);}log(s,`弃牌堆的 ${dead.length} 张被诅咒的亡者加入探查区`);break;}
   case 176:{const und=[...s.staging,...s.players.flatMap(p=>p.engaged)].filter(y=>y.type==='Enemy'&&/Undead/.test(y.traits||''));if(!und.length){x.remaining.unshift({});break;}for(const e2 of und){e2.undeadBoostOrig={a:e2.attack,d:e2.defense,t:e2.threat};e2.attack=(e2.attack??0)+1;e2.defense=(e2.defense??0)+1;e2.threat=(e2.threat??0)+1;e2.undeadBoostRound=s.round;}break;}
   case 178:{const milled=[];for(const p of alive(s)){const k=H.mill(s,p.id,3);milled.push(...p.playerDiscard.slice(-k));}const types=new Set(milled.map(y=>{try{return R.data(s,y).type}catch(e2){return y.type||'unknown'}}));if(types.size)x.encounterModifiers.push({kind:'staging',stat:'threat',amount:types.size*2});break;}
   case 179:{for(const p of alive(s)){const names=new Set(p.playerDiscard.map(y=>{try{return R.data(s,y).name}catch(e2){return y.name}}));for(const a2 of chars(s).filter(a2=>a2.kind==='ally'&&a2.controller===p.id&&names.has(a2.meta.name)))R.leaveAlly(s,a2.uid,'playerDiscard');}break;}

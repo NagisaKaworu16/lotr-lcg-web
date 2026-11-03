@@ -2,17 +2,17 @@
 const ScenarioEngine = (()=>{
 const D=typeof LOTR_DATA!=='undefined'?LOTR_DATA:require('./data.js');
 const PlanningFactory=typeof PlanningRulesFactory!=='undefined'?PlanningRulesFactory:require('./planning-engine.js');
-const P2=PlanningFactory({log,drawPlayer,shuffle,checkQuest:s=>{if(s.questing&&s.phase===2&&!s.questing.queue.length){P3.advanceIfReady(s);P3.resumeDeployment(s);P3.resumeActions(s);}if(s.traveling&&s.phase===3){P3.advanceIfReady(s);P4.resume(s);}if(s.encountering&&s.phase===4){P3.advanceIfReady(s);P5.resume(s);}if(s.combat&&s.phase===5){P3.advanceIfReady(s);P6.resume(s);}if(s.refreshing&&s.phase===6){P7.resume(s);}},defeatEnemy:(s,uid)=>defeat(s,uid,true),addProgress:(s,n)=>[2,3,4,5,6].includes(s.phase)&&P2.context(s)?P3.progress(s,n):addProgress(s,n,true)});
+const P2=PlanningFactory({log,drawPlayer,shuffle,blankText,deadmenGate,amonFornStrike,currentQuestIsSide,checkQuest:s=>{if(s.questing&&s.phase===2&&!s.questing.queue.length){P3.advanceIfReady(s);P3.resumeDeployment(s);P3.resumeActions(s);}if(s.traveling&&s.phase===3){P3.advanceIfReady(s);P4.resume(s);}if(s.encountering&&s.phase===4){P3.advanceIfReady(s);P5.resume(s);}if(s.combat&&s.phase===5){P3.advanceIfReady(s);P6.resume(s);}if(s.refreshing&&s.phase===6){P7.resume(s);}},defeatEnemy:(s,uid)=>defeat(s,uid,true),addProgress:(s,n)=>[2,3,4,5,6].includes(s.phase)&&P2.context(s)?P3.progress(s,n):addProgress(s,n,true)});
 const QuestFactory=typeof QuestRulesFactory!=='undefined'?QuestRulesFactory:require('./quest-engine.js');
-const P3=QuestFactory({log,draw,shuffle,discardCard,task,gate,advance:(s)=>advance(s,true),threat,stageDef,questOf,mill,take:findTake,timeEnter,sorceryStrike},P2);
+const P3=QuestFactory({log,draw,shuffle,discardCard,task,gate,advance:(s)=>advance(s,true),threat,stageDef,questOf,mill,take:findTake,timeEnter,sorceryStrike,blankText,deadmenGate,amonFornStrike},P2);
 const TravelFactory=typeof TravelRulesFactory!=='undefined'?TravelRulesFactory:require('./travel-engine.js');
 const P4=TravelFactory({log,rng},P2,P3);
 const EncounterFactory=typeof EncounterRulesFactory!=='undefined'?EncounterRulesFactory:require('./encounter-engine.js');
 const P5=EncounterFactory({log,stageDef,questOf,engageHooks},P2,P3);
 const CombatFactory=typeof CombatRulesFactory!=='undefined'?CombatRulesFactory:require('./combat-engine.js');
-const P6=CombatFactory({log,draw,discardCard,get byId(){return byId;},mill},P2,P3);
+const P6=CombatFactory({log,draw,discardCard,get byId(){return byId;},mill,blankText,deadmenGate},P2,P3);
 const RefreshFactory=typeof RefreshRulesFactory!=='undefined'?RefreshRulesFactory:require('./refresh-engine.js');
-const P7=RefreshFactory({log,tickTime,stageDef,scenarioFlag,mill},P2,P3);
+const P7=RefreshFactory({log,tickTime,stageDef,scenarioFlag,mill,blankText},P2,P3);
 const byId=Object.fromEntries(D.cards.map(x=>[x.id,x]));
 const phases=['资源','计划','探险','旅行','遭遇','战斗','刷新'];
 const clone=x=>JSON.parse(JSON.stringify(x));
@@ -79,9 +79,23 @@ function engageHooks(s,pid,c){if(!c)return;
  if(c.id===174){const i=[...s.discard].reverse().findIndex(x=>x.type==='Enemy'&&/Undead/.test(x.traits||''));if(i>=0){const x=s.discard.splice(s.discard.length-1-i,1)[0];delete x.damage;delete x.timeLeft;s.players[pid].engaged.push(x);log(s,`弃牌堆顶的不死敌人「${x.name}」入场与${s.players[pid].name}交战`);}
  else log(s,'「死灵领主」交战：弃牌堆没有不死敌人');}
 }
-/* 162 索尔迪尔：Sorcery 诡计翻开后立即攻击第一玩家（无防御，伤害由1名英雄承担）。
-   注：「不可附着」的打出校验在 planning 层，本批不改 planning-engine，暂缺（已知缺口）。 */
+/* 162 索尔迪尔：Sorcery 诡计翻开后立即攻击第一玩家（无防御，伤害由1名英雄承担）。 */
 function sorceryStrike(s,card){if(!inplay(s,162))return;if(!/Sorcery/.test(card.traits||''))return;const th=inPlayCards(s).find(x=>x.id===162);const n=th?(th.attack??0):0;if(!n)return;const hs=P2.chars(s).filter(x=>x.controller===s.first&&x.kind==='hero');const t=hs[0]||P2.chars(s).find(x=>x.controller===s.first);log(s,'索尔迪尔因 Sorcery 诡计立即攻击第一玩家');if(t)P2.damageCharacter(s,t,n);P2.pump(s);}
+/* ── v0.16.10 批次2：196 条件附属 / 169 亡者之门 / 183 阿蒙福恩 / 156 支线口径 ── */
+/* 196 条件附属「来自安格玛的寒意」：附于当前探险卡时，每个受伤角色的印制文本框视为空白（关键词和特质除外）。
+   调用方在各印制能力位（Thalin/Eleanor/Éowyn/Glóin/Éomer/Dúnhere/Legolas/甘道夫盟友等）先查本谓词。 */
+function blankText(s,c){if(!s.questAttachments?.some(a=>a.card.id===196))return false;return ((c.state?.damage)??c.damage??0)>0;}
+/* 169 亡者之门（活跃地点）强制：玩家触发『行动』或『响应』效果后，弃掉其牌库顶1张牌。
+   覆盖点：quest-engine resumeActions（行动窗口 play/ability）与 planning resolveChoice（排队响应）；
+   战斗内 respond（长矛/迅捷打击）也走 resolveChoice/排队的由各引擎补钩。牌库为空时不弃（原文未定淘汰）。 */
+function deadmenGate(s,pid){if(!s.active||s.active.id!==169)return;const p=s.players[pid];if(!p||p.eliminated||!p.playerDeck.length)return;const c=p.playerDeck.shift();p.playerDiscard.push(c);log(s,`${p.name}触发行动/响应效果，弃掉牌库顶1张牌（亡者之门）`);}
+/* 183 阿蒙福恩（活跃地点）强制：1个兽人敌人加入探查区后，立即对第一名玩家发起一次攻击。
+   简化：探险/设置期无完整战斗窗口，沿用 162 sorceryStrike 先例——第一名玩家的第一名角色直接承受攻击力伤害。 */
+function amonFornStrike(s,c){if(!s.active||s.active.id!==183)return;if(!c||c.type!=='Enemy'||!/Orc\./.test(c.traits||''))return;const hs=P2.chars(s).filter(x=>x.controller===s.first&&x.kind==='hero');const t=hs[0]||P2.chars(s).find(x=>x.controller===s.first);const n=P2.stats(s,c.uid).attack;if(!t||!n)return;log(s,'阿蒙福恩：兽人敌人加入探查区，立即对第一名玩家发起攻击');P2.damageCharacter(s,t,n);P2.pump(s);}
+/* 156 崎岖乡野口径：当前探险是支线探险。本引擎的 s.quest 只会指向 D.quests 的正式关 stage 实体，
+   支线（149/150/155 等）目前只入探查区、无「转正」机制——故当前恒 false；未来若支持支线转正
+   （s.quest 指向 Side Quest 实体），此判定自动生效，156 的 +2 威胁随之激活。 */
+function currentQuestIsSide(s){return byId[s.quest]?.type==='Side Quest'||false;}
 const manualReveal=new Set([74,76,79,80,89,93,98,105,116,117,118,149,160,171,177,181,190,191,192,193,158]);
 function reveal(s,count=1,guardFor=null){
  for(let i=0;i<count;i++){
@@ -91,6 +105,10 @@ function reveal(s,count=1,guardFor=null){
   for(const p of live(s))if(c.doomed)adjustThreat(s,p,c.doomed);
   if(c.type==='Enemy'||c.type==='Location'||c.type==='Side Quest'||c.type==='Quest'){
    s.staging.push(c);timeEnter(s,c);if(guardFor&&i===0){guardFor.guard=c.uid;c.guard=guardFor.uid;}
+   /* v0.16.10 批次2：183 阿蒙福恩（活跃地点）——兽人敌人加入探查区后立即攻击第一玩家。 */
+   if(c.type==='Enemy')amonFornStrike(s,c);
+   /* v0.16.10 批次2：157 雾罩丘陵——场上只有1张探险卡（当前关，无支线在场）时获得涌现。 */
+   if(c.id===157&&1+s.staging.filter(y=>y.type==='Quest'||y.type==='Side Quest').length===1){log(s,'雾罩丘陵：场上只有1张探险卡，涌现');reveal(s,1);}
   }else if(c.type==='Objective'){
    c.holder=null;c.guard=null;s.objectives.push(c);reveal(s,1,c);
   }else if(c.type==='Treachery'){
@@ -106,6 +124,8 @@ function reveal(s,count=1,guardFor=null){
   }
   if(c.type==='Treachery')sorceryStrike(s,c);
   if(c.surge)reveal(s,1);
+  /* v0.16.10 批次2：168 闹鬼堡垒（活跃地点）——每回合第一个翻开的亡灵敌人获得涌现。 */
+  else if(s.active?.id===168&&c.type==='Enemy'&&/Undead\./.test(c.traits||'')&&s.haunted168Round!==s.round){s.haunted168Round=s.round;log(s,'闹鬼堡垒：本回合第一个亡灵敌人，涌现');reveal(s,1);}
  }
 }
 function enter(s,id){s.quest=id;s.progress=0;s.spawnDefeated=false;log(s,`进入 ${quest(s).stage}B「${quest(s).name}」`);
@@ -321,7 +341,7 @@ function setupCancelOptions(s){
  if(card.type!=='Treachery'||!x.hasEffect)return a;
  for(const p of live(s)){
   for(const h of p.hand||[])if(h.code==='01050')a.push({value:'will:'+h.uid,label:`${p.name} · 意志考验（1资源）`});
-  for(const c of P2.chars(s))if(c.controller===p.id&&c.meta.code==='01008'&&!c.state.exhausted)a.push({value:'eleanor:'+c.uid,label:`${p.name} · 埃莉诺（横置，弃掉并补翻）`});
+  for(const c of P2.chars(s))if(c.controller===p.id&&c.meta.code==='01008'&&!c.state.exhausted&&!blankText(s,c))a.push({value:'eleanor:'+c.uid,label:`${p.name} · 埃莉诺（横置，弃掉并补翻）`});
  }
  return a;
 }
@@ -419,7 +439,10 @@ function advance(s,internal=false){assert(internal||!s.questing,'探险推进由
  if(next==='random'){assert(Array.isArray(st.nextRandom)&&st.nextRandom.length>=1,'random next 需要 nextRandom 数组');next=st.nextRandom[Math.floor(rng(s)*st.nextRandom.length)];}
  if(next!==null&&next!==undefined){stageDef(s,next);enter(s,next);}
  else{const blocking=noWinBlocked(s);
-  if(blocking.length){log(s,`进度已满，但「${blocking.map(id=>D.cards.find(c=>c.id===id)?.name||id).join('、')}」仍在场，玩家不能获胜；待其离场后重新达成`);return;}
+  if(blocking.length){const sig=s.round+':'+[...blocking].sort((a,b)=>a-b).join(',');
+   /* v0.16.10 批次2：同一 blocking 状态只记一次日志（每次探险结算都会重入 advance，避免刷屏）。 */
+   if(s.noWinLogSig!==sig){s.noWinLogSig=sig;log(s,`进度已满，但「${blocking.map(id=>D.cards.find(c=>c.id===id)?.name||id).join('、')}」仍在场，玩家不能获胜；待其离场后重新达成`);}
+   return;}
   s.status='won';log(s,'剧本胜利！');}}
 function travel(s,uid,confirmed=false){assert(!s.traveling,'请使用旅行暂定选择与全员二次确认');ready(s);assert(s.phase===3,'仅在旅行阶段旅行。');assert(!s.active,'已有当前地点。');let c=s.staging.find(c=>c.uid===uid);assert(c?.type==='Location','请选择地点。');assert(!s.staging.some(x=>x.id===88)||c.id===88,'必须优先旅行至东湾。');
  if([77,78,94].includes(c.id))assert(confirmed,'请先确认旅行费用可支付并已处理。');

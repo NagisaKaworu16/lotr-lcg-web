@@ -19,10 +19,24 @@ const PlanningRulesFactory=(H)=>{
  const find=(s,uid)=>[...chars(s),...attaches(s),...enemies(s),...locations(s)].find(c=>same(c.uid,uid));
  function attached(s,uid){return attaches(s).filter(c=>same(c.state.target,uid));}
  function traits(s,c){let t=c.meta.traits||'';if(attached(s,c.uid).some(a=>a.meta.code==='01026'))t+=' Gondor.';return t;}
- function stats(s,uid){const c=find(s,uid);need(c,'目标已不在场');let v={willpower:c.meta.willpower??0,attack:c.meta.attack??0,defense:c.meta.defense??0,health:c.meta.health??0,threat:c.meta.threat??0};if(c.kind==='enemy'&&c.state.id===90)v.attack+=2*(c.state.resources||0);if(c.kind==='enemy'&&c.state.forestSpiderRound===s.round)v.attack+=c.state.forestSpiderBonus??1;if(c.meta.code==='01004')v.attack+=c.state.damage||0;
+ function stats(s,uid){const c=find(s,uid);need(c,'目标已不在场');let v={willpower:c.meta.willpower??0,attack:c.meta.attack??0,defense:c.meta.defense??0,health:c.meta.health??0,threat:c.meta.threat??0};if(c.kind==='enemy'&&c.state.id===90)v.attack+=2*(c.state.resources||0);if(c.kind==='enemy'&&c.state.forestSpiderRound===s.round)v.attack+=c.state.forestSpiderBonus??1;
+ /* v0.16.10 批次2：196 条件附属——受伤角色印制文本框空白（关键词和特质除外），埃莫尔的受损转攻随之失效。 */
+ if(c.meta.code==='01004'&&!H.blankText(s,c))v.attack+=c.state.damage||0;
   for(const a of attached(s,uid))switch(a.meta.code){case'01027':v.willpower+=2;break;case'01040':v.health+=4;break;case'01041':v.attack+=traits(s,c).includes('Dwarf.')?2:1;break;case'01055':v.willpower++;break;case'01056':v.threat--;break;case'01071':v.willpower--;break;}
   for(const m of s.phaseModifiers||[])if(m.round===s.round&&m.phase===s.phase&&m.targets.includes(c.uid))v[m.stat]+=m.amount;
   if([2,3,4,5,6].includes(s.phase))for(const m of context(s)?.encounterModifiers||[]){const inStage=s.staging.some(x=>x.uid===c.uid);if(m.kind==='committed'&&c.state.committed||m.kind==='staging'&&inStage||m.kind==='stagingLocations'&&inStage&&c.kind==='location')v[m.stat]+=m.amount;}
+  /* ── v0.16.10 批次2：安格玛光环（动态判定，卡离场即失效）── */
+  if([2,3,4,5,6].includes(s.phase)){
+   /* 155 兽人伏击（支线在探查区）：每个兽人敌人威胁/攻击/防御+1（探查区与交战区均生效）。 */
+   if(c.kind==='enemy'&&(c.meta.traits||'').includes('Orc.')&&s.staging.some(x2=>x2.id===155)){v.threat++;v.attack++;v.defense++;}
+   const inStg=s.staging.some(x2=>x2.uid===c.uid);
+   if(c.kind==='location'&&inStg){
+    /* 156 崎岖乡野：当前探险是支线探险时威胁+2（引擎暂无支线转正机制，恒 false，见 currentQuestIsSide 注释）。 */
+    if(c.state.id===156&&H.currentQuestIsSide?.(s))v.threat+=2;
+    /* 157 雾罩丘陵：威胁 X=场上探险卡数量（当前关+在场支线；覆盖印制 'X'）。 */
+    if(c.state.id===157)v.threat=1+s.staging.filter(y=>y.type==='Quest'||y.type==='Side Quest').length;
+   }
+  }
   if([2,3,4,5,6].includes(s.phase)&&context(s)?.ignoredThreat?.includes(c.uid))v.threat=0;
   // 甘道夫的地图：持有英雄不能攻击或防御（用不可枚举属性标记，避免污染数值对象与序列化）
   if(c.kind==='hero'&&objectiveOn(s,uid)?.id===108){v.attack=0;v.defense=0;Object.defineProperty(v,'noCombat',{value:true,enumerable:false});}
@@ -83,10 +97,10 @@ const PlanningRulesFactory=(H)=>{
  function sourceHand(s,pid,uid){const p=s.players[pid];need(p&&!p.eliminated&&p.hand,'无效玩家');const x=p.hand.find(c=>same(c.uid,uid));need(x,'卡牌不在该玩家手牌中');return {p,x,m:data(s,x)};}
  function handItem(s,uid){for(const p of alive(s)){const x=p.hand?.find(c=>same(c.uid,uid));if(x)return {p,x,m:data(s,x)};}return null;}
  function conditions(s){return [...attaches(s).filter(a=>traits(s,a).includes('Condition.')).map(a=>({uid:a.uid,label:label(s,a),kind:'player'})),...s.conditions.filter(c=>[80,105].includes(c.id)).map(c=>({uid:c.uid,label:c.name,kind:'encounter'}))];}
- function attachmentTargets(s,m){if(m.code==='01056')return locations(s);if(m.code==='01069')return enemies(s).filter(e=>e.state.id!==102&&alive(s).some(p=>p.engaged.some(c=>c.uid===e.uid)));if(m.code==='01072')return chars(s);return chars(s).filter(c=>c.kind==='hero');}
+ function attachmentTargets(s,m){if(m.code==='01056')return locations(s);if(m.code==='01069')return enemies(s).filter(e=>e.state.id!==102&&![143,162].includes(e.state.id)&&alive(s).some(p=>p.engaged.some(c=>c.uid===e.uid)));if(m.code==='01072')return chars(s);return chars(s).filter(c=>c.kind==='hero');}
  const restricted=a=>['01027','01039','01040','01041','01042'].includes(a.meta?.code);
  function restrictedOn(s,target){const c=find(s,target);return [...attached(s,target).filter(restricted).map(c=>({kind:'player',uid:c.uid,label:label(s,c)})),...(c?.kind==='hero'?s.objectives.filter(o=>o.holder?.player===c.controller&&o.holder?.hero===c.state.index).map(o=>({kind:'objective',uid:o.uid,label:o.name})):[])];}
- function eligibleAttackEnemies(s,attacker){const own=s.players[attacker.controller].engaged.map(c=>c.uid);const ranged=attacker.meta.rulesText?.includes('Ranged.');return enemies(s).filter(e=>own.includes(e.uid)||(ranged&&alive(s).some(p=>p.engaged.some(c=>c.uid===e.uid)))||(attacker.meta.code==='01009'&&s.staging.some(c=>c.uid===e.uid)));}
+ function eligibleAttackEnemies(s,attacker){const own=s.players[attacker.controller].engaged.map(c=>c.uid);const ranged=attacker.meta.rulesText?.includes('Ranged.');return enemies(s).filter(e=>own.includes(e.uid)||(ranged&&alive(s).some(p=>p.engaged.some(c=>c.uid===e.uid)))||(attacker.meta.code==='01009'&&!H.blankText(s,attacker)&&s.staging.some(c=>c.uid===e.uid)));}
  function actionFields(s,pid,code,params={}){
   const cs=chars(s),ps=alive(s),own=cs.filter(c=>c.controller===pid),players=items=>items.map(p=>opt(p.id,p.name));let f=[];
   switch(code){
@@ -173,7 +187,12 @@ const PlanningRulesFactory=(H)=>{
   case'01025':for(const c of cs)c.state.exhausted=false;break;
   case'01032':modifier(s,[num(a.target)],'attack',1);modifier(s,[num(a.target)],'defense',1);break;
   case'01033':find(s,a.exhaust).state.exhausted=true;for(const e of [...s.players[num(a.player)].engaged])damageEnemy(s,e.uid,1);break;
-  case'01035':{const c=find(s,a.attacker),e=find(s,a.target);c.state.exhausted=true;let atk=stats(s,c.uid).attack;if(c.meta.code==='01009'&&s.staging.some(x=>x.uid===e.uid))atk++;if((e.meta.traits||'').includes('Orc.'))atk+=attached(s,c.uid).filter(a=>a.meta.code==='01039').length;const d=Math.max(0,atk-stats(s,e.uid).defense);const killed=damageEnemy(s,e.uid,d);log(s,`立即攻击：${atk}攻击 − ${e.meta.defense}防御 = ${d}伤害`);if(killed&&(c.meta.code==='01005'||attached(s,c.uid).some(a=>a.meta.code==='01039')))queue(s,'attackProgress',c.controller,{attacker:c.uid,legolas:c.meta.code==='01005',blades:attached(s,c.uid).filter(a=>a.meta.code==='01039').map(a=>a.uid)});break;}
+  case'01035':{const c=find(s,a.attacker),e=find(s,a.target);c.state.exhausted=true;let atk=stats(s,c.uid).attack;
+  /* v0.16.10 批次2：196 条件附属——杜内希尔攻击探查区的 +1 属印制文本，受伤时失效。 */
+  if(c.meta.code==='01009'&&s.staging.some(x=>x.uid===e.uid)&&!H.blankText(s,c))atk++;
+  if((e.meta.traits||'').includes('Orc.'))atk+=attached(s,c.uid).filter(a=>a.meta.code==='01039').length;
+  const d=Math.max(0,atk-stats(s,e.uid).defense);const killed=damageEnemy(s,e.uid,d);log(s,`立即攻击：${atk}攻击 − ${e.meta.defense}防御 = ${d}伤害`);
+  if(killed&&(c.meta.code==='01005'&&!H.blankText(s,c)||attached(s,c.uid).some(a=>a.meta.code==='01039')))queue(s,'attackProgress',c.controller,{attacker:c.uid,legolas:c.meta.code==='01005'&&!H.blankText(s,c),blades:attached(s,c.uid).filter(a=>a.meta.code==='01039').map(a=>a.uid)});break;}
   case'01034':{const p=alive(s).find(p=>p.engaged.some(c=>same(c.uid,a.target)));s.phasePermissions??=[];s.phasePermissions.push({type:'noEnemyAttacks',enemy:num(a.target),player:p.id,round:s.round,phase:s.phase});break;}
   case'01036':s.phasePermissions??=[];s.phasePermissions.push({type:'noEnemyAttacks',player:num(a.player),round:s.round,phase:s.phase});break;
   case'01038':s.phasePermissions??=[];s.phasePermissions.push({type:'multipleDefenders',player:num(a.player),round:s.round,phase:s.phase});break;
@@ -198,7 +217,7 @@ const PlanningRulesFactory=(H)=>{
  function removeCombatRole(s,uid){if(s.phase!==5||!s.combat)return;for(const a of [s.combat.attack,...s.combat.stack||[]])if(a){if(a.defenders)a.defenders=a.defenders.filter(id=>!same(id,uid));if(a.attackers)a.attackers=a.attackers.filter(id=>!same(id,uid));}}
  function leaveAlly(s,uid,destination,destroyed=destination==='playerDiscard'){const c=find(s,uid);if(!c)return;removeCombatRole(s,uid);const t=traits(s,c);removeFrom(s.players[c.controller].allies,c.uid);for(const a of attached(s,c.uid))discardAttachment(s,a);delete c.state.controller;delete c.state.exhausted;delete c.state.damage;delete c.state.committed;ownerZone(s,c.state,destination).push(c.state);if(destination==='playerDeck')H.shuffle(s,ownerZone(s,c.state,'playerDeck'));leaveWindow(s,{...c,meta:{...c.meta,traits:t}},destroyed);}
  function destroyCharacter(s,c,destroyed=true){removeCombatRole(s,c.uid);for(const o of s.objectives)if(o.holder?.player===c.controller&&c.kind==='hero'&&o.holder?.hero===c.state.index)o.holder=null;if(c.kind==='ally')leaveAlly(s,c.uid,'playerDiscard',destroyed);else{const t=traits(s,c);c.state.destroyed=true;for(const a of attached(s,c.uid))discardAttachment(s,a);leaveWindow(s,{...c,meta:{...c.meta,traits:t}},destroyed);if(s.players[c.controller].heroStates.every(h=>h.destroyed||captured(s,c.controller,h.index)))eliminate(s,c.controller);}}
- function damageCharacter(s,c,n){c.state.damage+=n;log(s,`${label(s,c)}受到${n}伤害`);if(c.state.damage>=stats(s,c.uid).health)destroyCharacter(s,c);if(c.meta.code==='01003'&&!c.state.destroyed)queue(s,'gloin',c.controller,{uid:c.uid,amount:n});}
+ function damageCharacter(s,c,n){c.state.damage+=n;log(s,`${label(s,c)}受到${n}伤害`);if(c.state.damage>=stats(s,c.uid).health)destroyCharacter(s,c);if(c.meta.code==='01003'&&!c.state.destroyed&&!H.blankText(s,c))queue(s,'gloin',c.controller,{uid:c.uid,amount:n});}
  function abilityFields(s,pid,c,params={}){const cs=chars(s);switch(c.meta.code){
   case'01007':return [field('discard','弃掉己方手牌',s.players[pid].hand.map(x=>opt(x.uid,data(s,x).nameZh)))];
   case'01010':case'01060':case'01026':case'01031':case'01057':case'01072':return [];
@@ -210,7 +229,10 @@ const PlanningRulesFactory=(H)=>{
   case'01070':return [field('discard','弃掉己方手牌',s.players[pid].hand.map(x=>opt(x.uid,data(s,x).nameZh))),field('stat','本阶段提高的数值',[opt('willpower','意志+1'),opt('defense','防御+1')])];
   default:throw Error('该卡在计划阶段没有可主动使用的能力');
  }}
- function abilitySpec(s,pid,uid,params={}){const r={legal:false,reason:'',fields:[]};try{free(s);const c=find(s,uid);need(c&&['hero','ally','attachment'].includes(c.kind),'能力来源不在场');need(c.controller===pid||c.meta.code==='01007','不能使用其他玩家控制的卡牌能力');r.source=c;r.costText=['01010','01012','01014','01026','01057','01058','01060','01062','01072'].includes(c.meta.code)?'费用：横置此牌。':c.meta.code==='01011'?'费用：从葛罗芬戴尔自身资源池支付1资源。':['01007','01070'].includes(c.meta.code)?'费用：弃掉行动玩家自己的1张手牌。':c.meta.code==='01031'?'本阶段攻击+5；阶段结束时洗回牌库。':c.meta.code==='01043'?'转交控制权，自己威胁−3、对方威胁+3。':'';r.fields=abilityFields(s,pid,c,params);need(r.fields.every(f=>f.options.length),'没有合法目标');
+ function abilitySpec(s,pid,uid,params={}){const r={legal:false,reason:'',fields:[]};try{free(s);const c=find(s,uid);need(c&&['hero','ally','attachment'].includes(c.kind),'能力来源不在场');
+ /* v0.16.10 批次2：196 条件附属——受伤的角色（英雄/盟友）印制文本框空白，主动能力不可用；附属与关键词/特质不受影响。 */
+ if(['hero','ally'].includes(c.kind)&&H.blankText(s,c)){r.reason='196：受伤角色的印制文本框视为空白（关键词和特质除外）';return r;}
+ need(c.controller===pid||c.meta.code==='01007','不能使用其他玩家控制的卡牌能力');r.source=c;r.costText=['01010','01012','01014','01026','01057','01058','01060','01062','01072'].includes(c.meta.code)?'费用：横置此牌。':c.meta.code==='01011'?'费用：从葛罗芬戴尔自身资源池支付1资源。':['01007','01070'].includes(c.meta.code)?'费用：弃掉行动玩家自己的1张手牌。':c.meta.code==='01031'?'本阶段攻击+5；阶段结束时洗回牌库。':c.meta.code==='01043'?'转交控制权，自己威胁−3、对方威胁+3。':'';r.fields=abilityFields(s,pid,c,params);need(r.fields.every(f=>f.options.length),'没有合法目标');
   if(['01010','01012','01014','01026','01057','01058','01060','01062','01072'].includes(c.meta.code))need(!c.state.exhausted,'来源已经横置，不能再次支付横置费用');
   if(['01010','01060'].includes(c.meta.code))need(s.deck.length,'遭遇牌库为空');
   if(c.meta.code==='01011'){need(c.state.resources>=1,'葛罗芬戴尔自身资源不足');need(!used(s,`${uid}:glorfindel:${s.round}`),'本回合已使用治疗');}
@@ -269,7 +291,9 @@ const PlanningRulesFactory=(H)=>{
   if(t.kind==='search'){const f=spec.fields[0];chosen([f],a);const rest=t.payload.cards.filter(x=>!same(x,a.card));need(Array.isArray(a.order)&&a.order.length===rest.length&&new Set(a.order.map(String)).size===rest.length&&rest.every(x=>a.order.some(y=>same(x,y))),'请为其余被查看的牌给出完整、不重复的顺序');}
   else chosen(spec.fields,a);
   if(t.kind==='leaveResponses'){const r=responses(s,t).find(r=>same(r.value,a.response));need(r,'响应已不合法');let pay;if(r.type==='sacrifice'){requireEventWindow(s,'01024',t);pay=payment(s,r.pid,'leadership',1,a.payment);}t.payload.used.push(r.uid);
-   if(r.type==='horn')find(s,find(s,r.uid).state.target).state.resources++;if(r.type==='brok')putAlly(s,r.pid,removeFrom(s.players[r.pid].hand,r.uid));if(r.type==='sacrifice'){spend(s,pay.pay);const x=removeFrom(s.players[r.pid].hand,r.uid);draw(s,t.payload.controller,2);ownerZone(s,x,'playerDiscard').push(x);}pump(s);return;}
+   if(r.type==='horn')find(s,find(s,r.uid).state.target).state.resources++;if(r.type==='brok')putAlly(s,r.pid,removeFrom(s.players[r.pid].hand,r.uid));if(r.type==='sacrifice'){spend(s,pay.pay);const x=removeFrom(s.players[r.pid].hand,r.uid);draw(s,t.payload.controller,2);ownerZone(s,x,'playerDiscard').push(x);}
+  if(H.deadmenGate)H.deadmenGate(s,r.pid); /* v0.16.10 批次2：169 亡者之门——离场响应同样是响应效果 */
+  pump(s);return;}
   pl.queue.shift();const d=t.payload,pid=t.actor;
   if(t.kind==='entry')switch(d.code){
    case'01015':{engageEnemy(s,a.target,pid);break;}
@@ -286,6 +310,8 @@ const PlanningRulesFactory=(H)=>{
   if(t.kind==='search'){const p=s.players[d.player];const picked=removeFrom(p.playerDeck,a.card);p.hand.push(picked);const remaining=a.order.map(id=>removeFrom(p.playerDeck,id));if(d.shuffleRest){p.playerDeck.push(...remaining);H.shuffle(s,p.playerDeck);}else p.playerDeck.unshift(...remaining);}
   if(t.kind==='attackProgress'){const amount=a.response==='legolas'?2:1;H.addProgress(s,amount);if(a.response==='legolas')d.legolas=false;else d.blades=d.blades.filter(id=>!same(id,a.response));if(d.legolas||d.blades.length)pl.queue.unshift({...t,id:++s.serial});}
   if(t.kind==='endOrder'){const e=pl.endEffects.find(e=>same(e.id,a.effect));pl.endEffects=pl.endEffects.filter(x=>x.id!==e.id);applyEnd(s,e);}
+  /* v0.16.10 批次2：169 亡者之门（活跃地点）强制——玩家触发响应效果后弃掉其牌库顶1张牌。 */
+  if(H.deadmenGate)H.deadmenGate(s,pid);
   log(s,'已结算：'+spec.message);pump(s);
  }
  function pump(s){const pl=context(s);if(!pl)return;if(s.status!=='playing'){pl.queue=[];return;}let guard=0;while(pl.queue.length&&guard++<100){const t=pl.queue[0],sp=choiceSpec(s);if(sp.stale||(t.kind!=='search'&&sp.fields.some(f=>!f.options.length))){need(t.optional||sp.stale,'强制效果没有合法目标，停止结算');pl.queue.shift();continue;}break;}
