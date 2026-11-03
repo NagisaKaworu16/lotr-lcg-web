@@ -24,6 +24,9 @@ const RefreshRulesFactory=(H,R,Q)=>{
   if(s.status==='playing'){
    if(H.stageDef){const st=H.stageDef(s,s.quest);if(st.threatPerStagingEnemy){const n=s.staging.filter(c=>c.type==='Enemy').length;if(n)for(const p of [...alive(s)])R.changeThreat(s,p.id,n);}}
    if(H.tickTime)H.tickTime(s);
+   /* v0.16.10 P1（DD 官方文本）：deckOutElimination 剧本——休整阶段末尾每名玩家弃牌库顶1张；
+      牌库空 → H.mill 内部走 deckOut 淘汰路径。 */
+   if(H.scenarioFlag&&H.scenarioFlag(s,'deckOutElimination')&&H.mill)for(const p of [...alive(s)])H.mill(s,p.id,1);
    if(s.active?.id===185)for(const p of alive(s)){const cs=R.chars(s).filter(c=>c.controller===p.id&&c.kind==='hero'&&!c.state.destroyed);if(cs.length){R.damageCharacter(s,cs[0],1);log(s,s.players[p.id].name+'的'+cs[0].meta.nameZh+'受1点伤害（严寒山脊）');}}
    R.pump(s);
   }

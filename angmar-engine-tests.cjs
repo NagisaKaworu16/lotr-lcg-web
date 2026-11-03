@@ -117,3 +117,48 @@ test('engage hook 163: mill 2 from the engaging player via the engagement check'
 test('engage hook 174: top Undead enemy in the encounter discard joins and engages',()=>{const s=make();finishQuest(s);E.nextPhase(s);E.traveling.propose(s,s.first,null);pass(s);E.traveling.finish(s);E.nextPhase(s);const dead={...E.byId[174],uid:++s.serial};s.staging.push(dead);const undead={...E.byId[162],uid:++s.serial};s.discard.push(undead);E.encountering.propose(s,s.first,null);s.players[0].threat=99;pass(s);E.encountering.beginChecks(s);assert(s.players[0].engaged.some(c=>c.uid===dead.uid));assert(s.players[0].engaged.some(c=>c.uid===undead.uid),'弃牌堆顶亡灵敌人随之交战');});
 test('attack hook 164: defender discards top deck card; ally on top gives this attack +2',()=>{const s=toPhase5({enemies:[{id:164,pid:0}]});const p=s.players[0];p.playerDeck.unshift({uid:++s.serial,code:'01016',owner:0});const uid=selectEnemy(s);assert.equal(s.combat.attack.bonus,2,'牌库顶是盟友 → 攻击+2');assert.equal(p.playerDiscard.length,1,'弃掉牌库顶1张');
  const s2=toPhase5({enemies:[{id:164,pid:0}]});const p2=s2.players[0];p2.playerDeck.unshift({uid:++s.serial,code:'01022',owner:0});selectEnemy(s2);assert.equal(s2.combat.attack.bonus,0,'牌库顶非盟友 → 无加成');});
+
+/* ── verify-angmar 复核修复回归 ── */
+test('P0 no-win: 143 Orc War Party in play blocks victory; removing it wins (iic final stage, hardcoded)',()=>{const cfg=[P.config(P.starter(S,'leadership'),S)];const s=E.create('iic',1,999,cfg,{openingTest:true});settlePending(s);
+ const i=s.objectives.find(o=>o.id===161);i.holder={player:0,hero:null};
+ s.progress=999;E.advance(s,true);assert.notEqual(s.status,'won','143 兽人战团在场不能获胜');
+ s.staging.splice(s.staging.findIndex(c=>c.id===143),1);
+ E.advance(s,true);assert.equal(s.status,'won','143 离场后正常获胜');});
+test('P0 no-win: twh stage 191 reveals 183 Amon Fûn which blocks victory until it leaves play',()=>{const cfg=[P.config(P.starter(S,'leadership'),S)];const s=E.create('twh',1,888,cfg,{openingTest:true});settlePending(s);
+ s.progress=999;E.advance(s,true);assert.equal(s.quest,191);assert(s.staging.some(c=>c.id===183),'进入 191 时从预置区翻开 183 入探查区');
+ s.progress=999;E.advance(s,true);assert.notEqual(s.status,'won','183 在场阻断胜利');
+ s.staging.splice(s.staging.findIndex(c=>c.id===183),1);
+ E.advance(s,true);assert.equal(s.status,'won','183 离场后正常获胜');});
+test('P0 no-win: stage.noWinWhileInPlay data field blocks victory (data-driven path)',()=>{const s=make();s.staging=[];const e={...E.byId[96],uid:++s.serial};s.staging.push(e);
+ stageDefPatch(s,{next:null,noWinWhileInPlay:[96]},()=>{s.progress=999;E.advance(s,true);assert.notEqual(s.status,'won','数据字段声明的在场卡阻断胜利');
+  s.staging=[];E.advance(s,true);assert.equal(s.status,'won','离场后正常获胜');});});
+test('P0 147 Sudden Assault cannot be canceled (no Test of Will / Eleanor options)',()=>{const s=make(['spirit']);commitAll(s);s.staging=[];const wp={...E.byId[143],uid:++s.serial,threat:0};s.staging.push(wp);s.deck.push({...E.byId[143],uid:++s.serial});
+ const h=s.players[0].heroStates[0];h.resources=1;s.players[0].hand.push({uid:++s.serial,code:'01050',owner:0});
+ one(s,148);assert(Q.cancelOptions(s).length>0,'普通诡计在取消窗口可考验取消');Q.resolveReveal(s);
+ one(s,147);assert.equal(Q.cancelOptions(s).length,0,'147 不可取消：不提供任何取消选项');assert.throws(()=>Q.cancel(s,'will:'+s.players[0].hand[0].uid),'取消响应被拒绝');Q.resolveReveal(s);
+ assert.equal(Q.spec(s).task.kind,'suddenAssault','效果照常进入攻击任务');});
+test('P1 DD 172 follow-up: after all searches the deck is shuffled and 1 card per player is revealed into staging',()=>{const cfg=[P.config(P.starter(S,'leadership'),S)];const s=E.create('dd',1,777,cfg,{openingTest:true});
+ /* 受控牌库排除 surge/厄运干扰：搜索拿走 164 后，follow-up 必然翻开剩下的唯一1张 */
+ s.deck=[{...E.byId[164],uid:++s.serial},{...E.byId[96],uid:++s.serial}];
+ while(s.pending.length){const t=s.pending[0];const choice=t.kind==='searchEngage'?s.deck.find(c=>c.id===t.args.card)?.uid:undefined;E.resolve(s,t.id,choice);}
+ assert(!s.deck.length,'翻牌耗尽受控牌库');assert(s.staging.some(c=>c.id===96),'翻出的遭遇牌加入探查区');assert(s.searchEngageFollowUp===undefined,'follow-up 消费后清除');
+ const cfg2=[P.config(P.starter(S,'leadership'),S),P.config(P.starter(S,'spirit'),S)];const s2=E.create('dd',2,777,cfg2,{openingTest:true});
+ s2.deck=[{...E.byId[164],uid:++s2.serial},{...E.byId[164],uid:++s2.serial},{...E.byId[96],uid:++s2.serial},{...E.byId[97],uid:++s2.serial}];
+ while(s2.pending.length){const t=s2.pending[0];const choice=t.kind==='searchEngage'?s2.deck.find(c=>c.id===t.args.card)?.uid:undefined;E.resolve(s2,t.id,choice);}
+ assert(!s2.deck.length);assert(s2.staging.some(c=>c.id===96)&&s2.staging.some(c=>c.id===97),'双人局共翻2张加入探查区');});
+test('P1 refresh deckOutElimination: mill 1 per player at refresh end; empty deck eliminates',()=>{const s=toCombatDone();flagPatch(s,{deckOutElimination:true},()=>{const p=s.players[0];const d0=p.playerDeck.length;
+  E.refreshing.start(s);
+  assert.equal(p.playerDeck.length,d0-1,'休整末尾每人弃牌库顶1张');assert.equal(p.playerDiscard.length,1,'弃牌进入弃牌堆');});});
+test('P1 refresh deckOutElimination: player with empty deck is routed to elimination',()=>{const s=toCombatDone();flagPatch(s,{deckOutElimination:true},()=>{const p=s.players[0];p.playerDeck=[];p.playerDiscard=[];
+  E.refreshing.start(s);
+  assert(s.pending.some(t=>t.kind==='eliminate'&&t.args.player===0),'空牌库在休整 mill 时登记淘汰事项');s.pending=[];});});
+test('P1 173 Forced: Thaurdir destroying a character offers mill-3 or return-to-staging; mill branch',()=>{const s=toPhase5({enemies:[{id:162,pid:0}]});const p=s.players[0];const h=p.heroStates[0];h.damage=R.stats(s,h.uid).health-1;
+ const d0=p.playerDeck.length,dis0=p.playerDiscard.length;selectEnemy(s);defend(s,[h.uid]);
+ let guard=0;while(!s.combat.tasks.length&&guard++<6)advance(s);
+ const sp=C.spec(s);assert(sp&&sp.task.kind==='thaurdir173','角色被摧毁后登记 173 强制事项');assert(sp.fields[0].options.length===2,'提供 弃3张/返回 两个选项');
+ C.choose(s,sp.task.id,{target:'mill'});assert.equal(p.playerDeck.length,d0-3,'弃牌库顶3张');assert.equal(p.playerDiscard.length,dis0+3);});
+test('P1 173 Forced: return branch sends Thaurdir back to staging and aborts the rest of the attack',()=>{const s=toPhase5({enemies:[{id:162,pid:0}]});const p=s.players[0];const h=p.heroStates[0];h.damage=R.stats(s,h.uid).health-1;
+ selectEnemy(s);defend(s,[h.uid]);let guard2=0;while(!s.combat.tasks.length&&guard2++<6)advance(s);
+ const sp=C.spec(s);assert(sp&&sp.task.kind==='thaurdir173');
+ const thUid=s.combat.attack.uid;C.choose(s,sp.task.id,{target:'return'});
+ assert(s.staging.some(c=>c.uid===thUid),'索尔迪尔返回探查区');assert(!p.engaged.some(c=>c.uid===thUid),'不再处于交战区');});

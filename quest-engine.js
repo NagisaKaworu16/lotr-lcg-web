@@ -84,7 +84,7 @@ function submitDeployment(s,pid,uids){check(s);const x=q(s);need(x.step==='commi
   if(c.type==='Enemy'&&committed(s).some(a=>a.meta.code==='01006')){c.damage=(c.damage||0)+1;if(c.damage>=c.health){if(c.id===115){delete c.damage;s.deck.push(c);H.shuffle(s,s.deck);}else if(c.victory)s.victory.push(c);else H.discardCard(s,c);log(s,'沙林在翻开时击败敌人，跳过涌现与翻开效果');x.current=null;return c;}}
   x.current.hasEffect=HAS_EFFECT.includes(c.id);return c;
  }
- function cancelOptions(s){const cur=q(s)?.current;if(!cur?.hasEffect||cur.canceled)return [];const a=[];for(const p of alive(s)){for(const x of p.hand)if(x.code==='01050'){try{R.payment(s,p.id,'spirit',1);a.push({value:'will:'+x.uid,label:p.name+' · 意志考验（1资源）'});}catch{}}
+ function cancelOptions(s){const cur=q(s)?.current;if(!cur?.hasEffect||cur.canceled)return [];/* v0.16.10 P0③：147 兽人战团的效果不可取消，不提供任何取消选项 */if(cur.card.id===147)return [];const a=[];for(const p of alive(s)){for(const x of p.hand)if(x.code==='01050'){try{R.payment(s,p.id,'spirit',1);a.push({value:'will:'+x.uid,label:p.name+' · 意志考验（1资源）'});}catch{}}
   if(cur.card.type==='Treachery')for(const h of chars(s).filter(c=>c.controller===p.id&&c.meta.code==='01008'&&!c.state.exhausted))a.push({value:'eleanor:'+h.uid,label:p.name+' · 埃莉诺（横置，弃掉并补翻）'});
   }return a;
  }
@@ -100,6 +100,12 @@ function submitDeployment(s,pid,uids){check(s);const x=q(s);need(x.step==='commi
   if(c.type==='Treachery'&&!s.conditions.includes(c)&&!x.tasks.some(t=>t.payload.card?.uid===c.uid))H.discardCard(s,c);
   x.current=null;log(s,'已结算「'+c.name+'」');
  }
+ /* TODO(angmar-batch2) 待补缺口（需 planning-engine 授权后落地）：
+  ① 156/157：X 为静态值（无法术来源时 X=0），当前按字面读 X 未兜底；
+  ② 169/183/168：光环型持续修正（183 禁胜已另修，剩光环数值）；
+  ③ 196：卡牌文本框空白区提示/交互尚未实现（onEnter 伤害已生效）；
+  ④ 143/162：附属限制（不能有附属/限制条件）未实现；
+  ⑤ 155：兽人攻击/防御光环未实现。 */
  function effect(s,c){const x=q(s);switch(c.id){
   case 74:for(const p of alive(s))if(chars(s).some(a=>a.controller===p.id&&!a.state.exhausted))task(s,'exhaust',p.id);break;
   case 76:x.encounterModifiers.push({kind:'committed',stat:'willpower',amount:-1});break;

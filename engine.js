@@ -10,9 +10,9 @@ const P4=TravelFactory({log,rng},P2,P3);
 const EncounterFactory=typeof EncounterRulesFactory!=='undefined'?EncounterRulesFactory:require('./encounter-engine.js');
 const P5=EncounterFactory({log,stageDef,questOf,engageHooks},P2,P3);
 const CombatFactory=typeof CombatRulesFactory!=='undefined'?CombatRulesFactory:require('./combat-engine.js');
-const P6=CombatFactory({log,draw,discardCard,get byId(){return byId;}},P2,P3);
+const P6=CombatFactory({log,draw,discardCard,get byId(){return byId;},mill},P2,P3);
 const RefreshFactory=typeof RefreshRulesFactory!=='undefined'?RefreshRulesFactory:require('./refresh-engine.js');
-const P7=RefreshFactory({log,tickTime,stageDef},P2,P3);
+const P7=RefreshFactory({log,tickTime,stageDef,scenarioFlag,mill},P2,P3);
 const byId=Object.fromEntries(D.cards.map(x=>[x.id,x]));
 const phases=['资源','计划','探险','旅行','遭遇','战斗','刷新'];
 const clone=x=>JSON.parse(JSON.stringify(x));
@@ -122,7 +122,9 @@ function onEnterEffects(s,id){
   else if(oe.type==='revealPerPlayer'){assert(Number.isInteger(oe.count)&&oe.count>=1,'onEnter revealPerPlayer 需要正整数 count');
    if(s.questing){const ctx=P2.context(s);ctx.returnStep=ctx.step;ctx.step='staging';ctx.remaining.push(...Array.from({length:oe.count*live(s).length},()=>({})));}else reveal(s,oe.count*live(s).length);}
   /* v0.16.10：安格玛 onEnter 扩展（DD 1B/2A、TWH 2A）。 */
-  else if(oe.type==='searchEngage'){assert(Number.isInteger(oe.card),'onEnter searchEngage 需要 card id');for(const p of live(s))task(s,`${p.name}从遭遇牌库搜索1张指定卡，放入场并与其交战。`,'searchEngage',{player:p.id,card:oe.card});}
+  else if(oe.type==='searchEngage'){assert(Number.isInteger(oe.card),'onEnter searchEngage 需要 card id');for(const p of live(s))task(s,`${p.name}从遭遇牌库搜索1张指定卡，放入场并与其交战。`,'searchEngage',{player:p.id,card:oe.card});
+   /* v0.16.10 P1（DD 1B 官方全文）：搜索全部结算后洗混遭遇牌库，再每名玩家翻1张遭遇卡。 */
+   s.searchEngageFollowUp={shuffle:true,revealPerPlayer:true};}
   else if(oe.type==='spawnSetAside'){assert(Number.isInteger(oe.card),'onEnter spawnSetAside 需要 card id');const i=s.setaside.findIndex(x=>x.id===oe.card);assert(i>=0,'setAside 中找不到要生成的卡：'+oe.card);const c2=s.setaside.splice(i,1)[0];s.staging.push(c2);timeEnter(s,c2);log(s,`「${c2.name}」从预置区加入探查区`);}
   else if(oe.type==='revealSetAside'){assert(Array.isArray(oe.cards)&&oe.cards.length,'onEnter revealSetAside 需要 cards 数组');for(const id2 of oe.cards){const i=s.setaside.findIndex(x=>x.id===id2);assert(i>=0,'setAside 中找不到要翻出的卡：'+id2);const c2=s.setaside.splice(i,1)[0];s.staging.push(c2);timeEnter(s,c2);log(s,`翻开「${c2.name}」，加入探查区`);}}
   else assert(false,'未知 stage.onEnter 类型：'+oe.type);
@@ -347,6 +349,11 @@ function resolve(s,id,choice){const t=s.pending.find(t=>t.id===id);assert(t,'找
  }
  if(t.kind==='searchEngage'){
   const c=s.deck.find(x=>x.uid===Number(choice)&&x.id===t.args.card);assert(c,'必须从遭遇牌库选择指定的卡。');const p=s.players[t.args.player];p.engaged.push(s.deck.splice(s.deck.indexOf(c),1)[0]);log(s,`${p.name}搜索并交战「${c.name}」`);
+  /* v0.16.10 P1（DD 1B）：全部搜索结算后 → 洗混遭遇牌库 → 每名玩家翻1张遭遇卡。 */
+  if(s.searchEngageFollowUp&&!s.pending.some(x2=>x2.kind==='searchEngage'&&x2.id!==t.id)){const fu=s.searchEngageFollowUp;delete s.searchEngageFollowUp;
+   if(fu.shuffle)shuffle(s,s.deck);
+   if(fu.revealPerPlayer)reveal(s,live(s).length);
+  }
  }
  if(t.kind==='treachery'){
   const c=remove(s.resolving,t.args.uid);if(c.id===105)c.targetPlayer=s.first;if([80,105].includes(c.id))s.conditions.push(c);else discardCard(s,c);
@@ -386,6 +393,9 @@ function gate(s){if(s.setupPending)return '尚未完成开局设置';if(s.pendin
  if(g&&g.noEnemies){if([...s.staging,...s.players.flatMap(p=>p.engaged)].some(c=>c.type==='Enemy'))return '场上仍有敌人';}
  /* v0.16.10：安格玛 gate 扩展——controlsObjective（IiC 161）与 spawnHpZero（DD 2B 162，
    区别于 spawnDefeated 的离场判定：不可摧毁卡血量归零但仍在场即算达成）。 */
+ /* v0.16.10：controlsObjective 口径注释——现按「被任一玩家持有」判定（o.holder 非空）。
+   官方文本是「第一名玩家控制」，但 161 伊亚里安实际不可转移、控制权不随先手轮换，
+   若改成 o.holder?.player===s.first 会在先手轮换后永远无法过关；待官方裁定或数据支持转移后再收紧。 */
  if(g&&Array.isArray(g.controlsObjective)){const miss=g.controlsObjective.filter(id=>!s.objectives.some(o=>o.id===id&&o.holder));if(miss.length)return `必须控制目标：${miss.map(id=>D.cards.find(c=>c.id===id)?.name||('id '+id)).join('、')}（须由玩家持有）`;}
  if(Number.isInteger(g?.spawnHpZero)){const def=D.cards.find(c=>c.id===g.spawnHpZero),c=inPlayCards(s).find(x=>x.id===g.spawnHpZero);
   if(c){if((c.damage||0)<(c.health??0))return `必须将${c.name}的血量降至0（当前${c.damage||0}/${c.health??0}）`;}
@@ -398,13 +408,19 @@ function gate(s){if(s.setupPending)return '尚未完成开局设置';if(s.pendin
   else assert(false,'未知 gate.holdObjectives：'+need);
  }
  return '';}
+/* v0.16.10 P0：官方「在场时玩家不能获胜」——143 兽人战团（iic）、183 阿蒙福恩（twh）。
+   机制读 stage.noWinWhileInPlay；数据侧补字段前先以 NO_WIN_CARDS 硬编码双保险。 */
+const NO_WIN_CARDS=new Set([143,183]);
+function noWinBlocked(s){const ids=[...(stageDef(s,s.quest).noWinWhileInPlay||[]),...NO_WIN_CARDS];return ids.filter(id=>inPlayCards(s).some(c=>c.id===id));}
 function advance(s,internal=false){assert(internal||!s.questing,'探险推进由规则自动判定');ready(s);assert(!gate(s),gate(s));
  /* v0.16.3：推进读 stage.next（'random' 走 nextRandom，null/缺省=胜利）；目标必须是已定义的探险卡。 */
  const st=stageDef(s,s.quest);assert('next' in st,'stage 缺少 next 字段：'+s.quest);
  let next=st.next;
  if(next==='random'){assert(Array.isArray(st.nextRandom)&&st.nextRandom.length>=1,'random next 需要 nextRandom 数组');next=st.nextRandom[Math.floor(rng(s)*st.nextRandom.length)];}
  if(next!==null&&next!==undefined){stageDef(s,next);enter(s,next);}
- else{s.status='won';log(s,'剧本胜利！');}}
+ else{const blocking=noWinBlocked(s);
+  if(blocking.length){log(s,`进度已满，但「${blocking.map(id=>D.cards.find(c=>c.id===id)?.name||id).join('、')}」仍在场，玩家不能获胜；待其离场后重新达成`);return;}
+  s.status='won';log(s,'剧本胜利！');}}
 function travel(s,uid,confirmed=false){assert(!s.traveling,'请使用旅行暂定选择与全员二次确认');ready(s);assert(s.phase===3,'仅在旅行阶段旅行。');assert(!s.active,'已有当前地点。');let c=s.staging.find(c=>c.uid===uid);assert(c?.type==='Location','请选择地点。');assert(!s.staging.some(x=>x.id===88)||c.id===88,'必须优先旅行至东湾。');
  if([77,78,94].includes(c.id))assert(confirmed,'请先确认旅行费用可支付并已处理。');
  s.active=remove(s.staging,uid);s.active.progress=0;log(s,`旅行至「${c.name}」`);
@@ -412,6 +428,9 @@ function travel(s,uid,confirmed=false){assert(!s.traveling,'请使用旅行暂�
  if(c.id===87){s.active=null;leaveLocation(s,c);}
  /* v0.16.10：165 破损的城墙——旅行至此，每位玩家 mill 1（Time 3 计数在入场时已放置）。 */
  if(c.id===165)for(const p of live(s))mill(s,p.id,1);
+ /* v0.16.10 P2：187 旅行效果与 166/186 探索响应——本批降级为手动事项提示，避免静默丢失。 */
+ if(c.id===187)task(s,'隐秘兽人营地旅行效果：第一名玩家从遭遇牌库和弃牌堆找出1个兽人敌人置入场上与其交战，然后洗混遭遇牌库。（当前按手动事项处理）','setupManual');
+ if(c.id===166||c.id===186)task(s,`「${c.name}」的探索响应将在其被探索时结算，请手动处理。（当前按手动事项处理）`,'setupManual');
  if(c.id===99)task(s,'古老森林道路：起始玩家可重置1名己方角色。');
  if(c.id===100)task(s,'森林大门：起始玩家可抽2张牌（如抽牌被禁止则不抽）。');
  if(c.id===107)guards(s);

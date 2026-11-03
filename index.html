@@ -8642,7 +8642,7 @@ function submitDeployment(s,pid,uids){check(s);const x=q(s);need(x.step==='commi
   if(c.type==='Enemy'&&committed(s).some(a=>a.meta.code==='01006')){c.damage=(c.damage||0)+1;if(c.damage>=c.health){if(c.id===115){delete c.damage;s.deck.push(c);H.shuffle(s,s.deck);}else if(c.victory)s.victory.push(c);else H.discardCard(s,c);log(s,'沙林在翻开时击败敌人，跳过涌现与翻开效果');x.current=null;return c;}}
   x.current.hasEffect=HAS_EFFECT.includes(c.id);return c;
  }
- function cancelOptions(s){const cur=q(s)?.current;if(!cur?.hasEffect||cur.canceled)return [];const a=[];for(const p of alive(s)){for(const x of p.hand)if(x.code==='01050'){try{R.payment(s,p.id,'spirit',1);a.push({value:'will:'+x.uid,label:p.name+' · 意志考验（1资源）'});}catch{}}
+ function cancelOptions(s){const cur=q(s)?.current;if(!cur?.hasEffect||cur.canceled)return [];/* v0.16.10 P0③：147 兽人战团的效果不可取消，不提供任何取消选项 */if(cur.card.id===147)return [];const a=[];for(const p of alive(s)){for(const x of p.hand)if(x.code==='01050'){try{R.payment(s,p.id,'spirit',1);a.push({value:'will:'+x.uid,label:p.name+' · 意志考验（1资源）'});}catch{}}
   if(cur.card.type==='Treachery')for(const h of chars(s).filter(c=>c.controller===p.id&&c.meta.code==='01008'&&!c.state.exhausted))a.push({value:'eleanor:'+h.uid,label:p.name+' · 埃莉诺（横置，弃掉并补翻）'});
   }return a;
  }
@@ -8658,6 +8658,12 @@ function submitDeployment(s,pid,uids){check(s);const x=q(s);need(x.step==='commi
   if(c.type==='Treachery'&&!s.conditions.includes(c)&&!x.tasks.some(t=>t.payload.card?.uid===c.uid))H.discardCard(s,c);
   x.current=null;log(s,'已结算「'+c.name+'」');
  }
+ /* TODO(angmar-batch2) 待补缺口（需 planning-engine 授权后落地）：
+  ① 156/157：X 为静态值（无法术来源时 X=0），当前按字面读 X 未兜底；
+  ② 169/183/168：光环型持续修正（183 禁胜已另修，剩光环数值）；
+  ③ 196：卡牌文本框空白区提示/交互尚未实现（onEnter 伤害已生效）；
+  ④ 143/162：附属限制（不能有附属/限制条件）未实现；
+  ⑤ 155：兽人攻击/防御光环未实现。 */
  function effect(s,c){const x=q(s);switch(c.id){
   case 74:for(const p of alive(s))if(chars(s).some(a=>a.controller===p.id&&!a.state.exhausted))task(s,'exhaust',p.id);break;
   case 76:x.encounterModifiers.push({kind:'committed',stat:'willpower',amount:-1});break;
@@ -8843,6 +8849,7 @@ if(typeof module!=='undefined')module.exports=EncounterRulesFactory;
 /* Original Core / FAQ 1.9 combat. Proposals contain choices, never executed effects. */
 const CombatRulesFactory=(H,R,Q)=>{
  const need=(v,m)=>{if(!v)throw Error(m);},eq=(a,b)=>String(a)===String(b),x=s=>s.combat,live=s=>s.players.filter(p=>!p.eliminated),log=(s,t)=>H.log(s,'战斗 · '+t,'P5');
+ const mill=(s,pid,n)=>H.mill?H.mill(s,pid,n):0;
  const actionSteps=['enemyAction','beforeDefend','beforeShadows','beforeDamage','afterEnemy','playerAction','playerStrength','playerDamage','afterPlayer','endAction'];
  const enemy=(s,uid)=>R.enemies(s).find(c=>eq(c.uid,uid))?.state,chars=s=>R.chars(s),own=(s,pid)=>chars(s).filter(c=>c.controller===pid),current=s=>x(s).attack;
  const held=(s,uid)=>R.attaches(s).filter(c=>eq(c.state.target,uid));
@@ -8881,7 +8888,10 @@ const CombatRulesFactory=(H,R,Q)=>{
   else if(p.uid===null){x(s).playerIndex++;window(s,'playerAction');resume(s);}
   else{for(const uid of p.ids)R.find(s,uid).state.exhausted=true;x(s).doneAttacks.push(p.player+':'+p.uid);x(s).attack={kind:'player',uid:p.uid,player:p.player,attackers:[...p.ids]};window(s,'playerStrength');}
  }
- function beginEnemy(s,uid,pid,rider=false){const e=enemy(s,uid);if(!e)return;const a={kind:'enemy',uid,player:pid,defenders:[],bonus:0,ignoreDefense:false,shadowIndex:0,rider};x(s).attack=a;if(e.id===91)dealOne(s,e);if(e.id===84)R.changeThreat(s,pid,1);window(s,'beforeDefend');R.pump(s);}
+ function beginEnemy(s,uid,pid,rider=false){const e=enemy(s,uid);if(!e)return;const a={kind:'enemy',uid,player:pid,defenders:[],bonus:0,ignoreDefense:false,shadowIndex:0,rider};x(s).attack=a;if(e.id===91)dealOne(s,e);if(e.id===84)R.changeThreat(s,pid,1);
+  /* v0.16.10：164 阴毒幽影攻击钩子（Forced）：防御玩家弃掉牌库顶1张牌；若弃掉的是盟友，此次攻击+2。 */
+  if(e.id===164){const p=s.players[pid];if(p.playerDeck.length){const c2=p.playerDeck.shift();p.playerDiscard.push(c2);let isAlly=false;try{isAlly=R.data(s,c2).type==='ally';}catch(err){isAlly=false;}log(s,`${p.name}弃掉牌库顶1张牌（阴毒幽影）`);if(isAlly){a.bonus+=2;log(s,'弃掉的是盟友，阴毒幽影此次攻击+2');}}}
+  window(s,'beforeDefend');R.pump(s);}
  function requirePassed(s){need(!x(s).plannedActions?.length&&!x(s).actionLocked,'请先撤销或执行暂定行动');need(live(s).every(p=>x(s).finalPasses.includes(p.id)),'请所有玩家放弃本窗口行动');}
  function move(s){check(s);const a=x(s),step=a.step;need(actionSteps.includes(step),'此步骤须先完成选择或暗影结算');need(!a.tasks.length,'请先完成强制选择');requirePassed(s);
   if(step==='enemyAction'||step==='afterEnemy'){a.attack=null;a.step='enemyChoice';resume(s);}
@@ -8951,15 +8961,23 @@ const CombatRulesFactory=(H,R,Q)=>{
  function engagedAttack(s){const a=current(s);return a&&(!s.players[a.player].eliminated)&&(a.rider?!!enemy(s,a.uid):s.players[a.player].engaged.some(e=>e.uid===a.uid));}
  function attackStrength(s){const a=current(s),e=enemy(s,a.uid);if(!e)return 0;return a.attackers.map(uid=>R.find(s,uid)).filter(c=>c&&['hero','ally'].includes(c.kind)).reduce((n,c)=>n+R.stats(s,c.uid).attack+(s.staging.some(e=>e.uid===a.uid)&&c.meta.code==='01009'?1:0)+((e.traits||'').includes('Orc.')?held(s,c.uid).filter(c=>c.meta.code==='01039').length:0),0);}
  function enemyDamage(s){const a=current(s),e=enemy(s,a.uid);if(!e||!engagedAttack(s)){abortAttack(s);return;}const ds=liveDefenders(s),def=a.ignoreDefense?0:Math.max(0,ds.reduce((n,c)=>n+R.stats(s,c.uid).defense,0)-(a.defPenalty||0)),amount=Math.max(0,R.stats(s,e.uid).attack+a.bonus-def);a.damage=amount;x(s).step='damageChoice';if(amount){const targets=ds.length?ds:own(s,a.player).filter(c=>c.kind==='hero');if(targets.length===1)applyDamage(s,targets[0].uid);else task(s,'combatDamage',a.player,{undef:!ds.length});}else afterAttack(s);R.pump(s);resume(s);}
- function applyDamage(s,uid){const a=current(s),e=enemy(s,a.uid),c=R.find(s,uid);need(c,'受伤角色已离场');const excess=e?.id===82?Math.max(0,a.damage-(R.stats(s,uid).health-(c.state.damage||0))):0;R.damageCharacter(s,c,a.damage);if(excess&&!s.players[a.player].eliminated)R.changeThreat(s,a.player,excess);log(s,'攻击伤害'+a.damage+(excess?'；山丘巨魔溢出增加'+excess+'威胁':''));afterAttack(s);}
+ function applyDamage(s,uid){const a=current(s),e=enemy(s,a.uid),c=R.find(s,uid);need(c,'受伤角色已离场');const destroyed0=c.state.destroyed;const excess=e?.id===82?Math.max(0,a.damage-(R.stats(s,uid).health-(c.state.damage||0))):0;R.damageCharacter(s,c,a.damage);
+  /* v0.16.10 P1（DD 官方文本）：173 关卡 Forced——索尔迪尔攻击并摧毁1个角色后，其控制者
+     弃掉牌库顶3张，或索尔迪尔返回探查区（二选一，由被摧毁角色的控制者决定）。 */
+  if(!destroyed0&&c.state.destroyed&&e?.id===162&&!s.players[a.player].eliminated)task(s,'thaurdir173',a.player);
+  if(excess&&!s.players[a.player].eliminated)R.changeThreat(s,a.player,excess);log(s,'攻击伤害'+a.damage+(excess?'；山丘巨魔溢出增加'+excess+'威胁':''));afterAttack(s);}
  function afterAttack(s){const a=current(s),e=enemy(s,a.uid);if(e){if(e.id===90)e.resources=(e.resources||0)+1;if(e.id===111)s.progress=Math.max(0,s.progress-1);if(e.id===85&&!(e.shadows||[]).some(c=>c.shadow))returnToStaging(s,e);if(a.returnToStaging&&e.id!==85)returnToStaging(s,e);}
   if(a.rider){const virtual=x(s).riders.find(e=>e.uid===a.uid);if(virtual){for(const c of virtual.shadows||[])H.discardCard(s,c);x(s).riders=x(s).riders.filter(e=>e.uid!==a.uid);}const parent=x(s).stack.pop();x(s).attack=parent;x(s).step='shadowEffects';}else window(s,'afterEnemy');
  }
  function returnToStaging(s,e){for(const p of s.players){const at=p.engaged.findIndex(c=>c.uid===e.uid);if(at>=0){p.engaged.splice(at,1);if(e.synthetic){s.players[e.playerCard.owner].playerDiscard.push(e.playerCard);return;}s.staging.push(e);return;}}}
  function abortAttack(s){if(current(s)?.rider)afterAttack(s);else window(s,'afterEnemy');}
  function playerDamage(s){const a=current(s),e=enemy(s,a.uid);window(s,'afterPlayer');if(!e)return;const sources=a.attackers.map(uid=>R.find(s,uid)).filter(Boolean);const damage=Math.max(0,attackStrength(s)-R.stats(s,e.uid).defense);const killed=R.damageEnemy(s,e.uid,damage);log(s,'玩家攻击造成'+damage+'伤害');if(killed)for(const c of sources){const blades=held(s,c.uid).filter(a=>a.meta.code==='01039').map(a=>a.uid);if(c.meta.code==='01005'||blades.length)R.queue(s,'attackProgress',c.controller,{attacker:c.uid,legolas:c.meta.code==='01005',blades});}R.pump(s);resume(s);}
- function spec(s){const t=x(s)?.tasks[0];if(!t)return null;const d=t.payload;let items=[],message='';switch(t.kind){case'dealTie':message='由起始玩家选择同交战值敌人的暗影分配顺序（牌面仍隐藏）';items=d.uids.map(uid=>enemy(s,uid)).filter(Boolean);break;case'exhaust':message=s.players[t.actor].name+'再横置'+d.left+'名角色';items=own(s,t.actor).filter(c=>!c.state.exhausted);break;case'shadowDiscard':message=s.players[t.actor].name+'弃掉1张手牌（还剩'+d.left+'张）';items=own(s,t.actor).map(c=>({...c,meta:R.data(s,c)}));break;case'attachment':message='弃掉1张合法附属；目标卡返回探查区';items=attachmentItems(s,t.actor,d.targets);break;case'returnAlly':message='返回1名己方已横置盟友到拥有者手中';items=own(s,t.actor).filter(c=>c.kind==='ally'&&c.state.exhausted);break;case'discardCharacter':message='多尔哥多戒灵：弃掉1名己方角色';items=own(s,t.actor);break;case'combatDamage':message='所有'+current(s).damage+'伤害必须分配给同一名'+(d.undef?'己方英雄':'防御角色');items=d.undef?own(s,t.actor).filter(c=>c.kind==='hero'):liveDefenders(s);break;case'sniper':message='哥布林狙击手：对己方1名角色造成1伤害';items=own(s,t.actor);break;}return {task:t,message,fields:[field('target','选择目标',items)]};}
+ function spec(s){const t=x(s)?.tasks[0];if(!t)return null;const d=t.payload;let items=[],message='',fields=null;switch(t.kind){case'dealTie':message='由起始玩家选择同交战值敌人的暗影分配顺序（牌面仍隐藏）';items=d.uids.map(uid=>enemy(s,uid)).filter(Boolean);break;case'exhaust':message=s.players[t.actor].name+'再横置'+d.left+'名角色';items=own(s,t.actor).filter(c=>!c.state.exhausted);break;case'shadowDiscard':message=s.players[t.actor].name+'弃掉1张手牌（还剩'+d.left+'张）';items=own(s,t.actor).map(c=>({...c,meta:R.data(s,c)}));break;case'attachment':message='弃掉1张合法附属；目标卡返回探查区';items=attachmentItems(s,t.actor,d.targets);break;case'returnAlly':message='返回1名己方已横置盟友到拥有者手中';items=own(s,t.actor).filter(c=>c.kind==='ally'&&c.state.exhausted);break;case'discardCharacter':message='多尔哥多戒灵：弃掉1名己方角色';items=own(s,t.actor);break;case'combatDamage':message='所有'+current(s).damage+'伤害必须分配给同一名'+(d.undef?'己方英雄':'防御角色');items=d.undef?own(s,t.actor).filter(c=>c.kind==='hero'):liveDefenders(s);break;case'sniper':message='哥布林狙击手：对己方1名角色造成1伤害';items=own(s,t.actor);break;case'thaurdir173':message='索尔迪尔摧毁了1个角色：弃掉牌库顶3张，或让索尔迪尔返回探查区';fields=[{key:'mode',options:[{value:'mill',label:'弃牌库顶3张'},{value:'return',label:'索尔迪尔返回探查区'}]}];break;}return {task:t,message,fields:fields||[field('target','选择目标',items)]};}
  function choose(s,id,params){check(s);const sp=spec(s);need(sp&&sp.task.id===id,'选择已过期');need(sp.fields[0].options.some(o=>eq(o.value,params.target)),'请选择合法目标');const t=sp.task,uid=Number(params.target),d=t.payload;x(s).tasks.shift();
+  if(t.kind==='thaurdir173'){ /* v0.16.10 P1：由被摧毁角色的控制者二选一 */
+   if(params.target==='mill'){mill(s,t.actor,3);log(s,'索尔迪尔摧毁角色：'+s.players[t.actor].name+'弃掉牌库顶3张');}
+   else{const th=s.players[t.actor].engaged.find(c=>c.id===162);need(th,'索尔迪尔不在交战区');returnToStaging(s,th);log(s,'索尔迪尔返回探查区');}
+   R.pump(s);resume(s);return;}
   if(t.kind==='dealTie'){dealOne(s,enemy(s,uid));x(s).dealDone.push(uid);deal(s);}
   if(t.kind==='exhaust'){R.find(s,uid).state.exhausted=true;if(d.left>1)x(s).tasks.unshift({...t,id:++s.serial,payload:{...d,left:d.left-1}});}
   if(t.kind==='shadowDiscard'){const p=s.players[t.actor],i=p.hand.findIndex(c=>eq(c.uid,uid));need(i>=0,'该牌已不在手中');p.playerDiscard.push(p.hand.splice(i,1)[0]);if(d.left>1)x(s).tasks.unshift({...t,id:++s.serial,payload:{...d,left:d.left-1}});}
@@ -9008,6 +9026,9 @@ const RefreshRulesFactory=(H,R,Q)=>{
   if(s.status==='playing'){
    if(H.stageDef){const st=H.stageDef(s,s.quest);if(st.threatPerStagingEnemy){const n=s.staging.filter(c=>c.type==='Enemy').length;if(n)for(const p of [...alive(s)])R.changeThreat(s,p.id,n);}}
    if(H.tickTime)H.tickTime(s);
+   /* v0.16.10 P1（DD 官方文本）：deckOutElimination 剧本——休整阶段末尾每名玩家弃牌库顶1张；
+      牌库空 → H.mill 内部走 deckOut 淘汰路径。 */
+   if(H.scenarioFlag&&H.scenarioFlag(s,'deckOutElimination')&&H.mill)for(const p of [...alive(s)])H.mill(s,p.id,1);
    if(s.active?.id===185)for(const p of alive(s)){const cs=R.chars(s).filter(c=>c.controller===p.id&&c.kind==='hero'&&!c.state.destroyed);if(cs.length){R.damageCharacter(s,cs[0],1);log(s,s.players[p.id].name+'的'+cs[0].meta.nameZh+'受1点伤害（严寒山脊）');}}
    R.pump(s);
   }
@@ -9242,9 +9263,9 @@ const P4=TravelFactory({log,rng},P2,P3);
 const EncounterFactory=typeof EncounterRulesFactory!=='undefined'?EncounterRulesFactory:require('./encounter-engine.js');
 const P5=EncounterFactory({log,stageDef,questOf,engageHooks},P2,P3);
 const CombatFactory=typeof CombatRulesFactory!=='undefined'?CombatRulesFactory:require('./combat-engine.js');
-const P6=CombatFactory({log,draw,discardCard,get byId(){return byId;}},P2,P3);
+const P6=CombatFactory({log,draw,discardCard,get byId(){return byId;},mill},P2,P3);
 const RefreshFactory=typeof RefreshRulesFactory!=='undefined'?RefreshRulesFactory:require('./refresh-engine.js');
-const P7=RefreshFactory({log,tickTime,stageDef},P2,P3);
+const P7=RefreshFactory({log,tickTime,stageDef,scenarioFlag,mill},P2,P3);
 const byId=Object.fromEntries(D.cards.map(x=>[x.id,x]));
 const phases=['资源','计划','探险','旅行','遭遇','战斗','刷新'];
 const clone=x=>JSON.parse(JSON.stringify(x));
@@ -9354,7 +9375,9 @@ function onEnterEffects(s,id){
   else if(oe.type==='revealPerPlayer'){assert(Number.isInteger(oe.count)&&oe.count>=1,'onEnter revealPerPlayer 需要正整数 count');
    if(s.questing){const ctx=P2.context(s);ctx.returnStep=ctx.step;ctx.step='staging';ctx.remaining.push(...Array.from({length:oe.count*live(s).length},()=>({})));}else reveal(s,oe.count*live(s).length);}
   /* v0.16.10：安格玛 onEnter 扩展（DD 1B/2A、TWH 2A）。 */
-  else if(oe.type==='searchEngage'){assert(Number.isInteger(oe.card),'onEnter searchEngage 需要 card id');for(const p of live(s))task(s,`${p.name}从遭遇牌库搜索1张指定卡，放入场并与其交战。`,'searchEngage',{player:p.id,card:oe.card});}
+  else if(oe.type==='searchEngage'){assert(Number.isInteger(oe.card),'onEnter searchEngage 需要 card id');for(const p of live(s))task(s,`${p.name}从遭遇牌库搜索1张指定卡，放入场并与其交战。`,'searchEngage',{player:p.id,card:oe.card});
+   /* v0.16.10 P1（DD 1B 官方全文）：搜索全部结算后洗混遭遇牌库，再每名玩家翻1张遭遇卡。 */
+   s.searchEngageFollowUp={shuffle:true,revealPerPlayer:true};}
   else if(oe.type==='spawnSetAside'){assert(Number.isInteger(oe.card),'onEnter spawnSetAside 需要 card id');const i=s.setaside.findIndex(x=>x.id===oe.card);assert(i>=0,'setAside 中找不到要生成的卡：'+oe.card);const c2=s.setaside.splice(i,1)[0];s.staging.push(c2);timeEnter(s,c2);log(s,`「${c2.name}」从预置区加入探查区`);}
   else if(oe.type==='revealSetAside'){assert(Array.isArray(oe.cards)&&oe.cards.length,'onEnter revealSetAside 需要 cards 数组');for(const id2 of oe.cards){const i=s.setaside.findIndex(x=>x.id===id2);assert(i>=0,'setAside 中找不到要翻出的卡：'+id2);const c2=s.setaside.splice(i,1)[0];s.staging.push(c2);timeEnter(s,c2);log(s,`翻开「${c2.name}」，加入探查区`);}}
   else assert(false,'未知 stage.onEnter 类型：'+oe.type);
@@ -9579,6 +9602,11 @@ function resolve(s,id,choice){const t=s.pending.find(t=>t.id===id);assert(t,'找
  }
  if(t.kind==='searchEngage'){
   const c=s.deck.find(x=>x.uid===Number(choice)&&x.id===t.args.card);assert(c,'必须从遭遇牌库选择指定的卡。');const p=s.players[t.args.player];p.engaged.push(s.deck.splice(s.deck.indexOf(c),1)[0]);log(s,`${p.name}搜索并交战「${c.name}」`);
+  /* v0.16.10 P1（DD 1B）：全部搜索结算后 → 洗混遭遇牌库 → 每名玩家翻1张遭遇卡。 */
+  if(s.searchEngageFollowUp&&!s.pending.some(x2=>x2.kind==='searchEngage'&&x2.id!==t.id)){const fu=s.searchEngageFollowUp;delete s.searchEngageFollowUp;
+   if(fu.shuffle)shuffle(s,s.deck);
+   if(fu.revealPerPlayer)reveal(s,live(s).length);
+  }
  }
  if(t.kind==='treachery'){
   const c=remove(s.resolving,t.args.uid);if(c.id===105)c.targetPlayer=s.first;if([80,105].includes(c.id))s.conditions.push(c);else discardCard(s,c);
@@ -9618,6 +9646,9 @@ function gate(s){if(s.setupPending)return '尚未完成开局设置';if(s.pendin
  if(g&&g.noEnemies){if([...s.staging,...s.players.flatMap(p=>p.engaged)].some(c=>c.type==='Enemy'))return '场上仍有敌人';}
  /* v0.16.10：安格玛 gate 扩展——controlsObjective（IiC 161）与 spawnHpZero（DD 2B 162，
    区别于 spawnDefeated 的离场判定：不可摧毁卡血量归零但仍在场即算达成）。 */
+ /* v0.16.10：controlsObjective 口径注释——现按「被任一玩家持有」判定（o.holder 非空）。
+   官方文本是「第一名玩家控制」，但 161 伊亚里安实际不可转移、控制权不随先手轮换，
+   若改成 o.holder?.player===s.first 会在先手轮换后永远无法过关；待官方裁定或数据支持转移后再收紧。 */
  if(g&&Array.isArray(g.controlsObjective)){const miss=g.controlsObjective.filter(id=>!s.objectives.some(o=>o.id===id&&o.holder));if(miss.length)return `必须控制目标：${miss.map(id=>D.cards.find(c=>c.id===id)?.name||('id '+id)).join('、')}（须由玩家持有）`;}
  if(Number.isInteger(g?.spawnHpZero)){const def=D.cards.find(c=>c.id===g.spawnHpZero),c=inPlayCards(s).find(x=>x.id===g.spawnHpZero);
   if(c){if((c.damage||0)<(c.health??0))return `必须将${c.name}的血量降至0（当前${c.damage||0}/${c.health??0}）`;}
@@ -9630,13 +9661,19 @@ function gate(s){if(s.setupPending)return '尚未完成开局设置';if(s.pendin
   else assert(false,'未知 gate.holdObjectives：'+need);
  }
  return '';}
+/* v0.16.10 P0：官方「在场时玩家不能获胜」——143 兽人战团（iic）、183 阿蒙福恩（twh）。
+   机制读 stage.noWinWhileInPlay；数据侧补字段前先以 NO_WIN_CARDS 硬编码双保险。 */
+const NO_WIN_CARDS=new Set([143,183]);
+function noWinBlocked(s){const ids=[...(stageDef(s,s.quest).noWinWhileInPlay||[]),...NO_WIN_CARDS];return ids.filter(id=>inPlayCards(s).some(c=>c.id===id));}
 function advance(s,internal=false){assert(internal||!s.questing,'探险推进由规则自动判定');ready(s);assert(!gate(s),gate(s));
  /* v0.16.3：推进读 stage.next（'random' 走 nextRandom，null/缺省=胜利）；目标必须是已定义的探险卡。 */
  const st=stageDef(s,s.quest);assert('next' in st,'stage 缺少 next 字段：'+s.quest);
  let next=st.next;
  if(next==='random'){assert(Array.isArray(st.nextRandom)&&st.nextRandom.length>=1,'random next 需要 nextRandom 数组');next=st.nextRandom[Math.floor(rng(s)*st.nextRandom.length)];}
  if(next!==null&&next!==undefined){stageDef(s,next);enter(s,next);}
- else{s.status='won';log(s,'剧本胜利！');}}
+ else{const blocking=noWinBlocked(s);
+  if(blocking.length){log(s,`进度已满，但「${blocking.map(id=>D.cards.find(c=>c.id===id)?.name||id).join('、')}」仍在场，玩家不能获胜；待其离场后重新达成`);return;}
+  s.status='won';log(s,'剧本胜利！');}}
 function travel(s,uid,confirmed=false){assert(!s.traveling,'请使用旅行暂定选择与全员二次确认');ready(s);assert(s.phase===3,'仅在旅行阶段旅行。');assert(!s.active,'已有当前地点。');let c=s.staging.find(c=>c.uid===uid);assert(c?.type==='Location','请选择地点。');assert(!s.staging.some(x=>x.id===88)||c.id===88,'必须优先旅行至东湾。');
  if([77,78,94].includes(c.id))assert(confirmed,'请先确认旅行费用可支付并已处理。');
  s.active=remove(s.staging,uid);s.active.progress=0;log(s,`旅行至「${c.name}」`);
@@ -9644,6 +9681,9 @@ function travel(s,uid,confirmed=false){assert(!s.traveling,'请使用旅行暂�
  if(c.id===87){s.active=null;leaveLocation(s,c);}
  /* v0.16.10：165 破损的城墙——旅行至此，每位玩家 mill 1（Time 3 计数在入场时已放置）。 */
  if(c.id===165)for(const p of live(s))mill(s,p.id,1);
+ /* v0.16.10 P2：187 旅行效果与 166/186 探索响应——本批降级为手动事项提示，避免静默丢失。 */
+ if(c.id===187)task(s,'隐秘兽人营地旅行效果：第一名玩家从遭遇牌库和弃牌堆找出1个兽人敌人置入场上与其交战，然后洗混遭遇牌库。（当前按手动事项处理）','setupManual');
+ if(c.id===166||c.id===186)task(s,`「${c.name}」的探索响应将在其被探索时结算，请手动处理。（当前按手动事项处理）`,'setupManual');
  if(c.id===99)task(s,'古老森林道路：起始玩家可重置1名己方角色。');
  if(c.id===100)task(s,'森林大门：起始玩家可抽2张牌（如抽牌被禁止则不抽）。');
  if(c.id===107)guards(s);
