@@ -477,7 +477,12 @@ body:has(.desktop-table) .nav-home .brand-mark{width:17px;height:17px}
 .cat-item>summary::-webkit-details-marker{display:none}
 .cat-item>summary:hover{background:var(--surface-pop)}
 .cat-item>summary:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}
-.cat-name{font-weight:600;color:var(--ink)}
+/* v0.17.7 卡名粗细统一（用户反馈「有的粗有的细」）：卡名显式完整回退链 + 固定字重。
+   根因：LXGW WenKai 为按语料裁剪的子集，fetched 卡名（内嵌 index.html 的 PLAYER_CARDS_DATA
+   与 docs/data/encounter-carddata.js）中的字不在子集内时回退 Microsoft YaHei，600 在雅黑映射
+   到 Bold，与子集内 WenKai Medium 粗细不一。子集语料已扩至全数据文件（scripts/build-font-subsets.py），
+   此处再显式声明同族回退链与固定 font-weight 双保险。 */
+.cat-name{font-family:'LXGW WenKai','Microsoft YaHei',sans-serif;font-weight:600;color:var(--ink)}
 .cat-meta{color:var(--muted);font-size:14px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .cat-item[open]{grid-column:1/-1;margin:6px 0;padding:0 16px 4px;border:1px solid var(--line);border-radius:var(--radius-lg);background:var(--surface-pop);box-shadow:0 8px 28px rgba(36,57,47,.08)}
 .cat-item[open]>summary{margin-bottom:10px;border-bottom:1px solid var(--line)}
@@ -491,7 +496,7 @@ body:has(.desktop-table) .nav-home .brand-mark{width:17px;height:17px}
 .cat-art-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px}
 .cat-figure{display:flex;flex-direction:column;gap:6px;margin:0}
 .cat-figure figcaption{display:flex;flex-direction:column;gap:2px;color:var(--muted);font-size:14px}
-.cat-figure figcaption b{color:var(--ink);font-size:15px;font-weight:600}
+.cat-figure figcaption b{color:var(--ink);font-size:15px;font-family:'LXGW WenKai','Microsoft YaHei',sans-serif;font-weight:600}
 @media(prefers-reduced-motion:reduce){.cat-sides button,.cat-views button{transition:none}}
 @media(max-width:900px){.cat-list{grid-template-columns:1fr}}
 /* 牌组构建器：沿用卡牌库的密集列表，行右侧是加减牌操作（见 player-ui.js buildRow）。 */

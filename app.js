@@ -60,6 +60,18 @@ function captureSetup(){if(state)return;const count=$('#playerCount');if(!count)
 function bindSetup(){if(state||tab!=='table')return;const count=$('#playerCount');if(!count)return;count.onchange=()=>{captureSetup();render();};for(const id of ['seed','pc-first','pc-deck-0','pc-deck-1','pc-deck-2','pc-deck-3']){const el=$('#'+id);if(el){el.onchange=captureSetup;if(id==='seed')el.oninput=captureSetup;}}}
 const escape=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const enc=escape;
+/* v0.17.7：fetched 卡牌 rulesText/shadow 净化富文本渲染（用户反馈 <b>Action:</b> 字面显示）。
+   管线：解码常见实体 → 全量转义 → 白名单标签还原（b/strong→strong、i/em→em、u→u、br→br）
+   → RingsDB 图标 token 转可读文本。绝不把原文直接 innerHTML：白名单外的任何标签都以转义文本
+   原样显示（fail visible），不猜不放行。data.js 内置卡已是中文纯文本，继续走 enc() 不经此管线。 */
+const RICH_TOKENS={'[attack]':'[攻]','[defense]':'[防]','[willpower]':'[意]','[threat]':'[胁]','[surge]':'[涌]','[leadership]':'[领]','[tactics]':'[战]','[spirit]':'[灵]','[lore]':'[识]'};
+function rich(text){let s=String(text??'');
+ s=s.replace(/&(amp|lt|gt|quot|#39|nbsp);/g,m=>({'&amp;':'&','&lt;':'<','&gt;':'>','&quot;':'"','&#39;':"'",'&nbsp;':'\u00a0'}[m]));
+ s=escape(s);
+ s=s.replace(/&lt;(\/?)(b|strong|i|em|u)&gt;/g,(m,slash,tag)=>{const out=tag==='b'?'strong':tag==='i'?'em':tag;return slash?`</${out}>`:`<${out}>`;});
+ s=s.replace(/&lt;br\s*\/?&gt;/gi,'<br>');
+ for(const k of Object.keys(RICH_TOKENS))s=s.split(k).join(RICH_TOKENS[k]);
+ return s;}
 try{let s=localStorage.getItem('lotr-core-v02');if(s){let v=JSON.parse(s);if(v.version===1){state=v;if(state.phase===2&&state.questing)E.questing.enableDiscussion(state);}}}catch{}
 function save(){try{if(state)localStorage.setItem('lotr-core-v02',JSON.stringify(state));else localStorage.removeItem('lotr-core-v02');}catch{toast('浏览器未允许本地保存，可使用导出存档。');}}
 function toast(t){$('#toast').textContent=t;$('#toast').style.display='block';clearTimeout(toast.timer);toast.timer=setTimeout(()=>$('#toast').style.display='none',5000);}
@@ -342,7 +354,7 @@ function catalogDetail(face,code,pod){
   /* hero 五维可能为 null（307002 Tom Bombadil 等变值属性）→ 显示 'X' */
   const st=n=>n===null||n===undefined?'X':n;
   const rows=[['类型',PLAYER_TYPES[c.type]||c.type],['球色',SPHERE_NAMES[c.sphere]||c.sphereName||'—'],...(typeof c.cost==='number'||c.cost==='X'?[['费用',c.cost]]:[]),['初始威胁',c.startingThreat],['意志／攻击／防御／生命',c.type==='hero'?`${st(c.willpower)}／${st(c.attack)}／${st(c.defense)}／${st(c.health)}`:null],['特性',c.traits],['卡包',c.packName],['编号',c.code]];
-  return `<div class="cat-detail">${ImageLibrary.art(code)}<div class="cat-text">${catalogFacts(rows)}<p class="small muted">规则文本为 RingsDB 英文原文，未作翻译。</p><p>${enc(c.rulesText||'（暂无规则文本）')}</p></div></div>`;
+  return `<div class="cat-detail">${ImageLibrary.art(code)}<div class="cat-text">${catalogFacts(rows)}<p>${rich(c.rulesText||'（暂无规则文本）')}</p></div></div>`;
  }
  if(face==='quest'){
   const q=D.quests.find(x=>x.id===Number(code));
@@ -374,7 +386,7 @@ function catalogDetail(face,code,pod){
   if(f.type==='location')rows.push(['威胁／探索',`${f.threat??'—'}／${f.questPoints??'—'}`]);
   if(f.victory)rows.push(['胜利点',f.victory]);
   rows.push(['特性',f.traits],['关键词',f.keywords],['卡包',f.packNameZh||f.packName],['编号',f.code]);
-  return `<div class="cat-detail">${ImageLibrary.encounterArt(f.code)}<div class="cat-text">${catalogFacts(rows)}<p>${enc(f.rulesText||'（暂无规则文本）')}</p>${f.shadow?`<p><b>暗影效果</b><br>${enc(f.shadow)}</p>`:''}</div></div>`;
+  return `<div class="cat-detail">${ImageLibrary.encounterArt(f.code)}<div class="cat-text">${catalogFacts(rows)}<p>${rich(f.rulesText||'（暂无规则文本）')}</p>${f.shadow?`<p><b>暗影效果</b><br>${rich(f.shadow)}</p>`:''}</div></div>`;
  }
  return '';
 }

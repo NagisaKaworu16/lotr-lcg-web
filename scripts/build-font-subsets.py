@@ -16,12 +16,12 @@ SRC = os.path.join(ROOT, 'assets', 'fonts', '_src')
 OUT = os.path.join(ROOT, 'assets', 'fonts')
 
 # 1) 语料：源码全部字符中 ord>=0x80 的 + ASCII 可打印 + 全角标点兜底
+# v0.17.7：语料扩至 index.html（内嵌 PLAYER_CARDS_DATA 等全量卡名）与 docs/data/*.{js,json}
+# （fetched 遭遇卡/玩家卡中文名）——否则这些字不在子集内，卡名回退雅黑导致粗细不齐。
 corpus = set(chr(c) for c in range(0x20, 0x7F))
 PUNCT = '，。、；：？！""''（）《》〈〉【】〔〕·—…～％＋－×÷°′″¥　⒈⑴①⑧〔〕'
-for pat in ('*.js', 'shell.html'):
+for pat in ('*.js', 'shell.html', 'index.html', 'docs/data/*.js', 'docs/data/*.json'):
     for f in glob.glob(os.path.join(ROOT, pat)):
-        if f.endswith('index.html'):
-            continue
         with open(f, encoding='utf8', errors='ignore') as fh:
             for ch in fh.read():
                 if ord(ch) >= 0x80:
