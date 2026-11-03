@@ -3,7 +3,7 @@
  "source": "RingsDB",
  "nameZhNote": "nameZh: Core 卡来自 ringsdb-snapshot.js（data.js 权威，不覆盖）；其余由 docs/data/zh-overrides（EDGE 扩展导出）merge——先 edge-pack code 精确匹配，再规范化英文名（详见 scripts/zh-merge.py 与 docs/data/zh-merge-report.json）。rulesTextZh/traitsZh 来自 zh-overrides 规则文本译文（core-text-zh.json Core 73 张 + cycles1-text-zh.json Mirkwood/Dwarrowdelf 循环 133 张，code 精确匹配、原样直写，机器辅助译文未人工复核）；rulesTextZh 渲染归展示层（markdown 极简标记 + token，见 token 全集清单）。",
  "endpoint": "https://ringsdb.com/api/public/cards/{packCode}.json",
- "fetchedAt": "2026-11-03T09:00:23+00:00",
+ "fetchedAt": "2026-11-03T09:13:13+00:00",
  "cardCount": 1315,
  "packCount": 98,
  "packCoverageNote": "packs 数组=抓取范围（含 RingsDB 有数据的重印 starter 包 DoD/EoL/DoG/RoR，其卡与既有 code 全部重合、去重后归原包，故 packCount=含卡包数 98）；RingsDB 清单另列 11 个 ALeP 包（known=0 无卡数据，无法抓取）与 The Siege of Cair Andros（清单/接口均不存在，源站缺口）——两者如实留缺。",
@@ -4982,7 +4982,9 @@
      "position": 2
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17055"
+   "sourceUrl": "https://ringsdb.com/card/17055",
+   "rulesTextZh": "**响应：**在希尔巩任务成功后，从你手中打出一名 [tactics] 盟友，其费用降低1（最低为1）。然后，你可以将你的威胁提升1，使该盟友直到本轮结束+1 [attack] 且+1 [defense]。",
+   "traitsZh": "刚铎。侦察兵。"
   },
   {
    "code": "17056",
@@ -5018,7 +5020,9 @@
      "position": 56
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17056"
+   "sourceUrl": "https://ringsdb.com/card/17056",
+   "rulesTextZh": "受限。附属到一名**哈拉德民**角色身上。\n所附属的角色+1 [attack]。\n**响应：**在所附属角色被宣告为攻击者后，其在此次攻击中+3 [attack]。此次攻击结算后，弃掉哈拉德长矛。",
+   "traitsZh": "物品。武器。"
   },
   {
    "code": "17057",
@@ -5054,7 +5058,9 @@
      "position": 57
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17057"
+   "sourceUrl": "https://ringsdb.com/card/17057",
+   "rulesTextZh": "只有当你控制一名拥有**战士**特质的独特角色和另一名拥有**侦察兵**特质的独特角色时才能打出。\n**响应：**在玩家们将角色指派参加任务后，弃掉探查区中的一名非独特敌人。然后，展示1张遭遇卡。",
+   "traitsZh": ""
   },
   {
    "code": "17058",
@@ -5096,7 +5102,9 @@
      "position": 18
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17058"
+   "sourceUrl": "https://ringsdb.com/card/17058",
+   "rulesTextZh": "每副牌库限1张。附属到一名**刚铎**英雄身上。\n所附属的英雄+1 [willpower]。\n**英勇响应：**在所附属英雄任务成功后，将红箭加入胜利展示区，以在你牌库顶的5张卡中搜寻一名盟友并将其置入场上。",
+   "traitsZh": "秘宝。物品。"
   },
   {
    "code": "17059",
@@ -5132,7 +5140,9 @@
      "position": 59
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17059"
+   "sourceUrl": "https://ringsdb.com/card/17059",
+   "rulesTextZh": "胜利展示区中的持续守望限1张。\n当持续守望在胜利展示区中时，每名与玩家交战的非独特敌人-1 [attack]。",
+   "traitsZh": ""
   },
   {
    "code": "17060",
@@ -5168,7 +5178,9 @@
      "position": 60
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17060"
+   "sourceUrl": "https://ringsdb.com/card/17060",
+   "rulesTextZh": "当胜利展示区中有支线探险时，洛汗骑士参与任务时不需横置。",
+   "traitsZh": "洛汗。侦察兵。"
   },
   {
    "code": "17061",
@@ -5204,7 +5216,9 @@
      "position": 61
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17061"
+   "sourceUrl": "https://ringsdb.com/card/17061",
+   "rulesTextZh": "附属到一名**霍比特人**英雄身上，每名英雄限1张。所附属的英雄每有一张**歌谣**附属在其身上，便+1 [willpower]。",
+   "traitsZh": "歌谣。"
   },
   {
    "code": "17062",
@@ -5246,7 +5260,9 @@
      "position": 50
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17062"
+   "sourceUrl": "https://ringsdb.com/card/17062",
+   "rulesTextZh": "**响应：**弃掉杜内丹守望者，以取消遭遇牌库刚展示的一名敌人的「展示时」效果。",
+   "traitsZh": "登丹人。"
   },
   {
    "code": "17063",
@@ -5282,7 +5298,9 @@
      "position": 63
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17063"
+   "sourceUrl": "https://ringsdb.com/card/17063",
+   "rulesTextZh": "附属到一名英雄身上，每名英雄限1张。所附属的英雄获得**游侠**特质。\n**响应：**在你从手中打出刚强的游民后，抽1张卡。",
+   "traitsZh": "技艺。"
   },
   {
    "code": "17064",
@@ -5318,7 +5336,9 @@
      "position": 64
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17064"
+   "sourceUrl": "https://ringsdb.com/card/17064",
+   "rulesTextZh": "只有当你控制的角色合计拥有至少9个不同**特质**时才能打出。\n**行动：**重整场上每名角色。直到本阶段结束，你控制的每名角色+1 [willpower]。",
+   "traitsZh": ""
   },
   {
    "code": "08112",
@@ -7266,7 +7286,9 @@
      "position": 135
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17135"
+   "sourceUrl": "https://ringsdb.com/card/17135",
+   "rulesTextZh": "不能拥有受限附属。\n**行动：**对急楸造成2点伤害来重整他。（每阶段限一次。）",
+   "traitsZh": "恩特。"
   },
   {
    "code": "17136",
@@ -7302,7 +7324,9 @@
      "position": 136
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17136"
+   "sourceUrl": "https://ringsdb.com/card/17136",
+   "rulesTextZh": "胜利展示区中每有1张支线探险，哈尔法斯特·甘姆吉的打出费用便降低1。\n**响应：**在哈尔法斯特·甘姆吉进场后，将1点资源加入一名英雄的资源池。",
+   "traitsZh": "霍比特人。"
   },
   {
    "code": "17137",
@@ -7338,7 +7362,9 @@
      "position": 137
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17137"
+   "sourceUrl": "https://ringsdb.com/card/17137",
+   "rulesTextZh": "**行动：**弃掉你控制的一名盟友，以选择并弃掉一张**状态**附属。",
+   "traitsZh": ""
   },
   {
    "code": "17138",
@@ -7374,7 +7400,9 @@
      "position": 138
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17138"
+   "sourceUrl": "https://ringsdb.com/card/17138",
+   "rulesTextZh": "**响应：**在贝奥恩守卫参与的一次攻击消灭一名敌人后，弃掉贝奥恩守卫，在一个地点上放置X个进度，其中X为被消灭敌人的印刷 [threat]。",
+   "traitsZh": "比翁族。"
   },
   {
    "code": "17139",
@@ -7410,7 +7438,9 @@
      "position": 139
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17139"
+   "sourceUrl": "https://ringsdb.com/card/17139",
+   "rulesTextZh": "将尾随打出进你的打出区，不附属。\n处于未附属状态时，附属到下一名与你交战且符合条件的敌人身上。\n当所附属敌人与你交战时，将探查区总 [threat] 降低X，其中X为所附属敌人的印刷 [threat]。",
+   "traitsZh": "状态。陷阱。"
   },
   {
    "code": "17140",
@@ -7446,7 +7476,9 @@
      "position": 140
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17140"
+   "sourceUrl": "https://ringsdb.com/card/17140",
+   "rulesTextZh": "只有当你控制一名**诺多**或**西尔凡**英雄时才能打出。\n**谋划行动：**将一张备置的海上来的风洗入遭遇牌库。然后，将飞向大海移出游戏。",
+   "traitsZh": ""
   },
   {
    "code": "17141",
@@ -7488,7 +7520,9 @@
      "position": 29
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17141"
+   "sourceUrl": "https://ringsdb.com/card/17141",
+   "rulesTextZh": "**响应：**在埃敏阿尔能尖兵被指派参加任务后，选择一名附属有**陷阱**的敌人。直到本阶段结束，埃敏阿尔能尖兵+X [willpower]，其中X为所选择敌人的印刷 [threat]。",
+   "traitsZh": "刚铎。游侠。"
   },
   {
    "code": "17142",
@@ -7524,7 +7558,9 @@
      "position": 142
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17142"
+   "sourceUrl": "https://ringsdb.com/card/17142",
+   "rulesTextZh": "只有当你控制一名拥有**恩特**特质的独特角色和另一名拥有**霍比特人**特质的独特角色时才能打出。\n**行动：**重整你控制的每名带有伤害的**恩特**角色。",
+   "traitsZh": ""
   },
   {
    "code": "17143",
@@ -7566,7 +7602,9 @@
      "position": 31
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17143"
+   "sourceUrl": "https://ringsdb.com/card/17143",
+   "rulesTextZh": "附属到一名英雄身上。每名英雄限1张，每副牌库限1张。\n**行动：**横置魔法戒指并将你的威胁提升1，以（选择1项）：治疗所附属英雄身上的1点伤害；将1点资源加入所附属英雄的资源池；或重整所附属英雄。",
+   "traitsZh": "秘宝。物品。魔戒。"
   },
   {
    "code": "17144",
@@ -7602,7 +7640,9 @@
      "position": 144
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17144"
+   "sourceUrl": "https://ringsdb.com/card/17144",
+   "rulesTextZh": "遭遇。\n**展示时：**重整每名已指派参加任务的英雄，并将海上来的风移出游戏。\n**暗影：**重整防御角色。",
+   "traitsZh": ""
   },
   {
    "code": "01001",
@@ -11072,7 +11112,9 @@
      "position": 54
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/22054"
+   "sourceUrl": "https://ringsdb.com/card/22054",
+   "rulesTextZh": "当一张玩家卡效果将你的威胁降低任意数值时，将该数值降为1。\n打出拥有印刷厄运关键字的事件时，萨茹曼获得印刷的 [leadership]、[spirit] 和 [tactics] 图标。\n**响应：**在你打出一张拥有厄运关键字的卡后，重整萨茹曼。",
+   "traitsZh": "伊斯塔瑞。艾森加德。"
   },
   {
    "code": "22055",
@@ -11108,7 +11150,9 @@
      "position": 55
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/22055"
+   "sourceUrl": "https://ringsdb.com/card/22055",
+   "rulesTextZh": "附属到拥有至尊魔戒的英雄身上。\n每名英雄限1张。所附属的英雄+1 [willpower]。\n**响应：**在所附属英雄被指派参加任务后，横置至尊魔戒并将你的威胁提升1，使你控制的其他每名独特角色在本阶段结束前+1 [willpower]。",
+   "traitsZh": "宗主。"
   },
   {
    "code": "22056",
@@ -11144,7 +11188,9 @@
      "position": 56
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/22056"
+   "sourceUrl": "https://ringsdb.com/card/22056",
+   "rulesTextZh": "厄运2。\n**行动：**每名玩家可以从其手牌中将一张盟友卡置入场上。在本阶段结束时，将这些仍在场上的盟友洗入其拥有者的牌库。",
+   "traitsZh": ""
   },
   {
    "code": "22057",
@@ -11180,7 +11226,9 @@
      "position": 57
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/22057"
+   "sourceUrl": "https://ringsdb.com/card/22057",
+   "rulesTextZh": "厄运2。\n**响应：**在一名玩家因厄运关键字提升其威胁后，将艾森加德士兵的控制权交给该玩家。",
+   "traitsZh": "艾森加德。"
   },
   {
    "code": "22058",
@@ -11216,7 +11264,9 @@
      "position": 58
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/22058"
+   "sourceUrl": "https://ringsdb.com/card/22058",
+   "rulesTextZh": "厄运1。\n**行动：**查看遭遇牌库顶的5张卡。以原顺序放回。",
+   "traitsZh": ""
   },
   {
    "code": "22059",
@@ -11252,7 +11302,9 @@
      "position": 59
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/22059"
+   "sourceUrl": "https://ringsdb.com/card/22059",
+   "rulesTextZh": "**响应：**在诺瑞参与的一次攻击消灭一名敌人后，将你弃牌堆顶的1张卡放到你的牌库底。",
+   "traitsZh": "矮人。"
   },
   {
    "code": "22060",
@@ -11288,7 +11340,9 @@
      "position": 60
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/22060"
+   "sourceUrl": "https://ringsdb.com/card/22060",
+   "rulesTextZh": "附属到一名英雄身上。每名英雄限1条。\n所附属的英雄可以多拥有1张受限附属。",
+   "traitsZh": "物品。"
   },
   {
    "code": "22061",
@@ -11324,7 +11378,9 @@
      "position": 61
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/22061"
+   "sourceUrl": "https://ringsdb.com/card/22061",
+   "rulesTextZh": "**行动：**弃掉洛汗斥候，以选择探查区中的一名非独特敌人。该敌人本轮不对你进行交战检定。",
+   "traitsZh": "洛汗。侦察兵。"
   },
   {
    "code": "22062",
@@ -11366,7 +11422,9 @@
      "position": 25
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/22062"
+   "sourceUrl": "https://ringsdb.com/card/22062",
+   "rulesTextZh": "支付洛汗全军集结的费用时，你控制的每名**洛汗**英雄视为拥有一个 [spirit] 图标。\n**谋划行动：**在你牌库顶的10张卡中搜寻至多4名**洛汗**盟友，将其置入场上。洗你的牌库。若其中任何盟友在每轮结束时仍在场上，将其弃掉。",
+   "traitsZh": ""
   },
   {
    "code": "22063",
@@ -11402,7 +11460,9 @@
      "position": 63
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/22063"
+   "sourceUrl": "https://ringsdb.com/card/22063",
+   "rulesTextZh": "附属到萨茹曼身上。受限。\n**行动：**横置萨茹曼的手杖，以（选择一项）：使你本阶段打出的下一张厄运X事件的X值降低2；或在你牌库顶的5张卡中搜寻一张厄运事件，将其加入你的手牌。洗你的牌库。",
+   "traitsZh": "秘宝。物品。手杖。"
   },
   {
    "code": "22074",
@@ -11438,7 +11498,9 @@
      "position": 74
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/22074"
+   "sourceUrl": "https://ringsdb.com/card/22074",
+   "rulesTextZh": "**A面**\n你最多只能选择1名起始英雄。\n**设置：**在你的牌库中搜寻一张印刷费用为1的附属，将其置入场上。然后，将此卡翻面。\n\n**B面**\n你每个谋划阶段打出的第一张非独特卡不需要资源匹配。\n**行动：**横置此卡并将你的威胁提升1，以（选择2项）：重整你的起始英雄；将2点资源加入你的起始英雄的资源池；或治疗你的起始英雄身上的3点伤害。",
+   "traitsZh": ""
   },
   {
    "code": "11172",
@@ -13198,7 +13260,9 @@
      "position": 109
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17109"
+   "sourceUrl": "https://ringsdb.com/card/17109",
+   "rulesTextZh": "你每控制一名**霍比特人**英雄，福尔科·博芬的威胁费用便-1。\n**行动：**弃掉福尔科·博芬，将你的威胁降低7。（每局游戏限一次。）",
+   "traitsZh": "霍比特人。"
   },
   {
    "code": "17110",
@@ -13234,7 +13298,9 @@
      "position": 110
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17110"
+   "sourceUrl": "https://ringsdb.com/card/17110",
+   "rulesTextZh": "**行动：**支付1点 [leadership] 资源来重整河谷邦骑士。（每轮限一次。）\n**英勇行动：**重整河谷邦骑士。（每轮限一次。）",
+   "traitsZh": "谷地。战士。"
   },
   {
    "code": "17111",
@@ -13270,7 +13336,9 @@
      "position": 111
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17111"
+   "sourceUrl": "https://ringsdb.com/card/17111",
+   "rulesTextZh": "附属到一名英雄身上。每名英雄限1张。\n所附属的英雄获得**贵族**特质。\n**响应：**在你从手中打出勤勉的贵族后，抽1张卡。",
+   "traitsZh": "技艺。"
   },
   {
    "code": "17112",
@@ -13312,7 +13380,9 @@
      "position": 9
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17112"
+   "sourceUrl": "https://ringsdb.com/card/17112",
+   "rulesTextZh": "**响应：**在里德马克骑士被宣告为攻击者后，其在此次攻击中+2 [attack]。此次攻击结束时，弃掉里德马克骑士。",
+   "traitsZh": "洛汗。战士。"
   },
   {
    "code": "17113",
@@ -13348,7 +13418,9 @@
      "position": 113
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17113"
+   "sourceUrl": "https://ringsdb.com/card/17113",
+   "rulesTextZh": "**战斗行动：**对一名与你交战的非独特敌人造成3点伤害。\n**英勇行动：**弃掉一名与你交战的非独特敌人。",
+   "traitsZh": ""
   },
   {
    "code": "17114",
@@ -13384,7 +13456,9 @@
      "position": 114
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17114"
+   "sourceUrl": "https://ringsdb.com/card/17114",
+   "rulesTextZh": "当你的手牌中没有卡时，埃瑞吉安幸存者+1 [willpower]、+1 [attack] 和+1 [defense]。",
+   "traitsZh": "诺多。"
   },
   {
    "code": "17115",
@@ -13420,7 +13494,9 @@
      "position": 115
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17115"
+   "sourceUrl": "https://ringsdb.com/card/17115",
+   "rulesTextZh": "只有当你控制一名拥有**诺多**特质的独特角色和另一名拥有**登丹人**特质的独特角色时才能打出。\n**行动：**选择探查区中的一个非独特地点，将你的威胁提升X来弃掉它。X为所选择地点的印刷任务点数。",
+   "traitsZh": ""
   },
   {
    "code": "17116",
@@ -13456,7 +13532,9 @@
      "position": 116
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17116"
+   "sourceUrl": "https://ringsdb.com/card/17116",
+   "rulesTextZh": "不能拥有受限附属。\n进场时横置。\n你控制的每名带有伤害的**恩特**角色使树叶王+1 [willpower]。（上限+4 [willpower]。）",
+   "traitsZh": "恩特。"
   },
   {
    "code": "17117",
@@ -13492,7 +13570,9 @@
      "position": 117
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17117"
+   "sourceUrl": "https://ringsdb.com/card/17117",
+   "rulesTextZh": "附属到一名英雄身上。受限。\n胜利展示区中每有1张支线探险，所附属的英雄便+1 [attack]。（上限+3 [attack]。）",
+   "traitsZh": "物品。武器。"
   },
   {
    "code": "17118",
@@ -13528,7 +13608,9 @@
      "position": 118
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17118"
+   "sourceUrl": "https://ringsdb.com/card/17118",
+   "rulesTextZh": "**行动：**在你牌库顶的10张卡中搜寻一张**武器**或**护甲**附属，将其加入你的手牌。洗你的牌库。\n**英勇行动：**在你牌库顶的5张卡中搜寻一张**武器**或**护甲**附属，将其置入场上。洗你的牌库。",
+   "traitsZh": ""
   },
   {
    "code": "12166",
@@ -15066,7 +15148,9 @@
      "position": 28
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/10028"
+   "sourceUrl": "https://ringsdb.com/card/10028",
+   "rulesTextZh": "若当前地点与胜利展示区中的某个地点共享一个**特质**，罗塞尔+2 [willpower]。\n若进攻敌人与胜利展示区中的某名敌人共享一个**特质**，罗塞尔+2 [defense]。",
+   "traitsZh": "西尔凡。"
   },
   {
    "code": "10029",
@@ -15102,7 +15186,9 @@
      "position": 29
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/10029"
+   "sourceUrl": "https://ringsdb.com/card/10029",
+   "rulesTextZh": "当你的威胁为40或更高时，欧斯吉利亚斯老兵+1 [willpower]、+1 [attack] 和+1 [defense]。",
+   "traitsZh": "刚铎。战士。"
   },
   {
    "code": "10030",
@@ -15138,7 +15224,9 @@
      "position": 30
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/10030"
+   "sourceUrl": "https://ringsdb.com/card/10030",
+   "rulesTextZh": "重整至多X名你控制的**登丹人**角色。X为与你交战的敌人数量。",
+   "traitsZh": ""
   },
   {
    "code": "10031",
@@ -15174,7 +15262,9 @@
      "position": 31
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/10031"
+   "sourceUrl": "https://ringsdb.com/card/10031",
+   "rulesTextZh": "哨兵。\n不能拥有受限附属。\n进场时横置。\n当秘林谷战士正在防御时，它获得：\"**行动：**对秘林谷战士造成1点伤害，使其在此次攻击中+3 [defense]。\"（每次攻击限一次。）",
+   "traitsZh": "恩特。战士。"
   },
   {
    "code": "10032",
@@ -15210,7 +15300,9 @@
      "position": 32
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/10032"
+   "sourceUrl": "https://ringsdb.com/card/10032",
+   "rulesTextZh": "**响应：**在一名**恩特**角色受到任意数量的伤害后，重整它。该角色在本阶段结束前+3 [attack]。",
+   "traitsZh": "恩特。"
   },
   {
    "code": "10033",
@@ -15246,7 +15338,9 @@
      "position": 33
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/10033"
+   "sourceUrl": "https://ringsdb.com/card/10033",
+   "rulesTextZh": "**行动：**弃掉你手牌中的2张卡，将精灵宝石匠从你手中置入场上，由你控制。",
+   "traitsZh": "诺多。工匠。"
   },
   {
    "code": "10034",
@@ -15282,7 +15376,9 @@
      "position": 34
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/10034"
+   "sourceUrl": "https://ringsdb.com/card/10034",
+   "rulesTextZh": "每副牌库限1张。\n**响应：**当此关卡被击败时，将每名玩家的威胁降低5。",
+   "traitsZh": ""
   },
   {
    "code": "10035",
@@ -15318,7 +15414,9 @@
      "position": 35
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/10035"
+   "sourceUrl": "https://ringsdb.com/card/10035",
+   "rulesTextZh": "胜利展示区中的来去无踪限3张。\n**响应：**在一个非独特地点被探索后，将来去无踪加入胜利展示区，以将该地点加入胜利展示区。",
+   "traitsZh": ""
   },
   {
    "code": "10036",
@@ -15354,7 +15452,9 @@
      "position": 36
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/10036"
+   "sourceUrl": "https://ringsdb.com/card/10036",
+   "rulesTextZh": "**行动：**横置一名**游侠**或**侦察兵**角色，弃掉一个非独特的当前地点。然后，在遭遇牌库和遭遇弃牌堆中搜寻一个非独特地点，使其成为当前地点。洗遭遇牌库。",
+   "traitsZh": ""
   },
   {
    "code": "10037",
@@ -15390,7 +15490,9 @@
      "position": 37
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/10037"
+   "sourceUrl": "https://ringsdb.com/card/10037",
+   "rulesTextZh": "胜利展示区中每有1张不值胜利点数的卡，目光如炬的打出费用便降低1。\n**行动：**将目光如炬加入胜利展示区。然后，选择一项：将2点资源加入一名英雄的资源池；抽3张卡；或将你的威胁降低4。",
+   "traitsZh": ""
   },
   {
    "code": "309037",
@@ -15930,7 +16032,9 @@
      "position": 56
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/19056"
+   "sourceUrl": "https://ringsdb.com/card/19056",
+   "rulesTextZh": "**战斗行动：**从你手中打出一名**西尔凡**盟友。该盟友不需要资源匹配。（每轮限一次。）",
+   "traitsZh": "西尔凡。贵族。"
   },
   {
    "code": "19057",
@@ -15966,7 +16070,9 @@
      "position": 57
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/19057"
+   "sourceUrl": "https://ringsdb.com/card/19057",
+   "rulesTextZh": "附属到一名**西尔凡**英雄身上。\n**行动：**横置精灵国王，并将你控制的一名**西尔凡**盟友移回你的手牌，以重整所附属英雄。",
+   "traitsZh": "头衔。"
   },
   {
    "code": "19058",
@@ -16002,7 +16108,9 @@
      "position": 58
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/19058"
+   "sourceUrl": "https://ringsdb.com/card/19058",
+   "rulesTextZh": "看守（敌人或地点）。\n附属到一名英雄身上。受限。\n所附属的英雄+2 [attack]。\n**响应：**在所附属英雄消灭一名敌人后，将1点资源加入其资源池。",
+   "traitsZh": "秘宝。物品。武器。"
   },
   {
    "code": "19059",
@@ -16038,7 +16146,9 @@
      "position": 59
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/19059"
+   "sourceUrl": "https://ringsdb.com/card/19059",
+   "rulesTextZh": "当前地点上每有1张附属，密林大道旅人便+1 [willpower]、+1 [attack] 和+1 [defense]。",
+   "traitsZh": "林中人。侦察兵。"
   },
   {
    "code": "19060",
@@ -16074,7 +16184,9 @@
      "position": 60
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/19060"
+   "sourceUrl": "https://ringsdb.com/card/19060",
+   "rulesTextZh": "附属到一名 [lore] 或**游侠**角色身上。每名角色限1双。\n**响应：**在一个地点从遭遇牌库展示后，横置皮靴，以重整所附属角色。",
+   "traitsZh": "物品。"
   },
   {
    "code": "19061",
@@ -16110,7 +16222,9 @@
      "position": 61
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/19061"
+   "sourceUrl": "https://ringsdb.com/card/19061",
+   "rulesTextZh": "不能拥有附属。\n**行动：**重整巨熊。在你触发此效果的那个阶段结束时，将巨熊洗回你的牌库。（每阶段限一次。）",
+   "traitsZh": "生物。比翁族。"
   },
   {
    "code": "19062",
@@ -16146,7 +16260,9 @@
      "position": 62
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/19062"
+   "sourceUrl": "https://ringsdb.com/card/19062",
+   "rulesTextZh": "将技高一筹打出进你的打出区，不附属。\n若处于未附属状态，附属到下一名与你交战且符合条件的敌人身上。\n**响应：**在所附属敌人结算其攻击后，重整防御角色。",
+   "traitsZh": "状态。陷阱。"
   },
   {
    "code": "19063",
@@ -16182,7 +16298,9 @@
      "position": 63
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/19063"
+   "sourceUrl": "https://ringsdb.com/card/19063",
+   "rulesTextZh": "不能攻击或防御。\n**响应：**在加理安进场后，他直到本轮结束+1 [willpower]。",
+   "traitsZh": "西尔凡。"
   },
   {
    "code": "19064",
@@ -16218,7 +16336,9 @@
      "position": 64
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/19064"
+   "sourceUrl": "https://ringsdb.com/card/19064",
+   "rulesTextZh": "**响应：**将你控制的一名**西尔凡**盟友移回你的手牌，以取消战斗中刚触发的一个暗影效果。",
+   "traitsZh": ""
   },
   {
    "code": "19065",
@@ -16254,7 +16374,9 @@
      "position": 65
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/19065"
+   "sourceUrl": "https://ringsdb.com/card/19065",
+   "rulesTextZh": "当胜利展示区中至少有1张支线探险时，在战斗阶段开始时重整沙理安。\n当胜利展示区中至少有3张支线探险时，沙理安失去盟友卡牌类型，获得英雄卡牌类型，并获得胜利展示区中支线探险所具势力的资源图标。",
+   "traitsZh": "登丹人。游侠。"
   },
   {
    "code": "04101",
@@ -21362,7 +21484,9 @@
      "position": 1
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17001"
+   "sourceUrl": "https://ringsdb.com/card/17001",
+   "rulesTextZh": "你可以使用卡列尔资源池中的资源，支付任意势力的**哈拉德**盟友卡的费用。\n**行动：**弃掉你手牌中的一名**哈拉德**盟友卡，以重整场上的一名**哈拉德**角色。（每阶段限一次。）",
+   "traitsZh": "哈拉德。贵族。"
   },
   {
    "code": "17002",
@@ -21404,7 +21528,9 @@
      "position": 15
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17002"
+   "sourceUrl": "https://ringsdb.com/card/17002",
+   "rulesTextZh": "**响应：**在你从手中打出安德拉斯守护者后，选择一名与你交战的非独特敌人。该敌人本轮不能攻击你。",
+   "traitsZh": "登丹人。游侠。"
   },
   {
    "code": "17003",
@@ -21440,7 +21566,9 @@
      "position": 3
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17003"
+   "sourceUrl": "https://ringsdb.com/card/17003",
+   "rulesTextZh": "胜利展示区中的秣马厉兵限1张。\n当此任务在胜利展示区中时，第一名玩家在资源阶段额外抽1张卡。",
+   "traitsZh": ""
   },
   {
    "code": "17004",
@@ -21476,7 +21604,9 @@
      "position": 4
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17004"
+   "sourceUrl": "https://ringsdb.com/card/17004",
+   "rulesTextZh": "远程。\n**响应：**在雅赞被宣告为攻击者后，对场上一名非独特敌人造成1点伤害。（每阶段限一次。）",
+   "traitsZh": "哈拉德。游侠。"
   },
   {
    "code": "17005",
@@ -21518,7 +21648,9 @@
      "position": 26
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17005"
+   "sourceUrl": "https://ringsdb.com/card/17005",
+   "rulesTextZh": "**响应：**在任务阶段开始时，在遭遇牌库顶的5张卡中搜寻一名敌人，将其置入场上并与你交战。然后，本阶段少展示1张遭遇卡（最低为0）。洗遭遇牌库。",
+   "traitsZh": ""
   },
   {
    "code": "17006",
@@ -21554,7 +21686,9 @@
      "position": 6
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17006"
+   "sourceUrl": "https://ringsdb.com/card/17006",
+   "rulesTextZh": "哨兵。\n**响应：**在朱拜尔横置以防御一次攻击后，弃掉一名非独特敌人面前的1张面朝下的暗影卡。（每阶段限一次。）",
+   "traitsZh": "哈拉德。战士。"
   },
   {
    "code": "17007",
@@ -21596,7 +21730,9 @@
      "position": 30
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17007"
+   "sourceUrl": "https://ringsdb.com/card/17007",
+   "rulesTextZh": "附属到一名**矮人**角色身上。每名角色限1个。\n**响应：**在一张卡从你的牌库中被弃掉后，横置矮人烟斗，将该卡放到你的牌库底。",
+   "traitsZh": "物品。烟斗。"
   },
   {
    "code": "17008",
@@ -21632,7 +21768,9 @@
      "position": 8
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17008"
+   "sourceUrl": "https://ringsdb.com/card/17008",
+   "rulesTextZh": "**响应：**在菲尔娅被指派参加任务后，查看遭遇牌库顶的1张卡。然后，你可以弃掉所查看的卡。",
+   "traitsZh": "哈拉德。侦察兵。"
   },
   {
    "code": "17009",
@@ -21674,7 +21812,9 @@
      "position": 32
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17009"
+   "sourceUrl": "https://ringsdb.com/card/17009",
+   "rulesTextZh": "只有当你控制一名拥有**游侠**特质的独特角色和另一名拥有**战士**特质的独特角色时才能打出。\n**响应：**在你与一名敌人交战后，该敌人直到本轮结束不能攻击你。",
+   "traitsZh": ""
   },
   {
    "code": "17010",
@@ -21710,7 +21850,9 @@
      "position": 10
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17010"
+   "sourceUrl": "https://ringsdb.com/card/17010",
+   "rulesTextZh": "附属到卡列尔身上。受限。\n每名**哈拉德**角色+1 [willpower]。\n**重整行动：**横置卡列尔的头饰，将你弃牌堆中最上面的一名**哈拉德**盟友洗入你的牌库。",
+   "traitsZh": "秘宝。物品。"
   },
   {
    "code": "19112",
@@ -28212,7 +28354,9 @@
      "position": 28
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17028"
+   "sourceUrl": "https://ringsdb.com/card/17028",
+   "rulesTextZh": "胜利展示区中每有1张支线探险，夙林迪尔便+1 [willpower]。\n**设置：**在你的牌库中搜寻一张支线探险，将其加入你的手牌。洗你的牌库。",
+   "traitsZh": "登丹人。游侠。"
   },
   {
    "code": "17029",
@@ -28248,7 +28392,9 @@
      "position": 29
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17029"
+   "sourceUrl": "https://ringsdb.com/card/17029",
+   "rulesTextZh": "**行动：**横置卡列尔的族人，以选择另一名**哈拉德**角色。该角色在本阶段结束前+1 [willpower]、+1 [attack] 和+1 [defense]。",
+   "traitsZh": "哈拉德。"
   },
   {
    "code": "17030",
@@ -28284,7 +28430,9 @@
      "position": 30
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17030"
+   "sourceUrl": "https://ringsdb.com/card/17030",
+   "rulesTextZh": "附属到一名**登丹人**或**游侠**英雄身上。受限。\n**响应：**在你与一名敌人交战后，横置北方的骏马，以重整所附属英雄。",
+   "traitsZh": "坐骑。"
   },
   {
    "code": "17031",
@@ -28320,7 +28468,9 @@
      "position": 31
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17031"
+   "sourceUrl": "https://ringsdb.com/card/17031",
+   "rulesTextZh": "附属到一名英雄身上。每名英雄限1张。\n所附属的英雄获得**战士**特质。\n**响应：**在你从手中打出英勇的战士后，抽1张卡。",
+   "traitsZh": "技艺。"
   },
   {
    "code": "17032",
@@ -28356,7 +28506,9 @@
      "position": 32
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17032"
+   "sourceUrl": "https://ringsdb.com/card/17032",
+   "rulesTextZh": "只有当你控制一名拥有**贵族**特质的独特角色和另一名拥有**游侠**特质的独特角色时才能打出。\n**响应：**在你控制的一名英雄参与的一次攻击消灭一名敌人后，将X点资源加入该英雄的资源池。X为刚被消灭敌人的印刷 [threat]。",
+   "traitsZh": ""
   },
   {
    "code": "17033",
@@ -28392,7 +28544,9 @@
      "position": 33
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17033"
+   "sourceUrl": "https://ringsdb.com/card/17033",
+   "rulesTextZh": "**强制：**在此盟友进场后，在遭遇牌库顶的5张卡中搜寻一个非独特地点，将其加入探查区。若没有地点因此效果进场，弃掉杜内丹寻路者。洗遭遇牌库。",
+   "traitsZh": "登丹人。侦察兵。"
   },
   {
    "code": "17034",
@@ -28428,7 +28582,9 @@
      "position": 34
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17034"
+   "sourceUrl": "https://ringsdb.com/card/17034",
+   "rulesTextZh": "只有当主线任务没有关键字时才能打出。\n**行动：**从主线任务上移除X个进度，放置在探查区中的一个地点上。",
+   "traitsZh": ""
   },
   {
    "code": "17035",
@@ -28464,7 +28620,9 @@
      "position": 35
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17035"
+   "sourceUrl": "https://ringsdb.com/card/17035",
+   "rulesTextZh": "**响应：**当当前地点作为已探索地点离场时，弃掉埃林嘉兰拓荒者，以弃掉探查区中一个与刚被探索地点同名的地点。",
+   "traitsZh": "林中人。"
   },
   {
    "code": "17036",
@@ -28500,7 +28658,9 @@
      "position": 36
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17036"
+   "sourceUrl": "https://ringsdb.com/card/17036",
+   "rulesTextZh": "胜利展示区中的探索秘径限1张。\n当此支线探险在胜利展示区中时，探查区中每个与当前地点同名的地点不向探查区总 [threat] 贡献其 [threat]。",
+   "traitsZh": ""
   },
   {
    "code": "17037",
@@ -28536,7 +28696,9 @@
      "position": 37
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/17037"
+   "sourceUrl": "https://ringsdb.com/card/17037",
+   "rulesTextZh": "**响应：**当你打出一张事件时，赋予它厄运1来抽1张卡。若你本轮已触发过另一名欧尔桑克管家的此能力，则不能再触发。",
+   "traitsZh": "艾森加德。"
   },
   {
    "code": "19026",
@@ -28572,7 +28734,9 @@
      "position": 26
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/19026"
+   "sourceUrl": "https://ringsdb.com/card/19026",
+   "rulesTextZh": "当当前地点身上有附属时，哈尔丹参与任务时不需横置。\n**响应：**当当前地点被探索后，其身上每有1张附属便抽1张卡。",
+   "traitsZh": "林中人。侦察兵。"
   },
   {
    "code": "19027",
@@ -28608,7 +28772,9 @@
      "position": 27
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/19027"
+   "sourceUrl": "https://ringsdb.com/card/19027",
+   "rulesTextZh": "**响应：**在你打出威格拉弗后，从你手中免费在其身上打出一张**物品**附属。\n**行动：**横置威格拉弗身上的一张附属来重整他。（每阶段限一次。）",
+   "traitsZh": "谷地。侦察兵。战士。"
   },
   {
    "code": "19028",
@@ -28644,7 +28810,9 @@
      "position": 28
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/19028"
+   "sourceUrl": "https://ringsdb.com/card/19028",
+   "rulesTextZh": "附属到一名 [leadership] 或**贵族**角色身上。受限。\n每名角色限1件。\n所附属的角色+2 [defense] 和+2生命。",
+   "traitsZh": "物品。护甲。"
   },
   {
    "code": "19029",
@@ -28680,7 +28848,9 @@
      "position": 29
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/19029"
+   "sourceUrl": "https://ringsdb.com/card/19029",
+   "rulesTextZh": "看守（敌人或地点）。\n附属到一名英雄或甘道夫身上。受限。\n所附属的角色+2 [attack]。\n**响应：**在所附属角色消灭一名敌人后，抽1张卡。",
+   "traitsZh": "秘宝。物品。武器。"
   },
   {
    "code": "19030",
@@ -28716,7 +28886,9 @@
      "position": 30
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/19030"
+   "sourceUrl": "https://ringsdb.com/card/19030",
+   "rulesTextZh": "附属到一个没有进度标记的地点上。\n当所附属地点是当前地点时，将其任务点数值降为1。",
+   "traitsZh": "状态。"
   },
   {
    "code": "19031",
@@ -28752,7 +28924,9 @@
      "position": 31
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/19031"
+   "sourceUrl": "https://ringsdb.com/card/19031",
+   "rulesTextZh": "不能拥有受限附属。\n**响应：**在美尼尔多进场或离场后，在一个地点上放置2个进度。",
+   "traitsZh": "生物。鹰。"
   },
   {
    "code": "19032",
@@ -28788,7 +28962,9 @@
      "position": 32
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/19032"
+   "sourceUrl": "https://ringsdb.com/card/19032",
+   "rulesTextZh": "**行动：**将一名**鹰**盟友移回你的手牌，以将一张备置的北方的大鹰洗入遭遇牌库。然后，将大鹰飞翔移出游戏。",
+   "traitsZh": ""
   },
   {
    "code": "19033",
@@ -28824,7 +29000,9 @@
      "position": 33
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/19033"
+   "sourceUrl": "https://ringsdb.com/card/19033",
+   "rulesTextZh": "不能拥有附属。\n**谋划行动：**将野生种马附属到你控制的一名盟友身上。（视为一张**坐骑**附属，文本为：\"受限。每名盟友限1匹。所附属的盟友+1 [willpower]、+1 [attack]、+1 [defense] 和+1生命。\"）",
+   "traitsZh": "生物。"
   },
   {
    "code": "19034",
@@ -28860,7 +29038,9 @@
      "position": 34
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/19034"
+   "sourceUrl": "https://ringsdb.com/card/19034",
+   "rulesTextZh": "**旅行行动：**选择探查区中一个带有玩家卡附属的地点，使其成为当前地点，并将之前的当前地点移回探查区。将每名玩家的威胁降低X，其中X为当前地点上的附属数量。",
+   "traitsZh": "歌谣。"
   },
   {
    "code": "19035",
@@ -28896,7 +29076,9 @@
      "position": 35
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/19035"
+   "sourceUrl": "https://ringsdb.com/card/19035",
+   "rulesTextZh": "遭遇。涌现。\n不能拥有受限附属。\n**展示时：**第一名玩家选择一名玩家接管北方的大鹰的控制权。被选择的玩家可以选择并弃掉探查区中的一名非独特敌人。",
+   "traitsZh": "生物。鹰。"
   },
   {
    "code": "01132",
@@ -33894,7 +34076,9 @@
      "position": 3
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/22027"
+   "sourceUrl": "https://ringsdb.com/card/22027",
+   "rulesTextZh": "若伊奥梅尔在场上，洛希瑞尔获得洛汗特质。\n**响应：**在洛希瑞尔被指派参加任务后，选择你手中的一名盟友。若该盟友与她共享一个**特质**，将该盟友置入场上，横置且被指派参加任务。在本阶段结束时，若该盟友仍在场上，将其洗入你的牌库。",
+   "traitsZh": "刚铎。贵族。"
   },
   {
    "code": "22028",
@@ -33936,7 +34120,9 @@
      "position": 4
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/22028"
+   "sourceUrl": "https://ringsdb.com/card/22028",
+   "rulesTextZh": "当你的威胁为40或更高时，无畏的安格博+2 [attack] 且参与任务时不需横置。",
+   "traitsZh": "刚铎。战士。"
   },
   {
    "code": "22029",
@@ -33978,7 +34164,9 @@
      "position": 23
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/22029"
+   "sourceUrl": "https://ringsdb.com/card/22029",
+   "rulesTextZh": "**行动：**每名威胁为40或更高的玩家重整其控制的所有角色。",
+   "traitsZh": ""
   },
   {
    "code": "22030",
@@ -34014,7 +34202,9 @@
      "position": 30
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/22030"
+   "sourceUrl": "https://ringsdb.com/card/22030",
+   "rulesTextZh": "**响应：**在你从手中打出林地哨兵后，选择场上一名敌人或一个地点。若胜利展示区中有该卡的副本，弃掉所选择的卡。",
+   "traitsZh": "西尔凡。"
   },
   {
    "code": "22031",
@@ -34050,7 +34240,9 @@
      "position": 31
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/22031"
+   "sourceUrl": "https://ringsdb.com/card/22031",
+   "rulesTextZh": "附属到一名 [lore] 英雄身上。每名英雄限1张。\n受限。所附属的英雄获得远程。\n**响应：**在所附属英雄被宣告为攻击者、攻击一名敌人后，弃掉你手牌中至多3张卡，每以此方式弃掉1张卡，便对该敌人造成1点伤害。",
+   "traitsZh": "物品。武器。"
   },
   {
    "code": "22032",
@@ -34092,7 +34284,9 @@
      "position": 19
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/22032"
+   "sourceUrl": "https://ringsdb.com/card/22032",
+   "rulesTextZh": "附属到一名 [tactics] 角色身上。每名角色限1把。\n受限。\n所附属的角色每拥有一张拥有限制关键字的附属，便+1 [attack]。",
+   "traitsZh": "物品。武器。"
   },
   {
    "code": "22033",
@@ -34128,7 +34322,9 @@
      "position": 33
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/22033"
+   "sourceUrl": "https://ringsdb.com/card/22033",
+   "rulesTextZh": "附属到拥有至尊魔戒的英雄身上。\n每名英雄限1张。所附属的英雄+1 [attack]。\n**响应：**在所附属英雄被宣告为攻击者后，横置至尊魔戒并将你的威胁提升1，使所附属英雄在此次攻击中印刷 [attack] 翻倍。",
+   "traitsZh": "宗主。"
   },
   {
    "code": "22034",
@@ -34164,7 +34360,9 @@
      "position": 34
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/22034"
+   "sourceUrl": "https://ringsdb.com/card/22034",
+   "rulesTextZh": "**响应：**在贝尔法拉斯骑士进场后，将你弃牌堆中的一名**刚铎**盟友移回你的手牌。",
+   "traitsZh": "刚铎。战士。"
   },
   {
    "code": "22035",
@@ -34206,7 +34404,9 @@
      "position": 17
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/22035"
+   "sourceUrl": "https://ringsdb.com/card/22035",
+   "rulesTextZh": "附属到一名**洛汗**英雄或梅里身上。受限。\n**响应：**当一名角色离场时，若该角色与所附属英雄共享至少一个**特质**，横置马克的号角来抽1张卡。",
+   "traitsZh": "秘宝。物品。"
   },
   {
    "code": "22036",
@@ -34248,7 +34448,9 @@
      "position": 23
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/22036"
+   "sourceUrl": "https://ringsdb.com/card/22036",
+   "rulesTextZh": "**谋划行动：**将你控制的每名**西尔凡**盟友移回你的手牌。然后，从你手中逐张无偿打出这些盟友。",
+   "traitsZh": ""
   },
   {
    "code": "22049",
@@ -34284,7 +34486,9 @@
      "position": 49
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/22049"
+   "sourceUrl": "https://ringsdb.com/card/22049",
+   "rulesTextZh": "**A面**\n你的牌库不能包含盟友卡。\n你的每名英雄可以多拥有1张受限附属。你每轮在每名英雄身上打出的第一张受限附属费用降低1。\n**重整行动：**若你的每名英雄都至少拥有2张受限附属，将此卡翻面。\n\n**B面**\n你的每名英雄可以多拥有1张受限附属，且其身上每有1张受限附属便+1 [willpower]。\n**行动：**横置此卡，治疗你每名英雄身上的1点伤害。",
+   "traitsZh": ""
   },
   {
    "code": "06032",
@@ -36574,7 +36778,9 @@
      "position": 145
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/19145"
+   "sourceUrl": "https://ringsdb.com/card/19145",
+   "rulesTextZh": "打出**生物**盟友时，拉达加斯特获得印刷的 [leadership]、[spirit] 和 [tactics] 图标。\n**响应：**在你打出一张**生物**卡后，拉达加斯特本轮参与任务时不需横置。",
+   "traitsZh": "伊斯塔瑞。"
   },
   {
    "code": "19146",
@@ -36610,7 +36816,9 @@
      "position": 146
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/19146"
+   "sourceUrl": "https://ringsdb.com/card/19146",
+   "rulesTextZh": "不能攻击、防御或拥有附属。**重整行动：**将信使渡鸦移回其拥有者的手牌，并报出一种卡牌类型。选择一名玩家查看其牌库顶的1张卡。若该卡是所报类型，将其加入其拥有者的手牌；若不是，将其弃掉。",
+   "traitsZh": "生物。"
   },
   {
    "code": "19147",
@@ -36646,7 +36854,9 @@
      "position": 147
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/19147"
+   "sourceUrl": "https://ringsdb.com/card/19147",
+   "rulesTextZh": "**行动：**在你的牌库中搜寻一张看守附属，将其置入场上。洗你的牌库。",
+   "traitsZh": "歌谣。"
   },
   {
    "code": "19148",
@@ -36682,7 +36892,9 @@
      "position": 148
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/19148"
+   "sourceUrl": "https://ringsdb.com/card/19148",
+   "rulesTextZh": "不能拥有附属。**响应：**弃掉忠诚的猎犬，以取消刚对你控制的一名英雄造成的至多2点伤害。",
+   "traitsZh": "生物。"
   },
   {
    "code": "19149",
@@ -36718,7 +36930,9 @@
      "position": 149
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/19149"
+   "sourceUrl": "https://ringsdb.com/card/19149",
+   "rulesTextZh": "你必须使用来自3名不同英雄资源池的资源来支付此卡的费用。**战斗行动：**选择并弃掉探查区中的一名非独特敌人。",
+   "traitsZh": ""
   },
   {
    "code": "19150",
@@ -36754,7 +36968,9 @@
      "position": 150
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/19150"
+   "sourceUrl": "https://ringsdb.com/card/19150",
+   "rulesTextZh": "当你与一名交战费用高于你威胁的敌人交战时，傍水镇夏警+1 [willpower]、+1 [attack] 和+1 [defense]。",
+   "traitsZh": "霍比特人。治安官。"
   },
   {
    "code": "19151",
@@ -36790,7 +37006,9 @@
      "position": 151
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/19151"
+   "sourceUrl": "https://ringsdb.com/card/19151",
+   "rulesTextZh": "只有当你控制一名拥有伊斯塔瑞特质的独特角色和另一名拥有鹰特质的独特角色时才能打出。**行动：**在你牌库顶的5张卡中搜寻一名**鹰**或**伊斯塔瑞**盟友，将其置入场上。洗你的牌库。在每轮结束时，若该盟友仍在场上，将其移回你的手牌。",
+   "traitsZh": ""
   },
   {
    "code": "19152",
@@ -36826,7 +37044,9 @@
      "position": 152
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/19152"
+   "sourceUrl": "https://ringsdb.com/card/19152",
+   "rulesTextZh": "看守（地点）。\n看守（地点）。附属到一名英雄身上。**响应：**当所附属英雄受到任意数量的伤害时，将该数值降低1。",
+   "traitsZh": "秘宝。物品。护甲。"
   },
   {
    "code": "19153",
@@ -36862,7 +37082,9 @@
      "position": 153
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/19153"
+   "sourceUrl": "https://ringsdb.com/card/19153",
+   "rulesTextZh": "**行动：**在任意玩家的弃牌堆中选择一张印刷费用为X的**物品**附属，无偿打出该附属。（所选择的附属可以属于任意势力范围。）",
+   "traitsZh": ""
   },
   {
    "code": "19154",
@@ -36898,7 +37120,9 @@
      "position": 154
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/19154"
+   "sourceUrl": "https://ringsdb.com/card/19154",
+   "rulesTextZh": "附属到拉达加斯特身上。**行动：**横置拉达加斯特的手杖，选择一项：使你本阶段打出的下一张**生物**盟友费用降低2；重整一名**生物**盟友；或将一名与你交战的非独特**生物**敌人移回探查区。",
+   "traitsZh": "秘宝。物品。手杖。"
   },
   {
    "code": "304101",
@@ -37333,7 +37557,7 @@
     }
    ],
    "sourceUrl": "https://ringsdb.com/card/11002",
-   "rulesTextZh": "**响应：**在抽完起手牌后，你可以选择不进行重抽，改为弃掉手牌中任意数量的卡。然后，抽等量的卡。\n**行动：**若你的手牌中没有卡，抽6张卡。（每局游戏限一次。）",
+   "rulesTextZh": "**响应：**在抽完起手牌后，你可以选择不进行调度，改为弃掉手牌中任意数量的卡。然后，抽等量的卡。\n**行动：**若你的手牌中没有卡，抽6张卡。（每局游戏限一次。）",
    "traitsZh": "诺多。"
   },
   {
@@ -40811,7 +41035,7 @@
     }
    ],
    "sourceUrl": "https://ringsdb.com/card/22134",
-   "rulesTextZh": "**A面**\n准备阶段你最多只能选择2名英雄。\n**准备：**从你的牌库中选择一名非中立独特盟友，将其置入场上。将该盟友印刷的 [willpower]、[attack]、[defense] 与生命值之和加入你的起始威胁。然后，将此卡翻面并附属到该盟友身上。\n**B面**\n所附属的盟友失去盟友卡牌类型，获得英雄卡牌类型。\n所附属的角色每阶段被重整不能超过一次。\n所附属角色在场上时，国王的信使免疫卡牌效果。\n**若所附属角色离场，将国王的信使移出游戏。**",
+   "rulesTextZh": "**A面**\n设置阶段你最多只能选择2名英雄。\n**设置：**从你的牌库中选择一名非中立独特盟友，将其置入场上。将该盟友印刷的 [willpower]、[attack]、[defense] 与生命值之和加入你的起始威胁。然后，将此卡翻面并附属到该盟友身上。\n**B面**\n所附属的盟友失去盟友卡牌类型，获得英雄卡牌类型。\n所附属的角色每阶段被重整不能超过一次。\n所附属角色在场上时，国王的信使免疫卡牌效果。\n**若所附属角色离场，将国王的信使移出游戏。**",
    "traitsZh": ""
   },
   {
@@ -40848,7 +41072,9 @@
      "position": 134
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/06134"
+   "sourceUrl": "https://ringsdb.com/card/06134",
+   "rulesTextZh": "哨兵。\n每名拥有印刷 [tactics] 资源图标的 [tactics] 英雄+1 [willpower]。",
+   "traitsZh": "洛汗。贵族。战士。"
   },
   {
    "code": "06135",
@@ -40890,7 +41116,9 @@
      "position": 8
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/06135"
+   "sourceUrl": "https://ringsdb.com/card/06135",
+   "rulesTextZh": "**响应：**在佩拉基尔船长进场后，将1点资源从你控制的一名英雄的资源池移到另一名英雄的资源池。",
+   "traitsZh": "刚铎。"
   },
   {
    "code": "06136",
@@ -40932,7 +41160,9 @@
      "position": 20
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/06136"
+   "sourceUrl": "https://ringsdb.com/card/06136",
+   "rulesTextZh": "附属到一名**刚铎**英雄身上。\n当所附属英雄的资源池中至少有1点资源时，**刚铎**角色+1 [willpower]。",
+   "traitsZh": "技艺。"
   },
   {
    "code": "06137",
@@ -40974,7 +41204,9 @@
      "position": 29
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/06137"
+   "sourceUrl": "https://ringsdb.com/card/06137",
+   "rulesTextZh": "受限。\n附属到一名**洛汗**角色身上。\n所附属的角色+1 [attack]（攻击探查区中的敌人时，改为+2 [attack]）。",
+   "traitsZh": "物品。武器。"
   },
   {
    "code": "06138",
@@ -41016,7 +41248,9 @@
      "position": 23
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/06138"
+   "sourceUrl": "https://ringsdb.com/card/06138",
+   "rulesTextZh": "**战斗行动：**本阶段中，每名**洛汗**英雄都可以被宣告为攻击者，攻击探查区中的敌人。",
+   "traitsZh": ""
   },
   {
    "code": "06139",
@@ -41058,7 +41292,9 @@
      "position": 30
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/06139"
+   "sourceUrl": "https://ringsdb.com/card/06139",
+   "rulesTextZh": "附属到一名**刚铎**或**洛汗**英雄身上。\n**响应：**在所附属英雄被指派参加任务后，从其资源池支付1点资源来重整他。",
+   "traitsZh": "坐骑。"
   },
   {
    "code": "06140",
@@ -41094,7 +41330,9 @@
      "position": 140
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/06140"
+   "sourceUrl": "https://ringsdb.com/card/06140",
+   "rulesTextZh": "**行动：**选择一名 [spirit] 英雄。直到本阶段结束，该英雄每有1点资源池中的资源便+1 [willpower]。",
+   "traitsZh": "歌谣。"
   },
   {
    "code": "06141",
@@ -41136,7 +41374,9 @@
      "position": 9
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/06141"
+   "sourceUrl": "https://ringsdb.com/card/06141",
+   "rulesTextZh": "**响应：**在埃瑞德宁莱斯勘探者进场后，弃掉你牌库顶的3张卡。然后，从你弃牌堆中选择1张卡洗回你的牌库。",
+   "traitsZh": "矮人。"
   },
   {
    "code": "06142",
@@ -41172,7 +41412,9 @@
      "position": 142
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/06142"
+   "sourceUrl": "https://ringsdb.com/card/06142",
+   "rulesTextZh": "附属到一名 [lore] 英雄身上。\n你控制的每名拥有印刷 [lore] 资源图标的英雄，使伊熙尔杜卷轴的打出费用降低1。\n**行动：**弃掉伊熙尔杜卷轴，打出你弃牌堆中任意一张 [lore] 事件卡，视同其在你手中。然后，将该事件放到你的牌库底。",
+   "traitsZh": "记录。"
   },
   {
    "code": "06143",
@@ -41214,7 +41456,9 @@
      "position": 21
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/06143"
+   "sourceUrl": "https://ringsdb.com/card/06143",
+   "rulesTextZh": "**响应：**在隐秘的珍宝从你的牌库中被弃掉后，将2点资源加入你控制的一名英雄的资源池。\n**行动：**支付1点资源来抽1张卡。",
+   "traitsZh": ""
   },
   {
    "code": "505001",
@@ -44390,7 +44634,9 @@
      "position": 1
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/16001"
+   "sourceUrl": "https://ringsdb.com/card/16001",
+   "rulesTextZh": "哨兵。\n**响应：**在吉姆利被宣告为防御者后，从他自己的资源池支付1点资源来重整另一名英雄。若该英雄是莱戈拉斯，他在本阶段结束前+1 [attack]。（每阶段限一次。）",
+   "traitsZh": "矮人。贵族。战士。"
   },
   {
    "code": "16002",
@@ -44426,7 +44672,9 @@
      "position": 2
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/16002"
+   "sourceUrl": "https://ringsdb.com/card/16002",
+   "rulesTextZh": "远程。\n**响应：**在莱戈拉斯被指派参加任务后，弃掉你手牌中的1张卡来重整另一名英雄。若该英雄是吉姆利，他在本阶段结束前+1 [willpower]。（每阶段限一次。）",
+   "traitsZh": "西尔凡。贵族。侦察兵。"
   },
   {
    "code": "16003",
@@ -44468,7 +44716,9 @@
      "position": 8
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/16003"
+   "sourceUrl": "https://ringsdb.com/card/16003",
+   "rulesTextZh": "远程。\n**响应：**在绿林弓手进场后，重整一名英雄。",
+   "traitsZh": "西尔凡。"
   },
   {
    "code": "16004",
@@ -44510,7 +44760,9 @@
      "position": 29
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/16004"
+   "sourceUrl": "https://ringsdb.com/card/16004",
+   "rulesTextZh": "哨兵。\n**响应：**在你从手中打出埃瑞博禁卫时，弃掉你牌库顶的2张卡，使其费用降低2。",
+   "traitsZh": "矮人。战士。"
   },
   {
    "code": "16005",
@@ -44546,7 +44798,9 @@
      "position": 5
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/16005"
+   "sourceUrl": "https://ringsdb.com/card/16005",
+   "rulesTextZh": "当胜利展示区中有支线探险时，半身人边界守卫获得：\"**响应：**弃掉半身人边界守卫，以取消遭遇牌库刚展示的一张遭遇卡的「展示时」效果。\"",
+   "traitsZh": "霍比特人。"
   },
   {
    "code": "16006",
@@ -44582,7 +44836,9 @@
      "position": 6
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/16006"
+   "sourceUrl": "https://ringsdb.com/card/16006",
+   "rulesTextZh": "当胜利展示区中有支线探险时，警惕的杜内丹人防御时不需横置。",
+   "traitsZh": "登丹人。游侠。"
   },
   {
    "code": "16007",
@@ -44618,7 +44874,9 @@
      "position": 7
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/16007"
+   "sourceUrl": "https://ringsdb.com/card/16007",
+   "rulesTextZh": "只有当你控制一名拥有**西尔凡**特质的独特角色和另一名拥有**矮人**特质的独特角色时才能打出。\n**行动：**抽1张卡，并将1点资源加入你控制的一名英雄的资源池。",
+   "traitsZh": ""
   },
   {
    "code": "16008",
@@ -44654,7 +44912,9 @@
      "position": 8
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/16008"
+   "sourceUrl": "https://ringsdb.com/card/16008",
+   "rulesTextZh": "只有当你控制一名拥有**贵族**特质的独特角色和另一名拥有**侦察兵**特质的独特角色时才能打出。\n**响应：**在一名玩家与一名敌人交战后，将其威胁降低X，其中X为该敌人的印刷 [threat]。",
+   "traitsZh": ""
   },
   {
    "code": "16009",
@@ -44690,7 +44950,9 @@
      "position": 9
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/16009"
+   "sourceUrl": "https://ringsdb.com/card/16009",
+   "rulesTextZh": "**行动：**对一名与你交战的敌人造成X点伤害。X为胜利展示区中的支线探险数量。",
+   "traitsZh": ""
   },
   {
    "code": "16010",
@@ -44726,7 +44988,9 @@
      "position": 10
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/16010"
+   "sourceUrl": "https://ringsdb.com/card/16010",
+   "rulesTextZh": "附属到一名**矮人**英雄身上。受限。\n所附属的英雄+1 [defense]。\n**响应：**在所附属英雄因敌人攻击受到伤害后，横置矮人盾，将1点资源加入所附属英雄的资源池。",
+   "traitsZh": "物品。护甲。"
   },
   {
    "code": "16011",
@@ -44762,7 +45026,9 @@
      "position": 11
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/16011"
+   "sourceUrl": "https://ringsdb.com/card/16011",
+   "rulesTextZh": "附属到一名**西尔凡**英雄身上。受限。\n所附属的英雄+1 [willpower] 和+1 [attack]。",
+   "traitsZh": "物品。武器。"
   },
   {
    "code": "16012",
@@ -44798,7 +45064,9 @@
      "position": 12
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/16012"
+   "sourceUrl": "https://ringsdb.com/card/16012",
+   "rulesTextZh": "附属到场上一张任务卡上。\n**响应：**当所附属任务被击败时，第一名玩家选择一名玩家。该玩家在其牌库中搜寻一张支线探险，将其加入手牌，并洗其牌库。",
+   "traitsZh": "歌谣。"
   },
   {
    "code": "16013",
@@ -44834,7 +45102,9 @@
      "position": 13
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/16013"
+   "sourceUrl": "https://ringsdb.com/card/16013",
+   "rulesTextZh": "胜利展示区中的风暴将至限1张。\n当此任务在胜利展示区中时，每名玩家每轮打出的第一名盟友不需要资源匹配。",
+   "traitsZh": ""
   },
   {
    "code": "500006",
@@ -45864,7 +46134,9 @@
      "position": 1
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/18001"
+   "sourceUrl": "https://ringsdb.com/card/18001",
+   "rulesTextZh": "你控制的每名带有玩家附属的**谷地**角色+1 [willpower]。\n**响应：**在你将一张附属打到一名没有附属的**谷地**角色身上后，抽1张卡。",
+   "traitsZh": "谷地。贵族。"
   },
   {
    "code": "18002",
@@ -45900,7 +46172,9 @@
      "position": 2
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/18002"
+   "sourceUrl": "https://ringsdb.com/card/18002",
+   "rulesTextZh": "打出**物品**附属时，布兰德之子巴德视为拥有印刷的 [leadership]、[lore] 和 [tactics] 图标。\n**响应：**当一名角色离场时，将该角色身上的每张附属移回其拥有者的手牌。（每阶段限一次。）",
+   "traitsZh": "谷地。贵族。"
   },
   {
    "code": "18003",
@@ -45936,7 +46210,9 @@
      "position": 3
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/18003"
+   "sourceUrl": "https://ringsdb.com/card/18003",
+   "rulesTextZh": "在红水河哨兵身上打出**护甲**附属的费用降低1。\n当红水河哨兵有**护甲**附属时，其+1 [defense] 并获得哨兵。",
+   "traitsZh": "谷地。战士。"
   },
   {
    "code": "18004",
@@ -45972,7 +46248,9 @@
      "position": 4
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/18004"
+   "sourceUrl": "https://ringsdb.com/card/18004",
+   "rulesTextZh": "当北方王国守望者有**物品**附属时，其+1 [willpower] 且参与任务时不需横置。",
+   "traitsZh": "谷地。侦察兵。"
   },
   {
    "code": "18005",
@@ -46008,7 +46286,9 @@
      "position": 5
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/18005"
+   "sourceUrl": "https://ringsdb.com/card/18005",
+   "rulesTextZh": "在河谷邦战士身上打出**武器**附属的费用降低1。\n当河谷邦战士有**武器**附属时，其+1 [attack] 并获得远程。",
+   "traitsZh": "谷地。战士。"
   },
   {
    "code": "18006",
@@ -46044,7 +46324,9 @@
      "position": 6
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/18006"
+   "sourceUrl": "https://ringsdb.com/card/18006",
+   "rulesTextZh": "**行动：**横置长湖商人，将一张**物品**附属从你控制的一名角色身上移到另一名符合条件的角色身上。",
+   "traitsZh": "谷地。"
   },
   {
    "code": "18007",
@@ -46080,7 +46362,9 @@
      "position": 7
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/18007"
+   "sourceUrl": "https://ringsdb.com/card/18007",
+   "rulesTextZh": "附属到一名**谷地**或**战士**角色身上。每名角色限1件。\n所附属的角色+1 [defense]（若所附属角色拥有哨兵关键字，则还+1生命）。",
+   "traitsZh": "物品。护甲。"
   },
   {
    "code": "18008",
@@ -46116,7 +46400,9 @@
      "position": 8
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/18008"
+   "sourceUrl": "https://ringsdb.com/card/18008",
+   "rulesTextZh": "附属到一名**谷地**或**埃斯加洛斯**英雄身上。\n**谋划行动：**横置河谷邦之王，使你本阶段打出的下一张**谷地**盟友的费用降低，降低量为所附属英雄身上每种不同玩家附属1点。该盟友不需要资源匹配。",
+   "traitsZh": "头衔。"
   },
   {
    "code": "18009",
@@ -46152,7 +46438,9 @@
      "position": 9
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/18009"
+   "sourceUrl": "https://ringsdb.com/card/18009",
+   "rulesTextZh": "附属到一名**谷地**或**战士**角色身上。\n受限。\n**响应：**在所附属角色被宣告为攻击者后，横置紫衫木弓，对防御的敌人造成1点伤害。",
+   "traitsZh": "物品。武器。"
   },
   {
    "code": "18010",
@@ -46188,7 +46476,9 @@
      "position": 10
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/18010"
+   "sourceUrl": "https://ringsdb.com/card/18010",
+   "rulesTextZh": "附属到一名**谷地**或**侦察兵**角色身上，每名角色限1张。**响应：**在所附属角色被指派参加任务后，在当前地点上放置1个进度。",
+   "traitsZh": "物品。"
   },
   {
    "code": "18011",
@@ -46224,7 +46514,9 @@
      "position": 11
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/18011"
+   "sourceUrl": "https://ringsdb.com/card/18011",
+   "rulesTextZh": "看守（敌人或地点）。\n附属到一名英雄身上。\n所附属的英雄+2 [willpower]，且在资源阶段额外收集1点资源。",
+   "traitsZh": "秘宝。物品。"
   },
   {
    "code": "18012",
@@ -46260,7 +46552,9 @@
      "position": 12
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/18012"
+   "sourceUrl": "https://ringsdb.com/card/18012",
+   "rulesTextZh": "**谋划行动：**选择你控制的一名**谷地**英雄。你控制的每名带有玩家附属的角色，为其资源池加入1点资源。每轮你只能打出1张河谷邦的物流。",
+   "traitsZh": ""
   },
   {
    "code": "18013",
@@ -46296,7 +46590,9 @@
      "position": 13
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/18013"
+   "sourceUrl": "https://ringsdb.com/card/18013",
+   "rulesTextZh": "**行动：**选择一名带有玩家附属的盟友。重整该盟友。",
+   "traitsZh": ""
   },
   {
    "code": "18014",
@@ -46332,7 +46628,9 @@
      "position": 14
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/18014"
+   "sourceUrl": "https://ringsdb.com/card/18014",
+   "rulesTextZh": "**响应：**在一名角色被宣告为攻击者或防御者、抵御一名附属有附属卡的敌人的攻击后，该角色在此次攻击结束前+3 [attack] 且+3 [defense]。",
+   "traitsZh": ""
   },
   {
    "code": "18015",
@@ -46368,7 +46666,9 @@
      "position": 15
     }
    ],
-   "sourceUrl": "https://ringsdb.com/card/18015"
+   "sourceUrl": "https://ringsdb.com/card/18015",
+   "rulesTextZh": "**谋划行动：**选择你控制的一名角色身上一个未横置的玩家附属。将该附属移回其拥有者的手牌，使本阶段打出的下一张附属费用降低X，其中X为所选择附属的费用。",
+   "traitsZh": ""
   },
   {
    "code": "08056",
