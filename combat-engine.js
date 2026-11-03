@@ -39,7 +39,10 @@ const CombatRulesFactory=(H,R,Q)=>{
   else if(p.uid===null){x(s).playerIndex++;window(s,'playerAction');resume(s);}
   else{for(const uid of p.ids)R.find(s,uid).state.exhausted=true;x(s).doneAttacks.push(p.player+':'+p.uid);x(s).attack={kind:'player',uid:p.uid,player:p.player,attackers:[...p.ids]};window(s,'playerStrength');}
  }
- function beginEnemy(s,uid,pid,rider=false){const e=enemy(s,uid);if(!e)return;const a={kind:'enemy',uid,player:pid,defenders:[],bonus:0,ignoreDefense:false,shadowIndex:0,rider};x(s).attack=a;if(e.id===91)dealOne(s,e);if(e.id===84)R.changeThreat(s,pid,1);window(s,'beforeDefend');R.pump(s);}
+ function beginEnemy(s,uid,pid,rider=false){const e=enemy(s,uid);if(!e)return;const a={kind:'enemy',uid,player:pid,defenders:[],bonus:0,ignoreDefense:false,shadowIndex:0,rider};x(s).attack=a;if(e.id===91)dealOne(s,e);if(e.id===84)R.changeThreat(s,pid,1);
+  /* v0.16.10：164 阴毒幽影攻击钩子（Forced）：防御玩家弃掉牌库顶1张牌；若弃掉的是盟友，此次攻击+2。 */
+  if(e.id===164){const p=s.players[pid];if(p.playerDeck.length){const c2=p.playerDeck.shift();p.playerDiscard.push(c2);let isAlly=false;try{isAlly=R.data(s,c2).type==='ally';}catch(err){isAlly=false;}log(s,`${p.name}弃掉牌库顶1张牌（阴毒幽影）`);if(isAlly){a.bonus+=2;log(s,'弃掉的是盟友，阴毒幽影此次攻击+2');}}}
+  window(s,'beforeDefend');R.pump(s);}
  function requirePassed(s){need(!x(s).plannedActions?.length&&!x(s).actionLocked,'请先撤销或执行暂定行动');need(live(s).every(p=>x(s).finalPasses.includes(p.id)),'请所有玩家放弃本窗口行动');}
  function move(s){check(s);const a=x(s),step=a.step;need(actionSteps.includes(step),'此步骤须先完成选择或暗影结算');need(!a.tasks.length,'请先完成强制选择');requirePassed(s);
   if(step==='enemyAction'||step==='afterEnemy'){a.attack=null;a.step='enemyChoice';resume(s);}
