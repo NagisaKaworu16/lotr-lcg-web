@@ -35,14 +35,14 @@
 - 数字差异 6 处复核均为量词补全良性（"a Signal card"→"1张信号卡"等），另 09010 初稿将 "by 1 for each enemy" 抽象为 X，已改为忠实直译"每有一名敌人便降低1"；
 - 无 HTML 残留；无废弃术语（舞台区/限定/隐匿/独占/支线任务）残留；无空文本卡。
 
-## 4. 本批新术语（待复核）
+## 4. 本批新术语（裁决结果见 TERMS.md，2026-11-03 已全部落定）
 
-1. **Guarded (enemy or location)→看守（敌人或地点）**：亦有"护卫/设防"。
-2. **Contract（卡类型）→契约**：22134 Messenger of the King 首张契约卡，Side A/B 译"A面/B面"。
-3. **setup / setup hand / mulligan→准备 / 起手牌 / 重抽**：11002 加尔多卡内含 mulligan 规则。
-4. **Encounter（09015 关键字，与 Surge 并列）→遭遇**：与 Encounter Action=遭遇行动 同词不同义（一个是关键字一个是行动窗口），展示层注意区分。
-5. **Burglar（特质）→窃贼**（19112 比尔博）、**Pipe（特质）→烟斗**（22115/22116）。
-6. **threat cost→威胁费用**（12143 英雄威胁值）、**starting threat→起始威胁**。
+1. **Guarded (enemy or location)→看守（敌人或地点）**：**已裁决**：维持。
+2. **Contract（卡类型）→契约**：**已裁决**：维持。22134 Side A/B 译"A面/B面"。
+3. **setup→设置 / mulligan→调度**：**已裁决**：setup=设置（app 全站「剧本设置」）、mulligan=调度（app 帮助「保留或调度」）；译文已修订（11002 调度、22134 设置阶段/**设置：**）。
+4. **Encounter 关键字 vs Encounter Action**：**已裁决**：关键字译「遭遇」、行动译「遭遇行动」；判定方法见 TERMS.md（随主语：卡面关键字栏=关键字，动作前缀=行动窗口）。
+5. **Burglar→窃贼 / Pipe→烟斗**：**已裁决**：维持。
+6. **threat cost→威胁费用 / starting threat→起始威胁**：无争议。
 7. **"top card of your discard pile" 条件系列**（11003/11006/11012）→"弃牌堆顶的卡是X时"。
 
 建议并入 TERMS.md：看守/契约/窃贼/烟斗/威胁费用/起始威胁 + 上述关键字区分备注。

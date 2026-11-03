@@ -52,6 +52,14 @@
 | Valour | 英勇 | 已裁决：同上（2026-11-03） |
 | Planning Action / Encounter Action / Refresh Action | 谋划行动 / 遭遇行动 / 重整行动 | 批次3 采用 |
 | optionally engage / undefended attack | 主动交战 / 未防御的攻击 | 批次3 采用 |
+| Guarded (enemy or location) | 看守（敌人或地点） | 已裁决：批次4 复核维持（2026-11-03） |
+| Contract（卡类型） | 契约 | 已裁决：批次4 复核维持（2026-11-03）；Side A/B=A面/B面 |
+| setup / setup hand / mulligan | 设置 / 起手牌 / 调度 | 已裁决：app 全站「剧本设置」+ 帮助「保留或调度」（2026-11-03；初译"准备/重抽"已废弃） |
+| Encounter 关键字 vs Encounter Action | 遭遇 vs 遭遇行动 | 同词异义判定：卡面关键字栏（与 Surge/Ranged 并列）=关键字「遭遇」；行动前缀（Planning/Combat/Encounter/Quest/Refresh Action）=行动窗口「遭遇行动」 |
+| Burglar / Pipe（特质） | 窃贼 / 烟斗 | 已裁决：批次4 复核维持（2026-11-03） |
+| threat cost / starting threat | 威胁费用 / 起始威胁 | 批次4 采用 |
+| set aside | 备置 | 批次4 采用（Ranger Summons 等设置类卡） |
+| threat display / victory display 语境 | 威胁 / 胜利展示区 | victory display 已裁决见上 |
 
 ## 3. 特质（traits）对照表（25 词 Core 批 + 14 词批次2，均已落定）
 
@@ -80,7 +88,9 @@
 | Ent | 恩特 | | Outlands | 边地 |
 | Record | 记录 | | Corsair | 海盗 |
 | Woodman | 林中人 | | Isengard | 艾森加德 |
-| Spell | 咒语 | | | |
+| Spell | 咒语 | | Harad | 哈拉德 |
+| Haradrim | 哈拉德民 | | Esgaroth | 埃斯加洛斯 |
+| Staff | 手杖 | | Master | 宗主（Master） |
 
 ## 4. 译文格式规范
 

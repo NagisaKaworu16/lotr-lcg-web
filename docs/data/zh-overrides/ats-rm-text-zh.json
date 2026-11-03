@@ -3,7 +3,7 @@
   "source": "机器辅助译文（批次3）",
   "date": "2026-11-03",
   "reviewed": false,
-  "scope": "player-carddata.json 玩家卡：Against the Shadow 循环（HoN deluxe + EaAD/TDF/AoO/BoG/SoCH）+ The Ring-maker 循环（VoI deluxe + TTT/TiT/AtE/NiE/CS/TAC），共 144 张唯一卡。注：AtS 循环第 5 包 The Siege of Cair Andros 在 player-carddata.json 中不存在（数据缺口，已在报告记录）",
+  "scope": "Against the Shadow 循环（HoN deluxe + EaAD/TDF/AoO/BoG/TMV，SCA 缺数据）+ The Ring-maker 循环（VoI deluxe + TTT/TiT/AtE/NiE/CS/TAC），共 154 张。批次3 原含 SoCH 系归属错误（SoCH 实属 Dream-chaser，已移出本范围并于批次4 覆盖）；2026-11-03 补译 TMV 10 张（勘误）",
   "terms": "遵循 zh-overrides/TERMS.md（含 2026-11-03 二次裁决：隐秘/独特/歌谣/信号/胜利展示区）",
   "notes": "本批全部 144 张既有 nameZh 均非空，cards 内不含 nameZh 键（merge 跳过）。换行统一 \\n。新关键字译法：Battle=会战、Siege=攻城、Valour=英勇（文本内均括注英文，待裁决后去除）。"
  },
@@ -583,6 +583,46 @@
   "07015": {
    "traitsZh": "",
    "rulesTextZh": "厄运1。\n**行动：**在你的牌库中搜寻一张拥有厄运关键字的卡，将其加入你的手牌。洗你的牌库。"
+  },
+  "06134": {
+   "traitsZh": "洛汗。贵族。战士。",
+   "rulesTextZh": "哨兵。\n每名拥有印刷 [tactics] 资源图标的 [tactics] 英雄+1 [willpower]。"
+  },
+  "06135": {
+   "traitsZh": "刚铎。",
+   "rulesTextZh": "**响应：**在佩拉基尔船长进场后，将1点资源从你控制的一名英雄的资源池移到另一名英雄的资源池。"
+  },
+  "06136": {
+   "traitsZh": "技艺。",
+   "rulesTextZh": "附属到一名**刚铎**英雄身上。\n当所附属英雄的资源池中至少有1点资源时，**刚铎**角色+1 [willpower]。"
+  },
+  "06137": {
+   "traitsZh": "物品。武器。",
+   "rulesTextZh": "受限。\n附属到一名**洛汗**角色身上。\n所附属的角色+1 [attack]（攻击探查区中的敌人时，改为+2 [attack]）。"
+  },
+  "06138": {
+   "traitsZh": "",
+   "rulesTextZh": "**战斗行动：**本阶段中，每名**洛汗**英雄都可以被宣告为攻击者，攻击探查区中的敌人。"
+  },
+  "06139": {
+   "traitsZh": "坐骑。",
+   "rulesTextZh": "附属到一名**刚铎**或**洛汗**英雄身上。\n**响应：**在所附属英雄被指派参加任务后，从其资源池支付1点资源来重整他。"
+  },
+  "06140": {
+   "traitsZh": "歌谣。",
+   "rulesTextZh": "**行动：**选择一名 [spirit] 英雄。直到本阶段结束，该英雄每有1点资源池中的资源便+1 [willpower]。"
+  },
+  "06141": {
+   "traitsZh": "矮人。",
+   "rulesTextZh": "**响应：**在埃瑞德宁莱斯勘探者进场后，弃掉你牌库顶的3张卡。然后，从你弃牌堆中选择1张卡洗回你的牌库。"
+  },
+  "06142": {
+   "traitsZh": "记录。",
+   "rulesTextZh": "附属到一名 [lore] 英雄身上。\n你控制的每名拥有印刷 [lore] 资源图标的英雄，使伊熙尔杜卷轴的打出费用降低1。\n**行动：**弃掉伊熙尔杜卷轴，打出你弃牌堆中任意一张 [lore] 事件卡，视同其在你手中。然后，将该事件放到你的牌库底。"
+  },
+  "06143": {
+   "traitsZh": "",
+   "rulesTextZh": "**响应：**在隐秘的珍宝从你的牌库中被弃掉后，将2点资源加入你控制的一名英雄的资源池。\n**行动：**支付1点资源来抽1张卡。"
   }
  }
 }
