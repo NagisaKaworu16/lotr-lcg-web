@@ -27,13 +27,13 @@
 | Action / Response | 行动 / 响应 | **行动：** 风格，markdown 加粗 |
 | Combat Action / Quest Action | 战斗行动 / 任务行动 | |
 | Event / Attachment / Ally / Hero | 事件 / 附属 / 盟友 / 英雄 | |
-| exhaust / ready | 横置 / 重整 | 见可疑清单 #1 |
+| exhaust / ready | 横置 / 重整 | 已裁决：data.js 9 处惯例（2026-11-03） |
 | commit to a quest | 被指派参加任务 | 见可疑清单 #5 |
-| staging area | 舞台区 | 见可疑清单 #2 |
-| active location | 当前地点 | 见可疑清单 #3 |
+| staging area | 探查区 | 已裁决：data.js 44 处惯例（2026-11-03），初译"舞台区"已修订 |
+| active location | 当前地点 | 已裁决：data.js 3 处惯例（2026-11-03） |
 | engaged / engage | 交战 / 与…交战 | |
 | Sentinel / Ranged | 哨兵 / 远程 | 关键字 |
-| Restricted | 限定 | 见可疑清单 #4 |
+| Restricted | 受限 | 已裁决：data.js 3 处惯例（2026-11-03），初译"限定"已修订 |
 | "when revealed" effects | 「展示时」效果 | |
 | shadow card / shadow effect | 暗影卡 / 暗影效果 | |
 | resource pool | 资源池 | |
@@ -48,12 +48,12 @@
 
 特质（traits）对照：Dúnedain=登丹人、Noble=贵族、Ranger=游侠、Rohan=洛汗、Warrior=战士、Dwarf=矮人、Silvan=西尔凡、Gondor=刚铎、Steward=宰相、Noldor=诺多、Scout=侦察兵、Archer=弓手、Title=头衔、Artifact=秘宝、Item=物品、Beorning=比翁族、Weapon=武器、Armor=护甲、Hobbit=霍比特人、Condition=状态、Craftsman=工匠、Minstrel=吟游诗人、Trap=陷阱、Skill=技艺、Istari=伊斯塔瑞。
 
-## 3. 可疑译法清单（待复核，≤10 条）
+## 3. 可疑译法清单（含裁决结果）
 
-1. **exhaust→横置**：社区亦有译"耗尽"。本批统一"横置"（与 ready=重整 成对）。
-2. **staging area→舞台区**：亦有译"布景区/集结区"，需与遭遇侧统一。
-3. **active location→当前地点**：亦有译"活动地点"。
-4. **Restricted→限定**：LCG 附属栏位限制术语，亦有译"限制"。
+1. **exhaust→横置**：社区亦有译"耗尽"。本批统一"横置"（与 ready=重整 成对）。**已裁决**：维持，依据 data.js 9 处既有惯例。
+2. **staging area→探查区**：初译"舞台区"（另有"布景区/集结区"等译法）。**已裁决**：改为**探查区**，依据 data.js 44 处既有惯例；译文已修订（6 处）。
+3. **active location→当前地点**：亦有译"活动地点"。**已裁决**：维持，依据 data.js 3 处既有惯例。
+4. **Restricted→受限**：初译"限定"（亦有译"限制"）。**已裁决**：改为**受限**，依据 data.js 3 处既有惯例；译文已修订（5 处）。
 5. **commits to a quest→被指派参加任务**：亦可"commit→指派/承担"，长句中用被动以明确时序。
 6. **Condition（特质）→状态**：作为附属特质词，与"状况/境况"等译法需统一。
 7. ** Istari→伊斯塔瑞**：音译，亦有"巫师"意译（如译"巫师"需避免与游戏词混淆）。
@@ -97,5 +97,5 @@
 ## 5. 后续建议
 
 - merge 接线由 fe2 完成：展示层需支持 `** **` 加粗、`\n` 分段、`[xxx]` token 渲染；
-- 若术语表有改动（尤其 #1–#5），建议在本批基础上做一次全局替换再扩量；
+- 若术语表有改动（尤其 #1–#5），建议在本批基础上做一次全局替换再扩量；2026-11-03 裁决后已在本批完成修订（舞台区→探查区 6 处、限定→受限 5 处），基准文件见 `TERMS.md`；
 - 遭遇卡（encounter-carddata.json）的翻译可复用本术语表，但需补充 Surge=涌现、Doomed X=厄运X、Archery=箭伤、Capture=俘虏 等遭遇侧术语。
