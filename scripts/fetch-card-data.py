@@ -271,6 +271,12 @@ def main():
     tg_stats = zh_merge.merge_text_zh(cards, 'tlr-tgh-text-zh.json', 'playerTlrTghText')
     he_stats = zh_merge.merge_text_zh(cards, 'harad-em-text-zh.json', 'playerHaradEmText')
     vm_stats = zh_merge.merge_text_zh(cards, 'vom-text-zh.json', 'playerVomText')
+    # 批次6（补齐全量玩家卡）：四组并行产出的散装译文，按 code 精确匹配直写。
+    # 组间 packCode 清单互斥，顺序不影响结果（overlap 计数仅作审计）。
+    sg_stats = zh_merge.merge_text_zh(cards, 'saga-text-zh.json', 'playerSagaText')
+    al_stats = zh_merge.merge_text_zh(cards, 'alep-text-zh.json', 'playerAlepText')
+    cm_stats = zh_merge.merge_text_zh(cards, 'ce-motka-text-zh.json', 'playerCeMotkaText')
+    cy2_stats = zh_merge.merge_text_zh(cards, 'cycle-misc-text-zh.json', 'playerCycleMiscText')
 
     dataset = {
         'schemaVersion': 1,
@@ -279,9 +285,10 @@ def main():
                       '其余由 docs/data/zh-overrides（EDGE 扩展导出）merge——先 '
                       'edge-pack code 精确匹配，再规范化英文名（详见 scripts/zh-merge.py '
                       '与 docs/data/zh-merge-report.json）。rulesTextZh/traitsZh 来自 '
-                      'zh-overrides 规则文本译文（core-text-zh.json Core 73 张 + '
-                      'cycles1-text-zh.json Mirkwood/Dwarrowdelf 循环 133 张，code '
-                      '精确匹配、原样直写，机器辅助译文未人工复核）；rulesTextZh '
+                      'zh-overrides 规则文本译文（core-text/cycles1/ats-rm/tlr-tgh/'
+                      'harad-em/vom/saga/alep/ce-motka/cycle-misc 十节，code 精确匹配、'
+                      '原样直写，机器辅助译文未人工复核——各批 reviewed 见产物 meta 与 '
+                      'zh-merge-report.json）；rulesTextZh '
                       '渲染归展示层（markdown 极简标记 + token，见 token 全集清单）。',
         'endpoint': 'https://ringsdb.com/api/public/cards/{packCode}.json',
         'fetchedAt': time.strftime('%Y-%m-%dT%H:%M:%S+00:00', time.gmtime()),
